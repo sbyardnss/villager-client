@@ -66,8 +66,11 @@ export const Play = () => {
         const possibleMoves = game.moves();
 
         // exit if the game is over
-        if (game.game_over() || game.in_draw() || possibleMoves.length === 0) return;
-
+        if (game.game_over() || game.in_draw() || possibleMoves.length === 0) {
+            console.log(game.pgn())
+            game.game_over() ? console.log("won by checkmate") : game.in_draw() ? console.log("game is a draw") : possibleMoves.length === 0 ? console.log("no moves available") : null
+            return;
+        }
         const randomIndex = Math.floor(Math.random() * possibleMoves.length);
         safeGameMutate((game) => {
             game.move(possibleMoves[randomIndex]);

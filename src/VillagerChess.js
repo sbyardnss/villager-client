@@ -23,12 +23,19 @@
 // }
 import { Route, Routes } from "react-router-dom"
 import { ApplicationViews } from "./ApplicationViews";
+import { Login } from "./Auth/Login";
+import { Register } from "./Auth/Register";
+import { Authorized } from "./Authorized";
 
 export const VillagerChess = () => {
   return <Routes>
+    <Route path="/login" element={<Login />} />
+    <Route path="/register" element={<Register />} />
     <Route path="*" element={
       <>
-        <ApplicationViews />
+        <Authorized>
+          <ApplicationViews />
+        </Authorized>
       </>
     } />
   </Routes>

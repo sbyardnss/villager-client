@@ -1,3 +1,15 @@
 #homepageContainer {
     margin-top: 80px;
 }
+
+/* community post section styling */
+.communityPost {
+    list-style: none;
+    border: 1px solid orange;
+}
+
+/* active tournament section styling */
+.activeTournamentListItem {
+    list-style: none;
+    border: 1px solid rgb(59, 174, 174)
+}

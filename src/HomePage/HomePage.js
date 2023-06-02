@@ -51,12 +51,12 @@ export const HomePage = () => {
                                     {
                                         t.games.map(game => {
                                             return (
-                                                <div>
+                                                <div key={game.id}>
                                                     Round {game.tournament_round}
-                                                    <div>
-                                                        <li>white - {game.player_w.full_name}</li>
-                                                        <li>black - {game.player_b.full_name}</li>
-                                                    </div>
+                                                    <ul>
+                                                        <li key={game.player_w.id}>white - {game.player_w.full_name}</li>
+                                                        <li key={game.player_b.id}>black - {game.player_b.full_name}</li>
+                                                    </ul>
                                                 </div>
                                             )
                                         })

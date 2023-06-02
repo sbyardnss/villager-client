@@ -26,6 +26,7 @@ import { ApplicationViews } from "./ApplicationViews";
 import { Login } from "./Auth/Login";
 import { Register } from "./Auth/Register";
 import { Authorized } from "./Authorized";
+import { Nav } from "./Nav/Nav";
 
 export const VillagerChess = () => {
   return <Routes>
@@ -34,6 +35,7 @@ export const VillagerChess = () => {
     <Route path="*" element={
       <>
         <Authorized>
+          <Nav />
           <ApplicationViews />
         </Authorized>
       </>

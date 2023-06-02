@@ -1,20 +1,37 @@
 import "./HomePage.css"
 
 import { React, useContext, useState, useEffect } from "react"
-import { Chessboard } from "react-chessboard"
-import Chess from "chess.js"
+import { getAllCommunityPosts } from "../ServerManager"
 
 export const HomePage = () => {
+    const [communityPosts, setCommunityPosts] = useState([])
+    useEffect(
+        () => {
+            getAllCommunityPosts().then(data => setCommunityPosts(data))
+        }, []
+    )
+
     return <>
-        <h2>Homepage</h2>
-        <section>
-            <h3>community posts</h3>
-        </section>
-        <section>
-            <h4>open challenges</h4>
-        </section>
-        <section>
-            <h4>active tournaments</h4>
-        </section>
+        <main id="homepageContainer">
+            <h2>Homepage</h2>
+            <article>
+                <h3>community posts</h3>
+                <section id="communityForumMsgs">
+                    {
+                        communityPosts.map(post => {
+                            return <>
+                                {post.poster.full_name} {post.message}
+                            </>
+                        })
+                    }
+                </section>
+            </article>
+            <article>
+                <h4>open challenges</h4>
+            </article>
+            <article>
+                <h4>active tournaments</h4>
+            </article>
+        </main>
     </>
 }

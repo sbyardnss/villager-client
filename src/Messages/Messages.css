@@ -1,0 +1,61 @@
+#messagingContainer {
+    margin-top: 80px;
+}
+
+#chatAndInterface {
+    display: flex;
+    justify-content: center;
+}
+
+/* friend list */
+#messagesFriends {
+    width: 40%;
+}
+
+.messagingFriendListItem {
+    border: 1px solid firebrick;
+    cursor: pointer;
+}
+
+.messagingFriendListItem:hover {
+    border: 1px solid firebrick;
+    background-color: aquamarine;
+    cursor: pointer;
+}
+
+/* chat */
+#chat {
+    display: block;
+    border: 1px solid orange;
+    height: 60vh;
+    width: 80vw;
+    overflow: scroll;
+    background-color: blanchedalmond;
+}
+
+.receivedMsg {
+    border: 2px solid darkorchid;
+    background-color: lavender;
+    border-radius: 4px;
+    padding: .5em;
+    width: fit-content;
+    margin-right: auto;
+    list-style: none;
+}
+
+.sentMsg {
+    border: 2px solid darkgreen;
+    background-color: rgb(205, 250, 205);
+    border-radius: 4px;
+    padding: .5em;
+    width: fit-content;
+    margin-left: auto;
+    list-style: none;
+}
+
+#chatInterface {
+    width: 80%;
+    padding: .5em;
+    border-radius: 4px;
+    border: 1px solid gray;
+}

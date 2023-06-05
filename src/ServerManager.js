@@ -103,6 +103,31 @@ export const addFriend = (friendId) => {
         }
     })
 }
+export const sendDirectMessage = (msgObj) => {
+    const localVillagerObj = getToken()
+    return fetch(`${apiKey}/messages`, {
+        method: "POST",
+        headers: {
+            "Authorization": `Token ${localVillagerObj.token}`,
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(msgObj)
+    })
+} 
+
+//PUT FETCHES
+export const updateProfile = (userId, profileObj) => {
+    const localVillagerObj = getToken()
+    return fetch(`${apiKey}/players/${userId}`, {
+        method: "PUT",
+        headers: {
+            "Authorization": `Token ${localVillagerObj.token}`,
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(profileObj)
+    })
+        .then(res => res.json())
+}
 
 //DELETE FETCHES
 export const deleteCommunityPost = (postId) => {

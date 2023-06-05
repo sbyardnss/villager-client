@@ -3,6 +3,7 @@ import { HomePage } from "./HomePage/HomePage"
 import { UserList } from "./UserList/UserList"
 import { Play } from "./Play/Play"
 import { Profile } from "./Profile/Profile"
+import { Messages } from "./Messages/Messages"
 
 export const ApplicationViews = () => {
     return (
@@ -16,6 +17,7 @@ export const ApplicationViews = () => {
                     <Route path="userList" element={<UserList />} />
                     <Route path="play" element={<Play />} />
                     <Route path="profile" element={<Profile />} />
+                    <Route path="messages" element={<Messages />} />
             </Route>
         </Routes>
     )

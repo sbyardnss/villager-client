@@ -1,0 +1,17 @@
+#profileContainer {
+    margin-top: 80px;
+}
+/* profile info and update */
+#updateProfileSection {
+    display: flex;
+    flex-direction: column;
+    width: 50%;
+}
+/* profile friend list */
+#profileFriendContainer {
+    border: 1px solid orange;
+}
+.profileUserListItem {
+    display: flex;
+    align-items: center;
+}

@@ -3,6 +3,7 @@ import "./Play.css"
 import { React, useContext, useState, useEffect } from "react"
 import { Chessboard } from "react-chessboard"
 import Chess from "chess.js"
+import "./Play.css"
 
 export const Play = () => {
     const [game, setGame] = useState(new Chess());
@@ -67,8 +68,16 @@ export const Play = () => {
 
         // exit if the game is over
         if (game.game_over() || game.in_draw() || possibleMoves.length === 0) {
-            console.log(game.pgn())
-            game.game_over() ? console.log("won by checkmate") : game.in_draw() ? console.log("game is a draw") : possibleMoves.length === 0 ? console.log("no moves available") : null
+            // game.game_over() ? console.log("won by checkmate") : game.in_draw() ? console.log("game is a draw") : possibleMoves.length === 0 ? console.log("no moves available") : null
+            if (game.game_over()) {
+                console.log("won by checkmate")
+            }
+            if (game.in_draw()) {
+                console.log("draw")
+            }
+            if (possibleMoves.length === 0) {
+                console.log('no more moves. draw')
+            }
             return;
         }
         const randomIndex = Math.floor(Math.random() * possibleMoves.length);
@@ -124,47 +133,49 @@ export const Play = () => {
     }
 
     return (
-        <div >
-            <Chessboard
-                id="ClickToMove"
-                animationDuration={200}
-                arePiecesDraggable={false}
-                boardOrientation={orientation}
-                position={game.fen()}
-                onSquareClick={onSquareClick}
-                onSquareRightClick={onSquareRightClick}
-                customBoardStyle={{
-                    borderRadius: "4px",
-                    boxShadow: "0 2px 10px rgba(0, 0, 0, 0.5)",
-                }}
-                customSquareStyles={{
-                    ...moveSquares,
-                    ...optionSquares,
-                    ...rightClickedSquares,
-                }}
-            />
-            <button
-                onClick={() => {
-                    safeGameMutate((game) => {
-                        game.reset();
-                    });
-                    setMoveSquares({});
-                    setRightClickedSquares({});
-                }}
-            >
-                reset
-            </button>
-            <button
-                onClick={() => {
-                    safeGameMutate((game) => {
-                        game.undo();
-                    });
-                    setMoveSquares({});
-                    setRightClickedSquares({});
-                }}
-            >
-                undo
-            </button>
-        </div>
+        <main id="playContainer">
+            <div >
+                <Chessboard
+                    id="ClickToMove"
+                    animationDuration={200}
+                    arePiecesDraggable={false}
+                    boardOrientation={orientation}
+                    position={game.fen()}
+                    onSquareClick={onSquareClick}
+                    onSquareRightClick={onSquareRightClick}
+                    customBoardStyle={{
+                        borderRadius: "4px",
+                        boxShadow: "0 2px 10px rgba(0, 0, 0, 0.5)",
+                    }}
+                    customSquareStyles={{
+                        ...moveSquares,
+                        ...optionSquares,
+                        ...rightClickedSquares,
+                    }}
+                />
+                <button
+                    onClick={() => {
+                        safeGameMutate((game) => {
+                            game.reset();
+                        });
+                        setMoveSquares({});
+                        setRightClickedSquares({});
+                    }}
+                >
+                    reset
+                </button>
+                <button
+                    onClick={() => {
+                        safeGameMutate((game) => {
+                            game.undo();
+                        });
+                        setMoveSquares({});
+                        setRightClickedSquares({});
+                    }}
+                >
+                    undo
+                </button>
+            </div>
+        </main>
     );
 }

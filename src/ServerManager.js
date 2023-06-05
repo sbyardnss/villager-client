@@ -6,7 +6,7 @@ const getToken = () => {
 // const apiKey = process.env.REACT_APP_API;
 const apiKey = "http://localhost:8000"
 
-//list fetches
+//LIST FETCHES
 export const getAllPlayers = () => {
     const localVillagerObj = getToken()
     return fetch(`${apiKey}/players`, {
@@ -68,6 +68,19 @@ export const getAllCommunityPosts = () => {
         .then(res => res.json())
 }
 
+//POST FETCHES
+export const submitNewPostToAPI = (newPostObj) => {
+    const localVillagerObj = getToken()
+    return fetch(`${apiKey}/communityposts`, {
+        method: "POST",
+        headers: {
+            "Authorization": `Token ${localVillagerObj.token}`,
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(newPostObj)
+    })
+        .then(res => res.json())
+}
 //auth
 export const loginUser = (user) => {
     return fetch(`${apiKey}/login`, {

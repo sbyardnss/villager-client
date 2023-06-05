@@ -58,9 +58,10 @@ export const Nav = () => {
                 <div id="profileIconAndHamburger">
                     <Link className="profileLink" to="/profile" onClick={
                         () => {
-                            document.getElementById("active").replace("active", "inactive")
+                            // document.getElementById("active").replace("active", "inactive")
+                            document.getElementById("active").checked = false
                         }
-                    }><img className="invert" /*src={profileIcon}*/ /></Link>
+                    }>{/*<img className="invert" src={profileIcon} />*/}Profile</Link>
                 </div>
                 <div id="linkContainer">
                     <div ref={navMenu}>
@@ -69,7 +70,7 @@ export const Nav = () => {
                         <label htmlFor="inactive" className="close"></label>
                         <div id="menuWrapper" className="wrapper">
                             <ul>
-                                {/* <li className="navListItem"><Link className="navigation_link" to="/play" onClick={
+                                <li className="navListItem"><Link className="navigation_link" to="/play" onClick={
                                     () => {
                                         document.getElementById("active").checked = false
                                     }
@@ -79,19 +80,17 @@ export const Nav = () => {
                                         document.getElementById("active").checked = false
                                     }
                                 }>Messages {msgNotification()}</Link></li>
-                                <li className="navListItem"><Link className="navigation_link" to="/createTeeTime" onClick={
+                                {/* <li className="navListItem"><Link className="navigation_link" to="/createTeeTime" onClick={
                                     () => {
                                         document.getElementById("active").checked = false
                                     }
-                                }>New Tournament</Link></li>
-                                */
+                                }>New Tournament</Link></li> */}
                                 <li className="navListItem"><Link className="navigation_link" to="/userList" onClick={
                                     () => {
                                         document.getElementById("active").checked = false
                                     }
                                 }>Make Friends</Link></li>
-                                /*
-                                <li className="navListItem"><Link className="navigation_link" to="/addCourse" onClick={
+                                {/* <li className="navListItem"><Link className="navigation_link" to="/addCourse" onClick={
                                     () => {
                                         document.getElementById("active").checked = false
                                     }

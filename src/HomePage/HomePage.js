@@ -8,12 +8,12 @@ export const HomePage = () => {
     const localVillagerObj = JSON.parse(localVillager)
     const [players, setPlayers] = useState([])
     const [communityPosts, setCommunityPosts] = useState([])
+    const [tournaments, setTournaments] = useState([])
     const [newPost, updateNewPost] = useState({
         poster: localVillagerObj.userId,
         message: ""
 
     })
-    const [tournaments, setTournaments] = useState([])
     useEffect(
         () => {
             // getAllCommunityPosts().then(data => setCommunityPosts(data))

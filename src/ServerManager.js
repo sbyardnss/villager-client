@@ -68,6 +68,18 @@ export const getAllCommunityPosts = () => {
         .then(res => res.json())
 }
 
+//RETRIEVE FETCHES
+export const getProfile = () => {
+    const localVillagerObj = getToken()
+    return fetch(`${apiKey}/players/profile`, {
+        headers: {
+            "Authorization": `Token ${localVillagerObj.token}`,
+            "Content-Type": "application/json"
+        }
+    })
+        .then(res => res.json())
+}
+
 //POST FETCHES
 export const submitNewPostToAPI = (newPostObj) => {
     const localVillagerObj = getToken()

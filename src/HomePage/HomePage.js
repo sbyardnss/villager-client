@@ -10,6 +10,7 @@ export const HomePage = () => {
     const [communityPosts, setCommunityPosts] = useState([])
     const [newPost, updateNewPost] = useState({
         poster: localVillagerObj.userId,
+        message: ""
 
     })
     const [tournaments, setTournaments] = useState([])
@@ -97,23 +98,23 @@ export const HomePage = () => {
                     }
                 </section>
                 <section id="communityForumInterface">
-                    <input id="communityForumInput" 
-                        type="text"
-                        value={newPost.message}
-                        onChange={handleChange}
-                        onKeyDown={handlekeyDown}
-                    />
-                    <button id="communityForumSubmitBtn"
-                        onClick={() => {
-                            submitNewPostToAPI(newPost).then(() => {
-                                const copy = { ...newPost }
-                                copy.message = ""
-                                updateNewPost(copy)
-                                getAllCommunityPosts().then(data => setCommunityPosts(data))
-                                // resetMessages()
-                            })
-                        }}
-                    >send</button>
+                        <input id="communityForumInput"
+                            type="text"
+                            value={newPost.message}
+                            onChange={handleChange}
+                            onKeyDown={handlekeyDown}
+                        />
+                        <button id="communityForumSubmitBtn"
+                            onClick={() => {
+                                submitNewPostToAPI(newPost).then(() => {
+                                    const copy = { ...newPost }
+                                    copy.message = ""
+                                    updateNewPost(copy)
+                                    getAllCommunityPosts().then(data => setCommunityPosts(data))
+                                    // resetMessages()
+                                })
+                            }}
+                        >send</button>
                 </section>
             </article>
             <article key="openChallenges">

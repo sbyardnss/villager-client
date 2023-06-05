@@ -81,11 +81,31 @@ export const submitNewPostToAPI = (newPostObj) => {
     })
         .then(res => res.json())
 }
+export const addFriend = (friendId) => {
+    const localVillagerObj = getToken()
+    return fetch(`${apiKey}/players/${friendId}/add_friend`, {
+        method: "POST",
+        headers: {
+            "Authorization": `Token ${localVillagerObj.token}`,
+            "Content-Type": "application/json"
+        }
+    })
+}
 
 //DELETE FETCHES
 export const deleteCommunityPost = (postId) => {
     const localVillagerObj = getToken()
     return fetch(`${apiKey}/communityposts/${postId}`, {
+        method: "DELETE",
+        headers: {
+            "Authorization": `Token ${localVillagerObj.token}`,
+            "Content-Type": "application/json"
+        }
+    })
+}
+export const removeFriend = (friendId) => {
+    const localVillagerObj = getToken()
+    return fetch(`${apiKey}/players/${friendId}/remove_friend`, {
         method: "DELETE",
         headers: {
             "Authorization": `Token ${localVillagerObj.token}`,

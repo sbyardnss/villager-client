@@ -84,11 +84,13 @@ export const Nav = () => {
                                         document.getElementById("active").checked = false
                                     }
                                 }>New Tournament</Link></li>
+                                */
                                 <li className="navListItem"><Link className="navigation_link" to="/userList" onClick={
                                     () => {
                                         document.getElementById("active").checked = false
                                     }
                                 }>Make Friends</Link></li>
+                                /*
                                 <li className="navListItem"><Link className="navigation_link" to="/addCourse" onClick={
                                     () => {
                                         document.getElementById("active").checked = false

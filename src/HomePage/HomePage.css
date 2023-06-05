@@ -2,7 +2,22 @@
     margin-top: 80px;
 }
 
-/* community post section styling */
+
+/* community forum section styling */
+#communityForum {
+    width: 40%;
+}
+#communityForumInterface {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+#communityForumInput {
+    width: 70%;
+}
+#communityForumSubmitBtn {
+    width: 25%;
+}
 .communityPost {
     list-style: none;
     border: 1px solid orange;

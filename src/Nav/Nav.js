@@ -69,7 +69,7 @@ export const Nav = () => {
                         <label htmlFor="inactive" className="close"></label>
                         <div id="menuWrapper" className="wrapper">
                             <ul>
-                                <li className="navListItem"><Link className="navigation_link" to="/play" onClick={
+                                {/* <li className="navListItem"><Link className="navigation_link" to="/play" onClick={
                                     () => {
                                         document.getElementById("active").checked = false
                                     }
@@ -83,7 +83,7 @@ export const Nav = () => {
                                     () => {
                                         document.getElementById("active").checked = false
                                     }
-                                }>New Tee Time</Link></li>
+                                }>New Tournament</Link></li>
                                 <li className="navListItem"><Link className="navigation_link" to="/userList" onClick={
                                     () => {
                                         document.getElementById("active").checked = false
@@ -93,7 +93,7 @@ export const Nav = () => {
                                     () => {
                                         document.getElementById("active").checked = false
                                     }
-                                }>Add Course</Link></li>
+                                }>Create Challenge</Link></li> */}
                                 <li className="navListItem"><Link className="navigation_logout" to="" onClick={() => {
                                     localStorage.removeItem("villager")
                                     Navigate("/", { replace: true })

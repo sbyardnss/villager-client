@@ -81,6 +81,18 @@ export const submitNewPostToAPI = (newPostObj) => {
     })
         .then(res => res.json())
 }
+
+//DELETE FETCHES
+export const deleteCommunityPost = (postId) => {
+    const localVillagerObj = getToken()
+    return fetch(`${apiKey}/communityposts/${postId}`, {
+        method: "DELETE",
+        headers: {
+            "Authorization": `Token ${localVillagerObj.token}`,
+            "Content-Type": "application/json"
+        }
+    })
+}
 //auth
 export const loginUser = (user) => {
     return fetch(`${apiKey}/login`, {

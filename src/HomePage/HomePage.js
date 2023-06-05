@@ -1,7 +1,7 @@
 import "./HomePage.css"
 
 import { React, useContext, useState, useEffect } from "react"
-import { getAllCommunityPosts, getAllPlayers, getAllTournaments, submitNewPostToAPI } from "../ServerManager"
+import { deleteCommunityPost, getAllCommunityPosts, getAllPlayers, getAllTournaments, submitNewPostToAPI } from "../ServerManager"
 
 export const HomePage = () => {
     const localVillager = localStorage.getItem("villager")
@@ -9,7 +9,7 @@ export const HomePage = () => {
     const [players, setPlayers] = useState([])
     const [communityPosts, setCommunityPosts] = useState([])
     const [newPost, updateNewPost] = useState({
-        poster: localVillagerObj.id,
+        poster: localVillagerObj.userId,
 
     })
     const [tournaments, setTournaments] = useState([])
@@ -23,6 +23,9 @@ export const HomePage = () => {
             })
         }, []
     )
+    const resetCommunityPosts = () => {
+        getAllCommunityPosts().then(data => setCommunityPosts(data))
+    }
     //SCROLL TO BOTTOM FUNCTIONALITY FROM LINKUP
     // const scrollToBottom = () => {
     //     messagesEndRef.current?.scrollIntoView({behavior: "auto"})
@@ -42,24 +45,45 @@ export const HomePage = () => {
                 const copy = { ...newPost }
                 copy.message = ""
                 updateNewPost(copy)
-                getAllCommunityPosts().then(data => setCommunityPosts(data))
-                // resetMessages()
+                // getAllCommunityPosts().then(data => setCommunityPosts(data))
+                resetCommunityPosts()
             })
+        }
+    }
+    const handleDelete = id => {
+        if (window.confirm("are you sure?")) {
+            deleteCommunityPost(id)
+                .then(() => {
+                    // getAllCommunityPosts()
+                    //     .then(data => setCommunityPosts(data))
+                    resetCommunityPosts()
+                })
         }
     }
     return <>
         <main id="homepageContainer">
             <h1>Homepage</h1>
-            <article key="communityForum">
+            <article id="communityForum">
                 <h2>community posts</h2>
                 <section id="communityForumMsgs" >
-                    <div>
-                        {
-                            communityPosts.map(post => {
-                                const date_time = new Date(post.date_time)
-                                const date = date_time.toLocaleDateString('en-us')
-                                const time = date_time.toLocaleTimeString('en-us',  {hour: 'numeric', minute:'2-digit'})
-                                console.log(date)
+                    {
+                        communityPosts.map(post => {
+                            const date_time = new Date(post.date_time)
+                            const date = date_time.toLocaleDateString('en-us')
+                            const time = date_time.toLocaleTimeString('en-us', { hour: 'numeric', minute: '2-digit' })
+                            if (post.poster?.id === localVillagerObj.userId) {
+                                return (
+                                    <li key={post.id} className="communityPost">
+                                        <h3>
+                                            {post.poster?.full_name}
+                                        </h3>
+                                        <h5>{date} {time}</h5>
+                                        {post.message}
+                                        <button onClick={() => handleDelete(post.id)}>delete</button>
+                                    </li>
+                                )
+                            }
+                            else {
                                 return (
                                     <li key={post.id} className="communityPost">
                                         <h3>
@@ -68,14 +92,18 @@ export const HomePage = () => {
                                         <h5>{date} {time}</h5>
                                         {post.message}</li>
                                 )
-                            })
-                        }
-                    </div>
-                    <input id="communityForumInput" type="text"
+                            }
+                        })
+                    }
+                </section>
+                <section id="communityForumInterface">
+                    <input id="communityForumInput" 
+                        type="text"
+                        value={newPost.message}
                         onChange={handleChange}
                         onKeyDown={handlekeyDown}
                     />
-                    <button id="communityForumSubmitButton"
+                    <button id="communityForumSubmitBtn"
                         onClick={() => {
                             submitNewPostToAPI(newPost).then(() => {
                                 const copy = { ...newPost }
@@ -87,7 +115,6 @@ export const HomePage = () => {
                         }}
                     >send</button>
                 </section>
-
             </article>
             <article key="openChallenges">
                 <h2>open challenges</h2>

@@ -10,6 +10,7 @@ export const TournamentProvider = (props) => {
     const [players, setPlayers] = useState([])
     const [tournaments, setTournaments] = useState([])
     const [timeSettings, setTimeSettings] = useState([])
+    const [games, setGames] = useState([])
     const [tournamentGames, setTournamentGames] = useState([])
     useEffect(
         () => {
@@ -17,15 +18,22 @@ export const TournamentProvider = (props) => {
                 setPlayers(playerData)
                 setTournaments(tournamentData)
                 setTimeSettings(timeSettingData)
-                const games = gameData.filter(g => g.tournament)
-                setTournamentGames(games)
+                setGames(gameData)
+                // const games = gameData.filter(g => g.tournament)
+                // setTournamentGames(games)
             })
         }, []
+    )
+    useEffect(
+        () => {
+            const tourneyGamesOnly = games.filter(g => g.tournament)
+            setTournamentGames(tourneyGamesOnly)
+        }, [games]
     )
 
     return (
         <TournamentContext.Provider value={{
-            localVillagerObj, players, timeSettings, tournaments, setTournaments, tournamentGames
+            localVillagerObj, players, timeSettings, tournaments, setTournaments, tournamentGames, setGames
         }}>
             {props.children}
         </TournamentContext.Provider>

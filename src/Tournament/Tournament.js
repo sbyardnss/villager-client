@@ -1,13 +1,23 @@
 import { useState, useEffect, useContext } from "react"
 import { TournamentContext } from "./TournamentProvider"
 import "./Tournament.css"
-import { getAllTournaments, sendNewTournament } from "../ServerManager"
+import { getAllGames, getAllTournaments, sendNewGame, sendNewTournament } from "../ServerManager"
 export const Tournament = () => {
-    const { localVillagerObj, tournamentGames, tournaments, setTournaments, players, timeSettings } = useContext(TournamentContext)
+    const { localVillagerObj, tournamentGames, tournaments, setTournaments, players, timeSettings, setGames } = useContext(TournamentContext)
     const [potentialCompetitors, setPotentialCompetitors] = useState([])
     const [selectedTournament, setSelectedTournament] = useState(0)
     const [activeTournament, setActiveTournament] = useState({})
     const [activeTournamentPlayers, setActiveTournamentPlayers] = useState([])
+    const [playerBye, setPlayerBye] = useState({})
+    const [gameForApi, updateGameForApi] = useState({
+        player_w: 0,
+        player_b: 0,
+        w_notes: "",
+        b_notes: "",
+        tournament: activeTournament?.id,
+        time_setting: activeTournament?.timeSetting,
+        accepted: true
+    })
     const [newTournament, updateNewTournament] = useState({
         title: "",
         creator: localVillagerObj.userId,
@@ -43,16 +53,46 @@ export const Tournament = () => {
         let roundNumber = activeTournament?.rounds;
         let tableHtml = [];
         while (roundNumber > 0) {
-            tableHtml.push(<th class="roundHeader">{roundNumber}</th>)
+            tableHtml.push(<th key={roundNumber} className="roundHeader">{roundNumber}</th>)
             roundNumber--;
         }
         return tableHtml
     };
     const roundHtml = roundPopulation()
 
+    //NOT WORKING QUITE RIGHT YET
+    //generating random matchups for next round
     const createMatchups = () => {
+        const playersForMatchup = [...activeTournamentPlayers]
+        const numOfPlayers = playersForMatchup.length
+        // generate random player_w
+        const randomNumWhite = Math.floor(Math.random() * parseInt(numOfPlayers))
+        const player_w = playersForMatchup[randomNumWhite]
+        // remove matched player_w
+        playersForMatchup.splice(randomNumWhite, 1)
+        // generate random player_b
+        const randomNumBlack = Math.floor(Math.random() * parseInt(numOfPlayers))
+        const player_b = playersForMatchup[randomNumBlack]
+        // remove matched player_b
+        playersForMatchup.splice(randomNumBlack, 1)
+        // send game with matched players
+        const gameCopy = { ...gameForApi }
         
+        gameCopy.player_b = player_b?.id
+        gameCopy.player_w = player_w?.id
+        if (gameCopy.player_b !== 0 && gameCopy.player_w !== 0) {
+            updateGameForApi(gameCopy)
+            sendNewGame(gameForApi)
+        }
+        //check if all players that can be matched have been matched
+        if (playersForMatchup.length > 1) {
+            createMatchups()
+        }
+        else if (playersForMatchup.length === 1) {
+            setPlayerBye(playersForMatchup[0])
+        }
     }
+
 
     if (selectedTournament) {
         if (activeTournament && activeTournamentPlayers) {
@@ -66,12 +106,17 @@ export const Tournament = () => {
                             )
                         })
                     }
-                    <button onClick={() => {}}>Start Next Round</button>
+                    <button onClick={() => {
+                        if (window.confirm("create round?")) {
+                            createMatchups()
+                            getAllGames().then(data => setGames(data))
+                        }
+                    }}>Start Next Round</button>
                     <button onClick={() => setSelectedTournament(0)}>exit tournament</button>
                     <section id="tournamentTableContainer">
                         <table id="tournamentTable">
                             <thead>
-                                <tr className="tableHeaderRow">
+                                <tr key={0} className="tableHeaderRow">
                                     <th>player</th>
                                     {
                                         roundHtml.map(round => {
@@ -84,7 +129,7 @@ export const Tournament = () => {
                                 {
                                     activeTournamentPlayers.map(tourneyPlayer => {
                                         return (
-                                            <tr>
+                                            <tr key={tourneyPlayer.id}>
                                                 <td key={tourneyPlayer.id} className="tablePlayerCell">{tourneyPlayer.full_name}</td>
                                             </tr>
                                         )

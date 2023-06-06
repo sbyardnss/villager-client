@@ -80,11 +80,11 @@ export const Nav = () => {
                                         document.getElementById("active").checked = false
                                     }
                                 }>Messages {msgNotification()}</Link></li>
-                                {/* <li className="navListItem"><Link className="navigation_link" to="/createTeeTime" onClick={
+                                <li className="navListItem"><Link className="navigation_link" to="/tournament" onClick={
                                     () => {
                                         document.getElementById("active").checked = false
                                     }
-                                }>New Tournament</Link></li> */}
+                                }>New Tournament</Link></li>
                                 <li className="navListItem"><Link className="navigation_link" to="/userList" onClick={
                                     () => {
                                         document.getElementById("active").checked = false

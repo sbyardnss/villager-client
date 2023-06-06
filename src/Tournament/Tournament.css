@@ -1,0 +1,17 @@
+#tournamentContainer {
+    margin-top: 80px;
+}
+
+/* tournament setup */
+#tournamentCompetitorSelection {
+    border: 1px solid green;
+}
+#tournamentTimeSettingSelection {
+    border: 1px solid orange;
+}
+#tournamentPotentialCompetitorSelection {
+    border: 1px solid blue;
+}
+#tournamentSelectedCompetitors {
+    border: 1px solid brown;
+}

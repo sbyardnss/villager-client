@@ -1,9 +1,9 @@
 import { useState, useEffect, useContext } from "react"
 import { TournamentContext } from "./TournamentProvider"
 import "./Tournament.css"
-import { sendNewTournament } from "../ServerManager"
+import { getAllTournaments, sendNewTournament } from "../ServerManager"
 export const Tournament = () => {
-    const { localVillagerObj, tournamentGames, tournaments, players, timeSettings } = useContext(TournamentContext)
+    const { localVillagerObj, tournamentGames, tournaments, setTournaments, players, timeSettings } = useContext(TournamentContext)
     const [potentialCompetitors, setPotentialCompetitors] = useState([])
     const [selectedTournament, setSelectedTournament] = useState(0)
     const [activeTournament, setActiveTournament] = useState({})
@@ -12,26 +12,47 @@ export const Tournament = () => {
         title: "",
         creator: localVillagerObj.userId,
         competitors: [],
-        timeSetting: 0
+        timeSetting: 0,
+        rounds: 1
     })
     useEffect(
         () => {
             setPotentialCompetitors(players)
+            setSelectedTournament(6) //remove this line after tournament view built
         }, [players]
     )
     useEffect(
         () => {
             const selectedTournamentObj = tournaments.find(t => t.id === selectedTournament)
             setActiveTournament(selectedTournamentObj)
-        }, [selectedTournament]
+        }, [selectedTournament, players]//remove players after tournament view built
     )
     useEffect(
         () => {
-
             const playersForSelectedTournament = players.filter(p => activeTournament?.competitors.find(c => c === p.id))
             setActiveTournamentPlayers(playersForSelectedTournament)
         }, [activeTournament]
     )
+    //getter/setter
+    const resetTournaments = () => {
+        getAllTournaments()
+            .then(data => setTournaments(data))
+    }
+    //code for populating number of table columns based on number of rounds in activeTournament
+    const roundPopulation = () => {
+        let roundNumber = activeTournament?.rounds;
+        let tableHtml = [];
+        while (roundNumber > 0) {
+            tableHtml.push(<th class="roundHeader">{roundNumber}</th>)
+            roundNumber--;
+        }
+        return tableHtml
+    };
+    const roundHtml = roundPopulation()
+
+    const createMatchups = () => {
+        
+    }
 
     if (selectedTournament) {
         if (activeTournament && activeTournamentPlayers) {
@@ -45,10 +66,35 @@ export const Tournament = () => {
                             )
                         })
                     }
+                    <button onClick={() => {}}>Start Next Round</button>
                     <button onClick={() => setSelectedTournament(0)}>exit tournament</button>
+                    <section id="tournamentTableContainer">
+                        <table id="tournamentTable">
+                            <thead>
+                                <tr className="tableHeaderRow">
+                                    <th>player</th>
+                                    {
+                                        roundHtml.map(round => {
+                                            return round
+                                        })
+                                    }
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {
+                                    activeTournamentPlayers.map(tourneyPlayer => {
+                                        return (
+                                            <tr>
+                                                <td key={tourneyPlayer.id} className="tablePlayerCell">{tourneyPlayer.full_name}</td>
+                                            </tr>
+                                        )
+                                    })
+                                }
+                            </tbody>
+                        </table>
+                    </section>
                 </main>
             </>
-
         }
     }
     else {
@@ -130,6 +176,9 @@ export const Tournament = () => {
                             if (newTournament.competitors && newTournament.timeSetting && newTournament.title) {
                                 if (window.confirm("Everybody ready?")) {
                                     sendNewTournament(newTournament)
+                                        .then(() => {
+                                            resetTournaments()
+                                        })
                                 }
                             }
                         }}>

@@ -19,3 +19,12 @@
 #tournamentSelectedCompetitors {
     border: 1px solid brown;
 }
+
+/* tournament table */
+#tournamentTable {
+    background-color: blanchedalmond;
+    border: 1px solid green;
+}
+.roundHeader {
+    background-color: gray;
+}

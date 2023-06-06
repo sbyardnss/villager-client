@@ -3,12 +3,16 @@
 }
 
 /* tournament setup */
-#tournamentCompetitorSelection {
+#newTournamentForm {
+    border: 1px solid slateblue;
+}
+/* #tournamentCompetitorSelection {
     border: 1px solid green;
 }
 #tournamentTimeSettingSelection {
     border: 1px solid orange;
 }
+*/
 #tournamentPotentialCompetitorSelection {
     border: 1px solid blue;
 }

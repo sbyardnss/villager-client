@@ -113,7 +113,18 @@ export const sendDirectMessage = (msgObj) => {
         },
         body: JSON.stringify(msgObj)
     })
-} 
+}
+export const sendNewTournament = (tournamentObj) => {
+    const localVillagerObj = getToken()
+    return fetch(`${apiKey}/tournaments`, {
+        method: "POST",
+        headers: {
+            "Authorization": `Token ${localVillagerObj.token}`,
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(tournamentObj)
+    })
+}
 
 //PUT FETCHES
 export const updateProfile = (userId, profileObj) => {

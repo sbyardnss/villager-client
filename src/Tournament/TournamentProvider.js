@@ -10,22 +10,22 @@ export const TournamentProvider = (props) => {
     const [players, setPlayers] = useState([])
     const [tournaments, setTournaments] = useState([])
     const [timeSettings, setTimeSettings] = useState([])
-    const [games, setGames] = useState([])
+    const [tournamentGames, setTournamentGames] = useState([])
     useEffect(
         () => {
             Promise.all([getAllPlayers(), getAllTournaments(), getAllTimeSettings(), getAllGames()]).then(([playerData, tournamentData, timeSettingData, gameData]) => {
                 setPlayers(playerData)
                 setTournaments(tournamentData)
                 setTimeSettings(timeSettingData)
-                const tournamentGames = gameData.filter(g => g.tournament)
-                setGames(tournamentGames)
+                const games = gameData.filter(g => g.tournament)
+                setTournamentGames(games)
             })
         }, []
     )
 
     return (
         <TournamentContext.Provider value={{
-            localVillagerObj, players, timeSettings, tournaments, games
+            localVillagerObj, players, timeSettings, tournaments, tournamentGames
         }}>
             {props.children}
         </TournamentContext.Provider>

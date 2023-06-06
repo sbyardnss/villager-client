@@ -80,6 +80,7 @@ export const getProfile = () => {
         .then(res => res.json())
 }
 
+
 //POST FETCHES
 export const submitNewPostToAPI = (newPostObj) => {
     const localVillagerObj = getToken()

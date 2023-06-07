@@ -7,8 +7,11 @@ export const Tournament = () => {
     const [potentialCompetitors, setPotentialCompetitors] = useState([])
     const [activeTournament, setActiveTournament] = useState({})
     const [activeTournamentPlayers, setActiveTournamentPlayers] = useState([])
+    const [unapprovedPairings, setUnapprovedPairings] = useState([])
+    const [newPairings, setNewPairings] = useState([])
     const [playerBye, setPlayerBye] = useState({})
     const [round, setRound] = useState(0)
+    let [shuffledPlayers, setShuffledPlayers] = useState([])
     const [gameForApi, updateGameForApi] = useState({
         player_w: 0,
         player_b: 0,
@@ -28,31 +31,44 @@ export const Tournament = () => {
     useEffect(
         () => {
             setPotentialCompetitors(players)
-            // setSelectedTournament(6) //remove this line after tournament view built
         }, [players]
     )
     useEffect(
         () => {
             const selectedTournamentObj = tournaments.find(t => t.id === selectedTournament)
             setActiveTournament(selectedTournamentObj)
-        }, [selectedTournament]//remove players after tournament view built
+        }, [selectedTournament]
     )
     useEffect(
         () => {
             const playersForSelectedTournament = players.filter(p => activeTournament?.competitors.find(c => c === p.id))
             setActiveTournamentPlayers(playersForSelectedTournament)
+            setRound(activeTournament?.rounds)
         }, [activeTournament]
     )
-    useEffect(
-        () => {
-            setRound(activeTournament?.rounds)
-        },[activeTournament]
-    )
-
-    //getter/setter
+    // useEffect(
+    //     () => {
+    //         resetShuffledPlayers()
+    //     }, [selectedTournament, activeTournamentPlayers]
+    // )
+    // useEffect(
+    //     () => {
+    //         console.log(unapprovedPairings)
+    //     }, [unapprovedPairings]
+    // )
+    // useEffect(
+    //     () => {
+    //         console.log(newPairings)
+    //     }, [newPairings]
+    // )
+    //getter/setter for tournaments
     const resetTournaments = () => {
         getAllTournaments()
             .then(data => setTournaments(data))
+    }
+    const resetGames = () => {
+        getAllGames()
+            .then(data => setGames(data))
     }
     //code for populating number of table columns based on number of rounds in activeTournament
     const roundPopulation = () => {
@@ -66,6 +82,7 @@ export const Tournament = () => {
     };
     const roundHtml = roundPopulation()
 
+    /*
     //shuffle array of players for random matchup
     const shuffle = (arr) => {
         let currentIndex = arr.length, randomIndex;
@@ -79,46 +96,78 @@ export const Tournament = () => {
         }
         return arr
     }
-
-
-    const tournamentPlayers = [...activeTournamentPlayers]
-    let shuffledPlayers = shuffle(tournamentPlayers)
-    const createMatchups = () => {//function seems to be working correctly other than setting the bye player
-        //check to see if there are at least 2 players left
-        if (shuffledPlayers.length){
-            if (shuffledPlayers.length > 1) {
-                const player_w = shuffledPlayers[0]
-                const player_b = shuffledPlayers[1]
-                if (player_b && player_w) {
-                    //check to see if this matchup matches a previous game in the tournament
-                    if (pastPairings.find(p => p === [player_w.id, player_b.id] || p === [player_b.id, player_w.id])) {
-                        console.log("game already played")
-                        createMatchups()
-                    }
-                    else {
-                        const gameCopy = { ...gameForApi }
-                        gameCopy.player_w = player_w.id
-                        gameCopy.player_b = player_b.id
-                        shuffledPlayers.splice(0, 2)
-                        console.log(gameCopy)
-                        if (shuffledPlayers.length) {
-                            createMatchups()
-                        }
-                    }
-                }
-                
+    //reset shuffled players if matchup isn't valid
+    const resetShuffledPlayers = () => {
+        const tournamentPlayers = [...activeTournamentPlayers]
+        setShuffledPlayers(shuffle(tournamentPlayers))
+    }
+    const createMatchups = () => {
+        //check to see if all players have been assigned. if so, send pairings to api
+        if (shuffledPlayers.length === 0) {
+            setNewPairings(unapprovedPairings)
+        }
+        //check to see if one player left
+        if (shuffledPlayers.length === 1) {
+            const remainingPlayer = shuffledPlayers[0]
+            //ensure that remaining player hasn't had a bye yet. if they have reset the matches entirely and start again
+            if (pastPairings.find(p => p === [remainingPlayer.id, 0])) {
+                setUnapprovedPairings([])
+                resetShuffledPlayers().then(() => {
+                    createMatchups()
+                })
             }
             else {
-                // console.log(shuffledPlayers[0])
-                setPlayerBye(shuffledPlayers[0])
-                console.log(playerBye)
-                
+                //if they havent had a bye, set their pairing against a 0 and send it
+                const byePairing = [remainingPlayer.id, 0]
+                const copyOfUnapprovedPairings = [...unapprovedPairings]
+                copyOfUnapprovedPairings.push(byePairing)
+                console.log(copyOfUnapprovedPairings)
+                setUnapprovedPairings(copyOfUnapprovedPairings)
             }
         }
-        else {
-            console.log('matchup made')
+        //check to see if 2 players left
+        if (shuffledPlayers.length === 2) {
+            const player_w = shuffledPlayers[0]
+            const player_b = shuffledPlayers[1]
+            if (player_w && player_b) {
+                //if theyve played eachother already, reset the function
+                if (pastPairings.find(p => p === [player_w.id, player_b.id] || p === [player_b.id, player_w.id])) {
+                    setUnapprovedPairings([])
+                    resetShuffledPlayers()
+                        .then(() => {
+                            createMatchups()
+                        })
+                }
+                else {
+                    //if they haven't played eachother, add that pairing to the new pairings
+                    const newPairing = [player_w.id, player_b.id]
+                    const copyOfUnapprovedPairings = [...unapprovedPairings]
+                    copyOfUnapprovedPairings.push(newPairing)
+                    setUnapprovedPairings(copyOfUnapprovedPairings)
+                }
+            }
         }
-    }
+        //check to see if more than 2 players left
+        if (shuffledPlayers.length > 2) {
+            const player_w = shuffledPlayers[0]
+            const player_b = shuffledPlayers[1]
+            if (player_w && player_b) {
+                //check to see if this matchup matches a previous game in the tournament
+                if (pastPairings.find(p => p === [player_w.id, player_b.id] || p === [player_b.id, player_w.id])) {
+                    console.log("game already played")
+                    createMatchups()
+                }
+                else {
+                    const newPairing = [player_w.id, player_b.id]
+                    const copyOfUnapprovedPairings = [...unapprovedPairings]
+                    copyOfUnapprovedPairings.push(newPairing)
+                    setUnapprovedPairings(copyOfUnapprovedPairings)
+                    shuffledPlayers.splice(0, 2)
+                    createMatchups()
+                }
+            }
+        }
+    }*/
 
 
     if (selectedTournament) {
@@ -135,7 +184,7 @@ export const Tournament = () => {
                     }
                     <button onClick={() => {
                         if (window.confirm("create round?")) {
-                            createMatchups()
+                            // createMatchups()
                             getAllGames().then(data => setGames(data))
                         }
                     }}>Start Next Round</button>

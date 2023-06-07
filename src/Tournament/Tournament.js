@@ -2,7 +2,7 @@ import { useState, useEffect, useContext } from "react"
 import { RoundRobin } from "tournament-pairings"
 import { TournamentContext } from "./TournamentProvider"
 import "./Tournament.css"
-import { getAllGames, getAllTournaments, sendNewGame, sendNewTournament } from "../ServerManager"
+import { getAllGames, getAllTournaments, sendNewGame, sendNewTournament, updateTournament } from "../ServerManager"
 export const Tournament = () => {
     const { localVillagerObj, tournamentGames, tournaments, setTournaments, players, timeSettings, setGames, selectedTournament, setSelectedTournament, pastPairings } = useContext(TournamentContext)
     const [potentialCompetitors, setPotentialCompetitors] = useState([])
@@ -36,7 +36,7 @@ export const Tournament = () => {
         () => {
             const selectedTournamentObj = tournaments.find(t => t.id === selectedTournament)
             setActiveTournament(selectedTournamentObj)
-        }, [selectedTournament]
+        }, [selectedTournament, tournaments]
     )
     useEffect(
         () => {
@@ -53,10 +53,13 @@ export const Tournament = () => {
     )
     useEffect(
         () => {
-
+            if (activeTournament) {
+                const currentRoundPairings = activeTournament.pairings?.filter(p => p.round === currentRound)
+                setCurrentRoundMatchups(currentRoundPairings)
+            }
         }, [currentRound]
     )
-    console.log(activeTournament)
+    console.log(currentRound)
     //getter/setter for tournaments
     const resetTournaments = () => {
         getAllTournaments()
@@ -74,13 +77,10 @@ export const Tournament = () => {
             tableHtml.push(<th key={roundNumber} className="roundHeader">{roundNumber}</th>)
             roundNumber--;
         }
-        return tableHtml
+        return tableHtml.reverse()
     };
     const roundHtml = roundPopulation()
-    console.log(activeTournament?.pairings)
-    const createMatchups = () => {
 
-    }
     if (selectedTournament) {
         if (activeTournament && activeTournamentPlayers) {
             return <>
@@ -96,8 +96,13 @@ export const Tournament = () => {
                     } */}
                     <button onClick={() => {
                         if (window.confirm("create round?")) {
-                            // createMatchups()
-                            getAllGames().then(data => setGames(data))
+                            const tournamentCopy = { ...activeTournament }
+                            tournamentCopy.rounds++
+                            updateTournament(tournamentCopy)
+                                .then(() => {
+                                    resetTournaments()
+                                })
+                            // getAllGames().then(data => setGames(data))
                         }
                     }}>Start Next Round</button>
                     <button onClick={() => setSelectedTournament(0)}>exit tournament</button>

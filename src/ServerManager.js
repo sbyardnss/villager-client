@@ -151,6 +151,17 @@ export const updateProfile = (userId, profileObj) => {
     })
         .then(res => res.json())
 }
+export const updateTournament = (tournamentObj) => {
+    const localVillagerObj = getToken()
+    return fetch(`${apiKey}/tournaments/${tournamentObj.id}`, {
+        method: "PUT",
+        headers: {
+            "Authorization": `Token ${localVillagerObj.token}`,
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(tournamentObj)
+    })
+}
 
 //DELETE FETCHES
 export const deleteCommunityPost = (postId) => {

@@ -3,12 +3,12 @@ import { TournamentContext } from "./TournamentProvider"
 import "./Tournament.css"
 import { getAllGames, getAllTournaments, sendNewGame, sendNewTournament } from "../ServerManager"
 export const Tournament = () => {
-    const { localVillagerObj, tournamentGames, tournaments, setTournaments, players, timeSettings, setGames } = useContext(TournamentContext)
+    const { localVillagerObj, tournamentGames, tournaments, setTournaments, players, timeSettings, setGames, selectedTournament, setSelectedTournament, pastPairings } = useContext(TournamentContext)
     const [potentialCompetitors, setPotentialCompetitors] = useState([])
-    const [selectedTournament, setSelectedTournament] = useState(0)
     const [activeTournament, setActiveTournament] = useState({})
     const [activeTournamentPlayers, setActiveTournamentPlayers] = useState([])
     const [playerBye, setPlayerBye] = useState({})
+    const [round, setRound] = useState(0)
     const [gameForApi, updateGameForApi] = useState({
         player_w: 0,
         player_b: 0,
@@ -28,14 +28,14 @@ export const Tournament = () => {
     useEffect(
         () => {
             setPotentialCompetitors(players)
-            setSelectedTournament(6) //remove this line after tournament view built
+            // setSelectedTournament(6) //remove this line after tournament view built
         }, [players]
     )
     useEffect(
         () => {
             const selectedTournamentObj = tournaments.find(t => t.id === selectedTournament)
             setActiveTournament(selectedTournamentObj)
-        }, [selectedTournament, players]//remove players after tournament view built
+        }, [selectedTournament]//remove players after tournament view built
     )
     useEffect(
         () => {
@@ -43,6 +43,12 @@ export const Tournament = () => {
             setActiveTournamentPlayers(playersForSelectedTournament)
         }, [activeTournament]
     )
+    useEffect(
+        () => {
+            setRound(activeTournament?.rounds)
+        },[activeTournament]
+    )
+
     //getter/setter
     const resetTournaments = () => {
         getAllTournaments()
@@ -60,36 +66,57 @@ export const Tournament = () => {
     };
     const roundHtml = roundPopulation()
 
-    //NOT WORKING QUITE RIGHT YET
-    //generating random matchups for next round
-    const createMatchups = () => {
-        const playersForMatchup = [...activeTournamentPlayers]
-        const numOfPlayers = playersForMatchup.length
-        // generate random player_w
-        const randomNumWhite = Math.floor(Math.random() * parseInt(numOfPlayers))
-        const player_w = playersForMatchup[randomNumWhite]
-        // remove matched player_w
-        playersForMatchup.splice(randomNumWhite, 1)
-        // generate random player_b
-        const randomNumBlack = Math.floor(Math.random() * parseInt(numOfPlayers))
-        const player_b = playersForMatchup[randomNumBlack]
-        // remove matched player_b
-        playersForMatchup.splice(randomNumBlack, 1)
-        // send game with matched players
-        const gameCopy = { ...gameForApi }
-        
-        gameCopy.player_b = player_b?.id
-        gameCopy.player_w = player_w?.id
-        if (gameCopy.player_b !== 0 && gameCopy.player_w !== 0) {
-            updateGameForApi(gameCopy)
-            sendNewGame(gameForApi)
+    //shuffle array of players for random matchup
+    const shuffle = (arr) => {
+        let currentIndex = arr.length, randomIndex;
+        //while there are elements to shuffle
+        while (currentIndex !== 0) {
+            //pick a remaining element
+            randomIndex = Math.floor(Math.random() * currentIndex);
+            currentIndex--;
+            //and swap it with the current element
+            [arr[currentIndex], arr[randomIndex]] = [arr[randomIndex], arr[currentIndex]]
         }
-        //check if all players that can be matched have been matched
-        if (playersForMatchup.length > 1) {
-            createMatchups()
+        return arr
+    }
+
+
+    const tournamentPlayers = [...activeTournamentPlayers]
+    let shuffledPlayers = shuffle(tournamentPlayers)
+    const createMatchups = () => {//function seems to be working correctly other than setting the bye player
+        //check to see if there are at least 2 players left
+        if (shuffledPlayers.length){
+            if (shuffledPlayers.length > 1) {
+                const player_w = shuffledPlayers[0]
+                const player_b = shuffledPlayers[1]
+                if (player_b && player_w) {
+                    //check to see if this matchup matches a previous game in the tournament
+                    if (pastPairings.find(p => p === [player_w.id, player_b.id] || p === [player_b.id, player_w.id])) {
+                        console.log("game already played")
+                        createMatchups()
+                    }
+                    else {
+                        const gameCopy = { ...gameForApi }
+                        gameCopy.player_w = player_w.id
+                        gameCopy.player_b = player_b.id
+                        shuffledPlayers.splice(0, 2)
+                        console.log(gameCopy)
+                        if (shuffledPlayers.length) {
+                            createMatchups()
+                        }
+                    }
+                }
+                
+            }
+            else {
+                // console.log(shuffledPlayers[0])
+                setPlayerBye(shuffledPlayers[0])
+                console.log(playerBye)
+                
+            }
         }
-        else if (playersForMatchup.length === 1) {
-            setPlayerBye(playersForMatchup[0])
+        else {
+            console.log('matchup made')
         }
     }
 

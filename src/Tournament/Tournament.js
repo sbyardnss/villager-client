@@ -8,11 +8,8 @@ export const Tournament = () => {
     const [potentialCompetitors, setPotentialCompetitors] = useState([])
     const [activeTournament, setActiveTournament] = useState({})
     const [activeTournamentPlayers, setActiveTournamentPlayers] = useState([])
-    const [unapprovedPairings, setUnapprovedPairings] = useState([])
-    const [newPairings, setNewPairings] = useState([])
-    const [playerBye, setPlayerBye] = useState({})
-    const [round, setRound] = useState(0)
-    let [shuffledPlayers, setShuffledPlayers] = useState([])
+    const [currentRound, setCurrentRound] = useState(0)
+    const [currentRoundMatchups, setCurrentRoundMatchups] = useState([])
     const [gameForApi, updateGameForApi] = useState({
         player_w: 0,
         player_b: 0,
@@ -27,7 +24,8 @@ export const Tournament = () => {
         creator: localVillagerObj.userId,
         competitors: [],
         timeSetting: 0,
-        rounds: 1
+        rounds: 1,
+        pairings: []
     })
     useEffect(
         () => {
@@ -44,24 +42,21 @@ export const Tournament = () => {
         () => {
             const playersForSelectedTournament = players.filter(p => activeTournament?.competitors.find(c => c === p.id))
             setActiveTournamentPlayers(playersForSelectedTournament)
-            setRound(activeTournament?.rounds)
         }, [activeTournament]
     )
-    // useEffect(
-    //     () => {
-    //         resetShuffledPlayers()
-    //     }, [selectedTournament, activeTournamentPlayers]
-    // )
-    // useEffect(
-    //     () => {
-    //         console.log(unapprovedPairings)
-    //     }, [unapprovedPairings]
-    // )
-    // useEffect(
-    //     () => {
-    //         console.log(newPairings)
-    //     }, [newPairings]
-    // )
+    useEffect(
+        () => {
+            if (activeTournament) {
+                setCurrentRound(activeTournament.rounds)
+            }
+        }, [activeTournament]
+    )
+    useEffect(
+        () => {
+
+        }, [currentRound]
+    )
+    console.log(activeTournament)
     //getter/setter for tournaments
     const resetTournaments = () => {
         getAllTournaments()
@@ -82,20 +77,23 @@ export const Tournament = () => {
         return tableHtml
     };
     const roundHtml = roundPopulation()
+    console.log(activeTournament?.pairings)
+    const createMatchups = () => {
 
-
+    }
     if (selectedTournament) {
         if (activeTournament && activeTournamentPlayers) {
             return <>
                 <main id="tournamentContainer">
                     {activeTournament.title}
-                    {
+
+                    {/* {
                         activeTournamentPlayers.map(tourneyPlayer => {
                             return (
                                 <li key={tourneyPlayer.id} className="tournamentPlayerListItem">{tourneyPlayer.full_name}</li>
                             )
                         })
-                    }
+                    } */}
                     <button onClick={() => {
                         if (window.confirm("create round?")) {
                             // createMatchups()
@@ -103,6 +101,10 @@ export const Tournament = () => {
                         }
                     }}>Start Next Round</button>
                     <button onClick={() => setSelectedTournament(0)}>exit tournament</button>
+                    <section id="matchupsContainer">
+
+
+                    </section>
                     <section id="tournamentTableContainer">
                         <table id="tournamentTable">
                             <thead>
@@ -210,7 +212,9 @@ export const Tournament = () => {
                         <button onClick={() => {
                             if (newTournament.competitors && newTournament.timeSetting && newTournament.title) {
                                 if (window.confirm("Everybody ready?")) {
-                                    sendNewTournament(newTournament)
+                                    const copy = { ...newTournament }
+                                    copy.pairings = RoundRobin(newTournament.competitors)
+                                    sendNewTournament(copy)
                                         .then(() => {
                                             resetTournaments()
                                         })

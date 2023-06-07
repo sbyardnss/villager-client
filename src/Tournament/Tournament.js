@@ -1,4 +1,5 @@
 import { useState, useEffect, useContext } from "react"
+import { RoundRobin } from "tournament-pairings"
 import { TournamentContext } from "./TournamentProvider"
 import "./Tournament.css"
 import { getAllGames, getAllTournaments, sendNewGame, sendNewTournament } from "../ServerManager"
@@ -81,93 +82,6 @@ export const Tournament = () => {
         return tableHtml
     };
     const roundHtml = roundPopulation()
-
-    /*
-    //shuffle array of players for random matchup
-    const shuffle = (arr) => {
-        let currentIndex = arr.length, randomIndex;
-        //while there are elements to shuffle
-        while (currentIndex !== 0) {
-            //pick a remaining element
-            randomIndex = Math.floor(Math.random() * currentIndex);
-            currentIndex--;
-            //and swap it with the current element
-            [arr[currentIndex], arr[randomIndex]] = [arr[randomIndex], arr[currentIndex]]
-        }
-        return arr
-    }
-    //reset shuffled players if matchup isn't valid
-    const resetShuffledPlayers = () => {
-        const tournamentPlayers = [...activeTournamentPlayers]
-        setShuffledPlayers(shuffle(tournamentPlayers))
-    }
-    const createMatchups = () => {
-        //check to see if all players have been assigned. if so, send pairings to api
-        if (shuffledPlayers.length === 0) {
-            setNewPairings(unapprovedPairings)
-        }
-        //check to see if one player left
-        if (shuffledPlayers.length === 1) {
-            const remainingPlayer = shuffledPlayers[0]
-            //ensure that remaining player hasn't had a bye yet. if they have reset the matches entirely and start again
-            if (pastPairings.find(p => p === [remainingPlayer.id, 0])) {
-                setUnapprovedPairings([])
-                resetShuffledPlayers().then(() => {
-                    createMatchups()
-                })
-            }
-            else {
-                //if they havent had a bye, set their pairing against a 0 and send it
-                const byePairing = [remainingPlayer.id, 0]
-                const copyOfUnapprovedPairings = [...unapprovedPairings]
-                copyOfUnapprovedPairings.push(byePairing)
-                console.log(copyOfUnapprovedPairings)
-                setUnapprovedPairings(copyOfUnapprovedPairings)
-            }
-        }
-        //check to see if 2 players left
-        if (shuffledPlayers.length === 2) {
-            const player_w = shuffledPlayers[0]
-            const player_b = shuffledPlayers[1]
-            if (player_w && player_b) {
-                //if theyve played eachother already, reset the function
-                if (pastPairings.find(p => p === [player_w.id, player_b.id] || p === [player_b.id, player_w.id])) {
-                    setUnapprovedPairings([])
-                    resetShuffledPlayers()
-                        .then(() => {
-                            createMatchups()
-                        })
-                }
-                else {
-                    //if they haven't played eachother, add that pairing to the new pairings
-                    const newPairing = [player_w.id, player_b.id]
-                    const copyOfUnapprovedPairings = [...unapprovedPairings]
-                    copyOfUnapprovedPairings.push(newPairing)
-                    setUnapprovedPairings(copyOfUnapprovedPairings)
-                }
-            }
-        }
-        //check to see if more than 2 players left
-        if (shuffledPlayers.length > 2) {
-            const player_w = shuffledPlayers[0]
-            const player_b = shuffledPlayers[1]
-            if (player_w && player_b) {
-                //check to see if this matchup matches a previous game in the tournament
-                if (pastPairings.find(p => p === [player_w.id, player_b.id] || p === [player_b.id, player_w.id])) {
-                    console.log("game already played")
-                    createMatchups()
-                }
-                else {
-                    const newPairing = [player_w.id, player_b.id]
-                    const copyOfUnapprovedPairings = [...unapprovedPairings]
-                    copyOfUnapprovedPairings.push(newPairing)
-                    setUnapprovedPairings(copyOfUnapprovedPairings)
-                    shuffledPlayers.splice(0, 2)
-                    createMatchups()
-                }
-            }
-        }
-    }*/
 
 
     if (selectedTournament) {

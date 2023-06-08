@@ -59,7 +59,11 @@ export const Tournament = () => {
             }
         }, [currentRound]
     )
-    console.log(currentRound)
+    useEffect(
+        () => {
+
+        }, []
+    )
     //getter/setter for tournaments
     const resetTournaments = () => {
         getAllTournaments()
@@ -80,13 +84,12 @@ export const Tournament = () => {
         return tableHtml.reverse()
     };
     const roundHtml = roundPopulation()
-
+    console.log(activeTournament?.pairings)
     if (selectedTournament) {
         if (activeTournament && activeTournamentPlayers) {
             return <>
                 <main id="tournamentContainer">
                     {activeTournament.title}
-
                     {/* {
                         activeTournamentPlayers.map(tourneyPlayer => {
                             return (
@@ -107,8 +110,31 @@ export const Tournament = () => {
                     }}>Start Next Round</button>
                     <button onClick={() => setSelectedTournament(0)}>exit tournament</button>
                     <section id="matchupsContainer">
-
-
+                        <div>
+                            Round {currentRound}
+                        </div>
+                        <table>
+                            <thead>
+                                <tr className="tableHeaderRow">
+                                    <th>white player</th>
+                                    <th>black player</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {
+                                    currentRoundMatchups?.map(matchup => {
+                                        const white = activeTournamentPlayers.find(player => player.id === matchup.player1)
+                                        const black = activeTournamentPlayers.find(player => player.id === matchup.player2)
+                                        return (
+                                            <tr>
+                                                <td>{white.full_name}</td>
+                                                <td>{black.full_name}</td>
+                                            </tr>
+                                        )
+                                    })
+                                }
+                            </tbody>
+                        </table>
                     </section>
                     <section id="tournamentTableContainer">
                         <table id="tournamentTable">
@@ -125,9 +151,22 @@ export const Tournament = () => {
                             <tbody>
                                 {
                                     activeTournamentPlayers.map(tourneyPlayer => {
+                                        console.log(tournamentGames)
+                                        const tourneyPlayerGames = tournamentGames.filter(tg => {
+                                            return tg.player_b.id === tourneyPlayer.id || tg.player_w.id === tourneyPlayer.id
+                                        })
                                         return (
                                             <tr key={tourneyPlayer.id}>
                                                 <td key={tourneyPlayer.id} className="tablePlayerCell">{tourneyPlayer.full_name}</td>
+                                                {
+                                                    tourneyPlayerGames.map(tpg => {
+                                                        return (
+                                                            tpg.winner.id === tourneyPlayer.id ? <td key={tpg.id} id={tpg.id + "--" + tourneyPlayer.id} className="tournamentGameResult">1</td> :
+                                                                tpg.winner === null ? <td key={tpg.id} id={tpg.id + "--" + tourneyPlayer.id} className="tournamentGameResult">.5</td> :
+                                                                    <td key={tpg.id} id={tpg.id + "--" + tourneyPlayer.id} className="tournamentGameResult">0</td>
+                                                        )
+                                                    })
+                                                }
                                             </tr>
                                         )
                                     })

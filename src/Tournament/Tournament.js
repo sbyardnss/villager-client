@@ -11,6 +11,7 @@ export const Tournament = () => {
     const [currentRound, setCurrentRound] = useState(0)
     const [currentRoundMatchups, setCurrentRoundMatchups] = useState([])
     const [scoring, setScoring] = useState(false)
+    const [editScores, setEditScores] = useState(false)
     const [outcomes, updateOutcomes] = useState([])
     const [gameForApi, updateGameForApi] = useState({
         player_w: 0,
@@ -185,6 +186,71 @@ export const Tournament = () => {
             )
         }
     }
+    const tableOrEdit = () => {
+        if (editScores) {
+            const editPairings = [...activeTournament?.pairings]
+            const filteredPairings = editPairings.filter(pairing => pairing.round <= activeTournament?.rounds)
+            return (
+                <table>
+                    <thead>
+                        <tr className="tableHeaderRow">
+                            <th></th>
+                            <th>outcomes</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {
+                            filteredPairings.map(pairing => {
+                                console.log(filteredPairings)
+                                const white = activeTournamentPlayers.find(player => player.id === pairing.player1)
+                                const black = activeTournamentPlayers.find(player => player.id === pairing.player2)
+                                const matchup = tournamentGames.find(game => game.tournament_round === pairing.round && game.player_w.id === white.id && game.player_b.id === black.id)
+                                return (
+                                    <tr key={pairing.round + matchup?.id + "edit"}>
+                                        <td className="whitePiecesMatchup"
+                                            onClick={() => {
+                                                const copy = { ...gameForApi }
+                                                copy.winner = white.id
+                                                copy.player_w = white.id
+                                                copy.player_b = black.id
+                                                copy.win_style = "checkmate"
+                                                const outcomeCopy = [...outcomes]
+                                                outcomeCopy.push(copy)
+                                                updateOutcomes(outcomeCopy)
+                                            }}>{white.full_name}</td>
+                                        <td className="drawMatchupButton"
+                                            onClick={() => {
+                                                const copy = { ...gameForApi }
+                                                copy.winner = null
+                                                copy.player_w = white.id
+                                                copy.player_b = black.id
+                                                copy.win_style = "draw"
+                                                const outcomeCopy = [...outcomes]
+                                                outcomeCopy.push(copy)
+                                                updateOutcomes(outcomeCopy)
+                                            }}>Draw</td>
+                                        <td className="blackPiecesMatchup"
+                                            onClick={() => {
+                                                const copy = { ...gameForApi }
+                                                copy.winner = black.id
+                                                copy.player_w = white.id
+                                                copy.player_b = black.id
+                                                copy.win_style = "checkmate"
+                                                const outcomeCopy = [...outcomes]
+                                                outcomeCopy.push(copy)
+                                                updateOutcomes(outcomeCopy)
+                                            }}>{black.full_name}</td>
+                                    </tr>
+                                )
+                            })
+                        }
+                    </tbody>
+                </table>
+
+            )
+        }
+    }
     if (selectedTournament) {
         if (activeTournament && activeTournamentPlayers) {
             return <>
@@ -209,6 +275,7 @@ export const Tournament = () => {
                         }
                     }}>Start Next Round</button>
                     <button onClick={() => setSelectedTournament(0)}>exit tournament</button>
+                    <button onClick={() => setEditScores(true)}>edit scores</button>
                     <button onClick={() => setScoring(true)}>score</button>
                     <button onClick={() => {
                         if (window.confirm("submit scores?")) {
@@ -235,6 +302,7 @@ export const Tournament = () => {
                                             return round
                                         })
                                     }
+                                    <th>count</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -243,24 +311,43 @@ export const Tournament = () => {
                                         const tourneyPlayerGames = tournamentGames.filter(tg => {
                                             return tg.player_b.id === tourneyPlayer.id || tg.player_w.id === tourneyPlayer.id
                                         })
+                                        let score = 0
                                         return (
                                             <tr key={tourneyPlayer.id}>
                                                 <td key={tourneyPlayer.id} className="tablePlayerCell">{tourneyPlayer.full_name}</td>
                                                 {
                                                     tourneyPlayerGames.map(tpg => {
-                                                        return (
-                                                            tpg.winner?.id === tourneyPlayer.id ? <td key={tpg.id} id={tpg.id + "--" + tourneyPlayer.id} className="tournamentGameResult">1</td> :
-                                                                tpg.winner === null ? <td key={tpg.id} id={tpg.id + "--" + tourneyPlayer.id} className="tournamentGameResult">.5</td> :
-                                                                    <td key={tpg.id} id={tpg.id + "--" + tourneyPlayer.id} className="tournamentGameResult">0</td>
-                                                        )
+                                                        if (tpg.winner?.id === tourneyPlayer.id) {
+                                                            score++
+                                                            return (
+                                                                <td key={tpg.id} value={1} id={tpg.id + "--" + tourneyPlayer.id} className="tournamentGameResult">1</td>
+                                                            )
+                                                        }
+                                                        else if (tpg.winner === null) {
+                                                            score += .5
+                                                            return (
+                                                                <td key={tpg.id} value={.5} id={tpg.id + "--" + tourneyPlayer.id} className="tournamentGameResult">1/2</td>
+                                                            )
+                                                        }
+                                                        else {
+                                                            return (
+                                                                <td key={tpg.id} value={0} id={tpg.id + "--" + tourneyPlayer.id} className="tournamentGameResult">0</td>
+                                                            )
+                                                        }
                                                     })
                                                 }
+                                                <td key={tourneyPlayer + "-- score"}>
+                                                    {score}
+                                                </td>
                                             </tr>
                                         )
                                     })
                                 }
                             </tbody>
                         </table>
+                    </section>
+                    <section>
+                        {tableOrEdit()}
                     </section>
                 </main>
             </>

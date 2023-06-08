@@ -173,6 +173,17 @@ export const updateTournament = (tournamentObj) => {
         body: JSON.stringify(tournamentObj)
     })
 }
+export const sendUpdatedGames = (outcomeArr) => {
+    const localVillagerObj = getToken()
+    return fetch(`${apiKey}/games/tournament_update`, {
+        method: "PUT",
+        headers: {
+            "Authorization": `Token ${localVillagerObj.token}`,
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(outcomeArr)
+    })
+}
 
 //DELETE FETCHES
 export const deleteCommunityPost = (postId) => {

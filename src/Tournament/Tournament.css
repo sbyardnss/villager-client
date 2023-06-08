@@ -6,18 +6,39 @@
 #newTournamentForm {
     border: 1px solid slateblue;
 }
-/* #tournamentCompetitorSelection {
-    border: 1px solid green;
-}
-#tournamentTimeSettingSelection {
-    border: 1px solid orange;
-}
-*/
 #tournamentPotentialCompetitorSelection {
     border: 1px solid blue;
 }
 #tournamentSelectedCompetitors {
     border: 1px solid brown;
+}
+
+/* matchup table */
+.whitePiecesMatchup {
+    background-color: whitesmoke;
+    color: black;
+    font-weight: 500;
+    padding: .5em;
+    border-radius: 5px 0 5px 0;
+    border: 1px solid rgb(40, 40, 40);
+    text-align: center;
+}
+.blackPiecesMatchup {
+    background-color: rgb(40, 40, 40);
+    color: whitesmoke;
+    font-weight: 500;
+    padding: .5em;
+    border-radius: 5px 0 5px 0;
+    text-align: center;
+}
+.drawMatchupButton {
+    background-color: rgb(96, 219, 250);
+    font-weight: 500;
+    padding: .5em;
+    border-radius: 5px 0 5px 0;
+    text-align: center;
+    border: 1px solid rgb(40, 40, 40);
+
 }
 
 /* tournament table */

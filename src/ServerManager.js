@@ -137,6 +137,17 @@ export const sendNewGame = (gameObj) => {
         body: JSON.stringify(gameObj)
     })
 }
+export const sendTournamentRoundOutcomes = (outcomeArr) => {
+    const localVillagerObj = getToken()
+    return fetch(`${apiKey}/games/outcomes`, {
+        method: "POST",
+        headers: {
+            "Authorization": `Token ${localVillagerObj.token}`,
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(outcomeArr)
+    })
+}
 
 //PUT FETCHES
 export const updateProfile = (userId, profileObj) => {

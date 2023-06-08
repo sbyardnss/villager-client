@@ -16,14 +16,15 @@ export const Tournament = () => {
     const [gameForApi, updateGameForApi] = useState({
         player_w: 0,
         player_b: 0,
-        w_notes: "",
-        b_notes: "",
+        // w_notes: "",
+        // b_notes: "",
         tournament: 0,
         time_setting: 0,
         win_style: "",
         accepted: true,
         tournament_round: 0,
-        winner: 0
+        winner: 0,
+        bye: false
     })
     const [newTournament, updateNewTournament] = useState({
         title: "",
@@ -98,7 +99,6 @@ export const Tournament = () => {
         return tableHtml.reverse()
     };
     const roundHtml = roundPopulation()
-    console.log(tournamentGames)
     const matchupsOrScoring = () => {
         if (scoring) {
             return (
@@ -113,8 +113,9 @@ export const Tournament = () => {
                     <tbody>
                         {
                             currentRoundMatchups?.map(matchup => {
-                                const white = activeTournamentPlayers.find(player => player.id === matchup.player1)
-                                const black = activeTournamentPlayers.find(player => player.id === matchup.player2)
+                                const white = activeTournamentPlayers?.find(player => player.id === matchup.player1)
+                                const black = activeTournamentPlayers?.find(player => player.id === matchup.player2)
+                                console.log(activeTournament.pairings)
                                 return (
                                     <tr key={matchup.round + matchup.match}>
                                         <td className="whitePiecesMatchup"
@@ -176,12 +177,23 @@ export const Tournament = () => {
                             currentRoundMatchups?.map(matchup => {
                                 const white = activeTournamentPlayers.find(player => player.id === matchup.player1)
                                 const black = activeTournamentPlayers.find(player => player.id === matchup.player2)
-                                if (white && black) {
+
+                                if (white?.id && black?.id) {
                                     return (
                                         <tr key={matchup.round + matchup.match}>
                                             <td className="whitePiecesMatchup">{white.full_name}</td>
                                             <td className="matchupTableVS">vs</td>
                                             <td className="blackPiecesMatchup">{black.full_name}</td>
+                                        </tr>
+                                    )
+                                }
+                                if (white?.id && black === undefined) {
+
+                                    return (
+                                        <tr key={matchup.round + matchup.match}>
+                                            <td className="whitePiecesMatchup">{white.full_name}</td>
+                                            <td className="matchupTableVS"></td>
+                                            <td className="blackPiecesMatchup">BYE</td>
                                         </tr>
                                     )
                                 }
@@ -276,6 +288,7 @@ export const Tournament = () => {
             )
         }
     }
+    console.log(currentRoundMatchups)
     if (selectedTournament) {
         if (activeTournament && activeTournamentPlayers) {
             return <>
@@ -308,6 +321,27 @@ export const Tournament = () => {
                     <button onClick={() => setScoring(true)}>score</button>
                     <button onClick={() => {
                         if (window.confirm("submit scores?")) {
+                            const byeGame = currentRoundMatchups.find(matchup => {
+                                return matchup?.player1 !== 0 && matchup?.player2 === 0
+                            })
+                            if (byeGame) {
+                                const byeGameForAPI = {
+                                    player_w: byeGame?.player1,
+                                    player_b: 0,
+                                    w_notes: "",
+                                    b_notes: "",
+                                    tournament: activeTournament?.id,
+                                    time_setting: activeTournament?.time_setting,
+                                    win_style: "",
+                                    accepted: true,
+                                    tournament_round: currentRound,
+                                    winner: byeGame.player1,
+                                    bye: true
+                                }
+                                const outcomeCopy = [...outcomes]
+                                outcomeCopy.push(byeGameForAPI)
+                                updateOutcomes(outcomeCopy)
+                            }
                             sendTournamentRoundOutcomes(outcomes)
                                 .then(() => {
                                     resetGames()
@@ -412,7 +446,7 @@ export const Tournament = () => {
                                             copy.splice(index, 1)
                                             setPotentialCompetitors(copy)
                                             const tournamentCopy = { ...newTournament }
-                                            tournamentCopy.competitors.push(p)
+                                            tournamentCopy.competitors.push(p.id)
                                             updateNewTournament(tournamentCopy)
                                         }}>
                                         {p.full_name}
@@ -424,6 +458,8 @@ export const Tournament = () => {
                     <div id="tournamentSelectedCompetitors">
                         {
                             newTournament.competitors.map((competitor, index) => {
+                                console.log(newTournament.competitors)
+                                const player = players.find(p => p.id === competitor)
                                 return (
                                     <li key={competitor.id}
                                         className="newTournamentPlayerListItem"
@@ -435,7 +471,7 @@ export const Tournament = () => {
                                             copy.push(competitor)
                                             setPotentialCompetitors(copy)
                                         }}>
-                                        {competitor.full_name}
+                                        {player.full_name}
                                     </li>
                                 )
                             })

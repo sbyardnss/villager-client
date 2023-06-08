@@ -123,6 +123,7 @@ export const Tournament = () => {
                                                 copy.player_w = white.id
                                                 copy.player_b = black.id
                                                 copy.win_style = "checkmate"
+                                                copy.tournament_round = currentRound
                                                 const outcomeCopy = [...outcomes]
                                                 outcomeCopy.push(copy)
                                                 updateOutcomes(outcomeCopy)
@@ -134,6 +135,7 @@ export const Tournament = () => {
                                                 copy.player_w = white.id
                                                 copy.player_b = black.id
                                                 copy.win_style = "draw"
+                                                copy.tournament_round = currentRound
                                                 const outcomeCopy = [...outcomes]
                                                 outcomeCopy.push(copy)
                                                 updateOutcomes(outcomeCopy)
@@ -145,6 +147,7 @@ export const Tournament = () => {
                                                 copy.player_w = white.id
                                                 copy.player_b = black.id
                                                 copy.win_style = "checkmate"
+                                                copy.tournament_round = currentRound
                                                 const outcomeCopy = [...outcomes]
                                                 outcomeCopy.push(copy)
                                                 updateOutcomes(outcomeCopy)
@@ -202,12 +205,11 @@ export const Tournament = () => {
                     <tbody>
                         {
                             filteredPairings.map(pairing => {
-                                console.log(filteredPairings)
                                 const white = activeTournamentPlayers.find(player => player.id === pairing.player1)
                                 const black = activeTournamentPlayers.find(player => player.id === pairing.player2)
-                                const matchup = tournamentGames.find(game => game.tournament_round === pairing.round && game.player_w.id === white.id && game.player_b.id === black.id)
+                                const matchup = tournamentGames?.find(game => game.tournament_round === pairing.round && game.player_w?.id === white.id && game.player_b?.id === black.id)
                                 return (
-                                    <tr key={pairing.round + matchup?.id + "edit"}>
+                                    <tr key={pairing?.round + pairing.player1 + "editing"}>
                                         <td className="whitePiecesMatchup"
                                             onClick={() => {
                                                 const copy = { ...gameForApi }
@@ -247,7 +249,6 @@ export const Tournament = () => {
                         }
                     </tbody>
                 </table>
-
             )
         }
     }
@@ -285,7 +286,6 @@ export const Tournament = () => {
                                 })
                         }
                     }}>submit scores</button>
-
                     <section id="matchupsContainer">
                         <div>
                             Round {currentRound}
@@ -311,9 +311,16 @@ export const Tournament = () => {
                                         const tourneyPlayerGames = tournamentGames.filter(tg => {
                                             return tg.player_b.id === tourneyPlayer.id || tg.player_w.id === tourneyPlayer.id
                                         })
+                                        const emptyCellCompensation = () => {
+                                            if (tourneyPlayerGames.length < currentRound) {
+                                                return (
+                                                    <td></td>
+                                                )
+                                            }
+                                        }
                                         let score = 0
                                         return (
-                                            <tr key={tourneyPlayer.id}>
+                                            <tr key={tourneyPlayer.id} id={tourneyPlayer.id + "--tourneyRow"}>
                                                 <td key={tourneyPlayer.id} className="tablePlayerCell">{tourneyPlayer.full_name}</td>
                                                 {
                                                     tourneyPlayerGames.map(tpg => {
@@ -336,7 +343,8 @@ export const Tournament = () => {
                                                         }
                                                     })
                                                 }
-                                                <td key={tourneyPlayer + "-- score"}>
+                                                {emptyCellCompensation()}
+                                                <td key={tourneyPlayer.id + "-- score"} id={tourneyPlayer.id + "-- score"}>
                                                     {score}
                                                 </td>
                                             </tr>

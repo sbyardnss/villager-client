@@ -341,6 +341,7 @@ export const Tournament = () => {
                             updateTournament(tournamentCopy)
                                 .then(() => {
                                     resetTournaments()
+                                    resetGames()
                                 })
                         }
                     }}>Start Next Round</button>

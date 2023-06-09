@@ -135,7 +135,7 @@ export const HomePage = () => {
                                                     Round {game.tournament_round}
                                                     <ul>
                                                         <li key={game.player_w.id}>white - {game.player_w.full_name}</li>
-                                                        <li key={game.player_b.id}>black - {game.player_b.full_name}</li>
+                                                        <li key={game.player_b?.id}>black - {game.player_b?.full_name}</li>
                                                     </ul>
                                                 </div>
                                             )

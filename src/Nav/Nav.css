@@ -723,3 +723,18 @@
         margin-left: 1em;
     }
 }
+
+#navLinks {
+    display: flex;
+    justify-content: space-evenly;
+    width: 80vw;
+    flex-wrap: wrap;
+    list-style: none;
+
+}
+#logo {
+    width: fit-content;
+}
+#logo__icon {
+    width: fit-content;
+}

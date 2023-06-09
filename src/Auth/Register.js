@@ -34,10 +34,8 @@ export const Register = (props) => {
     }
     const handleRegister = (e) => {
         e.preventDefault()
-        return fetch(`${apiKey}/players?email=${user.email}`
-            // headers: {
-            //     "Authorization": "Token 159cb7e2b243c66486fcd79ec8475ced5e1a507d"
-            // }
+        // return fetch(`${apiKey}/players?email=${user.email}`
+        return fetch(`${apiKey}/players/check_player_registered?email=${user.email}`
         )
             .then(res => res.json())
             .then(response => {

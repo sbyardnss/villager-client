@@ -64,7 +64,7 @@ export const Tournament = () => {
             copy.time_setting = activeTournament?.time_setting
             copy.tournament_round = activeTournament?.rounds
             updateGameForApi(copy)
-            
+
         }, [activeTournament]
     )
     useEffect(
@@ -74,7 +74,7 @@ export const Tournament = () => {
             }
         }, [activeTournament]
     )
-    
+
     useEffect(
         () => {
             if (activeTournament) {
@@ -95,7 +95,7 @@ export const Tournament = () => {
                 //creates bye game in the event of uneven number of players in tournament. will send bye game to api when moving to next round
                 const byePairing = currentRoundPairings?.find(pairing => pairing.player2 === null)
                 if (byePairing) {
-                    const byeCopy = {...gameForApi}
+                    const byeCopy = { ...gameForApi }
                     byeCopy.player_b = null
                     byeCopy.player_w = byePairing.player1
                     byeCopy.winner = byePairing.player1
@@ -126,62 +126,48 @@ export const Tournament = () => {
         }
         return tableHtml.reverse()
     };
+
+    //handles all forms of manually sending games to api
     const handleGameForApiUpdate = (targetId, whitePieces, blackPieces, pastGame) => {
-        console.log(targetId)
         if (scoring) {
+            const copy = { ...gameForApi }
+            copy.player_w = whitePieces.id
+            copy.player_b = blackPieces.id
+            copy.tournament = activeTournament?.id
+            copy.tournament_round = currentRound
             if (targetId === "white") {
-                const copy = { ...gameForApi }
                 copy.winner = whitePieces.id
-                copy.player_w = whitePieces.id
-                copy.player_b = blackPieces.id
                 copy.win_style = "checkmate"
-                copy.tournament = activeTournament?.id
-                copy.tournament_round = currentRound
                 updateGameForApi(copy)
             }
             else if (targetId === "draw") {
-                const copy = { ...gameForApi }
                 copy.winner = null
-                copy.player_w = whitePieces.id
-                copy.player_b = blackPieces.id
                 copy.win_style = "draw"
-                copy.tournament = activeTournament?.id
-                copy.tournament_round = currentRound
                 updateGameForApi(copy)
             }
             else {
                 const copy = { ...gameForApi }
                 copy.winner = blackPieces.id
-                copy.player_w = whitePieces.id
-                copy.player_b = blackPieces.id
                 copy.win_style = "checkmate"
-                copy.tournament = activeTournament?.id
-                copy.tournament_round = currentRound
                 updateGameForApi(copy)
             }
         }
         if (editScores) {
+            const copy = { ...pastGame }
+            copy.player_w = whitePieces.id
+            copy.player_b = blackPieces.id
             if (targetId === "whiteUpdate") {
-                const copy = { ...pastGame }
                 copy.winner = whitePieces.id
-                copy.player_w = whitePieces.id
-                copy.player_b = blackPieces.id
                 copy.win_style = "checkmate"
                 updateGameForApi(copy)
             }
             else if (targetId === "drawUpdate") {
-                const copy = { ...pastGame }
                 copy.winner = null
-                copy.player_w = whitePieces.id
-                copy.player_b = blackPieces.id
                 copy.win_style = "draw"
                 updateGameForApi(copy)
             }
             else {
-                const copy = { ...pastGame }
                 copy.winner = blackPieces.id
-                copy.player_w = whitePieces.id
-                copy.player_b = blackPieces.id
                 copy.win_style = "checkmate"
                 updateGameForApi(copy)
             }
@@ -383,7 +369,7 @@ export const Tournament = () => {
                                         const tourneyPlayerGames = tournamentGames.filter(tg => {
                                             return tg.player_b?.id === tourneyPlayer.id || tg.player_w.id === tourneyPlayer.id
                                         })
-                                    
+
                                         const emptyCellCompensation = () => {
                                             if (tourneyPlayerGames.length < currentRound) {
                                                 return (
@@ -398,7 +384,7 @@ export const Tournament = () => {
                                                 {
                                                     tourneyPlayerGames.map(tpg => {
                                                         if (tpg.bye === true) {
-                                                            score ++
+                                                            score++
                                                             return (
                                                                 <td key={tpg.id} value={1} id={tpg.id + "--" + tourneyPlayer.id} className="tournamentGameResultBye">bye</td>
                                                             )

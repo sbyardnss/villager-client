@@ -1,5 +1,4 @@
-import { useState, useEffect, createContext, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect, createContext } from "react";
 import { getAllGames, getAllPlayers, getAllTimeSettings, getAllTournaments } from "../ServerManager";
 
 export const TournamentContext = createContext()
@@ -10,7 +9,6 @@ export const TournamentProvider = (props) => {
     const [players, setPlayers] = useState([])
     const [tournaments, setTournaments] = useState([])
     const [selectedTournament, setSelectedTournament] = useState(0)
-
     const [timeSettings, setTimeSettings] = useState([])
     const [games, setGames] = useState([])
     const [tournamentGames, setTournamentGames] = useState([])
@@ -23,8 +21,6 @@ export const TournamentProvider = (props) => {
                 setTournaments(tournamentData)
                 setTimeSettings(timeSettingData)
                 setGames(gameData)
-                // const games = gameData.filter(g => g.tournament)
-                // setTournamentGames(games)
             })
         }, []
     )

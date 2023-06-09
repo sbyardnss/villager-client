@@ -16,8 +16,6 @@ export const Tournament = () => {
     const [gameForApi, updateGameForApi] = useState({
         player_w: 0,
         player_b: 0,
-        // w_notes: "",
-        // b_notes: "",
         tournament: 0,
         time_setting: 0,
         win_style: "",
@@ -33,6 +31,18 @@ export const Tournament = () => {
         timeSetting: 0,
         rounds: 1,
         pairings: []
+    })
+    const [byePlayer, setByePlayer] = useState(0)
+    const [byeGame, setByeGame] = useState({
+        player_w: 0,
+        player_b: null,
+        tournament: 0,
+        time_setting: 0,
+        win_style: "",
+        accepted: true,
+        tournament_round: 0,
+        winner: 0,
+        bye: true
     })
     useEffect(
         () => {
@@ -54,6 +64,7 @@ export const Tournament = () => {
             copy.time_setting = activeTournament?.time_setting
             copy.tournament_round = activeTournament?.rounds
             updateGameForApi(copy)
+            
         }, [activeTournament]
     )
     useEffect(
@@ -63,21 +74,38 @@ export const Tournament = () => {
             }
         }, [activeTournament]
     )
+    
     useEffect(
         () => {
             if (activeTournament) {
                 const currentRoundPairings = activeTournament.pairings?.filter(p => p.round === currentRound)
+                {
+                    //ensures that null value on matchup indicating bye player is restricted to player2 variable
+                    currentRoundPairings?.map(pairing => {
+                        if (pairing.player1 === null) {
+                            pairing.player1 = pairing.player2
+                            pairing.player2 = null
+                        }
+                    })
+                }
                 setCurrentRoundMatchups(currentRoundPairings)
                 const copy = { ...gameForApi }
-                copy.tournament_round = activeTournament?.rounds
+                copy.tournament_round = currentRound
                 updateGameForApi(copy)
+                //creates bye game in the event of uneven number of players in tournament. will send bye game to api when moving to next round
+                const byePairing = currentRoundPairings?.find(pairing => pairing.player2 === null)
+                if (byePairing) {
+                    const byeCopy = {...gameForApi}
+                    byeCopy.player_b = null
+                    byeCopy.player_w = byePairing.player1
+                    byeCopy.winner = byePairing.player1
+                    byeCopy.bye = true
+                    byeCopy.win_style = ""
+                    setByeGame(byeCopy)
+                    setByePlayer(byePairing.player1)
+                }
             }
         }, [currentRound]
-    )
-    useEffect(
-        () => {
-
-        }, []
     )
     //getter/setter for tournaments
     const resetTournaments = () => {
@@ -98,68 +126,118 @@ export const Tournament = () => {
         }
         return tableHtml.reverse()
     };
+    const handleGameForApiUpdate = (targetId, whitePieces, blackPieces, pastGame) => {
+        console.log(targetId)
+        if (scoring) {
+            if (targetId === "white") {
+                const copy = { ...gameForApi }
+                copy.winner = whitePieces.id
+                copy.player_w = whitePieces.id
+                copy.player_b = blackPieces.id
+                copy.win_style = "checkmate"
+                copy.tournament = activeTournament?.id
+                copy.tournament_round = currentRound
+                updateGameForApi(copy)
+            }
+            else if (targetId === "draw") {
+                const copy = { ...gameForApi }
+                copy.winner = null
+                copy.player_w = whitePieces.id
+                copy.player_b = blackPieces.id
+                copy.win_style = "draw"
+                copy.tournament = activeTournament?.id
+                copy.tournament_round = currentRound
+                updateGameForApi(copy)
+            }
+            else {
+                const copy = { ...gameForApi }
+                copy.winner = blackPieces.id
+                copy.player_w = whitePieces.id
+                copy.player_b = blackPieces.id
+                copy.win_style = "checkmate"
+                copy.tournament = activeTournament?.id
+                copy.tournament_round = currentRound
+                updateGameForApi(copy)
+            }
+        }
+        if (editScores) {
+            if (targetId === "whiteUpdate") {
+                const copy = { ...pastGame }
+                copy.winner = whitePieces.id
+                copy.player_w = whitePieces.id
+                copy.player_b = blackPieces.id
+                copy.win_style = "checkmate"
+                updateGameForApi(copy)
+            }
+            else if (targetId === "drawUpdate") {
+                const copy = { ...pastGame }
+                copy.winner = null
+                copy.player_w = whitePieces.id
+                copy.player_b = blackPieces.id
+                copy.win_style = "draw"
+                updateGameForApi(copy)
+            }
+            else {
+                const copy = { ...pastGame }
+                copy.winner = blackPieces.id
+                copy.player_w = whitePieces.id
+                copy.player_b = blackPieces.id
+                copy.win_style = "checkmate"
+                updateGameForApi(copy)
+            }
+        }
+    }
     const roundHtml = roundPopulation()
     const matchupsOrScoring = () => {
         if (scoring) {
             return (
-                <table>
-                    <thead>
-                        <tr className="tableHeaderRow">
-                            <th></th>
-                            <th>outcomes</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {
-                            currentRoundMatchups?.map(matchup => {
-                                const white = activeTournamentPlayers?.find(player => player.id === matchup.player1)
-                                const black = activeTournamentPlayers?.find(player => player.id === matchup.player2)
-                                console.log(activeTournament.pairings)
+                <section>
+                    {
+                        currentRoundMatchups?.map(matchup => {
+                            const white = activeTournamentPlayers?.find(player => player.id === matchup.player1)
+                            const black = activeTournamentPlayers?.find(player => player.id === matchup.player2)
+                            if (black === undefined) {
                                 return (
-                                    <tr key={matchup.round + matchup.match}>
-                                        <td className="whitePiecesMatchup"
-                                            onClick={() => {
-                                                const copy = { ...gameForApi }
-                                                copy.winner = white.id
-                                                copy.player_w = white.id
-                                                copy.player_b = black.id
-                                                copy.win_style = "checkmate"
-                                                copy.tournament_round = currentRound
-                                                const outcomeCopy = [...outcomes]
-                                                outcomeCopy.push(copy)
-                                                updateOutcomes(outcomeCopy)
-                                            }}>{white?.full_name}</td>
-                                        <td className="drawMatchupButton"
-                                            onClick={() => {
-                                                const copy = { ...gameForApi }
-                                                copy.winner = null
-                                                copy.player_w = white.id
-                                                copy.player_b = black.id
-                                                copy.win_style = "draw"
-                                                copy.tournament_round = currentRound
-                                                const outcomeCopy = [...outcomes]
-                                                outcomeCopy.push(copy)
-                                                updateOutcomes(outcomeCopy)
-                                            }}>Draw</td>
-                                        <td className="blackPiecesMatchup"
-                                            onClick={() => {
-                                                const copy = { ...gameForApi }
-                                                copy.winner = black.id
-                                                copy.player_w = white.id
-                                                copy.player_b = black.id
-                                                copy.win_style = "checkmate"
-                                                copy.tournament_round = currentRound
-                                                const outcomeCopy = [...outcomes]
-                                                outcomeCopy.push(copy)
-                                                updateOutcomes(outcomeCopy)
-                                            }}>{black?.full_name}</td>
-                                    </tr>
+                                    <div key={`${matchup.round} -- ${matchup.match} -- bye`}>
+                                        {white.full_name} has bye
+                                    </div>
                                 )
-                            })
-                        }
-                    </tbody>
-                </table>
+                            }
+                            return (
+                                <div key={`${matchup.round} -- ${matchup.match}`}>
+                                    <div
+                                        className="whitePiecesMatchup"
+                                        id="white"
+                                        onClick={(evt) => {
+                                            handleGameForApiUpdate(evt.target.id, white, black)
+                                        }}>{white?.full_name}
+                                    </div>
+                                    <div
+                                        className="drawMatchupButton"
+                                        id="draw"
+                                        onClick={(evt) => {
+                                            handleGameForApiUpdate(evt.target.id, white, black)
+                                        }}>Draw
+                                    </div>
+                                    <div
+                                        className="blackPiecesMatchup"
+                                        id="black"
+                                        onClick={(evt) => {
+                                            handleGameForApiUpdate(evt.target.id, white, black)
+                                        }}>{black?.full_name}
+                                    </div>
+                                    <button onClick={() => {
+                                        console.log(gameForApi)
+                                        sendNewGame(gameForApi)
+                                            .then(() => resetGames())
+                                    }}>
+                                        submit
+                                    </button>
+                                </div>
+                            )
+                        })
+                    }
+                </section>
             )
         }
         else {
@@ -177,7 +255,6 @@ export const Tournament = () => {
                             currentRoundMatchups?.map(matchup => {
                                 const white = activeTournamentPlayers.find(player => player.id === matchup.player1)
                                 const black = activeTournamentPlayers.find(player => player.id === matchup.player2)
-
                                 if (white?.id && black?.id) {
                                     return (
                                         <tr key={matchup.round + matchup.match}>
@@ -188,7 +265,6 @@ export const Tournament = () => {
                                     )
                                 }
                                 if (white?.id && black === undefined) {
-
                                     return (
                                         <tr key={matchup.round + matchup.match}>
                                             <td className="whitePiecesMatchup">{white.full_name}</td>
@@ -207,74 +283,36 @@ export const Tournament = () => {
     const tableOrEdit = () => {
         if (editScores) {
             const editPairings = [...activeTournament?.pairings]
-            const filteredPairings = editPairings.filter(pairing => pairing.round <= activeTournament?.rounds)
+            const filteredPairings = editPairings.filter(pairing => pairing.round < activeTournament?.rounds)
             return (
                 <section>
-
-                    <table>
-                        <thead>
-                            <tr className="tableHeaderRow">
-                                <th></th>
-                                <th>outcomes</th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {
-                                filteredPairings.map(pairing => {
-                                    console.log(activeTournament?.pairings)
-                                    const white = activeTournamentPlayers.find(player => player.id === pairing.player1)
-                                    const black = activeTournamentPlayers.find(player => player.id === pairing.player2)
-                                    const matchup = tournamentGames?.find(game => game.tournament_round === pairing.round && game.player_w?.id === white?.id && game.player_b?.id === black?.id)
-                                    console.log(matchup)
-                                    return (
-                                        <tr key={`${pairing.round} + ${pairing.player1} + editing`}>
-                                            <td>Round {pairing.round}</td>
-                                            <td className="whitePiecesMatchup"
-                                                onClick={() => {
-                                                    const copy = { ...matchup }
-                                                    copy.winner = white.id
-                                                    copy.player_w = white.id
-                                                    copy.player_b = black.id
-                                                    copy.win_style = "checkmate"
-                                                    copy.tournament_round = pairing.round
-                                                    copy.tournament = activeTournament?.id
-                                                    const outcomeCopy = [...outcomes]
-                                                    outcomeCopy.push(copy)
-                                                    updateOutcomes(outcomeCopy)
-                                                }}>{white.full_name}</td>
-                                            <td className="drawMatchupButton"
-                                                onClick={() => {
-                                                    const copy = { ...matchup }
-                                                    copy.winner = null
-                                                    copy.player_w = white.id
-                                                    copy.player_b = black.id
-                                                    copy.win_style = "draw"
-                                                    copy.tournament_round = pairing.round
-                                                    copy.tournament = activeTournament?.id
-                                                    const outcomeCopy = [...outcomes]
-                                                    outcomeCopy.push(copy)
-                                                    updateOutcomes(outcomeCopy)
-                                                }}>Draw</td>
-                                            <td className="blackPiecesMatchup"
-                                                onClick={() => {
-                                                    const copy = { ...matchup }
-                                                    copy.winner = black.id
-                                                    copy.player_w = white.id
-                                                    copy.player_b = black.id
-                                                    copy.win_style = "checkmate"
-                                                    copy.tournament_round = pairing.round
-                                                    copy.tournament = activeTournament?.id
-                                                    const outcomeCopy = [...outcomes]
-                                                    outcomeCopy.push(copy)
-                                                    updateOutcomes(outcomeCopy)
-                                                }}>{black.full_name}</td>
-                                        </tr>
-                                    )
-                                })
-                            }
-                        </tbody>
-                    </table>
+                    {
+                        tournamentGames.map(game => {
+                            const white = activeTournamentPlayers.find(player => player.id === game.player_w.id)
+                            const black = activeTournamentPlayers.find(player => player.id === game.player_b.id)
+                            // const matchup = tournamentGames?.find(game => game.tournament_round === pairing.round && game.player_w?.id === white?.id && game.player_b?.id === black?.id)
+                            return (
+                                <div key={`${game.tournament_round} + ${game.id} + editing`}>
+                                    <div>Round {game.tournament_round}</div>
+                                    <div className="whitePiecesMatchup"
+                                        id="whiteUpdate"
+                                        onClick={(evt) => {
+                                            handleGameForApiUpdate(evt.target.id, white, black, game)
+                                        }}>{white.full_name}</div>
+                                    <div className="drawMatchupButton"
+                                        id="drawUpdate"
+                                        onClick={(evt) => {
+                                            handleGameForApiUpdate(evt.target.id, white, black, game)
+                                        }}>Draw</div>
+                                    <div className="blackPiecesMatchup"
+                                        id="blackUpdate"
+                                        onClick={(evt) => {
+                                            handleGameForApiUpdate(evt.target.id, white, black, game)
+                                        }}>{black?.full_name}</div>
+                                </div>
+                            )
+                        })
+                    }
                     <button onClick={() => {
                         sendUpdatedGames(outcomes)
                             .then(() => {
@@ -288,28 +326,22 @@ export const Tournament = () => {
             )
         }
     }
-    console.log(currentRoundMatchups)
     if (selectedTournament) {
         if (activeTournament && activeTournamentPlayers) {
             return <>
                 <main id="tournamentContainer">
                     {activeTournament.title}
-                    {/* {
-                        activeTournamentPlayers.map(tourneyPlayer => {
-                            return (
-                                <li key={tourneyPlayer.id} className="tournamentPlayerListItem">{tourneyPlayer.full_name}</li>
-                            )
-                        })
-                    } */}
                     <button onClick={() => {
                         if (window.confirm("create round?")) {
+                            if (byePlayer) {
+                                sendNewGame(byeGame)
+                            }
                             const tournamentCopy = { ...activeTournament }
                             tournamentCopy.rounds++
                             updateTournament(tournamentCopy)
                                 .then(() => {
                                     resetTournaments()
                                 })
-                            // getAllGames().then(data => setGames(data))
                         }
                     }}>Start Next Round</button>
                     <button onClick={() => {
@@ -317,37 +349,14 @@ export const Tournament = () => {
                         setEditScores(false)
                         setScoring(false)
                     }}>exit tournament</button>
-                    <button onClick={() => setEditScores(true)}>edit scores</button>
-                    <button onClick={() => setScoring(true)}>score</button>
                     <button onClick={() => {
-                        if (window.confirm("submit scores?")) {
-                            const byeGame = currentRoundMatchups.find(matchup => {
-                                return matchup?.player1 !== 0 && matchup?.player2 === 0
-                            })
-                            if (byeGame) {
-                                const byeGameForAPI = {
-                                    player_w: byeGame?.player1,
-                                    player_b: 0,
-                                    w_notes: "",
-                                    b_notes: "",
-                                    tournament: activeTournament?.id,
-                                    time_setting: activeTournament?.time_setting,
-                                    win_style: "",
-                                    accepted: true,
-                                    tournament_round: currentRound,
-                                    winner: byeGame.player1,
-                                    bye: true
-                                }
-                                const outcomeCopy = [...outcomes]
-                                outcomeCopy.push(byeGameForAPI)
-                                updateOutcomes(outcomeCopy)
-                            }
-                            sendTournamentRoundOutcomes(outcomes)
-                                .then(() => {
-                                    resetGames()
-                                })
-                        }
-                    }}>submit scores</button>
+                        setEditScores(true)
+                        setScoring(false)
+                    }}>edit scores</button>
+                    <button onClick={() => {
+                        setScoring(true)
+                        setEditScores(false)
+                    }}>score</button>
                     <section id="matchupsContainer">
                         <div>
                             Round {currentRound}
@@ -371,8 +380,9 @@ export const Tournament = () => {
                                 {
                                     activeTournamentPlayers.map(tourneyPlayer => {
                                         const tourneyPlayerGames = tournamentGames.filter(tg => {
-                                            return tg.player_b.id === tourneyPlayer.id || tg.player_w.id === tourneyPlayer.id
+                                            return tg.player_b?.id === tourneyPlayer.id || tg.player_w.id === tourneyPlayer.id
                                         })
+                                    
                                         const emptyCellCompensation = () => {
                                             if (tourneyPlayerGames.length < currentRound) {
                                                 return (
@@ -386,6 +396,12 @@ export const Tournament = () => {
                                                 <td key={tourneyPlayer.id} className="tablePlayerCell">{tourneyPlayer.full_name}</td>
                                                 {
                                                     tourneyPlayerGames.map(tpg => {
+                                                        if (tpg.bye === true) {
+                                                            score ++
+                                                            return (
+                                                                <td key={tpg.id} value={1} id={tpg.id + "--" + tourneyPlayer.id} className="tournamentGameResultBye">bye</td>
+                                                            )
+                                                        }
                                                         if (tpg.winner?.id === tourneyPlayer.id) {
                                                             score++
                                                             return (

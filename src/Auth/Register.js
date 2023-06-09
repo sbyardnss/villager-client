@@ -21,16 +21,31 @@ export const Register = (props) => {
             body: JSON.stringify(user)
         })
             .then(res => res.json())
-            .then(createdUser => {
-                if (createdUser.hasOwnProperty("userId")) {
-                    localStorage.setItem("villager", JSON.stringify({
-                        userId: createdUser.userId,
-                        token: createdUser.token,
-                        valid: createdUser.valid
-                    }))
-                    navigate("/")
+            .then(res => {
+                if (res.error) {
+                    window.alert("Account with that email address already exists")
+                }
+                else {
+                    if (res.hasOwnProperty("userId")) {
+                        localStorage.setItem("villager", JSON.stringify({
+                            userId: res.userId,
+                            token: res.token,
+                            valid: res.valid
+                        }))
+                        navigate("/")
+                    }
                 }
             })
+            // .then(createdUser => {
+            //     if (createdUser.hasOwnProperty("userId")) {
+            //         localStorage.setItem("villager", JSON.stringify({
+            //             userId: createdUser.userId,
+            //             token: createdUser.token,
+            //             valid: createdUser.valid
+            //         }))
+            //         navigate("/")
+            //     }
+            // })
     }
     const handleRegister = (e) => {
         e.preventDefault()

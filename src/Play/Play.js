@@ -12,10 +12,6 @@ export const Play = () => {
     const [moveSquares, setMoveSquares] = useState({});
     const [optionSquares, setOptionSquares] = useState({});
     const [orientation, setOrientation] = useState("")
-    // const [turnForPgn, updateTurnForPgn] = useState({
-    //     white: "",
-    //     black: ""
-    // })
     const [turnForPgn, updateTurnForPgn] = useState([])
     const [pgn, updatePgn] = useState([])
     const [isLoading, setIsLoading] = useState(false)
@@ -28,8 +24,12 @@ export const Play = () => {
             console.log(turnForPgn)
         }, [turnForPgn]
     )
-
-
+    useEffect(
+        () => {
+            updateTurnForPgn([])
+        }, [pgn]
+    )
+    console.log(pgn)
     useEffect(
         () => {
             const randomOrientation = Math.floor(Math.random() * 2)
@@ -47,32 +47,16 @@ export const Play = () => {
     useEffect(
         () => {
             //AUTOMATICALLY ADD TURN NOTATION TO PGN ONCE TWO MOVES HAVE BEEN MADE
-            //for array version of turnForPgn
             if (turnForPgn.length === 2) {
                 const copyOfPgn = [...pgn]
                 copyOfPgn.push(turnForPgn)
                 updatePgn(copyOfPgn)
             }
-            //for obj version of turnForPgn
-            // if (turnForPgn.white && turnForPgn.black) {
-            //     const copyOfPgn = [...pgn]
-            //     copyOfPgn.push([turnForPgn.white, turnForPgn.black])
-            //     updatePgn(copyOfPgn)
-            //     console.log('getting here')
-            // }
         }, [turnForPgn]
     )
 
 
-    useEffect(
-        () => {
-            updateTurnForPgn([])
-            // updateTurnForPgn({
-            //     white: "",
-            //     black: ""
-            // })
-        }, [pgn]
-    )
+
     
     useEffect(
         () => {
@@ -146,21 +130,8 @@ export const Play = () => {
             
             computerTurnCopy.push(possibleMoves[randomIndex])
             console.log(computerTurnCopy)
-            // console.log('computer move')
             updateTurnForPgn(computerTurnCopy)
         }
-        // if (possibleMoves[randomIndex]) {
-        //     const computerTurnCopy = { ...turnForPgn }
-        //     console.log(turnForPgn)
-        //     if (orientation === "white") {
-        //         computerTurnCopy.black = possibleMoves[randomIndex]
-        //     }
-        //     else {
-        //         computerTurnCopy.white = possibleMoves[randomIndex]
-        //     }
-            // console.log('computer move')
-        //     updateTurnForPgn(computerTurnCopy)
-        // }
         //END CUSTOM
 
 
@@ -197,26 +168,6 @@ export const Play = () => {
             // console.log('my move')
             updateTurnForPgn(turnCopy)
         }
-
-        //for obj version of turnForPgn
-        // if (move) {
-        //     const computerTurnCopy = { ...turnForPgn }
-        //     // if (computerTurnCopy.white) {
-        //     //     computerTurnCopy.black = move.san
-        //     //     updateTurnForPgn(computerTurnCopy)
-        //     // }
-        //     // else {
-        //     //     computerTurnCopy.white = move.san
-        //     //     updateTurnForPgn(computerTurnCopy)
-        //     // }
-        //     if (orientation === "white") {
-        //         computerTurnCopy.white = move.san
-        //     }
-        //     else {
-        //         computerTurnCopy.black = move.san
-        //     }
-        //     // console.log('computer move')
-        // }
         //END CUSTOM
 
         

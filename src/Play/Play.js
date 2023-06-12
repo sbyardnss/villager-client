@@ -66,7 +66,6 @@ export const Play = () => {
 
     useEffect(
         () => {
-            console.log(pgn)
             updateTurnForPgn([])
             // updateTurnForPgn({
             //     white: "",
@@ -79,14 +78,10 @@ export const Play = () => {
         () => {
             if (orientation === "white") {
                 if (turnForPgn.length === 1) {
-
-                }
-            }
-            else {
-                if (turnForPgn.length === 0) {
                     setTimeout(makeRandomMove, 300)
                 }
             }
+            
         },[turnForPgn]
     )
     // updates board in ui 
@@ -148,7 +143,9 @@ export const Play = () => {
         //for array version of turnForPgn
         if (possibleMoves[randomIndex]) {
             const computerTurnCopy = [...turnForPgn]
+            
             computerTurnCopy.push(possibleMoves[randomIndex])
+            console.log(computerTurnCopy)
             // console.log('computer move')
             updateTurnForPgn(computerTurnCopy)
         }

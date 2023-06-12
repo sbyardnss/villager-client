@@ -15,13 +15,23 @@ export const Play = () => {
     const [turnForPgn, updateTurnForPgn] = useState([])
     const [pgn, updatePgn] = useState([])
     const [isLoading, setIsLoading] = useState(false)
-
+    const [gameForApi, updateGameForApi] = useState({
+        player_w: 0,
+        player_b: 0,
+        tournament: 0,
+        time_setting: 0,
+        win_style: "",
+        accepted: true,
+        tournament_round: 0,
+        winner: 0,
+        bye: false
+    })
 
     //pgn variable needs to look like [[h3, Nh6], [f3, b6], etc]
 
     useEffect(
         () => {
-            console.log(turnForPgn)
+            // console.log(turnForPgn)
         }, [turnForPgn]
     )
     useEffect(
@@ -29,7 +39,7 @@ export const Play = () => {
             updateTurnForPgn([])
         }, [pgn]
     )
-    console.log(pgn)
+
     useEffect(
         () => {
             const randomOrientation = Math.floor(Math.random() * 2)
@@ -229,6 +239,41 @@ export const Play = () => {
     //     return pgnArray
     // }
     // const pgnArr = grabMovesFromPGN()
+    const pgnForSplitTest = [['d4', 'e6'],
+    ['Bf4', 'Qg5'],
+    ['Bxg5', 'a6'],
+    ['e4', 'c5'],
+    ['dxc5', 'g6'],
+    ['Bf6', 'd6'],
+    ['Bxh8', 'h6'],
+    ['cxd6', 'f6'],
+    ['Bxf6', 'Bd7'],
+    ['Be7', 'b6'],
+    ['Bxf8', 'Nf6'],
+    ['Be7', 'Nxe4'],
+    ['Qf3', 'Nf6'],
+    ['Qxf6', 'b5'],
+    ['Qf8#']]
+    // const joined = pgnForSplitTest.join()
+    const pgnStringBuilder = (pgnArr, index) => {
+        // const outputPgnString = ""
+        // for (const arr in pgnArr) {
+        //     const joined = arr.join()
+        //     const numberedNotation = `${index + 1} ${joined} `
+        //     outputPgnString += numberedNotation
+        // }
+        const outputPgnString = pgnArr.map((notation, index) => {
+            if (notation.length === 2) {
+                return `${index + 1}. ${notation[0]} ${notation[1]}`
+            }
+            else {
+                return `${index + 1}. ${notation[0]}`
+            }
+        }).join(" ")
+        return outputPgnString
+    }
+    console.log(pgnStringBuilder(pgnForSplitTest))
+    game.load_pgn(pgnStringBuilder(pgnForSplitTest))
     return (
         <main id="playContainer">
             <div >
@@ -271,6 +316,17 @@ export const Play = () => {
                     }}
                 >
                     undo
+                </button>
+                <button
+                    onClick={() => {
+                        safeGameMutate((game) => {
+                            game.reset();
+                        });
+                        setMoveSquares({});
+                        setRightClickedSquares({});
+                    }}
+                >
+                    submit game
                 </button>
             </div>
         </main>

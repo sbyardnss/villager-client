@@ -1,3 +1,7 @@
 #playContainer {
-    margin-top: 80px;
+    margin-top: 100px;
+    max-width: 90%;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
 }

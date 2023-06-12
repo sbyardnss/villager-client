@@ -12,6 +12,23 @@ export const Play = () => {
     const [moveSquares, setMoveSquares] = useState({});
     const [optionSquares, setOptionSquares] = useState({});
     const [orientation, setOrientation] = useState("")
+    // const [turnForPgn, updateTurnForPgn] = useState({
+    //     white: "",
+    //     black: ""
+    // })
+    const [turnForPgn, updateTurnForPgn] = useState([])
+    const [pgn, updatePgn] = useState([])
+    const [isLoading, setIsLoading] = useState(false)
+
+
+    //pgn variable needs to look like [[h3, Nh6], [f3, b6], etc]
+
+    useEffect(
+        () => {
+            console.log(turnForPgn)
+        }, [turnForPgn]
+    )
+
 
     useEffect(
         () => {
@@ -25,9 +42,54 @@ export const Play = () => {
             }
         }, []
     )
-    //.pgn() give game history
-    // console.log(game.pgn())
 
+
+    useEffect(
+        () => {
+            //AUTOMATICALLY ADD TURN NOTATION TO PGN ONCE TWO MOVES HAVE BEEN MADE
+            //for array version of turnForPgn
+            if (turnForPgn.length === 2) {
+                const copyOfPgn = [...pgn]
+                copyOfPgn.push(turnForPgn)
+                updatePgn(copyOfPgn)
+            }
+            //for obj version of turnForPgn
+            // if (turnForPgn.white && turnForPgn.black) {
+            //     const copyOfPgn = [...pgn]
+            //     copyOfPgn.push([turnForPgn.white, turnForPgn.black])
+            //     updatePgn(copyOfPgn)
+            //     console.log('getting here')
+            // }
+        }, [turnForPgn]
+    )
+
+
+    useEffect(
+        () => {
+            console.log(pgn)
+            updateTurnForPgn([])
+            // updateTurnForPgn({
+            //     white: "",
+            //     black: ""
+            // })
+        }, [pgn]
+    )
+    
+    useEffect(
+        () => {
+            if (orientation === "white") {
+                if (turnForPgn.length === 1) {
+
+                }
+            }
+            else {
+                if (turnForPgn.length === 0) {
+                    setTimeout(makeRandomMove, 300)
+                }
+            }
+        },[turnForPgn]
+    )
+    // updates board in ui 
     function safeGameMutate(modify) {
         setGame((g) => {
             const update = { ...g };
@@ -35,7 +97,7 @@ export const Play = () => {
             return update;
         });
     }
-
+    //adds visualization of available moves for selected piece
     function getMoveOptions(square) {
         const moves = game.moves({
             square,
@@ -44,7 +106,6 @@ export const Play = () => {
         if (moves.length === 0) {
             return false;
         }
-
         const newSquares = {};
         moves.map((move) => {
             newSquares[move.to] = {
@@ -62,10 +123,9 @@ export const Play = () => {
         setOptionSquares(newSquares);
         return true;
     }
-
+    //function for automated move
     function makeRandomMove() {
         const possibleMoves = game.moves();
-
         // exit if the game is over
         if (game.game_over() || game.in_draw() || possibleMoves.length === 0) {
             // game.game_over() ? console.log("won by checkmate") : game.in_draw() ? console.log("game is a draw") : possibleMoves.length === 0 ? console.log("no moves available") : null
@@ -81,25 +141,47 @@ export const Play = () => {
             return;
         }
         const randomIndex = Math.floor(Math.random() * possibleMoves.length);
+
+
+        //CUSTOM
+        //add move to turn array to load into pgn
+        //for array version of turnForPgn
+        if (possibleMoves[randomIndex]) {
+            const computerTurnCopy = [...turnForPgn]
+            computerTurnCopy.push(possibleMoves[randomIndex])
+            // console.log('computer move')
+            updateTurnForPgn(computerTurnCopy)
+        }
+        // if (possibleMoves[randomIndex]) {
+        //     const computerTurnCopy = { ...turnForPgn }
+        //     console.log(turnForPgn)
+        //     if (orientation === "white") {
+        //         computerTurnCopy.black = possibleMoves[randomIndex]
+        //     }
+        //     else {
+        //         computerTurnCopy.white = possibleMoves[randomIndex]
+        //     }
+            // console.log('computer move')
+        //     updateTurnForPgn(computerTurnCopy)
+        // }
+        //END CUSTOM
+
+
         safeGameMutate((game) => {
             game.move(possibleMoves[randomIndex]);
         });
     }
-
     function onSquareClick(square) {
         setRightClickedSquares({});
-
         function resetFirstMove(square) {
             const hasOptions = getMoveOptions(square);
             if (hasOptions) setMoveFrom(square);
         }
-
         // from square
         if (!moveFrom) {
             resetFirstMove(square);
             return;
         }
-
         // attempt to make move
         const gameCopy = { ...game };
         const move = gameCopy.move({
@@ -107,19 +189,50 @@ export const Play = () => {
             to: square,
             promotion: "q", // always promote to a queen for example simplicity
         });
-        setGame(gameCopy);
 
+
+        //CUSTOM
+        //add move to turn array to load into pgn
+        //for array version of turnForPgn
+        if (move) {
+            const turnCopy = [...turnForPgn]
+            turnCopy.push(move.san)
+            // console.log('my move')
+            updateTurnForPgn(turnCopy)
+        }
+
+        //for obj version of turnForPgn
+        // if (move) {
+        //     const computerTurnCopy = { ...turnForPgn }
+        //     // if (computerTurnCopy.white) {
+        //     //     computerTurnCopy.black = move.san
+        //     //     updateTurnForPgn(computerTurnCopy)
+        //     // }
+        //     // else {
+        //     //     computerTurnCopy.white = move.san
+        //     //     updateTurnForPgn(computerTurnCopy)
+        //     // }
+        //     if (orientation === "white") {
+        //         computerTurnCopy.white = move.san
+        //     }
+        //     else {
+        //         computerTurnCopy.black = move.san
+        //     }
+        //     // console.log('computer move')
+        // }
+        //END CUSTOM
+
+        
+        setGame(gameCopy);
         // if invalid, setMoveFrom and getMoveOptions
         if (move === null) {
             resetFirstMove(square);
             return;
         }
-
-        setTimeout(makeRandomMove, 300);
+        // setTimeout(makeRandomMove, 300);
         setMoveFrom("");
         setOptionSquares({});
     }
-
     function onSquareRightClick(square) {
         const colour = "rgba(0, 0, 255, 0.4)";
         setRightClickedSquares({
@@ -131,7 +244,26 @@ export const Play = () => {
                     : { backgroundColor: colour },
         });
     }
-
+    // const testPgn = game.pgn()
+    // const split = testPgn.split(" ")
+    // console.log(split)
+    // const pgnArray = []
+    
+    // // console.log(split)
+    // //CURRENTLY CAUSING MY APP TO CRASH
+    // const grabMovesFromPGN = () => {
+    //     //.pgn() give game history
+    //     const pgn = game.pgn()
+    //     const splitBySpacesInitial = pgn?.split(" ")
+    //     // console.log(splitBySpacesInitial)
+    //     const pgnArray = []
+    //     for (let i = 0; i <= splitBySpacesInitial.length; i + 3) {
+    //         const joinedMoveTurn = [splitBySpacesInitial[i], splitBySpacesInitial[i + 1], splitBySpacesInitial[i + 2]]
+    //         pgnArray.push(joinedMoveTurn)
+    //     }
+    //     return pgnArray
+    // }
+    // const pgnArr = grabMovesFromPGN()
     return (
         <main id="playContainer">
             <div >

@@ -36,33 +36,9 @@ export const Register = (props) => {
                     }
                 }
             })
-            // .then(createdUser => {
-            //     if (createdUser.hasOwnProperty("userId")) {
-            //         localStorage.setItem("villager", JSON.stringify({
-            //             userId: createdUser.userId,
-            //             token: createdUser.token,
-            //             valid: createdUser.valid
-            //         }))
-            //         navigate("/")
-            //     }
-            // })
     }
     const handleRegister = (e) => {
         e.preventDefault()
-        // return fetch(`${apiKey}/players?email=${user.email}`
-        // // return fetch(`${apiKey}/players/check_player_registered?email=${user.email}`
-        // )
-        //     .then(res => res.json())
-        //     .then(response => {
-        //         if (response.length > 0) {
-        //             // Duplicate email. No good.
-        //             window.alert("Account with that email address already exists")
-        //         }
-        //         else {
-        //             // Good email, create user.
-        //             registerNewUser()
-        //         }
-        //     })
         registerNewUser()
     }
     const updateUser = (evt) => {

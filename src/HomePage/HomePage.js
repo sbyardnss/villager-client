@@ -120,7 +120,7 @@ export const HomePage = () => {
             <article key="openChallenges">
                 <h2>open challenges</h2>
             </article>
-            <article key="activeTournaments">
+            {/* <article key="activeTournaments">
                 <h2>active tournaments</h2>
                 <section id="activeTournaments">
                     {
@@ -146,7 +146,7 @@ export const HomePage = () => {
                         })
                     }
                 </section>
-            </article>
+            </article> */}
         </main>
     </>
 }

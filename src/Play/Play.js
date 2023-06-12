@@ -52,12 +52,20 @@ export const Play = () => {
                 copyOfPgn.push(turnForPgn)
                 updatePgn(copyOfPgn)
             }
+            // else {
+            //     if (game.game_over()) {
+            //         const copyOfPgn = [...pgn]
+            //         copyOfPgn.push(turnForPgn)
+            //         updatePgn(copyOfPgn)
+            //     }
+            // }
+
         }, [turnForPgn]
     )
 
 
 
-    
+
     useEffect(
         () => {
             if (orientation === "white") {
@@ -65,8 +73,12 @@ export const Play = () => {
                     setTimeout(makeRandomMove, 300)
                 }
             }
-            
-        },[turnForPgn]
+            if (orientation === "black") {
+                if (turnForPgn.length === 0) {
+                    setTimeout(makeRandomMove, 300)
+                }
+            }
+        }, [turnForPgn]
     )
     // updates board in ui 
     function safeGameMutate(modify) {
@@ -109,6 +121,11 @@ export const Play = () => {
         if (game.game_over() || game.in_draw() || possibleMoves.length === 0) {
             // game.game_over() ? console.log("won by checkmate") : game.in_draw() ? console.log("game is a draw") : possibleMoves.length === 0 ? console.log("no moves available") : null
             if (game.game_over()) {
+                if (orientation === "white") {
+                    const copyOfPgn = [...pgn]
+                    copyOfPgn.push(turnForPgn)
+                    updatePgn(copyOfPgn)
+                }
                 console.log("won by checkmate")
             }
             if (game.in_draw()) {
@@ -127,7 +144,7 @@ export const Play = () => {
         //for array version of turnForPgn
         if (possibleMoves[randomIndex]) {
             const computerTurnCopy = [...turnForPgn]
-            
+
             computerTurnCopy.push(possibleMoves[randomIndex])
             console.log(computerTurnCopy)
             updateTurnForPgn(computerTurnCopy)
@@ -170,7 +187,7 @@ export const Play = () => {
         }
         //END CUSTOM
 
-        
+
         setGame(gameCopy);
         // if invalid, setMoveFrom and getMoveOptions
         if (move === null) {
@@ -196,7 +213,7 @@ export const Play = () => {
     // const split = testPgn.split(" ")
     // console.log(split)
     // const pgnArray = []
-    
+
     // // console.log(split)
     // //CURRENTLY CAUSING MY APP TO CRASH
     // const grabMovesFromPGN = () => {

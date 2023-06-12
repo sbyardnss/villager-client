@@ -42,10 +42,12 @@ export const Play = () => {
             // console.log(turnForPgn)
         }, [turnForPgn]
     )
+
+    // set pgn string to state with pgn variable
     useEffect(
         () => {
-            const strPgn = pgnStringBuilder(pgn)
-            updatePgnStr(strPgn)
+            // const strPgn = pgnStringBuilder(pgn)
+            // updatePgnStr(strPgn)
             updateTurnForPgn([])
         }, [pgn]
     )
@@ -76,27 +78,27 @@ export const Play = () => {
     )
 
 
+    //AUTOMATICALLY ADD TURN NOTATION TO PGN ONCE TWO MOVES HAVE BEEN MADE
     useEffect(
         () => {
-            //AUTOMATICALLY ADD TURN NOTATION TO PGN ONCE TWO MOVES HAVE BEEN MADE
             if (turnForPgn.length === 2) {
                 const copyOfPgn = [...pgn]
                 copyOfPgn.push(turnForPgn)
                 updatePgn(copyOfPgn)
             }
-            // else {
-            //     if (game.game_over()) {
-            //         const copyOfPgn = [...pgn]
-            //         copyOfPgn.push(turnForPgn)
-            //         updatePgn(copyOfPgn)
-            //     }
-            // }
-        }, [turnForPgn]
+            if (game.in_checkmate()) {
+                if (turnForPgn.length === 1) {
+                    const copyOfPgn = [...pgn]
+                    copyOfPgn.push(turnForPgn)
+                    updatePgn(copyOfPgn)
+                }
+            }
+        }, [turnForPgn, game]
     )
 
 
 
-
+    console.log(game)
     useEffect(
         () => {
             if (orientation === "white") {
@@ -131,7 +133,6 @@ export const Play = () => {
             }
         }, [game]
     )
-    console.log(gameForApi)
     // updates board in ui 
     const safeGameMutate = (modify) => {
         setGame((g) => {
@@ -173,12 +174,13 @@ export const Play = () => {
         // exit if the game is over
         if (game.game_over() || game.in_draw() || possibleMoves.length === 0) {
             if (game.game_over()) {
-                if (orientation === "white") {
-                    const copyOfPgn = [...pgn]
-                    copyOfPgn.push(turnForPgn)
-                    updatePgn(copyOfPgn)
-                }
-                console.log("won by checkmate")
+                // if (orientation === "white") {
+                //     const copyOfPgn = [...pgn]
+                //     copyOfPgn.push(turnForPgn)
+                //     updatePgn(copyOfPgn)
+                // }
+                updatePgn(game.pgn())
+                console.log(gameForApi)
             }
             if (game.in_draw()) {
                 console.log("draw")
@@ -206,7 +208,7 @@ export const Play = () => {
         });
     }
     const onSquareClick = (square) => {
-        setRightClickedSquares({});
+        // setRightClickedSquares({});
         function resetFirstMove(square) {
             const hasOptions = getMoveOptions(square);
             if (hasOptions) setMoveFrom(square);
@@ -223,8 +225,6 @@ export const Play = () => {
             to: square,
             promotion: "q", // always promote to a queen for example simplicity
         });
-
-
         //CUSTOM
         //add move to turn array to load into pgn
         //for array version of turnForPgn
@@ -235,8 +235,6 @@ export const Play = () => {
             updateTurnForPgn(turnCopy)
         }
         //END CUSTOM
-
-
         setGame(gameCopy);
         // if invalid, setMoveFrom and getMoveOptions
         if (move === null) {
@@ -247,17 +245,19 @@ export const Play = () => {
         setMoveFrom("");
         setOptionSquares({});
     }
-    const onSquareRightClick = (square) => {
-        const colour = "rgba(0, 0, 255, 0.4)";
-        setRightClickedSquares({
-            ...rightClickedSquares,
-            [square]:
-                rightClickedSquares[square] &&
-                    rightClickedSquares[square].backgroundColor === colour
-                    ? undefined
-                    : { backgroundColor: colour },
-        });
-    }
+
+
+    // const onSquareRightClick = (square) => {
+    //     const colour = "rgba(0, 0, 255, 0.4)";
+    //     setRightClickedSquares({
+    //         ...rightClickedSquares,
+    //         [square]:
+    //             rightClickedSquares[square] &&
+    //                 rightClickedSquares[square].backgroundColor === colour
+    //                 ? undefined
+    //                 : { backgroundColor: colour },
+    //     });
+    // }
     // const testPgn = game.pgn()
     // const split = testPgn.split(" ")
     // console.log(split)
@@ -308,9 +308,7 @@ export const Play = () => {
         }).join(" ")
         return outputPgnString
     }
-    // console.log(pgnStringBuilder(pgnForSplitTest))
-    // game.load_pgn(pgnStringBuilder(pgnForSplitTest))
-    // console.log(pgn)
+
     return (
         <main id="playContainer">
             <div >
@@ -321,7 +319,7 @@ export const Play = () => {
                     boardOrientation={orientation}
                     position={game.fen()}
                     onSquareClick={onSquareClick}
-                    onSquareRightClick={onSquareRightClick}
+                    // onSquareRightClick={onSquareRightClick}
                     customBoardStyle={{
                         borderRadius: "4px",
                         boxShadow: "0 2px 10px rgba(0, 0, 0, 0.5)",
@@ -338,7 +336,7 @@ export const Play = () => {
                             game.reset();
                         });
                         setMoveSquares({});
-                        setRightClickedSquares({});
+                        // setRightClickedSquares({});
                     }}
                 >
                     reset
@@ -349,14 +347,16 @@ export const Play = () => {
                             game.undo();
                         });
                         setMoveSquares({});
-                        setRightClickedSquares({});
+                        // setRightClickedSquares({});
                     }}
                 >
                     undo
                 </button>
                 <button
                     onClick={() => {
-                        sendNewGame(gameForApi)
+                        const copy = {...gameForApi}
+                        copy.pgn = game.pgn()
+                        sendNewGame(copy)
                     }}
                 >
                     submit game

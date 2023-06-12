@@ -2,7 +2,7 @@ import { useState, useEffect, useContext } from "react"
 import { RoundRobin } from "tournament-pairings"
 import { TournamentContext } from "./TournamentProvider"
 import "./Tournament.css"
-import { getAllGames, getAllTournaments, sendNewGame, sendNewTournament, sendTournamentRoundOutcomes, sendUpdatedGames, updateTournament } from "../ServerManager"
+import { alterGame, getAllGames, getAllTournaments, sendNewGame, sendNewTournament, sendTournamentRoundOutcomes, sendUpdatedGames, updateTournament } from "../ServerManager"
 export const Tournament = () => {
     const { localVillagerObj, tournamentGames, tournaments, setTournaments, players, timeSettings, setGames, selectedTournament, setSelectedTournament, pastPairings } = useContext(TournamentContext)
     const [potentialCompetitors, setPotentialCompetitors] = useState([])
@@ -137,6 +137,7 @@ export const Tournament = () => {
             copy.tournament_round = currentRound
             if (targetId === "white") {
                 copy.winner = whitePieces.id
+
                 copy.win_style = "checkmate"
                 updateGameForApi(copy)
             }
@@ -146,7 +147,7 @@ export const Tournament = () => {
                 updateGameForApi(copy)
             }
             else {
-                const copy = { ...gameForApi }
+                // const copy = { ...gameForApi }
                 copy.winner = blackPieces.id
                 copy.win_style = "checkmate"
                 updateGameForApi(copy)
@@ -213,7 +214,6 @@ export const Tournament = () => {
                                         }}>{black?.full_name}
                                     </div>
                                     <button onClick={() => {
-                                        console.log(gameForApi)
                                         sendNewGame(gameForApi)
                                             .then(() => resetGames())
                                     }}>
@@ -275,7 +275,7 @@ export const Tournament = () => {
                     {
                         tournamentGames.map(game => {
                             const white = activeTournamentPlayers.find(player => player.id === game.player_w.id)
-                            const black = activeTournamentPlayers.find(player => player.id === game.player_b.id)
+                            const black = activeTournamentPlayers.find(player => player.id === game.player_b?.id)
                             // const matchup = tournamentGames?.find(game => game.tournament_round === pairing.round && game.player_w?.id === white?.id && game.player_b?.id === black?.id)
                             return (
                                 <div key={`${game.tournament_round} + ${game.id} + editing`}>
@@ -295,6 +295,12 @@ export const Tournament = () => {
                                         onClick={(evt) => {
                                             handleGameForApiUpdate(evt.target.id, white, black, game)
                                         }}>{black?.full_name}</div>
+                                    <button onClick={() => {
+                                        alterGame(gameForApi)
+                                            .then(() => resetGames())
+                                    }}>
+                                        submit
+                                    </button>
                                 </div>
                             )
                         })
@@ -302,7 +308,8 @@ export const Tournament = () => {
                     <button onClick={() => {
                         sendUpdatedGames(outcomes)
                             .then(() => {
-                                updateOutcomes([])
+                                // updateOutcomes([])
+                                // alterGame()
                                 resetGames()
                             })
                     }}>

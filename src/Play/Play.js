@@ -4,8 +4,13 @@ import { React, useContext, useState, useEffect } from "react"
 import { Chessboard } from "react-chessboard"
 import Chess from "chess.js"
 import "./Play.css"
+import { TournamentContext } from "../Tournament/TournamentProvider"
+import { sendNewGame } from "../ServerManager"
 
 export const Play = () => {
+    const localVillager = localStorage.getItem("villager")
+    const localVillagerObj = JSON.parse(localVillager)
+    // const { localVillagerObj } = useContext(TournamentContext)
     const [game, setGame] = useState(new Chess());
     const [moveFrom, setMoveFrom] = useState("");
     const [rightClickedSquares, setRightClickedSquares] = useState({});
@@ -14,17 +19,20 @@ export const Play = () => {
     const [orientation, setOrientation] = useState("")
     const [turnForPgn, updateTurnForPgn] = useState([])
     const [pgn, updatePgn] = useState([])
+    const [pgnStr, updatePgnStr] = useState("")
     const [isLoading, setIsLoading] = useState(false)
     const [gameForApi, updateGameForApi] = useState({
         player_w: 0,
         player_b: 0,
-        tournament: 0,
-        time_setting: 0,
+        // tournament: 0,
+        // time_setting: 0,
         win_style: "",
         accepted: true,
-        tournament_round: 0,
+        // tournament_round: null,
         winner: 0,
-        bye: false
+        // bye: false,
+        computer_opponent: true,
+        pgn: ""
     })
 
     //pgn variable needs to look like [[h3, Nh6], [f3, b6], etc]
@@ -36,18 +44,32 @@ export const Play = () => {
     )
     useEffect(
         () => {
+            const strPgn = pgnStringBuilder(pgn)
+            updatePgnStr(strPgn)
             updateTurnForPgn([])
         }, [pgn]
     )
 
+    // useEffect for setting up initial gameForAPI 
+    // properties for game against computer opponent
     useEffect(
         () => {
             const randomOrientation = Math.floor(Math.random() * 2)
             if (randomOrientation === 1) {
                 setOrientation("white")
+                const copy = { ...gameForApi }
+                copy.player_w = localVillagerObj.userId
+                copy.player_b = null
+                copy.computer_opponent = true
+                updateGameForApi(copy)
             }
             else {
                 setOrientation("black")
+                const copy = { ...gameForApi }
+                copy.player_b = localVillagerObj.userId
+                copy.player_w = null
+                copy.computer_opponent = true
+                updateGameForApi(copy)
                 makeRandomMove()
             }
         }, []
@@ -69,7 +91,6 @@ export const Play = () => {
             //         updatePgn(copyOfPgn)
             //     }
             // }
-
         }, [turnForPgn]
     )
 
@@ -90,8 +111,29 @@ export const Play = () => {
             }
         }, [turnForPgn]
     )
+    // useEffect for updating gameForAPI at end of game 
+    // against computer opponent
+    useEffect(
+        () => {
+            if (game.game_over()) {
+                const copy = { ...gameForApi }
+                copy.pgn = pgnStr
+                if (game.turn() === "b") {
+                    copy.winner = localVillagerObj.userId
+                }
+                if (game.in_checkmate()) {
+                    copy.win_style = "checkmate"
+                }
+                else {
+                    copy.win_style = "draw"
+                }
+                updateGameForApi(copy)
+            }
+        }, [game]
+    )
+    console.log(gameForApi)
     // updates board in ui 
-    function safeGameMutate(modify) {
+    const safeGameMutate = (modify) => {
         setGame((g) => {
             const update = { ...g };
             modify(update);
@@ -99,7 +141,7 @@ export const Play = () => {
         });
     }
     //adds visualization of available moves for selected piece
-    function getMoveOptions(square) {
+    const getMoveOptions = (square) => {
         const moves = game.moves({
             square,
             verbose: true,
@@ -124,12 +166,12 @@ export const Play = () => {
         setOptionSquares(newSquares);
         return true;
     }
+    console.log(gameForApi)
     //function for automated move
-    function makeRandomMove() {
+    const makeRandomMove = () => {
         const possibleMoves = game.moves();
         // exit if the game is over
         if (game.game_over() || game.in_draw() || possibleMoves.length === 0) {
-            // game.game_over() ? console.log("won by checkmate") : game.in_draw() ? console.log("game is a draw") : possibleMoves.length === 0 ? console.log("no moves available") : null
             if (game.game_over()) {
                 if (orientation === "white") {
                     const copyOfPgn = [...pgn]
@@ -148,15 +190,12 @@ export const Play = () => {
         }
         const randomIndex = Math.floor(Math.random() * possibleMoves.length);
 
-
         //CUSTOM
         //add move to turn array to load into pgn
         //for array version of turnForPgn
         if (possibleMoves[randomIndex]) {
             const computerTurnCopy = [...turnForPgn]
-
             computerTurnCopy.push(possibleMoves[randomIndex])
-            console.log(computerTurnCopy)
             updateTurnForPgn(computerTurnCopy)
         }
         //END CUSTOM
@@ -166,7 +205,7 @@ export const Play = () => {
             game.move(possibleMoves[randomIndex]);
         });
     }
-    function onSquareClick(square) {
+    const onSquareClick = (square) => {
         setRightClickedSquares({});
         function resetFirstMove(square) {
             const hasOptions = getMoveOptions(square);
@@ -208,7 +247,7 @@ export const Play = () => {
         setMoveFrom("");
         setOptionSquares({});
     }
-    function onSquareRightClick(square) {
+    const onSquareRightClick = (square) => {
         const colour = "rgba(0, 0, 255, 0.4)";
         setRightClickedSquares({
             ...rightClickedSquares,
@@ -257,9 +296,6 @@ export const Play = () => {
     // ['Qf3', 'Nf6'],
     // ['Qxf6', 'b5'],
     // ['Qf8#']]
-    // console.log(pgnStringBuilder(pgnForSplitTest))
-    // game.load_pgn(pgnStringBuilder(pgnForSplitTest))
-
     //turns pgn array into string for submitted game
     const pgnStringBuilder = (pgnArr, index) => {
         const outputPgnString = pgnArr.map((notation, index) => {
@@ -272,6 +308,9 @@ export const Play = () => {
         }).join(" ")
         return outputPgnString
     }
+    // console.log(pgnStringBuilder(pgnForSplitTest))
+    // game.load_pgn(pgnStringBuilder(pgnForSplitTest))
+    // console.log(pgn)
     return (
         <main id="playContainer">
             <div >
@@ -317,11 +356,7 @@ export const Play = () => {
                 </button>
                 <button
                     onClick={() => {
-                        safeGameMutate((game) => {
-                            game.reset();
-                        });
-                        setMoveSquares({});
-                        setRightClickedSquares({});
+                        sendNewGame(gameForApi)
                     }}
                 >
                     submit game

@@ -48,7 +48,7 @@ export const Play = () => {
         () => {
             // const strPgn = pgnStringBuilder(pgn)
             // updatePgnStr(strPgn)
-            updateTurnForPgn([])
+            // updateTurnForPgn([])
         }, [pgn]
     )
 
@@ -98,7 +98,6 @@ export const Play = () => {
 
 
 
-    console.log(game)
     useEffect(
         () => {
             if (orientation === "white") {

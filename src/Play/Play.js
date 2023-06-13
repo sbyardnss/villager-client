@@ -5,7 +5,7 @@ import { Chessboard } from "react-chessboard"
 import Chess from "chess.js"
 import "./Play.css"
 import { TournamentContext } from "../Tournament/TournamentProvider"
-import { sendNewGame } from "../ServerManager"
+import { getAIMove, sendNewGame } from "../ServerManager"
 
 export const Play = () => {
     const localVillager = localStorage.getItem("villager")
@@ -16,7 +16,7 @@ export const Play = () => {
     const [rightClickedSquares, setRightClickedSquares] = useState({});
     const [moveSquares, setMoveSquares] = useState({});
     const [optionSquares, setOptionSquares] = useState({});
-    const [orientation, setOrientation] = useState("")
+    const [orientation, setOrientation] = useState("white")
     const [turnForPgn, updateTurnForPgn] = useState([])
     const [pgn, updatePgn] = useState([])
     const [pgnStr, updatePgnStr] = useState("")
@@ -24,31 +24,37 @@ export const Play = () => {
     const [gameForApi, updateGameForApi] = useState({
         player_w: 0,
         player_b: 0,
-        // tournament: 0,
-        // time_setting: 0,
         win_style: "",
         accepted: true,
-        // tournament_round: null,
         winner: 0,
-        // bye: false,
         computer_opponent: true,
         pgn: ""
     })
-
+    const [aiMove, setAiMove] = useState("")
+    const [objForAi, updateObjForAi] = useState({
+        fen: game.fen(),
+        pgn: game.pgn(),
+        color: "",
+        possibleMoves: game.moves()
+    })
     //pgn variable needs to look like [[h3, Nh6], [f3, b6], etc]
-
     useEffect(
         () => {
-            // console.log(turnForPgn)
-        }, [turnForPgn]
+            
+        }, []
     )
-
+    useEffect(
+        () => {
+            console.log(pgnStr)
+        }, [pgnStr]
+    )
+    // game.load_pgn("1. d4 h5 2. Bf4 a6 3. e4 d5 4. exd5 ...Qxd5 5. Bc4")
     // set pgn string to state with pgn variable
     useEffect(
         () => {
-            // const strPgn = pgnStringBuilder(pgn)
-            // updatePgnStr(strPgn)
-            // updateTurnForPgn([])
+            const strPgn = pgnStringBuilder(pgn)
+            updatePgnStr(strPgn)
+            updateTurnForPgn([])
         }, [pgn]
     )
 
@@ -64,6 +70,9 @@ export const Play = () => {
                 copy.player_b = null
                 copy.computer_opponent = true
                 updateGameForApi(copy)
+                const aiObjCopy = {...objForAi}
+                aiObjCopy.color = "black"
+                updateObjForAi(aiObjCopy)
             }
             else {
                 setOrientation("black")
@@ -72,6 +81,9 @@ export const Play = () => {
                 copy.player_w = null
                 copy.computer_opponent = true
                 updateGameForApi(copy)
+                const aiObjCopy = {...objForAi}
+                aiObjCopy.color = "white"
+                updateObjForAi(aiObjCopy)
                 makeRandomMove()
             }
         }, []
@@ -97,7 +109,8 @@ export const Play = () => {
     )
 
 
-
+    //automatically make computer moves based on which players turn it is
+    //and the state of the turnForPgn variable
     useEffect(
         () => {
             if (orientation === "white") {
@@ -166,10 +179,15 @@ export const Play = () => {
         setOptionSquares(newSquares);
         return true;
     }
-    console.log(gameForApi)
     //function for automated move
     const makeRandomMove = () => {
+        setIsLoading(true)
         const possibleMoves = game.moves();
+        // if (possibleMoves) {
+        //     const copy = {...objForAi}
+        //     copy.possibleMoves = possibleMoves
+        //     updateObjForAi(copy)
+        // }
         // exit if the game is over
         if (game.game_over() || game.in_draw() || possibleMoves.length === 0) {
             if (game.game_over()) {
@@ -185,20 +203,36 @@ export const Play = () => {
                 console.log("draw")
             }
             if (possibleMoves.length === 0) {
-                console.log('no more moves. draw')
+                console.log("no more moves. draw")
             }
             return;
         }
+        //basic operation relies on random index for making move.
+        //this can be the point at which ai decides
         const randomIndex = Math.floor(Math.random() * possibleMoves.length);
+        // Promise.resolve(getAIMove(objForAi)).then(res => setAiMove(res))
+        if (aiMove) {
+            const [move, notation] = aiMove.split(" ")
+            if (notation) {
+                updateTurnForPgn(notation)
+            }
+        }
+        // Promise.resolve(getAIMove(objForAi))
+        //     .then(res => {
+        //         move = res;
+        //         setIsLoading(false)
+        //         console.log(res)
+        //     })
+
 
         //CUSTOM
         //add move to turn array to load into pgn
         //for array version of turnForPgn
-        if (possibleMoves[randomIndex]) {
-            const computerTurnCopy = [...turnForPgn]
-            computerTurnCopy.push(possibleMoves[randomIndex])
-            updateTurnForPgn(computerTurnCopy)
-        }
+        // if (possibleMoves[randomIndex]) {
+        //     const computerTurnCopy = [...turnForPgn]
+        //     computerTurnCopy.push(possibleMoves[randomIndex])
+        //     updateTurnForPgn(computerTurnCopy)
+        // }
         //END CUSTOM
 
 
@@ -270,14 +304,13 @@ export const Play = () => {
     //     const splitBySpacesInitial = pgn?.split(" ")
     //     // console.log(splitBySpacesInitial)
     //     const pgnArray = []
-    //     for (let i = 0; i <= splitBySpacesInitial.length; i + 3) {
+    //     for (let i = 0; i <= splitBySpacesInitial.length; i = i + 3) {
     //         const joinedMoveTurn = [splitBySpacesInitial[i], splitBySpacesInitial[i + 1], splitBySpacesInitial[i + 2]]
     //         pgnArray.push(joinedMoveTurn)
     //     }
     //     return pgnArray
     // }
     // const pgnArr = grabMovesFromPGN()
-
 
 
     // const pgnForSplitTest = [['d4', 'e6'],
@@ -353,7 +386,7 @@ export const Play = () => {
                 </button>
                 <button
                     onClick={() => {
-                        const copy = {...gameForApi}
+                        const copy = { ...gameForApi }
                         copy.pgn = game.pgn()
                         sendNewGame(copy)
                     }}

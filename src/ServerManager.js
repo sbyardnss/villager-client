@@ -148,6 +148,18 @@ export const sendTournamentRoundOutcomes = (outcomeArr) => {
         body: JSON.stringify(outcomeArr)
     })
 }
+export const getAIMove = (objForAi) => {
+    const localVillagerObj = getToken()
+    return fetch(`${apiKey}/ai_response`, {
+        method: "POST",
+        headers: {
+            "Authorization": `Token ${localVillagerObj.token}`,
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(objForAi)
+    })
+    .then(res => res.json())
+}
 
 //PUT FETCHES
 export const updateProfile = (userId, profileObj) => {

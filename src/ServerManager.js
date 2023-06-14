@@ -207,6 +207,17 @@ export const alterGame = (gameObj) => {
         body: JSON.stringify(gameObj)
     })
 }
+export const acceptChallenge = (gameObj) => {
+    const localVillagerObj = getToken()
+    return fetch(`${apiKey}/games/${gameObj.id}/accept_challenge`, {
+        method: "PUT",
+        headers: {
+            "Authorization": `Token ${localVillagerObj.token}`,
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(gameObj)
+    })
+}
 
 //DELETE FETCHES
 export const deleteCommunityPost = (postId) => {

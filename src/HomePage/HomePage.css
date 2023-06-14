@@ -73,3 +73,41 @@
 #whitePiecesSelect:hover {
     background-color: rgb(241, 133, 214);
 }
+
+
+/* open challenges section */
+#openChallengesList{
+    display: flex;
+    flex-direction: column;
+}
+.challengeListItem {
+    height: fit-content;
+    display: flex;
+    flex-direction: column;
+    
+}
+#whiteChallengeSpan {
+    color: rgb(52, 52, 52);
+    font-style: oblique;
+    font-weight: 500;
+    background-color: whitesmoke;
+    width: 4em;
+    padding: .25em;
+    border: 1px solid rgb(52, 52, 52);
+    border-radius: 3px;
+    text-align: center;
+}
+#blackChallengeSpan {
+    color: whitesmoke;
+    font-style: oblique;
+    font-weight: 500;
+    background-color: rgb(52, 52, 52);
+    width: 4em;
+    padding: .25em;
+    border: 1px solid rgb(52, 52, 52);
+    border-radius: 3px;
+    text-align: center;
+}
+.challengeAcceptBtn {
+    width: fit-content;
+}

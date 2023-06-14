@@ -1,7 +1,7 @@
 import "./HomePage.css"
 
 import { React, useContext, useState, useEffect } from "react"
-import { deleteCommunityPost, getAllCommunityPosts, getAllGames, getAllPlayers, getAllTournaments, sendNewGame, submitNewPostToAPI } from "../ServerManager"
+import { acceptChallenge, deleteCommunityPost, getAllCommunityPosts, getAllGames, getAllPlayers, getAllTournaments, sendNewGame, submitNewPostToAPI } from "../ServerManager"
 
 export const HomePage = () => {
     const localVillager = localStorage.getItem("villager")
@@ -11,6 +11,7 @@ export const HomePage = () => {
     const [tournaments, setTournaments] = useState([])
     const [games, setGames] = useState([])
     const [challenges, setChallenges] = useState([])
+    const [myUnfinishedGames, setMyUnfinishedGames] = useState([])
     const [newPost, updateNewPost] = useState({
         poster: localVillagerObj.userId,
         message: ""
@@ -35,12 +36,20 @@ export const HomePage = () => {
     useEffect(
         () => {
             const challengeGames = games?.filter(game => game.accepted === false)
-            console.log(games)
             setChallenges(challengeGames)
-        },[games]
+            const unfinishedGames = games?.filter(game => {
+                return (game.player_b?.id === localVillagerObj.userId || game.player_w?.id === localVillagerObj.userId) && game.winner === null
+            })
+            setMyUnfinishedGames(unfinishedGames)
+        }, [games]
     )
+    const resetGames = () => {
+        getAllGames()
+            .then(data => setGames(data))
+    }
     const resetCommunityPosts = () => {
-        getAllCommunityPosts().then(data => setCommunityPosts(data))
+        getAllCommunityPosts()
+            .then(data => setCommunityPosts(data))
     }
     //SCROLL TO BOTTOM FUNCTIONALITY FROM LINKUP
     // const scrollToBottom = () => {
@@ -129,17 +138,50 @@ export const HomePage = () => {
                     >send</button>
                 </section>
             </article>
-            <article key="openChallenges">
+            <article key="challenges">
                 <section>
+                    <h2>Active Games</h2>
+                    <div id="myActiveGames">
+                        {
+                            myUnfinishedGames?.map(ug => {
+                                const opponent = ug.player_w.id === localVillagerObj.userId ? ug.player_b : ug.player_w
+                                return (
+                                    <div key={ug.id} className="challengeListItem">
+                                        <div>Playing as <span id={ug.player_w ? "blackChallengeSpan" : "whiteChallengeSpan"}>{ug.player_w.id === localVillagerObj.userId ? "white" : "black"}</span></div>
+                                        <div>Against: {opponent.full_name}</div>
+                                    </div>
+                                )
+                            })
+                        }
+                    </div>
                     <h2>open challenges</h2>
-                    {
-                        challenges?.map(c => {
-                            const challengingPlayer = c.player_w ? c.player_w : c.player_b
-                            return (
-                                <div>{}</div>
-                            )
-                        })
-                    }
+                    <div id="openChallengesList">
+                        {
+                            challenges?.map(c => {
+                                const challengingPlayer = c.player_w ? c.player_w : c.player_b
+                                if (challengingPlayer.id !== localVillagerObj.userId) {
+                                    return (
+                                        <div key={c.id} className="challengeListItem">
+                                            <div>
+                                                Challenger: {challengingPlayer.full_name} playing as <span id={c.player_w ? "whiteChallengeSpan" : "blackChallengeSpan"}>{c.player_w ? "white" : "black"}</span>
+                                            </div>
+                                            <div>
+                                                <button className="challengeAcceptBtn"
+                                                    onClick={() => {
+                                                        const copy = { ...c }
+                                                        c.player_w ? copy.player_b = localVillagerObj.userId : copy.player_w = localVillagerObj.userId
+                                                        c.player_w ? copy.player_w = c.player_w.id : copy.player_b = c.player_b.id
+                                                        copy.accepted = true
+                                                        acceptChallenge(copy)
+                                                            .then(() => resetGames())
+                                                    }}>accept</button> and play as {c.player_w ? "black" : "white"}
+                                            </div>
+                                        </div>
+                                    )
+                                }
+                            })
+                        }
+                    </div>
                 </section>
                 <section>
                     <h2>create challenge</h2>

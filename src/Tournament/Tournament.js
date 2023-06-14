@@ -305,7 +305,7 @@ export const Tournament = () => {
                             )
                         })
                     }
-                    <button onClick={() => {
+                    {/* <button onClick={() => {
                         sendUpdatedGames(outcomes)
                             .then(() => {
                                 // updateOutcomes([])
@@ -314,7 +314,7 @@ export const Tournament = () => {
                             })
                     }}>
                         update
-                    </button>
+                    </button> */}
                 </section>
             )
         }

@@ -6,17 +6,19 @@ import Chess from "chess.js"
 import "./Play.css"
 import { TournamentContext } from "../Tournament/TournamentProvider"
 import { getAIMove, sendNewGame } from "../ServerManager"
+import { PlayContext } from "./PlayProvider"
+import { useNavigate } from "react-router-dom"
 
 export const Play = () => {
     const localVillager = localStorage.getItem("villager")
     const localVillagerObj = JSON.parse(localVillager)
-    // const { localVillagerObj } = useContext(TournamentContext)
+    const navigate = useNavigate()
+    const { selectedGame, setSelectedGame, selectedGameObj, orientation, setOrientation } = useContext(PlayContext)
     const [game, setGame] = useState(new Chess());
     const [moveFrom, setMoveFrom] = useState("");
     const [rightClickedSquares, setRightClickedSquares] = useState({});
     const [moveSquares, setMoveSquares] = useState({});
     const [optionSquares, setOptionSquares] = useState({});
-    const [orientation, setOrientation] = useState("white")
     const [turnForPgn, updateTurnForPgn] = useState([])
     const [pgn, updatePgn] = useState([])
     // const [pgnStr, updatePgnStr] = useState("")
@@ -32,32 +34,60 @@ export const Play = () => {
         timeSetting: null,
         pgn: ""
     })
-
-    // useEffect for setting up initial gameForAPI 
-    // properties for game against computer opponent.     
+    //set up game based on whether it is against human or computer
     useEffect(
         () => {
-            
-            const randomOrientation = Math.floor(Math.random() * 2)
-            if (randomOrientation === 1) {
-                setOrientation("white")
-                const copy = { ...gameForApi }
-                copy.player_w = localVillagerObj.userId
-                copy.player_b = null
-                copy.computer_opponent = true
-                updateGameForApi(copy)
+            if (selectedGameObj) {
+                game.load_pgn(selectedGameObj.pgn)
             }
             else {
-                setOrientation("black")
-                const copy = { ...gameForApi }
-                copy.player_b = localVillagerObj.userId
-                copy.player_w = null
-                copy.computer_opponent = true
-                updateGameForApi(copy)
-                makeRandomMove()
+                const randomOrientation = Math.floor(Math.random() * 2)
+                if (randomOrientation === 1) {
+                    setOrientation("white")
+                    const copy = { ...gameForApi }
+                    copy.player_w = localVillagerObj.userId
+                    copy.player_b = null
+                    copy.computer_opponent = true
+                    updateGameForApi(copy)
+                }
+                else {
+                    setOrientation("black")
+                    console.log("happening")
+                    const copy = { ...gameForApi }
+                    copy.player_b = localVillagerObj.userId
+                    copy.player_w = null
+                    copy.computer_opponent = true
+                    updateGameForApi(copy)
+                    makeRandomMove()
+                }
             }
         }, []
     )
+    // useEffect for setting up initial gameForAPI 
+    // properties for game against computer opponent.     
+    // useEffect(
+    //     () => {
+
+    //         const randomOrientation = Math.floor(Math.random() * 2)
+    //         if (randomOrientation === 1) {
+    //             setOrientation("white")
+    //             const copy = { ...gameForApi }
+    //             copy.player_w = localVillagerObj.userId
+    //             copy.player_b = null
+    //             copy.computer_opponent = true
+    //             updateGameForApi(copy)
+    //         }
+    //         else {
+    //             setOrientation("black")
+    //             const copy = { ...gameForApi }
+    //             copy.player_b = localVillagerObj.userId
+    //             copy.player_w = null
+    //             copy.computer_opponent = true
+    //             updateGameForApi(copy)
+    //             makeRandomMove()
+    //         }
+    //     }, []
+    // )
 
     //AUTOMATICALLY ADD TURN NOTATION TO PGN ONCE TWO MOVES HAVE BEEN MADE
     useEffect(
@@ -88,14 +118,16 @@ export const Play = () => {
     //and the state of the turnForPgn variable
     useEffect(
         () => {
-            if (orientation === "white") {
-                if (turnForPgn.length === 1) {
-                    setTimeout(makeRandomMove, 300)
+            if (!selectedGameObj) {
+                if (orientation === "white") {
+                    if (turnForPgn.length === 1) {
+                        setTimeout(makeRandomMove, 300)
+                    }
                 }
-            }
-            if (orientation === "black") {
-                if (turnForPgn.length === 0) {
-                    setTimeout(makeRandomMove, 300)
+                if (orientation === "black") {
+                    if (turnForPgn.length === 0) {
+                        setTimeout(makeRandomMove, 300)
+                    }
                 }
             }
         }, [turnForPgn]
@@ -306,11 +338,17 @@ export const Play = () => {
                     onClick={() => {
                         const copy = { ...gameForApi }
                         copy.pgn = game.pgn()
-                        
+
                         sendNewGame(copy)
                     }}
                 >
                     submit game
+                </button>
+                <button onClick={() => {
+                    setSelectedGame(0)
+                    navigate("/")
+                }}>
+                    exit game
                 </button>
             </div>
         </main>

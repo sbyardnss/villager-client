@@ -41,6 +41,13 @@ export const HomePage = () => {
             setMyUnfinishedGames(unfinishedGames)
         }, [games]
     )
+    useEffect(
+        () => {
+            if (selectedGame !== 0) {
+                navigate("/play")
+            }
+        },[selectedGame]
+    )
     
     const resetCommunityPosts = () => {
         getAllCommunityPosts()
@@ -77,7 +84,6 @@ export const HomePage = () => {
                 })
         }
     }
-    console.log(selectedGameObj)
     return <>
         <main id="homepageContainer">
             <h1>Homepage</h1>
@@ -148,7 +154,6 @@ export const HomePage = () => {
                                         <button className="challengeBtn"
                                                 onClick={() => {
                                                     setSelectedGame(ug.id)
-                                                    navigate('/play')
                                                 }}>play</button>
                                     </div>
                                 )

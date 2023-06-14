@@ -8,6 +8,8 @@ export const PlayProvider = (props) => {
     //provide whether game is against computer or human
     //provide selected game data
     //provide orientation
+    const localVillager = localStorage.getItem("villager")
+    const localVillagerObj = JSON.parse(localVillager)
     const [selectedGame, setSelectedGame] = useState(0)
     const [orientation, setOrientation] = useState("")
     const [games, setGames] = useState([])
@@ -38,13 +40,21 @@ export const PlayProvider = (props) => {
             updateSelectedGameObj(gameObjForPlay)
         },[selectedGame]
     )
+    useEffect(
+        () => {
+            if (selectedGameObj?.player_w === localVillagerObj.userId) {
+                setOrientation("white")
+            }
+        },[selectedGameObj]
+    )
     const resetGames = () => {
         getAllGames()
             .then(data => setGames(data))
     }
     return (
         <PlayContext.Provider value={{
-            selectedGame, setSelectedGame, selectedGameObj, games, players, resetGames
+            selectedGame, setSelectedGame, selectedGameObj, games, players, resetGames,
+            orientation, setOrientation
         }}>
             {props.children}
         </PlayContext.Provider>

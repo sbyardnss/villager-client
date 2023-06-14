@@ -1,7 +1,7 @@
 import "./HomePage.css"
 
 import { React, useContext, useState, useEffect } from "react"
-import { deleteCommunityPost, getAllCommunityPosts, getAllPlayers, getAllTournaments, submitNewPostToAPI } from "../ServerManager"
+import { deleteCommunityPost, getAllCommunityPosts, getAllGames, getAllPlayers, getAllTournaments, sendNewGame, submitNewPostToAPI } from "../ServerManager"
 
 export const HomePage = () => {
     const localVillager = localStorage.getItem("villager")
@@ -9,20 +9,35 @@ export const HomePage = () => {
     const [players, setPlayers] = useState([])
     const [communityPosts, setCommunityPosts] = useState([])
     const [tournaments, setTournaments] = useState([])
+    const [games, setGames] = useState([])
+    const [challenges, setChallenges] = useState([])
     const [newPost, updateNewPost] = useState({
         poster: localVillagerObj.userId,
         message: ""
 
     })
+    const [challengeForApi, updateChallengeForApi] = useState({
+        player_w: 0,
+        player_b: 0,
+        accepted: false,
+        computer_opponent: false
+    })
     useEffect(
         () => {
-            // getAllCommunityPosts().then(data => setCommunityPosts(data))
-            Promise.all([getAllPlayers(), getAllCommunityPosts(), getAllTournaments()]).then(([playerData, communityPostData, tournamentData]) => {
+            Promise.all([getAllPlayers(), getAllCommunityPosts(), getAllTournaments(), getAllGames()]).then(([playerData, communityPostData, tournamentData, gameData]) => {
                 setPlayers(playerData)
                 setCommunityPosts(communityPostData)
                 setTournaments(tournamentData)
+                setGames(gameData)
             })
         }, []
+    )
+    useEffect(
+        () => {
+            const challengeGames = games?.filter(game => game.accepted === false)
+            console.log(games)
+            setChallenges(challengeGames)
+        },[games]
     )
     const resetCommunityPosts = () => {
         getAllCommunityPosts().then(data => setCommunityPosts(data))
@@ -46,7 +61,6 @@ export const HomePage = () => {
                 const copy = { ...newPost }
                 copy.message = ""
                 updateNewPost(copy)
-                // getAllCommunityPosts().then(data => setCommunityPosts(data))
                 resetCommunityPosts()
             })
         }
@@ -55,8 +69,6 @@ export const HomePage = () => {
         if (window.confirm("are you sure?")) {
             deleteCommunityPost(id)
                 .then(() => {
-                    // getAllCommunityPosts()
-                    //     .then(data => setCommunityPosts(data))
                     resetCommunityPosts()
                 })
         }
@@ -98,55 +110,62 @@ export const HomePage = () => {
                     }
                 </section>
                 <section id="communityForumInterface">
-                        <input id="communityForumInput"
-                            type="text"
-                            value={newPost.message}
-                            onChange={handleChange}
-                            onKeyDown={handlekeyDown}
-                        />
-                        <button id="communityForumSubmitBtn"
-                            onClick={() => {
-                                submitNewPostToAPI(newPost).then(() => {
-                                    const copy = { ...newPost }
-                                    copy.message = ""
-                                    updateNewPost(copy)
-                                    getAllCommunityPosts().then(data => setCommunityPosts(data))
-                                    // resetMessages()
-                                })
-                            }}
-                        >send</button>
+                    <input id="communityForumInput"
+                        type="text"
+                        value={newPost.message}
+                        onChange={handleChange}
+                        onKeyDown={handlekeyDown}
+                    />
+                    <button id="communityForumSubmitBtn"
+                        onClick={() => {
+                            submitNewPostToAPI(newPost).then(() => {
+                                const copy = { ...newPost }
+                                copy.message = ""
+                                updateNewPost(copy)
+                                getAllCommunityPosts().then(data => setCommunityPosts(data))
+                                // resetMessages()
+                            })
+                        }}
+                    >send</button>
                 </section>
             </article>
             <article key="openChallenges">
-                <h2>open challenges</h2>
-            </article>
-            {/* <article key="activeTournaments">
-                <h2>active tournaments</h2>
-                <section id="activeTournaments">
+                <section>
+                    <h2>open challenges</h2>
                     {
-                        tournaments.map(t => {
+                        challenges?.map(c => {
+                            const challengingPlayer = c.player_w ? c.player_w : c.player_b
                             return (
-                                <li key={t.id} className="activeTournamentListItem">
-                                    <h3>{t.title}</h3>
-                                    {
-                                        t.games.map(game => {
-                                            return (
-                                                <div key={game.id}>
-                                                    Round {game.tournament_round}
-                                                    <ul>
-                                                        <li key={game.player_w.id}>white - {game.player_w.full_name}</li>
-                                                        <li key={game.player_b?.id}>black - {game.player_b?.full_name}</li>
-                                                    </ul>
-                                                </div>
-                                            )
-                                        })
-                                    }
-                                </li>
+                                <div>{}</div>
                             )
                         })
                     }
                 </section>
-            </article> */}
+                <section>
+                    <h2>create challenge</h2>
+                    <div>play as:
+                        <div id="piecesSelectionContainer">
+                            <div id="whitePiecesSelect" onClick={() => {
+                                const challengeCopy = { ...challengeForApi }
+                                challengeCopy.player_w = localVillagerObj.userId
+                                challengeCopy.player_b = null
+                                updateChallengeForApi(challengeCopy)
+                            }}>white</div>
+                            <div id="blackPiecesSelect" onClick={() => {
+                                const challengeCopy = { ...challengeForApi }
+                                challengeCopy.player_b = localVillagerObj.userId
+                                challengeCopy.player_w = null
+                                updateChallengeForApi(challengeCopy)
+                            }}>black</div>
+                        </div>
+                        <button onClick={() => {
+                            if (window.confirm("create open challenge?")) {
+                                sendNewGame(challengeForApi)
+                            }
+                        }}>create</button>
+                    </div>
+                </section>
+            </article>
         </main>
     </>
 }

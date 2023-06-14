@@ -7,17 +7,21 @@
 #communityForum {
     width: 40%;
 }
+
 #communityForumInterface {
     width: 100%;
     display: flex;
     justify-content: space-between;
 }
+
 #communityForumInput {
     width: 70%;
 }
+
 #communityForumSubmitBtn {
     width: 25%;
 }
+
 .communityPost {
     list-style: none;
     border: 1px solid orange;
@@ -27,4 +31,45 @@
 .activeTournamentListItem {
     list-style: none;
     border: 1px solid rgb(59, 174, 174)
+}
+
+/* create challenge section */
+#piecesSelectionContainer {
+    display: flex;
+}
+
+#whitePiecesSelect {
+    color: rgb(52, 52, 52);
+    font-style: oblique;
+    font-size: larger;
+    font-weight: 600;
+    background-color: whitesmoke;
+    width: 4em;
+    padding: 2em;
+    border: 2px solid rgb(52, 52, 52);
+    border-radius: 8px 0 0 8px;
+    border-right: none;
+    text-align: center;
+    cursor: pointer;
+}
+
+#blackPiecesSelect {
+    color: whitesmoke;
+    font-style: oblique;
+    font-size: larger;
+    font-weight: 600;
+    background-color: rgb(52, 52, 52);
+    width: 4em;
+    padding: 2em;
+    border: 2px solid rgb(52, 52, 52);
+    border-radius: 0 8px 8px 0;
+    border-right: none;
+    text-align: center;
+    cursor: pointer;
+} 
+#blackPiecesSelect:hover {
+    background-color: rgb(90, 0, 68);
+}
+#whitePiecesSelect:hover {
+    background-color: rgb(241, 133, 214);
 }

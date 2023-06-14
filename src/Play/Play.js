@@ -27,6 +27,9 @@ export const Play = () => {
         accepted: true,
         winner: 0,
         computer_opponent: true,
+        tournament: null,
+        tournament_round: null,
+        timeSetting: null,
         pgn: ""
     })
 
@@ -34,28 +37,25 @@ export const Play = () => {
     // properties for game against computer opponent.     
     useEffect(
         () => {
-            // const randomOrientation = Math.floor(Math.random() * 2)
-            // if (randomOrientation === 1) {
-            // setOrientation("white")
-            const copy = { ...gameForApi }
-            copy.player_w = localVillagerObj.userId
-            copy.player_b = null
-            copy.computer_opponent = true
-            updateGameForApi(copy)
-
-            // }
-            // else {
-            //     // setOrientation("black")
-            //     const copy = { ...gameForApi }
-            //     copy.player_b = localVillagerObj.userId
-            //     copy.player_w = null
-            //     copy.computer_opponent = true
-            //     updateGameForApi(copy)
-            //     const aiObjCopy = {...objForAi}
-            //     aiObjCopy.color = "white"
-            //     updateObjForAi(aiObjCopy)
-            //     makeRandomMove()
-            // }
+            
+            const randomOrientation = Math.floor(Math.random() * 2)
+            if (randomOrientation === 1) {
+                setOrientation("white")
+                const copy = { ...gameForApi }
+                copy.player_w = localVillagerObj.userId
+                copy.player_b = null
+                copy.computer_opponent = true
+                updateGameForApi(copy)
+            }
+            else {
+                setOrientation("black")
+                const copy = { ...gameForApi }
+                copy.player_b = localVillagerObj.userId
+                copy.player_w = null
+                copy.computer_opponent = true
+                updateGameForApi(copy)
+                makeRandomMove()
+            }
         }, []
     )
 
@@ -88,9 +88,6 @@ export const Play = () => {
     //and the state of the turnForPgn variable
     useEffect(
         () => {
-            // if (turnForPgn.length === 1) { //remove this if when you set orientation back to random
-            //     setTimeout(makeRandomMove, 300)
-            // }
             if (orientation === "white") {
                 if (turnForPgn.length === 1) {
                     setTimeout(makeRandomMove, 300)
@@ -188,9 +185,8 @@ export const Play = () => {
             possibleMoves: gameMoves
         }
         Promise.resolve(getAIMove(gameForAiCopy)).then(res => {
-            let [move, notation] = res.split(" ")
+            let [, notation] = res.split(" ")
             if (notation) {
-                console.log(notation)
                 const turnCopy = [...turnForPgn]
                 turnCopy.push(notation)
                 updateTurnForPgn(turnCopy)
@@ -274,9 +270,7 @@ export const Play = () => {
                     id="ClickToMove"
                     animationDuration={200}
                     arePiecesDraggable={false}
-                    boardOrientation={"white"}
-                    // boardOrientation={orientation}
-
+                    boardOrientation={orientation}
                     position={game.fen()}
                     onSquareClick={onSquareClick}
                     customBoardStyle={{
@@ -286,7 +280,6 @@ export const Play = () => {
                     customSquareStyles={{
                         ...moveSquares,
                         ...optionSquares,
-                        ...rightClickedSquares,
                     }}
                 />
                 <button
@@ -313,6 +306,7 @@ export const Play = () => {
                     onClick={() => {
                         const copy = { ...gameForApi }
                         copy.pgn = game.pgn()
+                        
                         sendNewGame(copy)
                     }}
                 >

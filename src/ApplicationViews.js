@@ -6,6 +6,7 @@ import { Profile } from "./Profile/Profile"
 import { Messages } from "./Messages/Messages"
 import { Tournament } from "./Tournament/Tournament"
 import { TournamentProvider } from "./Tournament/TournamentProvider"
+import { PlayProvider } from "./Play/PlayProvider"
 export const ApplicationViews = () => {
     return (
         <Routes>
@@ -14,12 +15,19 @@ export const ApplicationViews = () => {
                     <Outlet />
                 </>
             }>
-                <Route path="" element={<HomePage />} />
+                <Route path="" element={
+                    <PlayProvider>
+                        <HomePage />
+                    </PlayProvider>
+                } />
                 <Route path="userList" element={<UserList />} />
-                <Route path="play" element={<Play />} />
+                <Route path="play" element={
+                    <PlayProvider>
+                        <Play />
+                    </PlayProvider>
+                } />
                 <Route path="profile" element={<Profile />} />
                 <Route path="messages" element={<Messages />} />
-
                 <Route path="tournament" element={
                     <TournamentProvider>
                         <Tournament />

@@ -2,20 +2,20 @@ import "./HomePage.css"
 
 import { React, useContext, useState, useEffect } from "react"
 import { acceptChallenge, deleteCommunityPost, getAllCommunityPosts, getAllGames, getAllPlayers, getAllTournaments, sendNewGame, submitNewPostToAPI } from "../ServerManager"
-
+import { PlayContext } from "../Play/PlayProvider"
+import { useNavigate } from "react-router-dom"
 export const HomePage = () => {
     const localVillager = localStorage.getItem("villager")
     const localVillagerObj = JSON.parse(localVillager)
-    const [players, setPlayers] = useState([])
+    const navigate = useNavigate()
+    const { players, games, resetGames, selectedGameObj, selectedGame, setSelectedGame} = useContext(PlayContext)
     const [communityPosts, setCommunityPosts] = useState([])
     const [tournaments, setTournaments] = useState([])
-    const [games, setGames] = useState([])
     const [challenges, setChallenges] = useState([])
     const [myUnfinishedGames, setMyUnfinishedGames] = useState([])
     const [newPost, updateNewPost] = useState({
         poster: localVillagerObj.userId,
         message: ""
-
     })
     const [challengeForApi, updateChallengeForApi] = useState({
         player_w: 0,
@@ -25,11 +25,9 @@ export const HomePage = () => {
     })
     useEffect(
         () => {
-            Promise.all([getAllPlayers(), getAllCommunityPosts(), getAllTournaments(), getAllGames()]).then(([playerData, communityPostData, tournamentData, gameData]) => {
-                setPlayers(playerData)
+            Promise.all([getAllCommunityPosts(), getAllTournaments()]).then(([communityPostData, tournamentData]) => {
                 setCommunityPosts(communityPostData)
                 setTournaments(tournamentData)
-                setGames(gameData)
             })
         }, []
     )
@@ -43,10 +41,7 @@ export const HomePage = () => {
             setMyUnfinishedGames(unfinishedGames)
         }, [games]
     )
-    const resetGames = () => {
-        getAllGames()
-            .then(data => setGames(data))
-    }
+    
     const resetCommunityPosts = () => {
         getAllCommunityPosts()
             .then(data => setCommunityPosts(data))
@@ -82,6 +77,7 @@ export const HomePage = () => {
                 })
         }
     }
+    console.log(selectedGameObj)
     return <>
         <main id="homepageContainer">
             <h1>Homepage</h1>
@@ -149,6 +145,11 @@ export const HomePage = () => {
                                     <div key={ug.id} className="challengeListItem">
                                         <div>Playing as <span id={ug.player_w ? "blackChallengeSpan" : "whiteChallengeSpan"}>{ug.player_w.id === localVillagerObj.userId ? "white" : "black"}</span></div>
                                         <div>Against: {opponent.full_name}</div>
+                                        <button className="challengeBtn"
+                                                onClick={() => {
+                                                    setSelectedGame(ug.id)
+                                                    navigate('/play')
+                                                }}>play</button>
                                     </div>
                                 )
                             })
@@ -166,7 +167,7 @@ export const HomePage = () => {
                                                 Challenger: {challengingPlayer.full_name} playing as <span id={c.player_w ? "whiteChallengeSpan" : "blackChallengeSpan"}>{c.player_w ? "white" : "black"}</span>
                                             </div>
                                             <div>
-                                                <button className="challengeAcceptBtn"
+                                                <button className="challengeBtn"
                                                     onClick={() => {
                                                         const copy = { ...c }
                                                         c.player_w ? copy.player_b = localVillagerObj.userId : copy.player_w = localVillagerObj.userId

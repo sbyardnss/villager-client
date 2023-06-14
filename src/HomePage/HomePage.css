@@ -108,6 +108,7 @@
     border-radius: 3px;
     text-align: center;
 }
-.challengeAcceptBtn {
-    width: fit-content;
+.challengeBtn {
+    width: 4em;
+    text-align: center;
 }

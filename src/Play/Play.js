@@ -16,10 +16,10 @@ export const Play = () => {
     const [rightClickedSquares, setRightClickedSquares] = useState({});
     const [moveSquares, setMoveSquares] = useState({});
     const [optionSquares, setOptionSquares] = useState({});
-    const [orientation, setOrientation] = useState("white")
+    const [orientation, setOrientation] = useState("")
     const [turnForPgn, updateTurnForPgn] = useState([])
     const [pgn, updatePgn] = useState([])
-    const [pgnStr, updatePgnStr] = useState("")
+    // const [pgnStr, updatePgnStr] = useState("")
     const [isLoading, setIsLoading] = useState(false)
     const [gameForApi, updateGameForApi] = useState({
         player_w: 0,
@@ -30,7 +30,6 @@ export const Play = () => {
         computer_opponent: true,
         pgn: ""
     })
-    const [aiMove, setAiMove] = useState("")
     const [objForAi, updateObjForAi] = useState({
         fen: game.fen(),
         pgn: game.pgn(),
@@ -38,33 +37,26 @@ export const Play = () => {
         possibleMoves: game.moves()
     })
     //pgn variable needs to look like [[h3, Nh6], [f3, b6], etc]
-    useEffect(
-        () => {
-            
-        }, []
-    )
-    useEffect(
-        () => {
-            console.log(pgnStr)
-        }, [pgnStr]
-    )
+    
+    
     // game.load_pgn("1. d4 h5 2. Bf4 a6 3. e4 d5 4. exd5 ...Qxd5 5. Bc4")
     // set pgn string to state with pgn variable
-    useEffect(
-        () => {
-            const strPgn = pgnStringBuilder(pgn)
-            updatePgnStr(strPgn)
-            updateTurnForPgn([])
-        }, [pgn]
-    )
-
+    // useEffect(
+    //     () => {
+    //         // const strPgn = pgnStringBuilder(pgn)
+    //         // updatePgnStr(strPgn)
+    //         updateTurnForPgn([])
+    //     }, [pgn]
+    // )
+    console.log( turnForPgn)
+    console.log(pgn)
     // useEffect for setting up initial gameForAPI 
-    // properties for game against computer opponent
+    // properties for game against computer opponent.     
     useEffect(
         () => {
-            const randomOrientation = Math.floor(Math.random() * 2)
-            if (randomOrientation === 1) {
-                setOrientation("white")
+            // const randomOrientation = Math.floor(Math.random() * 2)
+            // if (randomOrientation === 1) {
+                // setOrientation("white")
                 const copy = { ...gameForApi }
                 copy.player_w = localVillagerObj.userId
                 copy.player_b = null
@@ -73,19 +65,19 @@ export const Play = () => {
                 const aiObjCopy = {...objForAi}
                 aiObjCopy.color = "black"
                 updateObjForAi(aiObjCopy)
-            }
-            else {
-                setOrientation("black")
-                const copy = { ...gameForApi }
-                copy.player_b = localVillagerObj.userId
-                copy.player_w = null
-                copy.computer_opponent = true
-                updateGameForApi(copy)
-                const aiObjCopy = {...objForAi}
-                aiObjCopy.color = "white"
-                updateObjForAi(aiObjCopy)
-                makeRandomMove()
-            }
+            // }
+            // else {
+            //     // setOrientation("black")
+            //     const copy = { ...gameForApi }
+            //     copy.player_b = localVillagerObj.userId
+            //     copy.player_w = null
+            //     copy.computer_opponent = true
+            //     updateGameForApi(copy)
+            //     const aiObjCopy = {...objForAi}
+            //     aiObjCopy.color = "white"
+            //     updateObjForAi(aiObjCopy)
+            //     makeRandomMove()
+            // }
         }, []
     )
 
@@ -97,6 +89,7 @@ export const Play = () => {
                 const copyOfPgn = [...pgn]
                 copyOfPgn.push(turnForPgn)
                 updatePgn(copyOfPgn)
+                updateTurnForPgn([])
             }
             if (game.in_checkmate()) {
                 if (turnForPgn.length === 1) {
@@ -113,6 +106,9 @@ export const Play = () => {
     //and the state of the turnForPgn variable
     useEffect(
         () => {
+            if (turnForPgn.length === 1) {
+                setTimeout(makeRandomMove, 300)
+            }
             if (orientation === "white") {
                 if (turnForPgn.length === 1) {
                     setTimeout(makeRandomMove, 300)
@@ -131,7 +127,7 @@ export const Play = () => {
         () => {
             if (game.game_over()) {
                 const copy = { ...gameForApi }
-                copy.pgn = pgnStr
+                copy.pgn = game.pgn()
                 if (game.turn() === "b") {
                     copy.winner = localVillagerObj.userId
                 }
@@ -191,11 +187,6 @@ export const Play = () => {
         // exit if the game is over
         if (game.game_over() || game.in_draw() || possibleMoves.length === 0) {
             if (game.game_over()) {
-                // if (orientation === "white") {
-                //     const copyOfPgn = [...pgn]
-                //     copyOfPgn.push(turnForPgn)
-                //     updatePgn(copyOfPgn)
-                // }
                 updatePgn(game.pgn())
                 console.log(gameForApi)
             }
@@ -210,20 +201,16 @@ export const Play = () => {
         //basic operation relies on random index for making move.
         //this can be the point at which ai decides
         const randomIndex = Math.floor(Math.random() * possibleMoves.length);
-        // Promise.resolve(getAIMove(objForAi)).then(res => setAiMove(res))
-        if (aiMove) {
-            const [move, notation] = aiMove.split(" ")
+        Promise.resolve(getAIMove(objForAi)).then(res => {
+            const [move, notation] = res.split(" ")
             if (notation) {
+                console.log(notation)
                 updateTurnForPgn(notation)
+                safeGameMutate((game) => {
+                    game.move(notation)
+                })
             }
-        }
-        // Promise.resolve(getAIMove(objForAi))
-        //     .then(res => {
-        //         move = res;
-        //         setIsLoading(false)
-        //         console.log(res)
-        //     })
-
+        })
 
         //CUSTOM
         //add move to turn array to load into pgn
@@ -236,9 +223,9 @@ export const Play = () => {
         //END CUSTOM
 
 
-        safeGameMutate((game) => {
-            game.move(possibleMoves[randomIndex]);
-        });
+        // safeGameMutate((game) => {
+        //     game.move(possibleMoves[randomIndex]);
+        // });
     }
     const onSquareClick = (square) => {
         // setRightClickedSquares({});
@@ -262,6 +249,7 @@ export const Play = () => {
         //add move to turn array to load into pgn
         //for array version of turnForPgn
         if (move) {
+            console.log(move)
             const turnCopy = [...turnForPgn]
             turnCopy.push(move.san)
             // console.log('my move')
@@ -291,10 +279,7 @@ export const Play = () => {
     //                 : { backgroundColor: colour },
     //     });
     // }
-    // const testPgn = game.pgn()
-    // const split = testPgn.split(" ")
-    // console.log(split)
-    // const pgnArray = []
+
 
     // // console.log(split)
     // //CURRENTLY CAUSING MY APP TO CRASH
@@ -348,7 +333,9 @@ export const Play = () => {
                     id="ClickToMove"
                     animationDuration={200}
                     arePiecesDraggable={false}
-                    boardOrientation={orientation}
+                    boardOrientation={"white"}
+                    // boardOrientation={orientation}
+
                     position={game.fen()}
                     onSquareClick={onSquareClick}
                     // onSquareRightClick={onSquareRightClick}

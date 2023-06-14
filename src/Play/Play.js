@@ -41,9 +41,9 @@ export const Play = () => {
                 game.load_pgn(selectedGameObj.pgn)
             }
             else {
-                const randomOrientation = Math.floor(Math.random() * 2)
-                if (randomOrientation === 1) {
-                    setOrientation("white")
+                // const randomOrientation = Math.floor(Math.random() * 2)
+                if (orientation === "white") {
+                    // setOrientation("white")
                     const copy = { ...gameForApi }
                     copy.player_w = localVillagerObj.userId
                     copy.player_b = null
@@ -51,8 +51,8 @@ export const Play = () => {
                     updateGameForApi(copy)
                 }
                 else {
-                    setOrientation("black")
-                    console.log("happening")
+                    // setOrientation("black")
+                    // console.log("happening")
                     const copy = { ...gameForApi }
                     copy.player_b = localVillagerObj.userId
                     copy.player_w = null
@@ -132,6 +132,8 @@ export const Play = () => {
             }
         }, [turnForPgn]
     )
+    console.log(orientation)
+    console.log(selectedGame)
     // useEffect for updating gameForAPI at end of game 
     // against computer opponent
     useEffect(
@@ -261,7 +263,6 @@ export const Play = () => {
             resetFirstMove(square);
             return;
         }
-        // setTimeout(makeRandomMove, 300);
         setMoveFrom("");
         setOptionSquares({});
     }

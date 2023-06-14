@@ -1,5 +1,5 @@
 import { useState, useEffect, createContext } from "react";
-import { getAllGames, getAllPlayers, getAllTimeSettings, getAllTournaments } from "../ServerManager";
+import { getAllGames, getAllPlayers } from "../ServerManager";
 
 export const PlayContext = createContext()
 
@@ -42,8 +42,22 @@ export const PlayProvider = (props) => {
     )
     useEffect(
         () => {
-            if (selectedGameObj?.player_w === localVillagerObj.userId) {
-                setOrientation("white")
+            if (selectedGameObj) {
+                if (selectedGameObj.player_w?.id === localVillagerObj.userId) {
+                    setOrientation("white")
+                }
+                else {
+                    setOrientation("black")
+                }
+            }
+            else {
+                const randomOrientation = Math.floor(Math.random() * 2)
+                if (randomOrientation === 1) {
+                    setOrientation("white")
+                }
+                else {
+                    setOrientation("black")
+                }
             }
         },[selectedGameObj]
     )

@@ -20,7 +20,6 @@ export const Play = () => {
     const [turnForPgn, updateTurnForPgn] = useState([])
     const [pgn, updatePgn] = useState([])
     // const [pgnStr, updatePgnStr] = useState("")
-    const [isLoading, setIsLoading] = useState(false)
     const [gameForApi, updateGameForApi] = useState({
         player_w: 0,
         player_b: 0,
@@ -30,8 +29,6 @@ export const Play = () => {
         computer_opponent: true,
         pgn: ""
     })
-    const [objForAi, updateObjForAi] = useState({})
-
 
     // useEffect for setting up initial gameForAPI 
     // properties for game against computer opponent.     
@@ -45,12 +42,7 @@ export const Play = () => {
             copy.player_b = null
             copy.computer_opponent = true
             updateGameForApi(copy)
-            const aiObjCopy = { ...objForAi }
-            aiObjCopy.color = "black"
-            aiObjCopy.pgn = game.pgn()
-            aiObjCopy.fen = game.fen()
-            aiObjCopy.possibleMoves = game.moves()
-            updateObjForAi(aiObjCopy)
+
             // }
             // else {
             //     // setOrientation("black")
@@ -67,30 +59,6 @@ export const Play = () => {
         }, []
     )
 
-
-    // update state of gameForAi object whenever turnForPgn is updated
-    useEffect(
-        () => {
-            const gameAiColor = orientation === "white" ? "black" : 'white'
-            const gamePgn = game.pgn()
-            const gameFen = game.fen()
-            const gameMoves = game.moves()
-            const gameForAiCopy = {
-                fen: gameFen,
-                pgn: gamePgn,
-                color: gameAiColor,
-                possibleMoves: gameMoves
-            }
-            updateObjForAi(gameForAiCopy)
-        }, [turnForPgn]
-    )
-    useEffect(
-        () => {
-            console.log(objForAi)
-            console.log(turnForPgn)
-            console.log(pgn)
-        },[objForAi]
-    )
     //AUTOMATICALLY ADD TURN NOTATION TO PGN ONCE TWO MOVES HAVE BEEN MADE
     useEffect(
         () => {
@@ -191,7 +159,6 @@ export const Play = () => {
     }
     //function for automated move
     const makeRandomMove = () => {
-        setIsLoading(true)
         const possibleMoves = game.moves();
         // exit if the game is over
         if (game.game_over() || game.in_draw() || possibleMoves.length === 0) {
@@ -210,7 +177,17 @@ export const Play = () => {
         //basic operation relies on random index for making move.
         //this can be the point at which ai decides
         const randomIndex = Math.floor(Math.random() * possibleMoves.length);
-        Promise.resolve(getAIMove(objForAi)).then(res => {
+        const gameAiColor = orientation === "white" ? "black" : 'white'
+        const gamePgn = game.pgn()
+        const gameFen = game.fen()
+        const gameMoves = game.moves()
+        const gameForAiCopy = {
+            fen: gameFen,
+            pgn: gamePgn,
+            color: gameAiColor,
+            possibleMoves: gameMoves
+        }
+        Promise.resolve(getAIMove(gameForAiCopy)).then(res => {
             let [move, notation] = res.split(" ")
             if (notation) {
                 console.log(notation)
@@ -222,21 +199,6 @@ export const Play = () => {
                 })
             }
         })
-
-        //CUSTOM
-        //add move to turn array to load into pgn
-        //for array version of turnForPgn
-        // if (possibleMoves[randomIndex]) {
-        //     const computerTurnCopy = [...turnForPgn]
-        //     computerTurnCopy.push(possibleMoves[randomIndex])
-        //     updateTurnForPgn(computerTurnCopy)
-        // }
-        //END CUSTOM
-
-
-        // safeGameMutate((game) => {
-        //     game.move(possibleMoves[randomIndex]);
-        // });
     }
     const onSquareClick = (square) => {
         // setRightClickedSquares({});
@@ -277,7 +239,6 @@ export const Play = () => {
     }
 
 
-
     // // console.log(split)
     // //CURRENTLY CAUSING MY APP TO CRASH
     // const grabMovesFromPGN = () => {
@@ -293,6 +254,17 @@ export const Play = () => {
     //     return pgnArray
     // }
     // const pgnArr = grabMovesFromPGN()
+    const pgnStringBuilder = (pgnArr, index) => {
+        const outputPgnString = pgnArr.map((notation, index) => {
+            if (notation.length === 2) {
+                return `${index + 1}. ${notation[0]} ${notation[1]}`
+            }
+            else {
+                return `${index + 1}. ${notation[0]}`
+            }
+        }).join(" ")
+        return outputPgnString
+    }
 
 
     return (

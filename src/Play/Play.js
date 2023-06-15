@@ -4,24 +4,25 @@ import { React, useContext, useState, useEffect } from "react"
 import { Chessboard } from "react-chessboard"
 import Chess from "chess.js"
 import "./Play.css"
-import { TournamentContext } from "../Tournament/TournamentProvider"
 import { alterGame, getAIMove, sendNewGame } from "../ServerManager"
 import { PlayContext } from "./PlayProvider"
 import { useNavigate } from "react-router-dom"
 
 export const Play = () => {
+    //update game obj based on selectedGameObj or simply populate computer opponent
+    //update selectedGameObj and send to api when a move is made
+    //make turns based on game.turn()
+
     const localVillager = localStorage.getItem("villager")
     const localVillagerObj = JSON.parse(localVillager)
     const navigate = useNavigate()
-    const { selectedGame, setSelectedGame, selectedGameObj, orientation, setOrientation, resetGames } = useContext(PlayContext)
+    const { setSelectedGame, selectedGameObj, orientation, setOrientation, resetGames } = useContext(PlayContext)
     const [game, setGame] = useState(new Chess());
     const [moveFrom, setMoveFrom] = useState("");
-    const [rightClickedSquares, setRightClickedSquares] = useState({});
     const [moveSquares, setMoveSquares] = useState({});
     const [optionSquares, setOptionSquares] = useState({});
     const [turnForPgn, updateTurnForPgn] = useState([])
     const [pgn, updatePgn] = useState([])
-    // const [pgnStr, updatePgnStr] = useState("")
     const [gameForApi, updateGameForApi] = useState({
         player_w: 0,
         player_b: 0,
@@ -45,9 +46,7 @@ export const Play = () => {
                 updateGameForApi(copy)
             }
             else {
-                // const randomOrientation = Math.floor(Math.random() * 2)
                 if (orientation === "white") {
-                    // setOrientation("white")
                     const copy = { ...gameForApi }
                     copy.player_w = localVillagerObj.userId
                     copy.player_b = null
@@ -55,8 +54,6 @@ export const Play = () => {
                     updateGameForApi(copy)
                 }
                 else {
-                    // setOrientation("black")
-                    // console.log("happening")
                     const copy = { ...gameForApi }
                     copy.player_b = localVillagerObj.userId
                     copy.player_w = null
@@ -67,47 +64,65 @@ export const Play = () => {
             }
         }, [orientation]
     )
+    //OLD USEEFFECT FROM WHEN TURNFORPGN WAS MAIN DRIVER
     //AUTOMATICALLY ADD TURN NOTATION TO PGN ONCE TWO MOVES HAVE BEEN MADE
+    // useEffect(
+    //     () => {
+    //         if (turnForPgn.length === 2) {
+    //             const copyOfPgn = [...pgn]
+    //             copyOfPgn.push(turnForPgn)
+    //             updatePgn(copyOfPgn)
+    //             updateTurnForPgn([])
+    //         }
+    //         if (game.in_checkmate()) {
+    //             if (turnForPgn.length === 1) {
+    //                 const copyOfPgn = [...pgn]
+    //                 copyOfPgn.push(turnForPgn)
+    //                 updatePgn(copyOfPgn)
+    //             }
+    //         }
+    //     }, [turnForPgn, game]
+    // )
     useEffect(
         () => {
-            if (turnForPgn.length === 2) {
-                const copyOfPgn = [...pgn]
-                copyOfPgn.push(turnForPgn)
-                updatePgn(copyOfPgn)
-                updateTurnForPgn([])
-            }
-            if (game.in_checkmate()) {
-                if (turnForPgn.length === 1) {
-                    const copyOfPgn = [...pgn]
-                    copyOfPgn.push(turnForPgn)
-                    updatePgn(copyOfPgn)
+            if (!selectedGameObj) {
+                if (orientation === "white") {
+                    if (game.turn() === "b") {
+                        setTimeout(makeRandomMove, 300)
+                    }
+                }
+                if (orientation === "b") {
+                    if (game.turn() === "w") {
+                        setTimeout(makeRandomMove, 300)
+                    }
                 }
             }
-        }, [turnForPgn, game]
+        },[game]
     )
     useEffect(
         () => {
             updateTurnForPgn([])
         }, [pgn]
     )
+    //OLD USEEFFECT FROM WHEN TURNFORPGN WAS MAIN DRIVER
     //automatically make computer moves based on which players turn it is
     //and the state of the turnForPgn variable
-    useEffect(
-        () => {
-            if (!selectedGameObj) {
-                if (orientation === "white") {
-                    if (turnForPgn.length === 1) {
-                        setTimeout(makeRandomMove, 300)
-                    }
-                }
-                if (orientation === "black") {
-                    if (turnForPgn.length === 0) {
-                        setTimeout(makeRandomMove, 300)
-                    }
-                }
-            }
-        }, [turnForPgn]
-    )
+    // useEffect(
+    //     () => {
+    //         if (!selectedGameObj) {
+    //             if (orientation === "white") {
+    //                 if (turnForPgn.length === 1) {
+    //                     setTimeout(makeRandomMove, 300)
+    //                 }
+    //             }
+    //             if (orientation === "black") {
+    //                 if (turnForPgn.length === 0) {
+    //                     setTimeout(makeRandomMove, 300)
+    //                 }
+    //             }
+    //         }
+    //     }, [turnForPgn]
+    // )
 
     // useEffect for updating gameForAPI at end of game 
     // against computer opponent
@@ -205,15 +220,16 @@ export const Play = () => {
         Promise.resolve(getAIMove(gameForAiCopy)).then(res => {
             let [, notation] = res.split(" ")
             if (notation) {
-                const turnCopy = [...turnForPgn]
-                turnCopy.push(notation)
-                updateTurnForPgn(turnCopy)
+                //OLD CODE WHEN TURNFORPGN WAS MAIN DRIVER
+                // const turnCopy = [...turnForPgn]
+                // turnCopy.push(notation)
+                // updateTurnForPgn(turnCopy)
                 safeGameMutate((game) => {
                     game.move(notation)
                 })
             }
         })
-        //CUSTOM
+        //CUSTOM (OLD CODE FOR NON AI BOT)
         //add move to turn array to load into pgn
         // for array version of turnForPgn
         // if (possibleMoves[randomIndex]) {
@@ -251,7 +267,6 @@ export const Play = () => {
         if (move) {
             const turnCopy = [...turnForPgn]
             turnCopy.push(move.san)
-            // console.log('my move')
             updateTurnForPgn(turnCopy)
         }
         setGame(gameCopy);
@@ -280,9 +295,8 @@ export const Play = () => {
                             const gameCopy = { ...selectedGameObj }
                             const newPgn = game.pgn()
                             gameCopy.pgn = newPgn
-
-                            // alterGame(gameCopy)
-                            // .then(() => resetGames())
+                            alterGame(gameCopy)
+                            .then(() => resetGames())
                         }
                     }}
                     customBoardStyle={{

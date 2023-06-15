@@ -26,8 +26,11 @@ export const TournamentProvider = (props) => {
     )
     useEffect(
         () => {
-            const tourneyGamesOnly = games.filter(g => g.tournament === selectedTournament)
-            setTournamentGames(tourneyGamesOnly)
+            if (selectedTournament) {
+                const selectedTournamentObj = tournaments.find(t => t.id === selectedTournament)
+                // const tourneyGamesOnly = games.filter(g => g.tournament === selectedTournament)
+                setTournamentGames(selectedTournamentObj.games)
+            }
         }, [games, selectedTournament]
     )
     useEffect(

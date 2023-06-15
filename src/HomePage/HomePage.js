@@ -76,7 +76,6 @@ export const HomePage = () => {
             }
         },[selectedGame]
     )
-    
     const resetCommunityPosts = () => {
         getAllCommunityPosts()
             .then(data => setCommunityPosts(data))

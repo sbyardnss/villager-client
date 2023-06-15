@@ -257,10 +257,13 @@ export const Tournament = () => {
                                             copy.bye = true
                                             copy.winner = white?.id
                                             copy.win_style = "bye"
+                                            // console.log(copy)
                                             sendNewGame(copy) 
                                         }
                                         else {
                                             copy.winner = null
+                                            // console.log(copy)
+
                                             sendNewGame(copy)
                                         }
                                     }

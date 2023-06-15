@@ -146,17 +146,19 @@ export const HomePage = () => {
                     <div id="myActiveGames">
                         {
                             myUnfinishedGames?.map(ug => {
-                                const opponent = ug.player_w.id === localVillagerObj.userId ? ug.player_b : ug.player_w
-                                return (
-                                    <div key={ug.id} className="challengeListItem">
-                                        <div>Playing as <span id={ug.player_w ? "blackChallengeSpan" : "whiteChallengeSpan"}>{ug.player_w.id === localVillagerObj.userId ? "white" : "black"}</span></div>
-                                        <div>Against: {opponent.full_name}</div>
-                                        <button className="challengeBtn"
-                                                onClick={() => {
-                                                    setSelectedGame(ug.id)
-                                                }}>play</button>
-                                    </div>
-                                )
+                                const opponent = ug.player_w?.id === localVillagerObj.userId ? ug.player_b : ug.player_w
+                                if (opponent) {
+                                    return (
+                                        <div key={ug.id} className="challengeListItem">
+                                            <div>Playing as <span id={ug.player_w ? "blackChallengeSpan" : "whiteChallengeSpan"}>{ug.player_w?.id === localVillagerObj.userId ? "white" : "black"}</span></div>
+                                            <div>Against: {opponent.full_name}</div>
+                                            <button className="challengeBtn"
+                                                    onClick={() => {
+                                                        setSelectedGame(ug.id)
+                                                    }}>play</button>
+                                        </div>
+                                    )
+                                }
                             })
                         }
                     </div>

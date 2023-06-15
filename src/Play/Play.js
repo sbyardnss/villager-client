@@ -5,7 +5,7 @@ import { Chessboard } from "react-chessboard"
 import Chess from "chess.js"
 import "./Play.css"
 import { TournamentContext } from "../Tournament/TournamentProvider"
-import { getAIMove, sendNewGame } from "../ServerManager"
+import { alterGame, getAIMove, sendNewGame } from "../ServerManager"
 import { PlayContext } from "./PlayProvider"
 import { useNavigate } from "react-router-dom"
 
@@ -63,32 +63,6 @@ export const Play = () => {
             }
         }, [orientation]
     )
-    // useEffect for setting up initial gameForAPI 
-    // properties for game against computer opponent.     
-    // useEffect(
-    //     () => {
-
-    //         const randomOrientation = Math.floor(Math.random() * 2)
-    //         if (randomOrientation === 1) {
-    //             setOrientation("white")
-    //             const copy = { ...gameForApi }
-    //             copy.player_w = localVillagerObj.userId
-    //             copy.player_b = null
-    //             copy.computer_opponent = true
-    //             updateGameForApi(copy)
-    //         }
-    //         else {
-    //             setOrientation("black")
-    //             const copy = { ...gameForApi }
-    //             copy.player_b = localVillagerObj.userId
-    //             copy.player_w = null
-    //             copy.computer_opponent = true
-    //             updateGameForApi(copy)
-    //             makeRandomMove()
-    //         }
-    //     }, []
-    // )
-
     //AUTOMATICALLY ADD TURN NOTATION TO PGN ONCE TWO MOVES HAVE BEEN MADE
     useEffect(
         () => {
@@ -130,7 +104,6 @@ export const Play = () => {
             }
         }, [turnForPgn]
     )
-    console.log(orientation)
     // useEffect for updating gameForAPI at end of game 
     // against computer opponent
     useEffect(
@@ -248,7 +221,6 @@ export const Play = () => {
         //add move to turn array to load into pgn
         //for array version of turnForPgn
         if (move) {
-            console.log(move)
             const turnCopy = [...turnForPgn]
             turnCopy.push(move.san)
             // console.log('my move')
@@ -302,7 +274,16 @@ export const Play = () => {
                     arePiecesDraggable={false}
                     boardOrientation={orientation}
                     position={game.fen()}
-                    onSquareClick={onSquareClick}
+                    onSquareClick={(evt) => {
+                        onSquareClick(evt)
+                        if (selectedGameObj?.id) {
+                            const gameCopy = { ...selectedGameObj }
+                            const newPgn = game.pgn()
+                            gameCopy.pgn = newPgn
+                            console.log(gameCopy)
+                            // alterGame(gameCopy)
+                        }
+                    }}
                     customBoardStyle={{
                         borderRadius: "4px",
                         boxShadow: "0 2px 10px rgba(0, 0, 0, 0.5)",

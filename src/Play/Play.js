@@ -61,7 +61,7 @@ export const Play = () => {
                     makeRandomMove()
                 }
             }
-        }, []
+        }, [orientation]
     )
     // useEffect for setting up initial gameForAPI 
     // properties for game against computer opponent.     
@@ -112,7 +112,6 @@ export const Play = () => {
             updateTurnForPgn([])
         }, [pgn]
     )
-    console.log(turnForPgn)
     //automatically make computer moves based on which players turn it is
     //and the state of the turnForPgn variable
     useEffect(

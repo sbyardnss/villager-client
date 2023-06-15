@@ -11,6 +11,8 @@ export const HomePage = () => {
     const { players, games, resetGames, selectedGameObj, selectedGame, setSelectedGame} = useContext(PlayContext)
     const [communityPosts, setCommunityPosts] = useState([])
     const [tournaments, setTournaments] = useState([])
+    const [myTournaments, setMyTournaments] = useState([])
+    const [tournamentGames, setTournamentGames] = useState([])
     const [challenges, setChallenges] = useState([])
     const [myUnfinishedGames, setMyUnfinishedGames] = useState([])
     const [newPost, updateNewPost] = useState({
@@ -40,6 +42,32 @@ export const HomePage = () => {
             })
             setMyUnfinishedGames(unfinishedGames)
         }, [games]
+    )
+    useEffect(
+        () => {
+            if (tournaments) {
+                const joinedTournaments = tournaments.filter(t => {
+                    if (t.complete === false) {
+                        return t.competitors.find(c => c === localVillagerObj.userId)
+                    }
+                })
+                setMyTournaments(joinedTournaments)
+            }
+        },[tournaments]
+    )
+    useEffect(
+        () => {
+            if (myTournaments) {
+                const myTournamentGames = games.filter(g => {
+                    return myTournaments.find(t => {
+                        if (t.in_person === false) {
+                            return t.id === g.tournament 
+                        }
+                    })
+                })
+                setTournamentGames(myTournamentGames)
+            }
+        },[myTournaments]
     )
     useEffect(
         () => {
@@ -215,6 +243,16 @@ export const HomePage = () => {
                         }}>create</button>
                     </div>
                 </section>
+            </article>
+            <article>
+                <h2>my tournaments</h2>
+                        {
+                            myTournaments?.map(t => {
+                                return (
+                                    <div key={t.id}>{t.title}</div>
+                                )
+                            })
+                        }
             </article>
         </main>
     </>

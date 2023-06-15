@@ -30,6 +30,7 @@ export const Tournament = () => {
         competitors: [],
         timeSetting: 0,
         rounds: 1,
+        in_person: true,
         pairings: []
     })
     const [byePlayer, setByePlayer] = useState(0)
@@ -126,67 +127,70 @@ export const Tournament = () => {
         }
         return tableHtml.reverse()
     };
-
     //handles all forms of manually sending games to api
     const handleGameForApiUpdate = (targetId, whitePieces, blackPieces, pastGame) => {
+        let copy = {}
         if (scoring) {
-            const copy = { ...gameForApi }
+            copy = { ...gameForApi }
             copy.player_w = whitePieces.id
             copy.player_b = blackPieces.id
             copy.tournament = activeTournament?.id
             copy.tournament_round = currentRound
-            if (targetId === "white") {
-                copy.winner = whitePieces.id
-
-                copy.win_style = "checkmate"
-                updateGameForApi(copy)
-            }
-            else if (targetId === "draw") {
-                copy.winner = null
-                copy.win_style = "draw"
-                updateGameForApi(copy)
-            }
-            else {
-                // const copy = { ...gameForApi }
-                copy.winner = blackPieces.id
-                copy.win_style = "checkmate"
-                updateGameForApi(copy)
-            }
         }
-        if (editScores) {
-            const copy = { ...pastGame }
+        else {
+            copy = { ...pastGame }
             copy.player_w = whitePieces.id
             copy.player_b = blackPieces.id
-            if (targetId === "whiteUpdate") {
-                copy.winner = whitePieces.id
-                copy.win_style = "checkmate"
-                updateGameForApi(copy)
-            }
-            else if (targetId === "drawUpdate") {
-                copy.winner = null
-                copy.win_style = "draw"
-                updateGameForApi(copy)
-            }
-            else {
-                copy.winner = blackPieces.id
-                copy.win_style = "checkmate"
-                updateGameForApi(copy)
-            }
+        }
+        if (targetId === "whiteUpdate") {
+            copy.winner = whitePieces.id
+            copy.win_style = "checkmate"
+            updateGameForApi(copy)
+        }
+        else if (targetId === "drawUpdate") {
+            copy.winner = null
+            copy.win_style = "draw"
+            updateGameForApi(copy)
+        }
+        else {
+            copy.winner = blackPieces.id
+            copy.win_style = "checkmate"
+            updateGameForApi(copy)
         }
     }
+
+    const handleChange = (evt) => {
+        if (evt.target.checked) {
+            const copy = { ...newTournament }
+            copy.in_person = false
+            updateNewTournament(copy)
+        }
+        else {
+            const copy = { ...newTournament }
+            copy.in_person = true
+            updateNewTournament(copy)
+        }
+    }
+
     const roundHtml = roundPopulation()
-    const matchupsOrScoring = () => {
-        if (scoring) {
+
+    //function for populating scoring options if tournament is played in person
+    const submitResultsOrNull = () => {
+        if (activeTournament?.in_person === true) {
             return (
                 <section>
                     {
                         currentRoundMatchups?.map(matchup => {
                             const white = activeTournamentPlayers?.find(player => player.id === matchup.player1)
                             const black = activeTournamentPlayers?.find(player => player.id === matchup.player2)
+                            const copy = { ...gameForApi }
+                            copy.player_w = white?.id
+                            copy.player_b = black?.id
+
                             if (black === undefined) {
                                 return (
                                     <div key={`${matchup.round} -- ${matchup.match} -- bye`}>
-                                        {white.full_name} has bye
+                                        {white?.full_name} has bye
                                     </div>
                                 )
                             }
@@ -194,21 +198,21 @@ export const Tournament = () => {
                                 <div key={`${matchup.round} -- ${matchup.match}`}>
                                     <div
                                         className="whitePiecesMatchup"
-                                        id="white"
+                                        id="whitePieces"
                                         onClick={(evt) => {
                                             handleGameForApiUpdate(evt.target.id, white, black)
                                         }}>{white?.full_name}
                                     </div>
                                     <div
                                         className="drawMatchupButton"
-                                        id="draw"
+                                        id="drawUpdate"
                                         onClick={(evt) => {
                                             handleGameForApiUpdate(evt.target.id, white, black)
                                         }}>Draw
                                     </div>
                                     <div
                                         className="blackPiecesMatchup"
-                                        id="black"
+                                        id="blackPieces"
                                         onClick={(evt) => {
                                             handleGameForApiUpdate(evt.target.id, white, black)
                                         }}>{black?.full_name}
@@ -228,7 +232,7 @@ export const Tournament = () => {
         }
         else {
             return (
-                <table>
+                <table id="digitalTournamentTable">
                     <thead>
                         <tr className="tableHeaderRow">
                             <th>white player</th>
@@ -241,6 +245,26 @@ export const Tournament = () => {
                             currentRoundMatchups?.map(matchup => {
                                 const white = activeTournamentPlayers.find(player => player.id === matchup.player1)
                                 const black = activeTournamentPlayers.find(player => player.id === matchup.player2)
+                                const copy = { ...gameForApi }
+                                copy.player_w = white?.id
+                                copy.player_b = black?.id ? black.id : null
+                                const alreadyCreatedGameObj = tournamentGames.find(g => g.tournament === copy.tournament && g.player_b?.id === copy.player_b && g.player_w?.id === copy.player_w)
+                                const alreadyCreatedByeGame = tournamentGames.find(g => g.tournament === copy.tournament && g.player_b === copy.player_b && g.player_w?.id === copy.player_w)
+                                if (tournamentGames) {
+                                    if (!alreadyCreatedGameObj && !alreadyCreatedByeGame) {
+                                        copy.pgn = ""
+                                        if (copy.player_b === null) {
+                                            copy.bye = true
+                                            copy.winner = white?.id
+                                            copy.win_style = "bye"
+                                            sendNewGame(copy) 
+                                        }
+                                        else {
+                                            copy.winner = null
+                                            sendNewGame(copy)
+                                        }
+                                    }
+                                }
                                 if (white?.id && black?.id) {
                                     return (
                                         <tr key={matchup.round + matchup.match}>
@@ -266,6 +290,7 @@ export const Tournament = () => {
             )
         }
     }
+    //function for populating section for updating previous games
     const tableOrEdit = () => {
         if (editScores) {
             const editPairings = [...activeTournament?.pairings]
@@ -305,16 +330,6 @@ export const Tournament = () => {
                             )
                         })
                     }
-                    {/* <button onClick={() => {
-                        sendUpdatedGames(outcomes)
-                            .then(() => {
-                                // updateOutcomes([])
-                                // alterGame()
-                                resetGames()
-                            })
-                    }}>
-                        update
-                    </button> */}
                 </section>
             )
         }
@@ -355,7 +370,8 @@ export const Tournament = () => {
                         <div>
                             Round {currentRound}
                         </div>
-                        {matchupsOrScoring()}
+                        {/* {matchupsOrScoring()} */}
+                        {submitResultsOrNull()}
                     </section>
                     <section id="tournamentTableContainer">
                         <table id="tournamentTable">
@@ -376,7 +392,6 @@ export const Tournament = () => {
                                         const tourneyPlayerGames = tournamentGames.filter(tg => {
                                             return tg.player_b?.id === tourneyPlayer.id || tg.player_w.id === tourneyPlayer.id
                                         })
-
                                         const emptyCellCompensation = () => {
                                             if (tourneyPlayerGames.length < currentRound) {
                                                 return (
@@ -402,10 +417,15 @@ export const Tournament = () => {
                                                                 <td key={tpg.id} value={1} id={tpg.id + "--" + tourneyPlayer.id} className="tournamentGameResult">1</td>
                                                             )
                                                         }
-                                                        else if (tpg.winner === null) {
+                                                        else if (tpg.winner === null && tpg.win_style === "draw") {
                                                             score += .5
                                                             return (
                                                                 <td key={tpg.id} value={.5} id={tpg.id + "--" + tourneyPlayer.id} className="tournamentGameResult">1/2</td>
+                                                            )
+                                                        }
+                                                        else if (tpg.winner === null && !tpg.win_style) {
+                                                            return (
+                                                                <td key={tpg.id} id={tpg.id + "--" + tourneyPlayer.id} className="tournamentGameResult"></td>
                                                             )
                                                         }
                                                         else {
@@ -468,7 +488,6 @@ export const Tournament = () => {
                     <div id="tournamentSelectedCompetitors">
                         {
                             newTournament.competitors.map((competitor, index) => {
-                                console.log(newTournament.competitors)
                                 const player = players.find(p => p.id === competitor)
                                 return (
                                     <li key={competitor.id}
@@ -506,6 +525,10 @@ export const Tournament = () => {
                                 })
                             }
                         </select>
+                    </div>
+                    <div>
+                        <input type="checkbox" onChange={handleChange} />
+                        <label>digital tournament</label>
                     </div>
                     <div id="tournamentSubmit">
                         <button onClick={() => {
@@ -547,3 +570,95 @@ export const Tournament = () => {
         </>
     }
 }
+//function for populating section for submitting new game results
+    // const matchupsOrScoring = () => {
+    //     if (scoring) {
+    //         return (
+    //             <section>
+    //                 {
+    //                     currentRoundMatchups?.map(matchup => {
+    //                         const white = activeTournamentPlayers?.find(player => player.id === matchup.player1)
+    //                         const black = activeTournamentPlayers?.find(player => player.id === matchup.player2)
+    //                         if (black === undefined) {
+    //                             return (
+    //                                 <div key={`${matchup.round} -- ${matchup.match} -- bye`}>
+    //                                     {white.full_name} has bye
+    //                                 </div>
+    //                             )
+    //                         }
+    //                         return (
+    //                             <div key={`${matchup.round} -- ${matchup.match}`}>
+    //                                 <div
+    //                                     className="whitePiecesMatchup"
+    //                                     id="whitePieces"
+    //                                     onClick={(evt) => {
+    //                                         handleGameForApiUpdate(evt.target.id, white, black)
+    //                                     }}>{white?.full_name}
+    //                                 </div>
+    //                                 <div
+    //                                     className="drawMatchupButton"
+    //                                     id="drawUpdate"
+    //                                     onClick={(evt) => {
+    //                                         handleGameForApiUpdate(evt.target.id, white, black)
+    //                                     }}>Draw
+    //                                 </div>
+    //                                 <div
+    //                                     className="blackPiecesMatchup"
+    //                                     id="blackPieces"
+    //                                     onClick={(evt) => {
+    //                                         handleGameForApiUpdate(evt.target.id, white, black)
+    //                                     }}>{black?.full_name}
+    //                                 </div>
+    //                                 <button onClick={() => {
+    //                                     sendNewGame(gameForApi)
+    //                                         .then(() => resetGames())
+    //                                 }}>
+    //                                     submit
+    //                                 </button>
+    //                             </div>
+    //                         )
+    //                     })
+    //                 }
+    //             </section>
+    //         )
+    //     }
+    //     else {
+    //         return (
+    //             <table>
+    //                 <thead>
+    //                     <tr className="tableHeaderRow">
+    //                         <th>white player</th>
+    //                         <th></th>
+    //                         <th>black player</th>
+    //                     </tr>
+    //                 </thead>
+    //                 <tbody>
+    //                     {
+    //                         currentRoundMatchups?.map(matchup => {
+    //                             const white = activeTournamentPlayers.find(player => player.id === matchup.player1)
+    //                             const black = activeTournamentPlayers.find(player => player.id === matchup.player2)
+    //                             if (white?.id && black?.id) {
+    //                                 return (
+    //                                     <tr key={matchup.round + matchup.match}>
+    //                                         <td className="whitePiecesMatchup">{white.full_name}</td>
+    //                                         <td className="matchupTableVS">vs</td>
+    //                                         <td className="blackPiecesMatchup">{black.full_name}</td>
+    //                                     </tr>
+    //                                 )
+    //                             }
+    //                             if (white?.id && black === undefined) {
+    //                                 return (
+    //                                     <tr key={matchup.round + matchup.match}>
+    //                                         <td className="whitePiecesMatchup">{white.full_name}</td>
+    //                                         <td className="matchupTableVS"></td>
+    //                                         <td className="blackPiecesMatchup">BYE</td>
+    //                                     </tr>
+    //                                 )
+    //                             }
+    //                         })
+    //                     }
+    //                 </tbody>
+    //             </table>
+    //         )
+    //     }
+    // }

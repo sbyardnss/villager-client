@@ -16,7 +16,7 @@ export const Play = () => {
     const localVillager = localStorage.getItem("villager")
     const localVillagerObj = JSON.parse(localVillager)
     const navigate = useNavigate()
-    const { setSelectedGame, selectedGameObj, orientation, setOrientation, resetGames } = useContext(PlayContext)
+    const { selectedGame, setSelectedGame, selectedGameObj, orientation, setOrientation, resetGames } = useContext(PlayContext)
     const [game, setGame] = useState(new Chess());
     const [moveFrom, setMoveFrom] = useState("");
     const [moveSquares, setMoveSquares] = useState({});
@@ -36,9 +36,10 @@ export const Play = () => {
         pgn: ""
     })
     //set up game based on whether it is against human or computer
+    //USE EFFECT CURRENTLY RUNNING BEFORE SELECTEDGAMEOBJ RETRIEVED 
     useEffect(
         () => {
-            if (selectedGameObj?.id) {
+            if (selectedGame) {
                 game.load_pgn(selectedGameObj.pgn)
                 const copy = { ...selectedGameObj }
                 copy.player_b = selectedGameObj.player_b.id
@@ -46,24 +47,30 @@ export const Play = () => {
                 updateGameForApi(copy)
             }
             else {
-                if (orientation === "white") {
+                if (orientation === "black") {
+                    const copy = { ...gameForApi }
+                    copy.player_b = localVillagerObj.userId
+                    copy.player_w = null
+                    copy.computer_opponent = true
+                    updateGameForApi(copy)
+                    makeRandomMove()//this one is causing moves even when user is white pieces
+                }
+                else {
                     const copy = { ...gameForApi }
                     copy.player_w = localVillagerObj.userId
                     copy.player_b = null
                     copy.computer_opponent = true
                     updateGameForApi(copy)
                 }
-                else {
-                    const copy = { ...gameForApi }
-                    copy.player_b = localVillagerObj.userId
-                    copy.player_w = null
-                    copy.computer_opponent = true
-                    updateGameForApi(copy)
-                    makeRandomMove()
-                }
             }
         }, [orientation]
     )
+    useEffect(
+        () => {
+            // call makeRandomMove in this useeffect after checking for relevant variables
+        },[]
+    )
+    console.log(gameForApi)
     //OLD USEEFFECT FROM WHEN TURNFORPGN WAS MAIN DRIVER
     //AUTOMATICALLY ADD TURN NOTATION TO PGN ONCE TWO MOVES HAVE BEEN MADE
     // useEffect(
@@ -85,26 +92,26 @@ export const Play = () => {
     // )
     useEffect(
         () => {
-            if (!selectedGameObj) {
+            if (selectedGame === 0) {
                 if (orientation === "white") {
                     if (game.turn() === "b") {
                         setTimeout(makeRandomMove, 300)
                     }
                 }
-                if (orientation === "b") {
+                if (orientation === "black") {
                     if (game.turn() === "w") {
                         setTimeout(makeRandomMove, 300)
                     }
                 }
             }
-        },[game]
-    )
-    useEffect(
-        () => {
-            updateTurnForPgn([])
-        }, [pgn]
+        }, [game]
     )
     //OLD USEEFFECT FROM WHEN TURNFORPGN WAS MAIN DRIVER
+    // useEffect(
+    //     () => {
+    //         updateTurnForPgn([])
+    //     }, [pgn]
+    // )
     //automatically make computer moves based on which players turn it is
     //and the state of the turnForPgn variable
     // useEffect(
@@ -279,7 +286,6 @@ export const Play = () => {
         setOptionSquares({});
     }
 
-
     return (
         <main id="playContainer">
             <div >
@@ -296,7 +302,7 @@ export const Play = () => {
                             const newPgn = game.pgn()
                             gameCopy.pgn = newPgn
                             alterGame(gameCopy)
-                            .then(() => resetGames())
+                                .then(() => resetGames())
                         }
                     }}
                     customBoardStyle={{

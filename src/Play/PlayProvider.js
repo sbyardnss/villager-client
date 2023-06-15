@@ -25,7 +25,7 @@ export const PlayProvider = (props) => {
         winner: null,
         bye: false
     })
-    
+
     useEffect(
         () => {
             Promise.all([getAllPlayers(), getAllGames()]).then(([playerData, gameData]) => {
@@ -38,7 +38,7 @@ export const PlayProvider = (props) => {
         () => {
             const gameObjForPlay = games.find(g => g.id === selectedGame)
             updateSelectedGameObj(gameObjForPlay)
-        },[selectedGame]
+        }, [selectedGame]
     )
     useEffect(
         () => {
@@ -46,7 +46,7 @@ export const PlayProvider = (props) => {
                 if (selectedGameObj.player_w?.id === localVillagerObj.userId) {
                     setOrientation("white")
                 }
-                else {
+                if (selectedGameObj.player_b?.id === localVillagerObj.userId) {
                     setOrientation("black")
                 }
             }
@@ -55,11 +55,11 @@ export const PlayProvider = (props) => {
                 if (randomOrientation === 1) {
                     setOrientation("white")
                 }
-                else {
+                if (randomOrientation === 0) {
                     setOrientation("black")
                 }
             }
-        },[selectedGameObj]
+        }, [selectedGameObj]
     )
     const resetGames = () => {
         getAllGames()

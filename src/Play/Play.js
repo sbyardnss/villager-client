@@ -37,7 +37,7 @@ export const Play = () => {
     //set up game based on whether it is against human or computer
     useEffect(
         () => {
-            if (selectedGameObj) {
+            if (selectedGameObj?.id) {
                 game.load_pgn(selectedGameObj.pgn)
             }
             else {
@@ -112,8 +112,7 @@ export const Play = () => {
             updateTurnForPgn([])
         }, [pgn]
     )
-
-
+    console.log(turnForPgn)
     //automatically make computer moves based on which players turn it is
     //and the state of the turnForPgn variable
     useEffect(
@@ -133,7 +132,6 @@ export const Play = () => {
         }, [turnForPgn]
     )
     console.log(orientation)
-    console.log(selectedGame)
     // useEffect for updating gameForAPI at end of game 
     // against computer opponent
     useEffect(

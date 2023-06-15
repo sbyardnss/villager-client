@@ -11,7 +11,7 @@ export const PlayProvider = (props) => {
     const localVillager = localStorage.getItem("villager")
     const localVillagerObj = JSON.parse(localVillager)
     const [selectedGame, setSelectedGame] = useState(0)
-    const [orientation, setOrientation] = useState("")
+    const [orientation, setOrientation] = useState("white")
     const [games, setGames] = useState([])
     const [players, setPlayers] = useState([])
     const [selectedGameObj, updateSelectedGameObj] = useState({
@@ -42,7 +42,7 @@ export const PlayProvider = (props) => {
     )
     useEffect(
         () => {
-            if (selectedGameObj) {
+            if (selectedGameObj?.id) {
                 if (selectedGameObj.player_w?.id === localVillagerObj.userId) {
                     setOrientation("white")
                 }

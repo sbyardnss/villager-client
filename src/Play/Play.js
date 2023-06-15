@@ -13,7 +13,7 @@ export const Play = () => {
     const localVillager = localStorage.getItem("villager")
     const localVillagerObj = JSON.parse(localVillager)
     const navigate = useNavigate()
-    const { selectedGame, setSelectedGame, selectedGameObj, orientation, setOrientation } = useContext(PlayContext)
+    const { selectedGame, setSelectedGame, selectedGameObj, orientation, setOrientation, resetGames } = useContext(PlayContext)
     const [game, setGame] = useState(new Chess());
     const [moveFrom, setMoveFrom] = useState("");
     const [rightClickedSquares, setRightClickedSquares] = useState({});
@@ -280,8 +280,8 @@ export const Play = () => {
                             const gameCopy = { ...selectedGameObj }
                             const newPgn = game.pgn()
                             gameCopy.pgn = newPgn
-                            console.log(gameCopy)
-                            // alterGame(gameCopy)
+                            alterGame(gameCopy)
+                            .then(() => resetGames())
                         }
                     }}
                     customBoardStyle={{
@@ -317,7 +317,6 @@ export const Play = () => {
                     onClick={() => {
                         const copy = { ...gameForApi }
                         copy.pgn = game.pgn()
-
                         sendNewGame(copy)
                     }}
                 >

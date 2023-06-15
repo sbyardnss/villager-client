@@ -33,6 +33,11 @@
     border: 1px solid rgb(59, 174, 174)
 }
 
+
+/* active games section */
+.tournamentChallengeListItem {
+    border: 1px solid orange;
+}
 /* create challenge section */
 #piecesSelectionContainer {
     display: flex;

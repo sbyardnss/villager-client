@@ -27,7 +27,7 @@ export const Play = () => {
         player_b: 0,
         win_style: "",
         accepted: true,
-        winner: 0,
+        winner: null,
         computer_opponent: true,
         tournament: null,
         tournament_round: null,
@@ -39,6 +39,10 @@ export const Play = () => {
         () => {
             if (selectedGameObj?.id) {
                 game.load_pgn(selectedGameObj.pgn)
+                const copy = { ...selectedGameObj }
+                copy.player_b = selectedGameObj.player_b.id
+                copy.player_w = selectedGameObj.player_w.id
+                updateGameForApi(copy)
             }
             else {
                 // const randomOrientation = Math.floor(Math.random() * 2)
@@ -104,7 +108,7 @@ export const Play = () => {
             }
         }, [turnForPgn]
     )
-    console.log(game)
+
     // useEffect for updating gameForAPI at end of game 
     // against computer opponent
     useEffect(
@@ -113,7 +117,10 @@ export const Play = () => {
                 const copy = { ...gameForApi }
                 copy.pgn = game.pgn()
                 if (game.turn() === "b") {
-                    copy.winner = localVillagerObj.userId
+                    copy.winner = selectedGameObj.player_w.id
+                }
+                else {
+                    copy.winner = selectedGameObj.player_b.id
                 }
                 if (game.in_checkmate()) {
                     copy.win_style = "checkmate"
@@ -122,9 +129,14 @@ export const Play = () => {
                     copy.win_style = "draw"
                 }
                 updateGameForApi(copy)
+                if (selectedGameObj) {
+                    console.log(copy)
+                }
             }
         }, [game]
     )
+
+    // four functions below are for game mechanics. mostly provided by react-chessboard
     // updates board in ui 
     const safeGameMutate = (modify) => {
         setGame((g) => {
@@ -165,7 +177,8 @@ export const Play = () => {
         // exit if the game is over
         if (game.game_over() || game.in_draw() || possibleMoves.length === 0) {
             if (game.game_over()) {
-                updatePgn(game.pgn())
+                const winner =
+                    updatePgn(game.pgn())
                 console.log(gameForApi)
             }
             if (game.in_draw()) {
@@ -200,6 +213,20 @@ export const Play = () => {
                 })
             }
         })
+        //CUSTOM
+        //add move to turn array to load into pgn
+        // for array version of turnForPgn
+        // if (possibleMoves[randomIndex]) {
+        //     const computerTurnCopy = [...turnForPgn]
+        //     computerTurnCopy.push(possibleMoves[randomIndex])
+        //     updateTurnForPgn(computerTurnCopy)
+        // }
+        //END CUSTOM
+
+
+        // safeGameMutate((game) => {
+        //     game.move(possibleMoves[randomIndex]);
+        // });
     }
     const onSquareClick = (square) => {
         // setRightClickedSquares({});
@@ -238,34 +265,6 @@ export const Play = () => {
     }
 
 
-    // // console.log(split)
-    // //CURRENTLY CAUSING MY APP TO CRASH
-    // const grabMovesFromPGN = () => {
-    //     //.pgn() give game history
-    //     const pgn = game.pgn()
-    //     const splitBySpacesInitial = pgn?.split(" ")
-    //     // console.log(splitBySpacesInitial)
-    //     const pgnArray = []
-    //     for (let i = 0; i <= splitBySpacesInitial.length; i = i + 3) {
-    //         const joinedMoveTurn = [splitBySpacesInitial[i], splitBySpacesInitial[i + 1], splitBySpacesInitial[i + 2]]
-    //         pgnArray.push(joinedMoveTurn)
-    //     }
-    //     return pgnArray
-    // }
-    // const pgnArr = grabMovesFromPGN()
-    const pgnStringBuilder = (pgnArr, index) => {
-        const outputPgnString = pgnArr.map((notation, index) => {
-            if (notation.length === 2) {
-                return `${index + 1}. ${notation[0]} ${notation[1]}`
-            }
-            else {
-                return `${index + 1}. ${notation[0]}`
-            }
-        }).join(" ")
-        return outputPgnString
-    }
-
-
     return (
         <main id="playContainer">
             <div >
@@ -281,8 +280,9 @@ export const Play = () => {
                             const gameCopy = { ...selectedGameObj }
                             const newPgn = game.pgn()
                             gameCopy.pgn = newPgn
-                            alterGame(gameCopy)
-                            .then(() => resetGames())
+
+                            // alterGame(gameCopy)
+                            // .then(() => resetGames())
                         }
                     }}
                     customBoardStyle={{

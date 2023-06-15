@@ -175,7 +175,6 @@ export const HomePage = () => {
                         {
                             myUnfinishedGames?.map(ug => {
                                 const opponent = ug.player_w?.id === localVillagerObj.userId ? ug.player_b : ug.player_w
-                                console.log(ug)
                                 const isTournamentGame = () => {
                                     return ug.tournament ? "tournamentChallengeListItem" : "challengeListItem"
                                 }

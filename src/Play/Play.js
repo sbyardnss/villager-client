@@ -104,6 +104,7 @@ export const Play = () => {
             }
         }, [turnForPgn]
     )
+    console.log(game)
     // useEffect for updating gameForAPI at end of game 
     // against computer opponent
     useEffect(

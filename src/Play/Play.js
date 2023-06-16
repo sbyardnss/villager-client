@@ -39,14 +39,17 @@ export const Play = () => {
     //USE EFFECT CURRENTLY RUNNING BEFORE SELECTEDGAMEOBJ RETRIEVED 
     const leaveGame = (e) => {
         if (document.getElementById("navMenu")?.contains(e.target)) {
-            setSelectedGame(0)
-            navigate(e.target.id)
+            if (e.target.id !== "navMenu" && e.target.id !== "navLinks" && e.target.id !== "logo") {
+                setSelectedGame(0)
+                navigate(e.target.id)
+            }
         }
+        
         if (e.target.id === "logout") {
             localStorage.removeItem("villager")
             navigate("/", { replace: true })
         }
-        
+
     }
     document.addEventListener('click', leaveGame)
     useEffect(
@@ -101,25 +104,27 @@ export const Play = () => {
     useEffect(
         () => {
             if (selectedGameObj) {
-                if (game.game_over()) {
-                    const copy = { ...gameForApi }
-                    copy.pgn = game.pgn()
-                    if (game.turn() === "b") {
-                        copy.winner = selectedGameObj.player_w.id
-                    }
-                    else {
-                        copy.winner = selectedGameObj.player_b.id
-                    }
-                    if (game.in_checkmate()) {
-                        copy.win_style = "checkmate"
-                        console.log("this useEffect worked")
-                    }
-                    else {
-                        copy.win_style = "draw"
-                    }
-                    updateGameForApi(copy)
-                    if (selectedGameObj) {
-                        alterGame(copy)
+                if (selectedGameObj.winner === null) {
+                    if (game.game_over()) {
+                        const copy = { ...gameForApi }
+                        copy.pgn = game.pgn()
+                        if (game.turn() === "b") {
+                            copy.winner = selectedGameObj.player_w.id
+                        }
+                        else {
+                            copy.winner = selectedGameObj.player_b.id
+                        }
+                        if (game.in_checkmate()) {
+                            copy.win_style = "checkmate"
+                            console.log("this useEffect worked")
+                        }
+                        else {
+                            copy.win_style = "draw"
+                        }
+                        updateGameForApi(copy)
+                        if (selectedGameObj) {
+                            alterGame(copy)
+                        }
                     }
                 }
             }
@@ -168,13 +173,25 @@ export const Play = () => {
         if (selectedGame === 0) {
             if (matchReady) {
                 return (
-                    <button onClick={() => {
-                        safeGameMutate((game) => {
-                            game.reset();
-                        });
-                        setMoveSquares({});
-                    }}
-                    >reset</button>
+                    <div>
+                        <button onClick={() => {
+                            safeGameMutate((game) => {
+                                game.reset();
+                            });
+                            setMoveSquares({});
+                        }}
+                        >reset</button>
+                        <button
+                            onClick={() => {
+                                const copy = { ...gameForApi }
+                                copy.pgn = game.pgn()
+                                sendNewGame(copy)
+                            }}
+                        >
+                            submit game
+                        </button>
+                    </div>
+
                 )
             }
             else {
@@ -339,18 +356,19 @@ export const Play = () => {
                         ...optionSquares,
                     }}
                 />
-                {resetOrStartGame()}
-                <button
-                    onClick={() => {
-                        safeGameMutate((game) => {
-                            game.undo();
-                        });
-                        setMoveSquares({});
-                    }}
-                >
-                    undo
-                </button>
-                <button
+                <div id="playControls">
+                    {resetOrStartGame()}
+                    <button
+                        onClick={() => {
+                            safeGameMutate((game) => {
+                                game.undo();
+                            });
+                            setMoveSquares({});
+                        }}
+                    >
+                        undo
+                    </button>
+                    {/* <button
                     onClick={() => {
                         const copy = { ...gameForApi }
                         copy.pgn = game.pgn()
@@ -358,13 +376,14 @@ export const Play = () => {
                     }}
                 >
                     submit game
-                </button>
-                <button onClick={() => {
-                    setSelectedGame(0)
-                    navigate("/")
-                }}>
-                    exit game
-                </button>
+                </button> */}
+                    <button onClick={() => {
+                        setSelectedGame(0)
+                        navigate("/")
+                    }}>
+                        exit game
+                    </button>
+                </div>
             </div>
         </main>
     );

@@ -134,23 +134,25 @@ export const Play = () => {
     //function for populating start game prompt window
     //only for non human opponents
     const checkWarning = () => {
-        if (game.in_check()) {
-            return (
-                <div>check</div>
-            )
-        }
-        if (game.game_over() && game.in_checkmate()) {
-            return (
-                <div id="checkmatePrompt">
-                    <div>checkmate</div>
-                    <button onClick={() => {
-                        setSelectedGame(0)
-                        navigate("/")
-                    }}>
-                        exit game
-                    </button>
-                </div>
-            )
+        if (!selectedGameObj) {
+            if (game.in_check()) {
+                return (
+                    <div>check</div>
+                )
+            }
+            if (game.game_over() && game.in_checkmate()) {
+                return (
+                    <div id="checkmatePrompt">
+                        <div>checkmate</div>
+                        <button onClick={() => {
+                            setSelectedGame(0)
+                            navigate("/")
+                        }}>
+                            exit game
+                        </button>
+                    </div>
+                )
+            }
         }
     }
     const clickStartPrompt = () => {
@@ -191,12 +193,19 @@ export const Play = () => {
                             submit game
                         </button>
                     </div>
-
                 )
             }
             else {
                 return null
             }
+        }
+        else {
+            return (
+                <div>
+                    <button className="reviewButtons">&lt;</button>
+                    <button className="reviewButtons">&gt;</button>
+                </div>
+            )
         }
     }
     // four functions below are for game mechanics. mostly provided by react-chessboard

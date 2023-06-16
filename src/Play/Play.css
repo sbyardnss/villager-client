@@ -54,3 +54,6 @@
 #playControls {
     display: flex;
 }
+.reviewButtons {
+    font-size: larger;
+}

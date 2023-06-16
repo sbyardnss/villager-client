@@ -14,6 +14,7 @@ export const PlayProvider = (props) => {
     const [orientation, setOrientation] = useState("white")
     const [games, setGames] = useState([])
     const [players, setPlayers] = useState([])
+    const [review, setReview] = useState(false)
     const [selectedGameObj, updateSelectedGameObj] = useState({
         player_w: null,
         player_b: null,
@@ -68,7 +69,7 @@ export const PlayProvider = (props) => {
     return (
         <PlayContext.Provider value={{
             selectedGame, setSelectedGame, selectedGameObj, games, players, resetGames,
-            orientation, setOrientation
+            orientation, setOrientation, review, setReview
         }}>
             {props.children}
         </PlayContext.Provider>

@@ -16,12 +16,14 @@ export const Play = () => {
     const localVillager = localStorage.getItem("villager")
     const localVillagerObj = JSON.parse(localVillager)
     const navigate = useNavigate()
-    const { selectedGame, setSelectedGame, selectedGameObj, orientation, setOrientation, resetGames } = useContext(PlayContext)
+    const { selectedGame, setSelectedGame, selectedGameObj, orientation, setOrientation, resetGames, review, setReview } = useContext(PlayContext)
     const [game, setGame] = useState(new Chess());
     const [moveFrom, setMoveFrom] = useState("");
     const [moveSquares, setMoveSquares] = useState({});
     const [optionSquares, setOptionSquares] = useState({});
     const [turnForPgn, updateTurnForPgn] = useState([])
+    const [reviewPgn, setReviewPgn] = useState([])
+    const [reviewLength, setReviewLength] = useState(0)
     const [matchReady, setMatchReady] = useState(false)
     const [gameForApi, updateGameForApi] = useState({
         player_w: 0,
@@ -41,17 +43,21 @@ export const Play = () => {
         if (document.getElementById("navMenu")?.contains(e.target)) {
             if (e.target.id !== "navMenu" && e.target.id !== "navLinks" && e.target.id !== "logo") {
                 setSelectedGame(0)
+                setReview(false)
                 navigate(e.target.id)
             }
         }
-        
+
         if (e.target.id === "logout") {
+            setSelectedGame(0)
+            setReview(false)
             localStorage.removeItem("villager")
             navigate("/", { replace: true })
         }
 
     }
     document.addEventListener('click', leaveGame)
+
     useEffect(
         () => {
             if (selectedGame) {
@@ -98,6 +104,7 @@ export const Play = () => {
             }
         }, [game, matchReady]
     )
+
     // useEffect for updating gameForAPI at end of game 
     // against computer opponent
 
@@ -130,7 +137,20 @@ export const Play = () => {
             }
         }, [game]
     )
-
+    useEffect(
+        () => {
+            if (review === true) {
+                const pgnArr = grabMovesFromPGN()
+                setReviewPgn(pgnArr)
+            }
+        }, [game]
+    )
+    useEffect(
+        () => {
+            const length = reviewPgn.length
+            setReviewLength(length)
+        }, [reviewPgn]
+    )
     //function for populating start game prompt window
     //only for non human opponents
     const checkWarning = () => {
@@ -202,11 +222,43 @@ export const Play = () => {
         else {
             return (
                 <div>
-                    <button className="reviewButtons">&lt;</button>
-                    <button className="reviewButtons">&gt;</button>
+                    <button className="reviewButtons"
+                        onClick={() => {
+                            const newLength = reviewLength - 1
+                            const reviewCopy = [...reviewPgn]
+                        }}>&lt;</button>
+                    <button className="reviewButtons"
+                        onClick={() => {
+                            const newLength = reviewLength + 1
+                            const reviewCopy = [...reviewPgn]
+                        }}>&gt;</button>
                 </div>
             )
         }
+    }
+
+    const pgnStringBuilder = (pgnArr, index) => {
+        const outputPgnString = pgnArr.map((notation, index) => {
+            if (notation.length === 2) {
+                return `${index + 1}. ${notation[0]} ${notation[1]}`
+            }
+            else {
+                return `${index + 1}. ${notation[0]}`
+            }
+        }).join(" ")
+        return outputPgnString
+    }
+    const grabMovesFromPGN = () => {
+        //.pgn() give game history
+        const pgn = game.pgn()
+        const splitBySpacesInitial = pgn?.split(" ")
+        // console.log(splitBySpacesInitial)
+        const pgnArray = []
+        for (let i = 0; i <= splitBySpacesInitial.length; i = i + 3) {
+            const joinedMoveTurn = [splitBySpacesInitial[i], splitBySpacesInitial[i + 1], splitBySpacesInitial[i + 2]]
+            pgnArray.push(joinedMoveTurn)
+        }
+        return pgnArray
     }
     // four functions below are for game mechanics. mostly provided by react-chessboard
     // updates board in ui 
@@ -319,11 +371,11 @@ export const Play = () => {
         });
         //add move to turn array to load into pgn
         //for array version of turnForPgn
-        if (move) {
-            const turnCopy = [...turnForPgn]
-            turnCopy.push(move.san)
-            updateTurnForPgn(turnCopy)
-        }
+        // if (move) {
+        //     const turnCopy = [...turnForPgn]
+        //     turnCopy.push(move.san)
+        //     updateTurnForPgn(turnCopy)
+        // }
         setGame(gameCopy);
         // if invalid, setMoveFrom and getMoveOptions
         if (move === null) {
@@ -371,12 +423,14 @@ export const Play = () => {
                         onClick={() => {
                             safeGameMutate((game) => {
                                 game.undo();
+
                             });
                             setMoveSquares({});
                         }}
                     >
                         undo
                     </button>
+
                     {/* <button
                     onClick={() => {
                         const copy = { ...gameForApi }

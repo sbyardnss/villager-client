@@ -23,6 +23,7 @@ export const Play = () => {
     const [optionSquares, setOptionSquares] = useState({});
     const [turnForPgn, updateTurnForPgn] = useState([])
     const [pgn, updatePgn] = useState([])
+    const [matchReady, setMatchReady] = useState(false)
     const [gameForApi, updateGameForApi] = useState({
         player_w: 0,
         player_b: 0,
@@ -53,7 +54,6 @@ export const Play = () => {
                     copy.player_w = null
                     copy.computer_opponent = true
                     updateGameForApi(copy)
-                    makeRandomMove()//this one is causing moves even when user is white pieces
                 }
                 else {
                     const copy = { ...gameForApi }
@@ -65,71 +65,25 @@ export const Play = () => {
             }
         }, [orientation]
     )
+
     useEffect(
         () => {
-            // call makeRandomMove in this useeffect after checking for relevant variables
-        },[]
-    )
-    console.log(gameForApi)
-    //OLD USEEFFECT FROM WHEN TURNFORPGN WAS MAIN DRIVER
-    //AUTOMATICALLY ADD TURN NOTATION TO PGN ONCE TWO MOVES HAVE BEEN MADE
-    // useEffect(
-    //     () => {
-    //         if (turnForPgn.length === 2) {
-    //             const copyOfPgn = [...pgn]
-    //             copyOfPgn.push(turnForPgn)
-    //             updatePgn(copyOfPgn)
-    //             updateTurnForPgn([])
-    //         }
-    //         if (game.in_checkmate()) {
-    //             if (turnForPgn.length === 1) {
-    //                 const copyOfPgn = [...pgn]
-    //                 copyOfPgn.push(turnForPgn)
-    //                 updatePgn(copyOfPgn)
-    //             }
-    //         }
-    //     }, [turnForPgn, game]
-    // )
-    useEffect(
-        () => {
-            if (selectedGame === 0) {
-                if (orientation === "white") {
-                    if (game.turn() === "b") {
-                        setTimeout(makeRandomMove, 300)
+            if (matchReady) {
+                if (selectedGame === 0) {
+                    if (orientation === "white") {
+                        if (game.turn() === "b") {
+                            setTimeout(makeRandomMove, 300)
+                        }
                     }
-                }
-                if (orientation === "black") {
-                    if (game.turn() === "w") {
-                        setTimeout(makeRandomMove, 300)
+                    if (orientation === "black") {
+                        if (game.turn() === "w") {
+                            setTimeout(makeRandomMove, 300)
+                        }
                     }
                 }
             }
-        }, [game]
+        }, [game, matchReady]
     )
-    //OLD USEEFFECT FROM WHEN TURNFORPGN WAS MAIN DRIVER
-    // useEffect(
-    //     () => {
-    //         updateTurnForPgn([])
-    //     }, [pgn]
-    // )
-    //automatically make computer moves based on which players turn it is
-    //and the state of the turnForPgn variable
-    // useEffect(
-    //     () => {
-    //         if (!selectedGameObj) {
-    //             if (orientation === "white") {
-    //                 if (turnForPgn.length === 1) {
-    //                     setTimeout(makeRandomMove, 300)
-    //                 }
-    //             }
-    //             if (orientation === "black") {
-    //                 if (turnForPgn.length === 0) {
-    //                     setTimeout(makeRandomMove, 300)
-    //                 }
-    //             }
-    //         }
-    //     }, [turnForPgn]
-    // )
 
     // useEffect for updating gameForAPI at end of game 
     // against computer opponent
@@ -157,7 +111,32 @@ export const Play = () => {
             }
         }, [game]
     )
-
+    const matchConfirmed = () => {
+        return matchReady ? "clickableContainer" : "unclickableContainer"
+    }
+    const resetOrStartGame = () => {
+        if (selectedGame === 0) {
+            if (matchReady) {
+                return (
+                    <button onClick={() => {
+                        safeGameMutate((game) => {
+                            game.reset();
+                        });
+                        setMoveSquares({});
+                    }}
+                    >reset</button>
+                )
+            }
+            else {
+                return (
+                    <button onClick={() => {
+                        setMatchReady(true)
+                    }}
+                    >start</button>
+                )
+            }
+        }
+    }
     // four functions below are for game mechanics. mostly provided by react-chessboard
     // updates board in ui 
     const safeGameMutate = (modify) => {
@@ -288,68 +267,61 @@ export const Play = () => {
 
     return (
         <main id="playContainer">
-            <div >
-                <Chessboard
-                    id="ClickToMove"
-                    animationDuration={200}
-                    arePiecesDraggable={false}
-                    boardOrientation={orientation}
-                    position={game.fen()}
-                    onSquareClick={(evt) => {
-                        onSquareClick(evt)
-                        if (selectedGameObj?.id) {
-                            const gameCopy = { ...selectedGameObj }
-                            const newPgn = game.pgn()
-                            gameCopy.pgn = newPgn
-                            alterGame(gameCopy)
-                                .then(() => resetGames())
-                        }
-                    }}
-                    customBoardStyle={{
-                        borderRadius: "4px",
-                        boxShadow: "0 2px 10px rgba(0, 0, 0, 0.5)",
-                    }}
-                    customSquareStyles={{
-                        ...moveSquares,
-                        ...optionSquares,
-                    }}
-                />
-                <button
-                    onClick={() => {
-                        safeGameMutate((game) => {
-                            game.reset();
-                        });
-                        setMoveSquares({});
-                    }}
-                >
-                    reset
-                </button>
-                <button
-                    onClick={() => {
-                        safeGameMutate((game) => {
-                            game.undo();
-                        });
-                        setMoveSquares({});
-                    }}
-                >
-                    undo
-                </button>
-                <button
-                    onClick={() => {
-                        const copy = { ...gameForApi }
-                        copy.pgn = game.pgn()
-                        sendNewGame(copy)
-                    }}
-                >
-                    submit game
-                </button>
-                <button onClick={() => {
-                    setSelectedGame(0)
-                    navigate("/")
-                }}>
-                    exit game
-                </button>
-            </div>
+                <div >
+                    <Chessboard
+                        id="ClickToMove"
+                        animationDuration={200}
+                        arePiecesDraggable={false}
+                        boardOrientation={orientation}
+                        position={game.fen()}
+                        onSquareClick={(evt) => {
+                            if (matchReady) {
+                                onSquareClick(evt)
+                                if (selectedGameObj?.id) {
+                                    const gameCopy = { ...selectedGameObj }
+                                    const newPgn = game.pgn()
+                                    gameCopy.pgn = newPgn
+                                    alterGame(gameCopy)
+                                        .then(() => resetGames())
+                                }
+                            }
+                        }}
+                        customBoardStyle={{
+                            borderRadius: "4px",
+                            boxShadow: "0 2px 10px rgba(0, 0, 0, 0.5)",
+                        }}
+                        customSquareStyles={{
+                            ...moveSquares,
+                            ...optionSquares,
+                        }}
+                    />
+                    {resetOrStartGame()}
+                    <button
+                        onClick={() => {
+                            safeGameMutate((game) => {
+                                game.undo();
+                            });
+                            setMoveSquares({});
+                        }}
+                    >
+                        undo
+                    </button>
+                    <button
+                        onClick={() => {
+                            const copy = { ...gameForApi }
+                            copy.pgn = game.pgn()
+                            sendNewGame(copy)
+                        }}
+                    >
+                        submit game
+                    </button>
+                    <button onClick={() => {
+                        setSelectedGame(0)
+                        navigate("/")
+                    }}>
+                        exit game
+                    </button>
+                </div>
         </main>
     );
 }

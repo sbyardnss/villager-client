@@ -22,7 +22,6 @@ export const Play = () => {
     const [moveSquares, setMoveSquares] = useState({});
     const [optionSquares, setOptionSquares] = useState({});
     const [turnForPgn, updateTurnForPgn] = useState([])
-    const [pgn, updatePgn] = useState([])
     const [matchReady, setMatchReady] = useState(false)
     const [gameForApi, updateGameForApi] = useState({
         player_w: 0,
@@ -66,7 +65,6 @@ export const Play = () => {
             }
         }, [orientation]
     )
-
     useEffect(
         () => {
             if (matchReady) {
@@ -85,7 +83,6 @@ export const Play = () => {
             }
         }, [game, matchReady]
     )
-
     // useEffect for updating gameForAPI at end of game 
     // against computer opponent
     useEffect(
@@ -93,6 +90,7 @@ export const Play = () => {
             if (game.game_over()) {
                 const copy = { ...gameForApi }
                 copy.pgn = game.pgn()
+                
                 if (game.turn() === "b") {
                     copy.winner = selectedGameObj.player_w.id
                 }
@@ -112,8 +110,18 @@ export const Play = () => {
             }
         }, [game]
     )
+
     //function for populating start game prompt window
     //only for non human opponents
+    const checkWarning = () => {
+        if (game.in_check()) {
+            return (
+                <div>check</div>
+            )
+        }
+        if (game.in_checkmate()) {
+        }
+    }
     const clickStartPrompt = () => {
         if (selectedGame === 0) {
             if (matchReady) {
@@ -189,8 +197,6 @@ export const Play = () => {
         // exit if the game is over
         if (game.game_over() || game.in_draw() || possibleMoves.length === 0) {
             if (game.game_over()) {
-                const winner =
-                    updatePgn(game.pgn())
                 console.log(gameForApi)
             }
             if (game.in_draw()) {
@@ -275,10 +281,10 @@ export const Play = () => {
         setMoveFrom("");
         setOptionSquares({});
     }
-
     return (
         <main id="playContainer">
             {clickStartPrompt()}
+            {checkWarning()}
             <div >
                 <Chessboard
                     id="ClickToMove"

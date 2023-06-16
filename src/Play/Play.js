@@ -46,6 +46,7 @@ export const Play = () => {
                 copy.player_b = selectedGameObj.player_b.id
                 copy.player_w = selectedGameObj.player_w.id
                 updateGameForApi(copy)
+                setMatchReady(true)
             }
             else {
                 if (orientation === "black") {
@@ -111,9 +112,24 @@ export const Play = () => {
             }
         }, [game]
     )
-    const matchConfirmed = () => {
-        return matchReady ? "clickableContainer" : "unclickableContainer"
+    //function for populating start game prompt window
+    //only for non human opponents
+    const clickStartPrompt = () => {
+        if (selectedGame === 0) {
+            if (matchReady) {
+                return null
+            }
+            else {
+                return (
+                    <div id="clickStartPrompt"
+                            onClick={()=> setMatchReady(true)}>
+                        <div>Start Game</div>
+                    </div>
+                )
+            }
+        }
     }
+    //function for populating reset button only if game is against computer
     const resetOrStartGame = () => {
         if (selectedGame === 0) {
             if (matchReady) {
@@ -128,12 +144,7 @@ export const Play = () => {
                 )
             }
             else {
-                return (
-                    <button onClick={() => {
-                        setMatchReady(true)
-                    }}
-                    >start</button>
-                )
+                return null
             }
         }
     }
@@ -267,61 +278,62 @@ export const Play = () => {
 
     return (
         <main id="playContainer">
-                <div >
-                    <Chessboard
-                        id="ClickToMove"
-                        animationDuration={200}
-                        arePiecesDraggable={false}
-                        boardOrientation={orientation}
-                        position={game.fen()}
-                        onSquareClick={(evt) => {
-                            if (matchReady) {
-                                onSquareClick(evt)
-                                if (selectedGameObj?.id) {
-                                    const gameCopy = { ...selectedGameObj }
-                                    const newPgn = game.pgn()
-                                    gameCopy.pgn = newPgn
-                                    alterGame(gameCopy)
-                                        .then(() => resetGames())
-                                }
+            {clickStartPrompt()}
+            <div >
+                <Chessboard
+                    id="ClickToMove"
+                    animationDuration={200}
+                    arePiecesDraggable={false}
+                    boardOrientation={orientation}
+                    position={game.fen()}
+                    onSquareClick={(evt) => {
+                        if (matchReady) {
+                            onSquareClick(evt)
+                            if (selectedGameObj?.id) {
+                                const gameCopy = { ...selectedGameObj }
+                                const newPgn = game.pgn()
+                                gameCopy.pgn = newPgn
+                                alterGame(gameCopy)
+                                    .then(() => resetGames())
                             }
-                        }}
-                        customBoardStyle={{
-                            borderRadius: "4px",
-                            boxShadow: "0 2px 10px rgba(0, 0, 0, 0.5)",
-                        }}
-                        customSquareStyles={{
-                            ...moveSquares,
-                            ...optionSquares,
-                        }}
-                    />
-                    {resetOrStartGame()}
-                    <button
-                        onClick={() => {
-                            safeGameMutate((game) => {
-                                game.undo();
-                            });
-                            setMoveSquares({});
-                        }}
-                    >
-                        undo
-                    </button>
-                    <button
-                        onClick={() => {
-                            const copy = { ...gameForApi }
-                            copy.pgn = game.pgn()
-                            sendNewGame(copy)
-                        }}
-                    >
-                        submit game
-                    </button>
-                    <button onClick={() => {
-                        setSelectedGame(0)
-                        navigate("/")
-                    }}>
-                        exit game
-                    </button>
-                </div>
+                        }
+                    }}
+                    customBoardStyle={{
+                        borderRadius: "4px",
+                        boxShadow: "0 2px 10px rgba(0, 0, 0, 0.5)",
+                    }}
+                    customSquareStyles={{
+                        ...moveSquares,
+                        ...optionSquares,
+                    }}
+                />
+                {resetOrStartGame()}
+                <button
+                    onClick={() => {
+                        safeGameMutate((game) => {
+                            game.undo();
+                        });
+                        setMoveSquares({});
+                    }}
+                >
+                    undo
+                </button>
+                <button
+                    onClick={() => {
+                        const copy = { ...gameForApi }
+                        copy.pgn = game.pgn()
+                        sendNewGame(copy)
+                    }}
+                >
+                    submit game
+                </button>
+                <button onClick={() => {
+                    setSelectedGame(0)
+                    navigate("/")
+                }}>
+                    exit game
+                </button>
+            </div>
         </main>
     );
 }

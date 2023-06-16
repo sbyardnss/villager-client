@@ -1,10 +1,14 @@
 import { React, useContext, useState, useEffect } from "react"
-import { getProfile, getAllMessages, updateProfile } from "../ServerManager"
+import { getProfile, getAllMessages, updateProfile, getMyGames, getTournament, getMyTournaments } from "../ServerManager"
 import "./Profile.css"
+import { PlayContext } from "../Play/PlayProvider"
+import { useNavigate } from "react-router-dom"
 
 export const Profile = () => {
     const localVillager = localStorage.getItem("villager")
     const localVillagerObj = JSON.parse(localVillager)
+    const navigate = useNavigate()
+    const { selectedGame, setSelectedGame, selectedGameObj, orientation, setOrientation, resetGames } = useContext(PlayContext)
     const [profileInfo, setProfileInfo] = useState({
         username: "",
         first_name: "",
@@ -12,7 +16,9 @@ export const Profile = () => {
         password: "",
         email: ""
     })
+    const [myTournaments, setMyTournaments] = useState({})
     const [messages, setMessages] = useState([])
+    const [myGames, setMyGames] = useState([])
     const [profileEdit, setProfileEdit] = useState(false)
     const [update, setUpdate] = useState({
         username: "",
@@ -25,13 +31,21 @@ export const Profile = () => {
 
     useEffect(
         () => {
-            // getAllCommunityPosts().then(data => setCommunityPosts(data))
-            Promise.all([getAllMessages(), getProfile()]).then(([messageData, profileData]) => {
+            Promise.all([getAllMessages(), getProfile(), getMyGames(), getMyTournaments()]).then(([messageData, profileData, myGameData, tournamentData]) => {
                 setMessages(messageData)
                 setProfileInfo(profileData)
                 setUpdate(profileData)
+                setMyGames(myGameData)
+                setMyTournaments(tournamentData)
             })
         }, []
+    )
+    useEffect(
+        () => {
+            if (selectedGame !== 0) {
+                navigate("/play")
+            }
+        }, [selectedGame]
     )
     const showPassword = (passwordVisible) => {
         if (passwordVisible === true) {
@@ -161,6 +175,38 @@ export const Profile = () => {
                                     <li className="profileUserListItem" key={f.id}>
                                         {f.full_name}
                                     </li>
+                                )
+                            }
+                        })
+                    }
+                </section>
+                <section id="'profilePastGames">
+                    {
+                        myGames.map(game => {
+                            const opponent = game.player_w?.id === localVillagerObj.userId ? game.player_b : game.player_w
+                            const color = game.player_w?.id === localVillagerObj.userId ? "white" : "black"
+                            const opponentColor = game.player_w?.id === localVillagerObj.userId ? "black" : "white"
+                            const tournamentInfo = () => {
+                                if (game.tournament) {
+                                    const gameTournament = myTournaments.find(t => t.id === game.tournament)
+                                    console.log(gameTournament)
+                                    return (
+                                        <div>{gameTournament.title}</div>
+                                    )
+                                }
+                            }
+                            
+                            if (game.pgn !== "" && game.pgn !== null && game.winner !== null) {
+                                return (
+                                    <div key={game.id}>
+                                        <div>{new Date(game.date_time).toLocaleDateString('en-us')}</div>
+                                        <div>{opponent.full_name} -- {opponentColor}</div>
+                                        <div>Playing as {color}</div>
+                                        {tournamentInfo()}
+                                        <button onClick={() => {
+                                            setSelectedGame(game.id)
+                                        }}>Review Game</button>
+                                    </div>
                                 )
                             }
                         })

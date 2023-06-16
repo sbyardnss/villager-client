@@ -186,7 +186,6 @@ export const Tournament = () => {
                             const copy = { ...gameForApi }
                             copy.player_w = white?.id
                             copy.player_b = black?.id
-
                             if (black === undefined) {
                                 return (
                                     <div key={`${matchup.round} -- ${matchup.match} -- bye`}>
@@ -263,7 +262,6 @@ export const Tournament = () => {
                                         else {
                                             copy.winner = null
                                             // console.log(copy)
-
                                             sendNewGame(copy)
                                         }
                                     }

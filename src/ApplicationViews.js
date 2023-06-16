@@ -28,7 +28,12 @@ export const ApplicationViews = () => {
                         <Play />
                     </PlayProvider>
                 } />
-                <Route path="profile" element={<Profile />} />
+
+                <Route path="profile" element={
+                    <PlayProvider>
+                        <Profile />
+                    </PlayProvider>
+                } />
                 <Route path="messages" element={<Messages />} />
                 <Route path="tournament" element={
                     <TournamentProvider>

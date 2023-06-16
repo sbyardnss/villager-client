@@ -37,10 +37,22 @@ export const Play = () => {
     })
     //set up game based on whether it is against human or computer
     //USE EFFECT CURRENTLY RUNNING BEFORE SELECTEDGAMEOBJ RETRIEVED 
+    const leaveGame = (e) => {
+        if (document.getElementById("navMenu")?.contains(e.target)) {
+            setSelectedGame(0)
+            navigate(e.target.id)
+        }
+        if (e.target.id === "logout") {
+            localStorage.removeItem("villager")
+            navigate("/", { replace: true })
+        }
+        
+    }
+    document.addEventListener('click', leaveGame)
     useEffect(
         () => {
             if (selectedGame) {
-                game.load_pgn(selectedGameObj.pgn)
+                game.load_pgn(selectedGameObj?.pgn)
                 const copy = { ...selectedGameObj }
                 copy.player_b = selectedGameObj.player_b.id
                 copy.player_w = selectedGameObj.player_w.id

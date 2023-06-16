@@ -67,11 +67,41 @@ export const getAllCommunityPosts = () => {
     })
         .then(res => res.json())
 }
+export const getMyGames = () => {
+    const localVillagerObj = getToken()
+    return fetch(`${apiKey}/games/my_games`, {
+        headers: {
+            "Authorization": `Token ${localVillagerObj.token}`,
+            "Content-Type": "application/json"
+        }
+    })
+        .then(res => res.json())
+}
+export const getMyTournaments = () => {
+    const localVillagerObj = getToken()
+    return fetch(`${apiKey}/tournaments/my_tournaments`, {
+        headers: {
+            "Authorization": `Token ${localVillagerObj.token}`,
+            "Content-Type": "application/json"
+        }
+    })
+        .then(res => res.json()) 
+}
 
 //RETRIEVE FETCHES
 export const getProfile = () => {
     const localVillagerObj = getToken()
     return fetch(`${apiKey}/players/profile`, {
+        headers: {
+            "Authorization": `Token ${localVillagerObj.token}`,
+            "Content-Type": "application/json"
+        }
+    })
+        .then(res => res.json())
+}
+export const getTournament = (tournamentId) => {
+    const localVillagerObj = getToken()
+    return fetch(`${apiKey}/tournaments/${tournamentId}`, {
         headers: {
             "Authorization": `Token ${localVillagerObj.token}`,
             "Content-Type": "application/json"

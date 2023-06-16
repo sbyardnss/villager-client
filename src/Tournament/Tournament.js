@@ -414,7 +414,7 @@ export const Tournament = () => {
                                                                 <td key={tpg.id} value={1} id={tpg.id + "--" + tourneyPlayer.id} className="tournamentGameResultBye">bye</td>
                                                             )
                                                         }
-                                                        if (tpg.winner?.id === tourneyPlayer.id) {
+                                                        if (tpg.winner === tourneyPlayer.id) {
                                                             score++
                                                             return (
                                                                 <td key={tpg.id} value={1} id={tpg.id + "--" + tourneyPlayer.id} className="tournamentGameResult">1</td>

@@ -85,27 +85,30 @@ export const Play = () => {
     )
     // useEffect for updating gameForAPI at end of game 
     // against computer opponent
+
     useEffect(
         () => {
-            if (game.game_over()) {
-                const copy = { ...gameForApi }
-                copy.pgn = game.pgn()
-                
-                if (game.turn() === "b") {
-                    copy.winner = selectedGameObj.player_w.id
-                }
-                else {
-                    copy.winner = selectedGameObj.player_b.id
-                }
-                if (game.in_checkmate()) {
-                    copy.win_style = "checkmate"
-                }
-                else {
-                    copy.win_style = "draw"
-                }
-                updateGameForApi(copy)
-                if (selectedGameObj) {
-                    console.log(copy)
+            if (selectedGameObj) {
+                if (game.game_over()) {
+                    const copy = { ...gameForApi }
+                    copy.pgn = game.pgn()
+                    if (game.turn() === "b") {
+                        copy.winner = selectedGameObj.player_w.id
+                    }
+                    else {
+                        copy.winner = selectedGameObj.player_b.id
+                    }
+                    if (game.in_checkmate()) {
+                        copy.win_style = "checkmate"
+                        console.log("this useEffect worked")
+                    }
+                    else {
+                        copy.win_style = "draw"
+                    }
+                    updateGameForApi(copy)
+                    if (selectedGameObj) {
+                        alterGame(copy)
+                    }
                 }
             }
         }, [game]
@@ -119,7 +122,18 @@ export const Play = () => {
                 <div>check</div>
             )
         }
-        if (game.in_checkmate()) {
+        if (game.game_over() && game.in_checkmate()) {
+            return (
+                <div id="checkmatePrompt">
+                    <div>checkmate</div>
+                    <button onClick={() => {
+                        setSelectedGame(0)
+                        navigate("/")
+                    }}>
+                        exit game
+                    </button>
+                </div>
+            )
         }
     }
     const clickStartPrompt = () => {
@@ -130,7 +144,7 @@ export const Play = () => {
             else {
                 return (
                     <div id="clickStartPrompt"
-                            onClick={()=> setMatchReady(true)}>
+                        onClick={() => setMatchReady(true)}>
                         <div>Start Game</div>
                     </div>
                 )

@@ -57,11 +57,13 @@ export const Play = () => {
 
     }
     document.addEventListener('click', leaveGame)
-
+    console.log(gameForApi)
     useEffect(
         () => {
             if (selectedGame) {
-                game.load_pgn(selectedGameObj?.pgn)
+                if (selectedGameObj.pgn) {
+                    game.load_pgn(selectedGameObj.pgn)
+                }
                 const copy = { ...selectedGameObj }
                 copy.player_b = selectedGameObj.player_b.id
                 copy.player_w = selectedGameObj.player_w.id

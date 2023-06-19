@@ -1,6 +1,6 @@
 /* overall layout */
 #homepageContainer {
-    margin-top: 80px;
+    margin-top: 120px;
 }
 
 #forumAndOpenChallenges {
@@ -9,60 +9,104 @@
     max-width: 960px;
 }
 
-#myActiveGames {
+
+#challengesArticle {
     display: flex;
-    flex-direction: column;
+    align-items: center;
+    justify-content: space-evenly;
     max-width: 960px;
 }
 
+h2, h3, h4 {
+    margin: .25em 0;
+}
 /* general use classnames */
 .opponentSectionForListItem {
     width: 14em;
 }
+
 /* community forum section styling */
 #communityForum {
-    width: 40%;
+    width: 50%;
+    border: 1px solid salmon;
+    padding: 1em;
+}
+
+#communityForumMsgs {
+    overflow: scroll;
+    height: 10em;
+    border: 1px solid orange;
 }
 
 #communityForumInterface {
     width: 100%;
     display: flex;
     justify-content: space-between;
+    margin: .5em 0;
 }
 
 #communityForumInput {
-    width: 70%;
+    width: 85%;
 }
 
 #communityForumSubmitBtn {
-    width: 25%;
+    width: 10%;
 }
 
 .communityPost {
     list-style: none;
-    border: 1px solid orange;
+    margin: 1em;
 }
 
 /* active tournament section styling */
 .activeTournamentListItem {
     list-style: none;
-    border: 1px solid rgb(59, 174, 174)
+    border: 1px solid rgb(59, 174, 174);
 }
 
 
 /* active games section */
+#myActiveGames {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid yellowgreen;
+    padding: 1em;
+    height: 12em;
+    width: 50%;
+}
+#myUnfinishedGamesScrollWindow {
+    overflow: scroll;
+}
+
 .tournamentActiveGameListItem {
     display: flex;
     justify-content: space-evenly;
+    align-items: center;
     border: 1px solid orange;
+    width: fit-content;
+    height: 2em;
+    padding: .5em;
+
 }
 
 .activeGameListItem {
     display: flex;
     justify-content: space-evenly;
+    width: fit-content;
+    align-items: center;
+    height: 2em;
+    padding: .5em;
 }
 
 /* create challenge section */
+#createChallengeSection {
+    width: 30%;
+    margin: 0px;
+    border: 1px solid pink;
+    padding: 1em;
+    height: 12em;
+}
+
 #piecesSelectionContainer {
     display: flex;
 }
@@ -74,7 +118,7 @@
     font-weight: 600;
     background-color: whitesmoke;
     width: 4em;
-    padding: 2em;
+    padding: 1em;
     border: 2px solid rgb(52, 52, 52);
     border-radius: 8px 0 0 8px;
     border-right: none;
@@ -89,7 +133,7 @@
     font-weight: 600;
     background-color: rgb(52, 52, 52);
     width: 4em;
-    padding: 2em;
+    padding: 1em;
     border: 2px solid rgb(52, 52, 52);
     border-radius: 0 8px 8px 0;
     border-right: none;
@@ -110,13 +154,16 @@
 #openChallengesList {
     display: flex;
     flex-direction: column;
+    width: 30%;
+    padding: 1em;
+    border: 1px solid blue;
 }
 
 .challengeListItem {
     height: fit-content;
     display: flex;
     flex-direction: column;
-
+    font-size: small;
 }
 
 #whiteChallengeSpan {
@@ -144,6 +191,7 @@
 }
 
 .challengeBtn {
-    width: 4em;
-    text-align: center;
+    min-width: 4em;
+    /* display: block;
+    text-align: center; */
 }

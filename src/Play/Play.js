@@ -420,7 +420,7 @@ export const Play = () => {
         <main id="playContainer">
             {clickStartPrompt()}
             {checkWarning()}
-            <div >
+            <div id="boardInterface">
                 <Chessboard
                     id="ClickToMove"
                     animationDuration={200}

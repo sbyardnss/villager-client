@@ -1,6 +1,6 @@
 import "./HomePage.css"
 
-import { React, useContext, useState, useEffect } from "react"
+import { React, useContext, useState, useEffect, useRef } from "react"
 import { acceptChallenge, deleteCommunityPost, getAllCommunityPosts, getAllGames, getAllPlayers, getAllTournaments, getPuzzles, sendNewGame, submitNewPostToAPI } from "../ServerManager"
 import { PlayContext } from "../Play/PlayProvider"
 import { useNavigate } from "react-router-dom"
@@ -83,17 +83,19 @@ export const HomePage = () => {
             }
         }, [selectedGame]
     )
+
     const resetCommunityPosts = () => {
         getAllCommunityPosts()
             .then(data => setCommunityPosts(data))
     }
     //SCROLL TO BOTTOM FUNCTIONALITY FROM LINKUP
-    // const scrollToBottom = () => {
-    //     messagesEndRef.current?.scrollIntoView({behavior: "auto"})
-    // }
-    // useEffect(() => {
-    //     scrollToBottom()
-    // }, [displayedMsgs])
+    const communityPostsEndRef = useRef(null)
+    const scrollToBottom = () => {
+        communityPostsEndRef.current.scrollIntoView({ behavior: "auto" })
+    }
+    useEffect(() => {
+        scrollToBottom()
+    }, [communityPosts])
 
     const handleChange = e => {
         const copy = { ...newPost }
@@ -118,13 +120,14 @@ export const HomePage = () => {
                 })
         }
     }
+
     return <>
         <main id="homepageContainer">
             {/* <h1>Homepage</h1> */}
             <div id="forumAndOpenChallenges">
                 <article id="communityForum">
+                    <h2>community posts</h2>
                     <section id="communityForumMsgs" >
-                        <h2>community posts</h2>
                         {
                             communityPosts.map(post => {
                                 const date_time = new Date(post.date_time)
@@ -154,6 +157,7 @@ export const HomePage = () => {
                                 }
                             })
                         }
+                        <div ref={communityPostsEndRef} />
                     </section>
                     <section id="communityForumInterface">
                         <input id="communityForumInput"
@@ -187,7 +191,7 @@ export const HomePage = () => {
                                             Challenger: {challengingPlayer.full_name} playing as <span id={c.player_w ? "whiteChallengeSpan" : "blackChallengeSpan"}>{c.player_w ? "white" : "black"}</span>
                                         </div>
                                         <div>
-                                            <button className="challengeBtn"
+                                            Play as {c.player_w ? "black" : "white"} <button className="challengeBtn"
                                                 onClick={() => {
                                                     const copy = { ...c }
                                                     c.player_w ? copy.player_b = localVillagerObj.userId : copy.player_w = localVillagerObj.userId
@@ -195,7 +199,7 @@ export const HomePage = () => {
                                                     copy.accepted = true
                                                     acceptChallenge(copy)
                                                         .then(() => resetGames())
-                                                }}>accept</button> and play as {c.player_w ? "black" : "white"}
+                                                }}>confirm</button>
                                         </div>
                                     </div>
                                 )
@@ -204,33 +208,35 @@ export const HomePage = () => {
                     }
                 </div>
             </div>
-            <article key="challenges">
+            <article key="challenges" id="challengesArticle">
                 <section id="myActiveGames">
                     <h2>My Games</h2>
-                    {
-                        myUnfinishedGames?.map(ug => {
-                            // const opponent = ug.player_w?.id === localVillagerObj.userId ? ug.player_b : ug.player_w
-                            const opponent = ug.player_w?.id === localVillagerObj.userId ? players.find(p => p.id === ug.player_b?.id) : players.find(p => p.id === ug.player_w?.id)
-                            const isTournamentGame = () => {
-                                return ug.tournament ? "tournamentActiveGameListItem" : "activeGameListItem"
-                            }
-                            if (opponent) {
-                                return (
-                                    <div key={ug.id} className={isTournamentGame()}>
-                                        <div>Play as <span id={ug.player_w.id === localVillagerObj.userId ? "whiteChallengeSpan" : "blackChallengeSpan"}>{ug.player_w?.id === localVillagerObj.userId ? "white" : "black"}</span></div>
-                                        <div className="opponentSectionForListItem">Opponent: {opponent.username}</div>
-                                        <button className="challengeBtn"
-                                            onClick={() => {
-                                                setSelectedGame(ug.id)
-                                            }}>play</button>
-                                    </div>
-                                )
-                            }
-                        })
-                    }
+                    <div id="myUnfinishedGamesScrollWindow">
+                        {
+                            myUnfinishedGames?.map(ug => {
+                                // const opponent = ug.player_w?.id === localVillagerObj.userId ? ug.player_b : ug.player_w
+                                const opponent = ug.player_w?.id === localVillagerObj.userId ? players.find(p => p.id === ug.player_b?.id) : players.find(p => p.id === ug.player_w?.id)
+                                const isTournamentGame = () => {
+                                    return ug.tournament ? "tournamentActiveGameListItem" : "activeGameListItem"
+                                }
+                                if (opponent) {
+                                    return (
+                                        <div key={ug.id} className={isTournamentGame()}>
+                                            <div>Play as <span id={ug.player_w.id === localVillagerObj.userId ? "whiteChallengeSpan" : "blackChallengeSpan"}>{ug.player_w?.id === localVillagerObj.userId ? "white" : "black"}</span></div>
+                                            <div className="opponentSectionForListItem">Opponent: {opponent.username}</div>
+                                            <button className="challengeBtn"
+                                                onClick={() => {
+                                                    setSelectedGame(ug.id)
+                                                }}>play</button>
+                                        </div>
+                                    )
+                                }
+                            })
+                        }
+                    </div>
                 </section>
-                <section>
-                    <h2>create challenge</h2>
+                <section id="createChallengeSection">
+                    <h3>create challenge</h3>
                     <div>play as:
                         <div id="piecesSelectionContainer">
                             <div id="whitePiecesSelect" onClick={() => {
@@ -267,7 +273,7 @@ export const HomePage = () => {
                     </div>
                 </section>
             </article>
-            <article>
+            {/* <article>
                 <h2>my tournaments</h2>
                 {
                     myTournaments?.map(t => {
@@ -276,7 +282,7 @@ export const HomePage = () => {
                         )
                     })
                 }
-            </article>
+            </article> */}
         </main>
     </>
 }

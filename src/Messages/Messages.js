@@ -110,23 +110,7 @@ export const Messages = () => {
                 </div>
             </>
         }
-        // else {
-        //     return <>
-        //         <section id="messagesFriends">
-        //             {
-        //                 friends?.map(f => {
-        //                     return (
-        //                         <li key={f.id}
-        //                             className="messagingFriendListItem"
-        //                             onClick={() => setSelectedChat(f.id)}>
-        //                             {f.full_name}
-        //                         </li>
-        //                     )
-        //                 })
-        //             }
-        //         </section>
-        //     </>
-        // }
+
     }
     return <>
         <main id="messagingContainer">

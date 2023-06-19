@@ -26,6 +26,12 @@ export const Play = () => {
     const [reviewLength, setReviewLength] = useState(0)
     const [strPgn, setStrPgn] = useState("")
     const [matchReady, setMatchReady] = useState(false)
+    const [gameForAi, updateGameForAi] = useState({
+        fen: "",
+        pgn: "",
+        color: "",
+        possibleMoves: []
+    })
     const [gameForApi, updateGameForApi] = useState({
         player_w: 0,
         player_b: 0,
@@ -48,7 +54,6 @@ export const Play = () => {
                 navigate(e.target.id)
             }
         }
-
         if (e.target.id === "logout") {
             setSelectedGame(0)
             setReview(false)
@@ -109,7 +114,16 @@ export const Play = () => {
 
     // useEffect for updating gameForAPI at end of game 
     // against computer opponent
-
+    useEffect(
+        () => {
+            const aiGameCopy = {...gameForAi}
+            aiGameCopy.color = orientation === "white" ? "black" : 'white'
+            aiGameCopy.pgn = game.pgn()
+            aiGameCopy.fen = game.fen()
+            aiGameCopy.possibleMoves = game.moves()
+            updateGameForAi(aiGameCopy)
+        },[game]
+    )
     useEffect(
         () => {
             if (selectedGameObj) {
@@ -149,7 +163,7 @@ export const Play = () => {
     )
     useEffect(
         () => {
-            const length = reviewPgn.length -1
+            const length = reviewPgn.length - 1
             setReviewLength(length)
         }, [reviewPgn]
     )
@@ -160,15 +174,16 @@ export const Play = () => {
                 const stringPgn = pgnStringBuilder(newPgn)
                 setStrPgn(stringPgn)
             }
-        },[reviewLength]
+        }, [reviewLength]
     )
     useEffect(
         () => {
             if (strPgn !== "") {
                 game.load_pgn(strPgn)
             }
-        },[strPgn]
+        }, [strPgn]
     )
+
     //function for populating start game prompt window
     //only for non human opponents
     const checkWarning = () => {
@@ -342,45 +357,14 @@ export const Play = () => {
             }
             return;
         }
-        //basic operation relies on random index for making move.
-        //this can be the point at which ai decides
-        const randomIndex = Math.floor(Math.random() * possibleMoves.length);
-        const gameAiColor = orientation === "white" ? "black" : 'white'
-        const gamePgn = game.pgn()
-        const gameFen = game.fen()
-        const gameMoves = game.moves()
-        const gameForAiCopy = {
-            fen: gameFen,
-            pgn: gamePgn,
-            color: gameAiColor,
-            possibleMoves: gameMoves
-        }
-        Promise.resolve(getAIMove(gameForAiCopy)).then(res => {
+        Promise.resolve(getAIMove(gameForAi)).then(res => {
             let [, notation] = res.split(" ")
             if (notation) {
-                //OLD CODE WHEN TURNFORPGN WAS MAIN DRIVER
-                // const turnCopy = [...turnForPgn]
-                // turnCopy.push(notation)
-                // updateTurnForPgn(turnCopy)
                 safeGameMutate((game) => {
                     game.move(notation)
                 })
             }
         })
-        //CUSTOM (OLD CODE FOR NON AI BOT)
-        //add move to turn array to load into pgn
-        // for array version of turnForPgn
-        // if (possibleMoves[randomIndex]) {
-        //     const computerTurnCopy = [...turnForPgn]
-        //     computerTurnCopy.push(possibleMoves[randomIndex])
-        //     updateTurnForPgn(computerTurnCopy)
-        // }
-        //END CUSTOM
-
-
-        // safeGameMutate((game) => {
-        //     game.move(possibleMoves[randomIndex]);
-        // });
     }
     const onSquareClick = (square) => {
         // setRightClickedSquares({});

@@ -188,7 +188,8 @@ export const HomePage = () => {
                                 return (
                                     <div key={c.id} className="challengeListItem">
                                         <div>
-                                            Challenger: {challengingPlayer.full_name} playing as <span id={c.player_w ? "whiteChallengeSpan" : "blackChallengeSpan"}>{c.player_w ? "white" : "black"}</span>
+                                            <div>Challenger:</div> 
+                                            <div className="openChallengerInfo">{challengingPlayer.full_name} playing as <span id={c.player_w ? "whiteChallengeSpan" : "blackChallengeSpan"}>{c.player_w ? "white" : "black"}</span></div>
                                         </div>
                                         <div>
                                             Play as {c.player_w ? "black" : "white"} <button className="challengeBtn"
@@ -199,7 +200,7 @@ export const HomePage = () => {
                                                     copy.accepted = true
                                                     acceptChallenge(copy)
                                                         .then(() => resetGames())
-                                                }}>confirm</button>
+                                                }}>accept</button>
                                         </div>
                                     </div>
                                 )

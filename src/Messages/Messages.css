@@ -1,5 +1,7 @@
 #messagingContainer {
-    margin-top: 80px;
+    margin-top: 120px;
+    display: flex;
+    justify-content: center;
 }
 
 #chatAndInterface {
@@ -9,12 +11,14 @@
 
 /* friend list */
 #messagesFriends {
-    width: 40%;
+    width: 20%;
+    margin-right: 1em;
 }
 
 .messagingFriendListItem {
     border: 1px solid firebrick;
     cursor: pointer;
+    width: 10em;
 }
 
 .messagingFriendListItem:hover {
@@ -28,7 +32,7 @@
     display: block;
     border: 1px solid orange;
     height: 60vh;
-    width: 80vw;
+    width: 50vw;
     overflow: scroll;
     background-color: blanchedalmond;
 }

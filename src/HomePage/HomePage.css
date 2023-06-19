@@ -6,6 +6,7 @@
 #forumAndOpenChallenges {
     display: flex;
     justify-content: space-evenly;
+    flex-wrap: wrap;
     max-width: 960px;
 }
 
@@ -15,6 +16,7 @@
     align-items: center;
     justify-content: space-evenly;
     max-width: 960px;
+    flex-wrap: wrap;
 }
 
 h2, h3, h4 {
@@ -101,6 +103,7 @@ h2, h3, h4 {
 /* create challenge section */
 #createChallengeSection {
     width: 30%;
+    min-width: 14em;
     margin: 0px;
     border: 1px solid pink;
     padding: 1em;
@@ -155,6 +158,7 @@ h2, h3, h4 {
     display: flex;
     flex-direction: column;
     width: 30%;
+    min-width: 14em;
     padding: 1em;
     border: 1px solid blue;
 }
@@ -165,17 +169,24 @@ h2, h3, h4 {
     flex-direction: column;
     font-size: small;
 }
+.openChallengerInfo {
+    height: 2em;
+    display: flex;
+    align-items: center;
+}
 
 #whiteChallengeSpan {
     color: rgb(52, 52, 52);
     font-style: oblique;
     font-weight: 500;
     background-color: whitesmoke;
-    width: 4em;
+    width: 3em;
     padding: .25em;
     border: 1px solid rgb(52, 52, 52);
     border-radius: 3px;
     text-align: center;
+    margin-left: .5em;
+
 }
 
 #blackChallengeSpan {
@@ -183,11 +194,12 @@ h2, h3, h4 {
     font-style: oblique;
     font-weight: 500;
     background-color: rgb(52, 52, 52);
-    width: 4em;
+    width: 3em;
     padding: .25em;
     border: 1px solid rgb(52, 52, 52);
     border-radius: 3px;
     text-align: center;
+    margin-left: .5em;
 }
 
 .challengeBtn {

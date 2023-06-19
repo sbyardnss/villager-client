@@ -24,6 +24,7 @@ export const Play = () => {
     const [turnForPgn, updateTurnForPgn] = useState([])
     const [reviewPgn, setReviewPgn] = useState([])
     const [reviewLength, setReviewLength] = useState(0)
+    const [strPgn, setStrPgn] = useState("")
     const [matchReady, setMatchReady] = useState(false)
     const [gameForApi, updateGameForApi] = useState({
         player_w: 0,
@@ -57,7 +58,6 @@ export const Play = () => {
 
     }
     document.addEventListener('click', leaveGame)
-    console.log(gameForApi)
     useEffect(
         () => {
             if (selectedGame) {
@@ -149,9 +149,25 @@ export const Play = () => {
     )
     useEffect(
         () => {
-            const length = reviewPgn.length
+            const length = reviewPgn.length -1
             setReviewLength(length)
         }, [reviewPgn]
+    )
+    useEffect(
+        () => {
+            if (reviewLength > 0) {
+                const newPgn = [...reviewPgn]
+                const stringPgn = pgnStringBuilder(newPgn)
+                setStrPgn(stringPgn)
+            }
+        },[reviewLength]
+    )
+    useEffect(
+        () => {
+            if (strPgn !== "") {
+                game.load_pgn(strPgn)
+            }
+        },[strPgn]
     )
     //function for populating start game prompt window
     //only for non human opponents
@@ -226,39 +242,50 @@ export const Play = () => {
                 <div>
                     <button className="reviewButtons"
                         onClick={() => {
-                            const newLength = reviewLength - 1
-                            const reviewCopy = [...reviewPgn]
+                            setReviewLength(reviewLength - 1)
                         }}>&lt;</button>
                     <button className="reviewButtons"
                         onClick={() => {
-                            const newLength = reviewLength + 1
-                            const reviewCopy = [...reviewPgn]
+                            if (reviewLength < reviewPgn.length) {
+                                setReviewLength(reviewLength + 1)
+                            }
                         }}>&gt;</button>
                 </div>
             )
         }
     }
 
-    const pgnStringBuilder = (pgnArr, index) => {
-        const outputPgnString = pgnArr.map((notation, index) => {
-            if (notation.length === 2) {
-                return `${index + 1}. ${notation[0]} ${notation[1]}`
+    const pgnStringBuilder = (pgnArr) => {
+        let index = 1
+        const arr = [...pgnArr]
+        arr.length = reviewLength
+        const newArr = []
+        for (let i = 0; i < arr.length; i = i + 2) {
+            if (arr[i + 1] !== undefined) {
+                newArr.push(`${index}. ${arr[i]} ${arr[i + 1]}`)
             }
             else {
-                return `${index + 1}. ${notation[0]}`
+                newArr.push(`${index}. ${arr[i]}`)
             }
-        }).join(" ")
-        return outputPgnString
+            index++
+        }
+        return newArr.join(" ")
     }
     const grabMovesFromPGN = () => {
         //.pgn() give game history
         const pgn = game.pgn()
         const splitBySpacesInitial = pgn?.split(" ")
-        // console.log(splitBySpacesInitial)
         const pgnArray = []
-        for (let i = 0; i <= splitBySpacesInitial.length; i = i + 3) {
-            const joinedMoveTurn = [splitBySpacesInitial[i], splitBySpacesInitial[i + 1], splitBySpacesInitial[i + 2]]
-            pgnArray.push(joinedMoveTurn)
+        for (let i = 0; i < splitBySpacesInitial.length; i = i + 3) {
+            const whitePiecesMove = splitBySpacesInitial[i + 1]
+            const blackPiecesMove = splitBySpacesInitial[i + 2]
+            if (blackPiecesMove) {
+                pgnArray.push(whitePiecesMove)
+                pgnArray.push(blackPiecesMove)
+            }
+            else {
+                pgnArray.push(whitePiecesMove)
+            }
         }
         return pgnArray
     }

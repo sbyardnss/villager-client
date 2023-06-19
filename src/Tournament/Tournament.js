@@ -257,7 +257,7 @@ export const Tournament = () => {
                                             copy.winner = white?.id
                                             copy.win_style = "bye"
                                             // console.log(copy)
-                                            sendNewGame(copy) 
+                                            sendNewGame(copy)
                                         }
                                         else {
                                             copy.winner = null
@@ -298,37 +298,51 @@ export const Tournament = () => {
             const filteredPairings = editPairings.filter(pairing => pairing.round < activeTournament?.rounds)
             return (
                 <section>
+                    <button onClick={() => setEditScores(false)}>cancel</button>
                     {
                         tournamentGames.map(game => {
                             const white = activeTournamentPlayers.find(player => player.id === game.player_w.id)
                             const black = activeTournamentPlayers.find(player => player.id === game.player_b?.id)
                             // const matchup = tournamentGames?.find(game => game.tournament_round === pairing.round && game.player_w?.id === white?.id && game.player_b?.id === black?.id)
-                            return (
-                                <div key={`${game.tournament_round} + ${game.id} + editing`}>
-                                    <div>Round {game.tournament_round}</div>
-                                    <div className="whitePiecesMatchup"
-                                        id="whiteUpdate"
-                                        onClick={(evt) => {
-                                            handleGameForApiUpdate(evt.target.id, white, black, game)
-                                        }}>{white.full_name}</div>
-                                    <div className="drawMatchupButton"
-                                        id="drawUpdate"
-                                        onClick={(evt) => {
-                                            handleGameForApiUpdate(evt.target.id, white, black, game)
-                                        }}>Draw</div>
-                                    <div className="blackPiecesMatchup"
-                                        id="blackUpdate"
-                                        onClick={(evt) => {
-                                            handleGameForApiUpdate(evt.target.id, white, black, game)
-                                        }}>{black?.full_name}</div>
-                                    <button onClick={() => {
-                                        alterGame(gameForApi)
-                                            .then(() => resetGames())
-                                    }}>
-                                        submit
-                                    </button>
-                                </div>
-                            )
+                            if (game.winner !== null) {
+                                if (game.bye === true) {
+                                    return (
+                                        <div key={`${game.tournament_round} + ${game.id} + editing`}>
+                                            <div>Round {game.tournament_round}</div>
+                                            <div className="whitePiecesMatchup"
+                                                id="whiteUpdate">{white.full_name}</div>
+                                        </div>
+                                    )
+                                }
+                                else {
+                                    return (
+                                        <div key={`${game.tournament_round} + ${game.id} + editing`}>
+                                            <div>Round {game.tournament_round}</div>
+                                            <div className="whitePiecesMatchup"
+                                                id="whiteUpdate"
+                                                onClick={(evt) => {
+                                                    handleGameForApiUpdate(evt.target.id, white, black, game)
+                                                }}>{white.full_name}</div>
+                                            <div className="drawMatchupButton"
+                                                id="drawUpdate"
+                                                onClick={(evt) => {
+                                                    handleGameForApiUpdate(evt.target.id, white, black, game)
+                                                }}>Draw</div>
+                                            <div className="blackPiecesMatchup"
+                                                id="blackUpdate"
+                                                onClick={(evt) => {
+                                                    handleGameForApiUpdate(evt.target.id, white, black, game)
+                                                }}>{black?.full_name}</div>
+                                            <button onClick={() => {
+                                                alterGame(gameForApi)
+                                                    .then(() => resetGames())
+                                            }}>
+                                                submit
+                                            </button>
+                                        </div>
+                                    )
+                                }
+                            }
                         })
                     }
                 </section>
@@ -336,6 +350,19 @@ export const Tournament = () => {
         }
     }
     if (selectedTournament) {
+        const scoringButtonOrNone = () => {
+            if (activeTournament.in_person === false) {
+                return null
+            }
+            else {
+                return (
+                    <button onClick={() => {
+                        setScoring(true)
+                        setEditScores(false)
+                    }}>score</button>
+                )
+            }
+        }
         if (activeTournament && activeTournamentPlayers) {
             return <>
                 <main id="tournamentContainer">
@@ -363,10 +390,7 @@ export const Tournament = () => {
                         setEditScores(true)
                         setScoring(false)
                     }}>edit scores</button>
-                    <button onClick={() => {
-                        setScoring(true)
-                        setEditScores(false)
-                    }}>score</button>
+                    {scoringButtonOrNone()}
                     <section id="matchupsContainer">
                         <div>
                             Round {currentRound}
@@ -491,7 +515,7 @@ export const Tournament = () => {
                             newTournament.competitors.map((competitor, index) => {
                                 const player = players.find(p => p.id === competitor)
                                 return (
-                                    <li key={competitor.id}
+                                    <li key={player.id + '-- competitor'}
                                         className="newTournamentPlayerListItem"
                                         onClick={() => {
                                             const tournamentCopy = { ...newTournament }

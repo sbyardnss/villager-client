@@ -1,7 +1,7 @@
 import "./HomePage.css"
 
 import { React, useContext, useState, useEffect } from "react"
-import { acceptChallenge, deleteCommunityPost, getAllCommunityPosts, getAllGames, getAllPlayers, getAllTournaments, sendNewGame, submitNewPostToAPI } from "../ServerManager"
+import { acceptChallenge, deleteCommunityPost, getAllCommunityPosts, getAllGames, getAllPlayers, getAllTournaments, getPuzzles, sendNewGame, submitNewPostToAPI } from "../ServerManager"
 import { PlayContext } from "../Play/PlayProvider"
 import { useNavigate } from "react-router-dom"
 export const HomePage = () => {
@@ -15,6 +15,7 @@ export const HomePage = () => {
     const [tournamentGames, setTournamentGames] = useState([])
     const [challenges, setChallenges] = useState([])
     const [myUnfinishedGames, setMyUnfinishedGames] = useState([])
+    // const [puzzles, setPuzzles] = useState([])
     const [newPost, updateNewPost] = useState({
         poster: localVillagerObj.userId,
         message: ""
@@ -25,6 +26,12 @@ export const HomePage = () => {
         accepted: false,
         computer_opponent: false
     })
+    // useEffect(
+    //     () => {
+    //         getPuzzles()
+    //             .then(data => setPuzzles(data))
+    //     },[]
+    // )
     useEffect(
         () => {
             Promise.all([getAllCommunityPosts(), getAllTournaments()]).then(([communityPostData, tournamentData]) => {

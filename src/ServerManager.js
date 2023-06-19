@@ -85,8 +85,17 @@ export const getMyTournaments = () => {
             "Content-Type": "application/json"
         }
     })
-        .then(res => res.json()) 
+        .then(res => res.json())
 }
+// export const getPuzzles = () => {
+//     return fetch('https://chess-puzzles.p.rapidapi.com/?themes=%5B%22middlegame%22%2C%22advantage%22%5D&rating=1500&themesType=ALL&playerMoves=4&count=25', {
+//         method: 'GET',
+//         headers: {
+//             'X-RapidAPI-Key': '079986b141msha5cf549e0f6360dp14dfcbjsn97a2d3b076a8',
+//             'X-RapidAPI-Host': 'chess-puzzles.p.rapidapi.com'
+//         }
+//     }).then(res => res.json())
+// }
 
 //RETRIEVE FETCHES
 export const getProfile = () => {
@@ -109,6 +118,7 @@ export const getTournament = (tournamentId) => {
     })
         .then(res => res.json())
 }
+
 
 
 //POST FETCHES
@@ -188,7 +198,7 @@ export const getAIMove = (objForAi) => {
         },
         body: JSON.stringify(objForAi)
     })
-    .then(res => res.json())
+        .then(res => res.json())
 }
 
 //PUT FETCHES

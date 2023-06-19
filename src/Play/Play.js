@@ -208,7 +208,6 @@ export const Play = () => {
             }
         }
     }
-    console.log(reviewLength)
     //function for populating reset button only if game is against computer
     const resetOrStartGame = () => {
         if (selectedGame === 0) {
@@ -462,16 +461,6 @@ export const Play = () => {
                     >
                         undo
                     </button>
-
-                    {/* <button
-                    onClick={() => {
-                        const copy = { ...gameForApi }
-                        copy.pgn = game.pgn()
-                        sendNewGame(copy)
-                    }}
-                >
-                    submit game
-                </button> */}
                     <button onClick={() => {
                         setSelectedGame(0)
                         navigate("/")

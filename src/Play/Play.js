@@ -21,11 +21,11 @@ export const Play = () => {
     const [moveFrom, setMoveFrom] = useState("");
     const [moveSquares, setMoveSquares] = useState({});
     const [optionSquares, setOptionSquares] = useState({});
-    const [turnForPgn, updateTurnForPgn] = useState([])
     const [reviewPgn, setReviewPgn] = useState([])
     const [reviewLength, setReviewLength] = useState(0)
     const [strPgn, setStrPgn] = useState("")
     const [matchReady, setMatchReady] = useState(false)
+    const [turn, setTurn] = useState("w")
     const [gameForAi, updateGameForAi] = useState({
         fen: "",
         pgn: "",
@@ -111,18 +111,26 @@ export const Play = () => {
             }
         }, [game, matchReady]
     )
-
+    //update turn variable for saving turn and controlling ai request
+    useEffect(
+        () => {
+            const gameTurn = game.turn()
+            setTurn(gameTurn)
+        }, [game]
+    )
     // useEffect for updating gameForAPI at end of game 
     // against computer opponent
     useEffect(
         () => {
-            const aiGameCopy = {...gameForAi}
-            aiGameCopy.color = orientation === "white" ? "black" : 'white'
-            aiGameCopy.pgn = game.pgn()
-            aiGameCopy.fen = game.fen()
-            aiGameCopy.possibleMoves = game.moves()
-            updateGameForAi(aiGameCopy)
-        },[game]
+            if (turn === orientation === "white" ? 'b' : 'w') {
+                const aiGameCopy = { ...gameForAi }
+                aiGameCopy.color = orientation === "white" ? "black" : 'white'
+                aiGameCopy.pgn = game.pgn()
+                aiGameCopy.fen = game.fen()
+                aiGameCopy.possibleMoves = game.moves()
+                updateGameForAi(aiGameCopy)
+            }
+        }, [turn]
     )
     useEffect(
         () => {

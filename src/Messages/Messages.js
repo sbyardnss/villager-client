@@ -112,6 +112,13 @@ export const Messages = () => {
         }
 
     }
+    const selectChatAnimation = document.querySelector('section#messagesFriends');
+    selectChatAnimation?.addEventListener('click', function () {
+        selectChatAnimation?.classList.add('animate');
+    });
+    selectChatAnimation?.addEventListener('animationend', function () {
+        selectChatAnimation?.classList.remove('animate')
+    })
     return <>
         <main id="messagingContainer">
             <section id="messagesFriends">

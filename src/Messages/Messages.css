@@ -63,3 +63,20 @@
     border-radius: 4px;
     border: 1px solid gray;
 }
+
+/* .animate {
+    animation: moveLeft;
+    animation-duration: 0.5s;
+}
+
+@keyframes moveLeft {
+    from {
+        margin-left: 0;
+        margin-right: 100%;
+    }
+
+    to {
+        margin-left: -100%;
+        margin-right: 0;
+    }
+} */

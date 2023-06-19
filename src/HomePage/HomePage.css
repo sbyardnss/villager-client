@@ -1,8 +1,24 @@
+/* overall layout */
 #homepageContainer {
     margin-top: 80px;
 }
 
+#forumAndOpenChallenges {
+    display: flex;
+    justify-content: space-evenly;
+    max-width: 960px;
+}
 
+#myActiveGames {
+    display: flex;
+    flex-direction: column;
+    max-width: 960px;
+}
+
+/* general use classnames */
+.opponentSectionForListItem {
+    width: 14em;
+}
 /* community forum section styling */
 #communityForum {
     width: 40%;
@@ -35,9 +51,17 @@
 
 
 /* active games section */
-.tournamentChallengeListItem {
+.tournamentActiveGameListItem {
+    display: flex;
+    justify-content: space-evenly;
     border: 1px solid orange;
 }
+
+.activeGameListItem {
+    display: flex;
+    justify-content: space-evenly;
+}
+
 /* create challenge section */
 #piecesSelectionContainer {
     display: flex;
@@ -71,26 +95,30 @@
     border-right: none;
     text-align: center;
     cursor: pointer;
-} 
+}
+
 #blackPiecesSelect:hover {
     background-color: rgb(90, 0, 68);
 }
+
 #whitePiecesSelect:hover {
     background-color: rgb(241, 133, 214);
 }
 
 
 /* open challenges section */
-#openChallengesList{
+#openChallengesList {
     display: flex;
     flex-direction: column;
 }
+
 .challengeListItem {
     height: fit-content;
     display: flex;
     flex-direction: column;
-    
+
 }
+
 #whiteChallengeSpan {
     color: rgb(52, 52, 52);
     font-style: oblique;
@@ -102,6 +130,7 @@
     border-radius: 3px;
     text-align: center;
 }
+
 #blackChallengeSpan {
     color: whitesmoke;
     font-style: oblique;
@@ -113,6 +142,7 @@
     border-radius: 3px;
     text-align: center;
 }
+
 .challengeBtn {
     width: 4em;
     text-align: center;

@@ -1,5 +1,5 @@
 import { useState, useEffect, createContext } from "react";
-import { getAllGames, getAllPlayers } from "../ServerManager";
+import { getAllGames, getAllPlayers, getPuzzles } from "../ServerManager";
 
 export const PlayContext = createContext()
 
@@ -15,6 +15,16 @@ export const PlayProvider = (props) => {
     const [games, setGames] = useState([])
     const [players, setPlayers] = useState([])
     const [review, setReview] = useState(false)
+    const [puzzles, setPuzzles] = useState([])
+    const [selectedPuzzle, setSelectedPuzzle] = useState({
+        id: "", //THIS MIGHT BE THE WRONG PROPERTY NAME
+        fen: "",
+        moves: [],
+        rating: 0,
+        ratingdeviation: 0,
+        themes: []
+    })
+    const [selectedRating, setSelectedRating] = useState(1300)
     const [selectedGameObj, updateSelectedGameObj] = useState({
         player_w: null,
         player_b: null,
@@ -62,6 +72,19 @@ export const PlayProvider = (props) => {
             }
         }, [selectedGameObj]
     )
+        useEffect(
+        () => {
+            // getPuzzles(selectedRating)
+            //     .then(data => setPuzzles(data))
+            /* data = [{
+                fen: "",
+                moves: ['', '', '', ...],
+                rating: 0,
+                ratingdeviation: 0,
+                themes: ['', '', '', ...]
+            }, ...] */
+        },[selectedRating]
+    )
     const resetGames = () => {
         getAllGames()
             .then(data => setGames(data))
@@ -69,7 +92,7 @@ export const PlayProvider = (props) => {
     return (
         <PlayContext.Provider value={{
             selectedGame, setSelectedGame, selectedGameObj, games, players, resetGames,
-            orientation, setOrientation, review, setReview
+            orientation, setOrientation, review, setReview, puzzles, selectedPuzzle, setSelectedPuzzle
         }}>
             {props.children}
         </PlayContext.Provider>

@@ -31,6 +31,10 @@
     min-width: 14em;
     /* border: 1px solid blue; */
 }
+#activeGamesArticle {
+    height: 259px;
+    /* padding: 1em; */
+}
 
 h2,
 h3,
@@ -95,14 +99,20 @@ h4 {
 
 
 /* active games section */
+
 #myActiveGames {
     display: flex;
     flex-direction: column;
-    padding: 1em;
-    height: 12em;
+    height: 100%;
     /* width: 50%; */
     backdrop-filter: blur(10px);
     background-color: #336b8775;
+}
+#activeGamesHeader {
+    margin-left: 1em;
+}
+#activeGamesUl {
+    padding: 1em;
 }
 
 #myUnfinishedGamesScrollWindow {
@@ -249,4 +259,11 @@ h4 {
     min-width: 4em;
     /* display: block;
     text-align: center; */
+}
+
+
+/* puzzle section */
+#homePagePuzzle {
+    cursor: pointer;
+    z-index: 99;
 }

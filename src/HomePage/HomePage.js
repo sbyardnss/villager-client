@@ -1,6 +1,8 @@
 import "./HomePage.css"
 
 import { React, useContext, useState, useEffect, useRef } from "react"
+import { Chessboard } from "react-chessboard"
+import Chess from "chess.js"
 import { acceptChallenge, deleteCommunityPost, getAllCommunityPosts, getAllGames, getAllPlayers, getAllTournaments, getPuzzles, sendNewGame, submitNewPostToAPI } from "../ServerManager"
 import { PlayContext } from "../Play/PlayProvider"
 import { useNavigate } from "react-router-dom"
@@ -9,14 +11,14 @@ export const HomePage = () => {
     const localVillager = localStorage.getItem("villager")
     const localVillagerObj = JSON.parse(localVillager)
     const navigate = useNavigate()
-    const { players, games, resetGames, selectedGameObj, selectedGame, setSelectedGame } = useContext(PlayContext)
+    const { players, games, resetGames, selectedGameObj, selectedGame, setSelectedGame, puzzles, selectedPuzzle, setSelectedPuzzle } = useContext(PlayContext)
     const [communityPosts, setCommunityPosts] = useState([])
     const [tournaments, setTournaments] = useState([])
     const [myTournaments, setMyTournaments] = useState([])
     const [tournamentGames, setTournamentGames] = useState([])
     const [challenges, setChallenges] = useState([])
     const [myUnfinishedGames, setMyUnfinishedGames] = useState([])
-    const [puzzles, setPuzzles] = useState([])
+    const [displayedPuzzle, setDisplayedPuzzle] = useState({})
     const [newPost, updateNewPost] = useState({
         poster: localVillagerObj.userId,
         message: ""
@@ -27,20 +29,7 @@ export const HomePage = () => {
         accepted: false,
         computer_opponent: false
     })
-    // useEffect(
-    //     () => {
-    //         getPuzzles()
-    //             .then(data => setPuzzles(data))
-    //         /* data = [{
-    //             fen: "",
-    //             moves: ['', '', '', ...],
-    //             rating: 0,
-    //             ratingdeviation: 0,
-    //             themes: ['', '', '', ...]
-    //         }, ...] */
-    //     },[]
-    // )
-    // console.log(puzzles)
+
     useEffect(
         () => {
             Promise.all([getAllCommunityPosts(), getAllTournaments()]).then(([communityPostData, tournamentData]) => {
@@ -71,20 +60,21 @@ export const HomePage = () => {
             }
         }, [tournaments]
     )
-    useEffect(
-        () => {
-            if (myTournaments) {
-                const myTournamentGames = games.filter(g => {
-                    return myTournaments.find(t => {
-                        if (t.in_person === false) {
-                            return t.id === g.tournament
-                        }
-                    })
-                })
-                setTournamentGames(myTournamentGames)
-            }
-        }, [myTournaments]
-    )
+    // update tournament games
+    // useEffect(
+    //     () => {
+    //         if (myTournaments) {
+    //             const myTournamentGames = games.filter(g => {
+    //                 return myTournaments.find(t => {
+    //                     if (t.in_person === false) {
+    //                         return t.id === g.tournament
+    //                     }
+    //                 })
+    //             })
+    //             setTournamentGames(myTournamentGames)
+    //         }
+    //     }, [myTournaments]
+    // )
     useEffect(
         () => {
             if (selectedGame !== 0) {
@@ -92,19 +82,33 @@ export const HomePage = () => {
             }
         }, [selectedGame]
     )
-
+    useEffect(
+        () => {
+            if (selectedPuzzle.fen !== "") {
+                navigate("/play")
+            }
+        },[selectedPuzzle]
+    )
+    //update displayed puzzle
+    // useEffect(
+    //     () => {
+    //         const firstPuzzle = puzzles.puzzles[0]
+    //         setDisplayedPuzzle(firstPuzzle)
+    //     },[puzzles]
+    // )
     const resetCommunityPosts = () => {
         getAllCommunityPosts()
             .then(data => setCommunityPosts(data))
     }
     //SCROLL TO BOTTOM FUNCTIONALITY FROM LINKUP
-    const communityPostsEndRef = useRef(null)
     const scrollToBottom = () => {
-        communityPostsEndRef.current.scrollIntoView({ behavior: "auto" })
+        const communityPostElement = document.getElementById("communityForumMsgs")
+        communityPostElement.scrollTop = communityPostElement.scrollHeight
     }
     useEffect(() => {
         scrollToBottom()
     }, [communityPosts])
+
 
     const handleChange = e => {
         const copy = { ...newPost }
@@ -164,7 +168,6 @@ export const HomePage = () => {
                                 }
                             })
                         }
-                        <div ref={communityPostsEndRef} />
                     </section>
                     <section id="communityForumInterface">
                         <input id="communityForumInput"
@@ -186,48 +189,50 @@ export const HomePage = () => {
                         >send</button>
                     </section>
                 </article>
-                <article key="activeGames" >
+                <article key="activeGames" id="activeGamesArticle">
                     <section id="myActiveGames">
-                        <h2>My Games</h2>
+                        <h2 id="activeGamesHeader">My Games</h2>
                         <div id="myUnfinishedGamesScrollWindow">
-                            {
-                                myUnfinishedGames?.map(ug => {
-                                    // const opponent = ug.player_w?.id === localVillagerObj.userId ? ug.player_b : ug.player_w
-                                    let tournament = {}
-                                    if (ug.tournament) {
-                                        tournament = tournaments.find(t => t.id = ug.tournament)
-                                    }
-                                    const opponent = ug.player_w?.id === localVillagerObj.userId ? players.find(p => p.id === ug.player_b?.id) : players.find(p => p.id === ug.player_w?.id)
-                                    const isTournamentGame = () => {
-                                        return ug.tournament ? "tournamentActiveGameListItem" : "activeGameListItem"
-                                    }
-                                    if (opponent) {
-                                        return (
-                                            <div key={ug.id} className={isTournamentGame()}>
-                                                <div><span id={ug.player_w.id === localVillagerObj.userId ? "whiteChallengeSpan" : "blackChallengeSpan"}>{ug.player_w?.id === localVillagerObj.userId ? "white" : "black"}</span></div>
-                                                <div className="activeGameInfo">
-                                                    <div className="opponentSectionForListItem">Vs {opponent.username}</div>
-                                                    <div>{ug.tournament ? <img className="trophyIconHomepage" src={trophyIcon} /> : ""}</div>
-                                                    <div className="myGamesListLogisticsInfo">
-                                                        <div>{tournament?.title || ""}</div>
-                                                        <div>{new Date(ug.date_time).toLocaleDateString('en-us')}</div>
+                            <div id="activeGamesUl">
+                                {
+                                    myUnfinishedGames?.map(ug => {
+                                        // const opponent = ug.player_w?.id === localVillagerObj.userId ? ug.player_b : ug.player_w
+                                        let tournament = {}
+                                        if (ug.tournament) {
+                                            tournament = tournaments.find(t => t.id = ug.tournament)
+                                        }
+                                        const opponent = ug.player_w?.id === localVillagerObj.userId ? players.find(p => p.id === ug.player_b?.id) : players.find(p => p.id === ug.player_w?.id)
+                                        const isTournamentGame = () => {
+                                            return ug.tournament ? "tournamentActiveGameListItem" : "activeGameListItem"
+                                        }
+                                        if (opponent) {
+                                            return (
+                                                <div key={ug.id} className={isTournamentGame()}>
+                                                    <div><span id={ug.player_w.id === localVillagerObj.userId ? "whiteChallengeSpan" : "blackChallengeSpan"}>{ug.player_w?.id === localVillagerObj.userId ? "white" : "black"}</span></div>
+                                                    <div className="activeGameInfo">
+                                                        <div className="opponentSectionForListItem">Vs {opponent.username}</div>
+                                                        <div>{ug.tournament ? <img className="trophyIconHomepage" src={trophyIcon} /> : ""}</div>
+                                                        <div className="myGamesListLogisticsInfo">
+                                                            <div>{tournament?.title || ""}</div>
+                                                            <div>{new Date(ug.date_time).toLocaleDateString('en-us')}</div>
+                                                        </div>
                                                     </div>
+                                                    <button className="challengeBtn"
+                                                        onClick={() => {
+                                                            setSelectedGame(ug.id)
+                                                        }}>play</button>
                                                 </div>
-                                                <button className="challengeBtn"
-                                                    onClick={() => {
-                                                        setSelectedGame(ug.id)
-                                                    }}>play</button>
-                                            </div>
-                                        )
-                                    }
-                                })
-                            }
+                                            )
+                                        }
+                                    })
+                                }
+                            </div>
                         </div>
                     </section>
 
                 </article>
             </div>
-            <div>
+            <div id="challengesAndPuzzles">
                 <div id="challengesArticle">
                     <section id="createChallengeSection">
                         <h3>create challenge</h3>
@@ -298,9 +303,13 @@ export const HomePage = () => {
                             }
                         })
                     }
-
                 </div>
-
+                <div id="puzzlesArticle">
+                    <Chessboard
+                        id="chessboardHomepage"
+                        position={displayedPuzzle?.fen}
+                        arePiecesDraggable={false} />
+                </div>
             </div>
 
 

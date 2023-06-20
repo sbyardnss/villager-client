@@ -4,14 +4,18 @@
     width: 80vw;
     flex-wrap: wrap;
     list-style: none;
-
+    padding-left: none;
+    margin: none;
 }
+
 #logo {
     width: fit-content;
 }
+
 #logo__icon {
     width: fit-content;
 }
+
 .navigation {
     display: flex;
     flex-wrap: nowrap;
@@ -32,15 +36,12 @@
     background-color: #202020;
     /* background-image: linear-gradient(to right, #0e483efd, whitesmoke); */
 }
+
 .navigation_logout {
-    /* margin-right: 2em;
-    margin-left: 1em;
-    display: flex;
-    flex-direction: row;
-    position: relative; */
     color: #ec44ff;
     text-decoration: none;
 }
+
 li .navigation_link {
     /* margin-right: 1em; */
     color: #ccfaff;
@@ -48,6 +49,7 @@ li .navigation_link {
     display: flex;
     align-items: center;
 }
+
 .navigation__name {
     font-size: 1.5rem;
     padding-left: 0.5rem;
@@ -55,4 +57,87 @@ li .navigation_link {
     color: #ccfaff;
     text-decoration: none;
 
+}
+
+/* animation effect and associated design */
+
+.menu-btn {
+    position: absolute;
+    z-index: 2;
+    right: 20px;
+    /*left: 20px; */
+    top: 20px;
+    height: 50px;
+    width: 50px;
+    text-align: center;
+    line-height: 50px;
+    border-radius: 50%;
+    font-size: 20px;
+    cursor: pointer;
+    /* color: #fff; */
+    /* background: linear-gradient(90deg, #f92c78, #4114a1); */
+    /* background: linear-gradient(375deg, #1cc7d0, #2ede98); */
+    /* background: linear-gradient(-45deg, #e3eefe 0%, #efddfb 100%); */
+    transition: all 0.3s ease-in-out;
+}
+
+.menu-btn span,
+.menu-btn:before,
+.menu-btn:after {
+    content: "";
+    position: absolute;
+    top: calc(40%);
+    left: 10%;
+    width: 50%;
+    border-bottom: 3px solid rgba(113, 20, 144, 0.909);
+    transition: .6s cubic-bezier(0.215, 0.61, 0.355, 1);
+}
+
+.menu-btn:before {
+    transform: translateY(-8px);
+}
+
+.menu-btn:after {
+    transform: translateY(8px);
+}
+
+.close {
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+/* closing animation */
+#active:checked+.menu-btn span {
+    transform: scaleX(0);
+}
+
+#active:checked+.menu-btn:before {
+    transform: rotate(45deg);
+    border-color: rgba(113, 20, 144, 0.909);
+}
+
+#active:checked+.menu-btn:after {
+    transform: rotate(-45deg);
+    border-color: rgba(113, 20, 144, 0.909);
+}
+
+input[type="checkbox"] {
+    display: none;
+}
+
+#navLinks {
+    position: fixed;
+    top: 14px;
+    right: -100%;
+    height: 10%;
+    width: 60%;
+    transition: all 0.4s ease;
+    border-radius: 0 0 0 12px;
+}
+
+#active:checked~#navLinks {
+    position: absolute;
+    right: 10%;
 }

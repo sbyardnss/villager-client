@@ -118,8 +118,10 @@ export const Nav = () => {
                 </Link>
             </div>
             <div id="navList">
-                
-                <div id="navLinks">
+            <input type="checkbox" id="active" />
+                <label htmlFor="active" className="menu-btn"><span></span></label>
+                <label htmlFor="inactive" className="close"></label>
+                {/* <div id="navLinksList"> */}
                     <ul id="navLinks">
                         <li className="tempListItem"><Link id="/profile" className="profileLink" to="/profile" >Profile</Link></li>
                         <li className="tempListItem"><Link id="/play" className="navigation_link" to="/play" >Play</Link></li>
@@ -132,7 +134,7 @@ export const Nav = () => {
                         }}>Logout</Link>
                         </li>
                     </ul>
-                </div>
+                {/* </div> */}
             </div>
         </header>
     )

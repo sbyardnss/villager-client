@@ -63,16 +63,22 @@ export const Nav = () => {
                 <label htmlFor="active" className="menu-btn"><span></span></label>
                 <label htmlFor="inactive" className="close"></label>
                 <ul id="navLinks">
-                    <li className="tempListItem"><Link id="/profile" className="profileLink" to="/profile" onClick={closeMenuAction}>Profile</Link></li>
-                    <li className="tempListItem"><Link id="/play" className="navigation_link" to="/play" onClick={closeMenuAction}>Play</Link></li>
-                    <li className="tempListItem"><Link id="/messages" className="navigation_link" to="/messages" onClick={closeMenuAction}>Messages </Link></li>
-                    <li className="tempListItem"><Link id="/tournament" className="navigation_link" to="/tournament" onClick={closeMenuAction}>Tournaments</Link></li>
-                    <li className="tempListItem"><Link id="/userList" className="navigation_link" to="/userList" onClick={closeMenuAction}>Make Friends</Link></li>
-                    <li className="tempListItem"><Link id="logout" className="navigation_logout" to="" onClick={() => {
-                        localStorage.removeItem("villager")
-                        navigate("/", { replace: true })
-                    }}>Logout</Link>
-                    </li>
+                    <div>
+                        <li className="tempListItem"><Link id="/profile" className="profileLink" to="/profile" onClick={closeMenuAction}>Profile</Link></li>
+                        <li className="tempListItem"><Link id="/play" className="navigation_link" to="/play" onClick={closeMenuAction}>Play</Link></li>
+                    </div>
+                    <div>
+                        <li className="tempListItem"><Link id="/messages" className="navigation_link" to="/messages" onClick={closeMenuAction}>Messages </Link></li>
+                        <li className="tempListItem"><Link id="/tournament" className="navigation_link" to="/tournament" onClick={closeMenuAction}>Tournaments</Link></li>
+                    </div>
+                    <div>
+                        <li className="tempListItem"><Link id="/userList" className="navigation_link" to="/userList" onClick={closeMenuAction}>Make Friends</Link></li>
+                        <li className="tempListItem"><Link id="logout" className="navigation_logout" to="" onClick={() => {
+                            localStorage.removeItem("villager")
+                            navigate("/", { replace: true })
+                        }}>Logout</Link>
+                        </li>
+                    </div>
                 </ul>
             </div>
         </header>

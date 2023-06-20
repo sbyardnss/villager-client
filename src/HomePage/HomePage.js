@@ -4,6 +4,7 @@ import { React, useContext, useState, useEffect, useRef } from "react"
 import { acceptChallenge, deleteCommunityPost, getAllCommunityPosts, getAllGames, getAllPlayers, getAllTournaments, getPuzzles, sendNewGame, submitNewPostToAPI } from "../ServerManager"
 import { PlayContext } from "../Play/PlayProvider"
 import { useNavigate } from "react-router-dom"
+import trophyIcon from "../images/small_trophy_with_background.png"
 export const HomePage = () => {
     const localVillager = localStorage.getItem("villager")
     const localVillagerObj = JSON.parse(localVillager)
@@ -192,6 +193,10 @@ export const HomePage = () => {
                             {
                                 myUnfinishedGames?.map(ug => {
                                     // const opponent = ug.player_w?.id === localVillagerObj.userId ? ug.player_b : ug.player_w
+                                    let tournament = {}
+                                    if (ug.tournament) {
+                                        tournament = tournaments.find(t => t.id = ug.tournament)
+                                    }
                                     const opponent = ug.player_w?.id === localVillagerObj.userId ? players.find(p => p.id === ug.player_b?.id) : players.find(p => p.id === ug.player_w?.id)
                                     const isTournamentGame = () => {
                                         return ug.tournament ? "tournamentActiveGameListItem" : "activeGameListItem"
@@ -199,8 +204,15 @@ export const HomePage = () => {
                                     if (opponent) {
                                         return (
                                             <div key={ug.id} className={isTournamentGame()}>
-                                                <div>Play as <span id={ug.player_w.id === localVillagerObj.userId ? "whiteChallengeSpan" : "blackChallengeSpan"}>{ug.player_w?.id === localVillagerObj.userId ? "white" : "black"}</span></div>
-                                                <div className="opponentSectionForListItem">Opponent: {opponent.username}</div>
+                                                <div><span id={ug.player_w.id === localVillagerObj.userId ? "whiteChallengeSpan" : "blackChallengeSpan"}>{ug.player_w?.id === localVillagerObj.userId ? "white" : "black"}</span></div>
+                                                <div className="activeGameInfo">
+                                                    <div className="opponentSectionForListItem">Vs {opponent.username}</div>
+                                                    <div>{ug.tournament ? <img className="trophyIconHomepage" src={trophyIcon} /> : ""}</div>
+                                                    <div className="myGamesListLogisticsInfo">
+                                                        <div>{tournament.title || ""}</div>
+                                                        <div>{new Date(ug.date_time).toLocaleDateString('en-us')}</div>
+                                                    </div>
+                                                </div>
                                                 <button className="challengeBtn"
                                                     onClick={() => {
                                                         setSelectedGame(ug.id)

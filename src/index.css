@@ -17,4 +17,7 @@ code {
 }
 html {
   background-image: url("./images/smokey_background.jpg");
+  /* background-image: url("./images/aberrated_perspective_board.jpg"); */
+  /* background-position: bottom fixed top 25%;
+  background-size: 80dvh; */
 }

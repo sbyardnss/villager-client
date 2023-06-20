@@ -17,6 +17,8 @@
 
 
 #challengesArticle {
+    backdrop-filter: blur(10px);
+    background-color: #76362645;
     display: flex;
     flex-direction: column;
     align-items: start;
@@ -27,26 +29,30 @@
     height: 19em;
     /* width: 30%; */
     min-width: 14em;
-    border: 1px solid blue;
+    /* border: 1px solid blue; */
 }
 
-h2, h3, h4 {
+h2,
+h3,
+h4 {
     margin: .25em 0;
 }
+
 /* general use classnames */
 .opponentSectionForListItem {
-    width: 14em;
+    width: 8em;
+    margin-left: .5em;
+
 }
 
 /* community forum section styling */
 #communityForum {
     /* width: 50%; */
     height: 19em;
-    border: 1px solid salmon;
     padding: 1em;
     backdrop-filter: blur(10px);
-    background-color: #0d676775;
-    border: 1px solid grey;
+    background-color: #2a313275;
+    /* border: 1px solid grey; */
     /* border-radius: 6px; */
     padding: 1em;
     box-shadow: rgba(255, 255, 255, 0.26) 0 1px 2px inset;
@@ -92,40 +98,54 @@ h2, h3, h4 {
 #myActiveGames {
     display: flex;
     flex-direction: column;
-    border: 1px solid yellowgreen;
     padding: 1em;
     height: 12em;
     /* width: 50%; */
+    backdrop-filter: blur(10px);
+    background-color: #336b8775;
 }
+
 #myUnfinishedGamesScrollWindow {
     overflow: scroll;
 }
 
 .tournamentActiveGameListItem {
     display: flex;
-    justify-content: space-evenly;
+    justify-content: space-between;
     align-items: center;
-    border: 1px solid orange;
-    width: fit-content;
+    /* border: 1px solid orange; */
+    width: 96%;
     height: 2em;
     padding: .5em;
-
 }
 
 .activeGameListItem {
     display: flex;
-    justify-content: space-evenly;
-    width: fit-content;
+    justify-content: space-between;
+    width: 96%;
     align-items: center;
     height: 2em;
     padding: .5em;
 }
-
+.activeGameInfo {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+}
+.myGamesListLogisticsInfo{
+    font-size: small;
+    margin-right: 1em;
+}
+.trophyIconHomepage {
+    height: 3em;
+}
 /* create challenge section */
 #createChallengeSection {
     width: 100%;
     margin: 0px;
 }
+
 #createChallengeDiv {
     display: flex;
     align-items: center;
@@ -191,6 +211,7 @@ h2, h3, h4 {
     flex-direction: column;
     font-size: small;
 }
+
 .openChallengerInfo {
     height: 2em;
     display: flex;

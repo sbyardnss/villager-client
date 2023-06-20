@@ -3,6 +3,7 @@
     margin-top: 120px;
     display: flex;
     justify-content: center;
+    flex-wrap: wrap;
 }
 
 #forumAndActiveGames {
@@ -24,7 +25,7 @@
     max-width: 960px;
     flex-wrap: wrap;
     height: 19em;
-    width: 30%;
+    /* width: 30%; */
     min-width: 14em;
     border: 1px solid blue;
 }
@@ -122,12 +123,13 @@ h2, h3, h4 {
 
 /* create challenge section */
 #createChallengeSection {
-    /* width: 30%;
-    min-width: 14em; */
+    width: 100%;
     margin: 0px;
-    /* border: 1px solid pink; */
-    /* padding: 1em; */
-    /* height: 12em; */
+}
+#createChallengeDiv {
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
 }
 
 #piecesSelectionContainer {

@@ -15,7 +15,7 @@ export const HomePage = () => {
     const [tournamentGames, setTournamentGames] = useState([])
     const [challenges, setChallenges] = useState([])
     const [myUnfinishedGames, setMyUnfinishedGames] = useState([])
-    // const [puzzles, setPuzzles] = useState([])
+    const [puzzles, setPuzzles] = useState([])
     const [newPost, updateNewPost] = useState({
         poster: localVillagerObj.userId,
         message: ""
@@ -30,8 +30,16 @@ export const HomePage = () => {
     //     () => {
     //         getPuzzles()
     //             .then(data => setPuzzles(data))
+    //         /* data = [{
+    //             fen: "",
+    //             moves: ['', '', '', ...],
+    //             rating: 0,
+    //             ratingdeviation: 0,
+    //             themes: ['', '', '', ...]
+    //         }, ...] */
     //     },[]
     // )
+    // console.log(puzzles)
     useEffect(
         () => {
             Promise.all([getAllCommunityPosts(), getAllTournaments()]).then(([communityPostData, tournamentData]) => {
@@ -209,6 +217,47 @@ export const HomePage = () => {
             </div>
             <div>
                 <div id="challengesArticle">
+                    <section id="createChallengeSection">
+                        <h3>create challenge</h3>
+                        <div id="createChallengeDiv">
+                            <div>play as:
+                                <div id="piecesSelectionContainer">
+                                    <div id="whitePiecesSelect" onClick={() => {
+                                        const challengeCopy = { ...challengeForApi }
+                                        challengeCopy.player_w = localVillagerObj.userId
+                                        challengeCopy.player_b = null
+                                        updateChallengeForApi(challengeCopy)
+                                    }}>white</div>
+                                    <div id="blackPiecesSelect" onClick={() => {
+                                        const challengeCopy = { ...challengeForApi }
+                                        challengeCopy.player_b = localVillagerObj.userId
+                                        challengeCopy.player_w = null
+                                        updateChallengeForApi(challengeCopy)
+                                    }}>black</div>
+                                </div>
+                            </div>
+                            <div>
+                                <div id="randomSelect" onClick={() => {
+                                    const challengeCopy = { ...challengeForApi }
+                                    const randomNumber = Math.floor(Math.random() * 2)
+                                    if (randomNumber === 1) {
+                                        challengeCopy.player_w = localVillagerObj.userId
+                                        challengeCopy.player_b = null
+                                    }
+                                    else {
+                                        challengeCopy.player_b = localVillagerObj.userId
+                                        challengeCopy.player_w = null
+                                    }
+                                    updateChallengeForApi(challengeCopy)
+                                }}>random</div>
+                                <button onClick={() => {
+                                    if (window.confirm("create open challenge?")) {
+                                        sendNewGame(challengeForApi)
+                                    }
+                                }}>create</button>
+                            </div>
+                        </div>
+                    </section>
                     <h2>open challenges</h2>
                     {
                         challenges?.map(c => {
@@ -217,11 +266,12 @@ export const HomePage = () => {
                                 return (
                                     <div key={c.id} className="challengeListItem">
                                         <div>
-                                            <div>Challenger:</div>
-                                            <div className="openChallengerInfo">{challengingPlayer.full_name} playing as <span id={c.player_w ? "whiteChallengeSpan" : "blackChallengeSpan"}>{c.player_w ? "white" : "black"}</span></div>
+                                            {/* <div>Challenger:</div> */}
+                                            <div className="openChallengerInfo">Play as <span id={c.player_w ? "blackChallengeSpan" : "whiteChallengeSpan"}>{c.player_w ? "black" : "white"}</span> VS {challengingPlayer.full_name} as <span id={c.player_w ? "whiteChallengeSpan" : "blackChallengeSpan"}>{c.player_w ? "white" : "black"}</span></div>
                                         </div>
                                         <div>
-                                            Play as {c.player_w ? "black" : "white"} <button className="challengeBtn"
+                                            {/* Play as {c.player_w ? "black" : "white"} */}
+                                            <button className="challengeBtn"
                                                 onClick={() => {
                                                     const copy = { ...c }
                                                     c.player_w ? copy.player_b = localVillagerObj.userId : copy.player_w = localVillagerObj.userId
@@ -236,43 +286,7 @@ export const HomePage = () => {
                             }
                         })
                     }
-                    <section id="createChallengeSection">
-                        <h3>create challenge</h3>
-                        <div>play as:
-                            <div id="piecesSelectionContainer">
-                                <div id="whitePiecesSelect" onClick={() => {
-                                    const challengeCopy = { ...challengeForApi }
-                                    challengeCopy.player_w = localVillagerObj.userId
-                                    challengeCopy.player_b = null
-                                    updateChallengeForApi(challengeCopy)
-                                }}>white</div>
-                                <div id="blackPiecesSelect" onClick={() => {
-                                    const challengeCopy = { ...challengeForApi }
-                                    challengeCopy.player_b = localVillagerObj.userId
-                                    challengeCopy.player_w = null
-                                    updateChallengeForApi(challengeCopy)
-                                }}>black</div>
-                            </div>
-                            <div id="randomSelect" onClick={() => {
-                                const challengeCopy = { ...challengeForApi }
-                                const randomNumber = Math.floor(Math.random() * 2)
-                                if (randomNumber === 1) {
-                                    challengeCopy.player_w = localVillagerObj.userId
-                                    challengeCopy.player_b = null
-                                }
-                                else {
-                                    challengeCopy.player_b = localVillagerObj.userId
-                                    challengeCopy.player_w = null
-                                }
-                                updateChallengeForApi(challengeCopy)
-                            }}>random</div>
-                            <button onClick={() => {
-                                if (window.confirm("create open challenge?")) {
-                                    sendNewGame(challengeForApi)
-                                }
-                            }}>create</button>
-                        </div>
-                    </section>
+
                 </div>
 
             </div>

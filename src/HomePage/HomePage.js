@@ -209,7 +209,7 @@ export const HomePage = () => {
                                                     <div className="opponentSectionForListItem">Vs {opponent.username}</div>
                                                     <div>{ug.tournament ? <img className="trophyIconHomepage" src={trophyIcon} /> : ""}</div>
                                                     <div className="myGamesListLogisticsInfo">
-                                                        <div>{tournament.title || ""}</div>
+                                                        <div>{tournament?.title || ""}</div>
                                                         <div>{new Date(ug.date_time).toLocaleDateString('en-us')}</div>
                                                     </div>
                                                 </div>

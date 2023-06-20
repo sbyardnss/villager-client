@@ -62,7 +62,7 @@ export const Messages = () => {
     const selectChatOrActiveChat = () => {
         if (selectedChat !== 0) {
             return <>
-                <div>
+                <div id="fullChatAndInterface">
                     <section id="chat">
                         {
                             selectedChatMsgs.map(msg => {
@@ -104,9 +104,9 @@ export const Messages = () => {
                                 })}
                         >send</button>
                     </div>
-                    <button id="exitChatBtn" onClick={() => setSelectedChat(0)}>
+                    {/* <button id="exitChatBtn" onClick={() => setSelectedChat(0)}>
                         exit
-                    </button>
+                    </button> */}
                 </div>
             </>
         }
@@ -121,18 +121,21 @@ export const Messages = () => {
     })
     return <>
         <main id="messagingContainer">
+
             <section id="messagesFriends">
-                {
-                    friends?.map(f => {
-                        return (
-                            <li key={f.id}
-                                className="messagingFriendListItem"
-                                onClick={() => setSelectedChat(f.id)}>
-                                {f.full_name}
-                            </li>
-                        )
-                    })
-                }
+                <ul id="messagingFriendList">
+                    {
+                        friends?.map(f => {
+                            return (
+                                <li key={f.id}
+                                    className={f.id === selectedChat ? "selectedFriendListItem" : "messagingFriendListItem"}
+                                    onClick={() => setSelectedChat(f.id)}>
+                                    {f.full_name}
+                                </li>
+                            )
+                        })
+                    }
+                </ul>
             </section>
             <article id="chatAndInterface">
                 {selectChatOrActiveChat()}

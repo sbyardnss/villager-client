@@ -60,7 +60,7 @@ export const Nav = () => {
             </div>
             <div id="navList" ref={(navMenu)}>
                 <input type="checkbox" id="active" />
-                <label htmlFor="active" className="menu-btn"><span></span></label>
+                <label htmlFor="active" className="menu-btn" ><span></span></label>
                 <label htmlFor="inactive" className="close"></label>
                 <ul id="navLinks">
                     <div>

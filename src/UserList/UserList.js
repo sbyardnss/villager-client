@@ -20,35 +20,39 @@ export const UserList = () => {
     }
     return <>
         <main id="userListContainer">
-            <h1>User List</h1>
-            {
-                players.map(p => {
-                    if (p.id !== localVillagerObj.userId) {
-                        if (p.is_friend === 0) {
-                            return (
-                                <li key={p.id}>
-                                    {p.full_name}
-                                    <button onClick={() => {
-                                        addFriend(p.id)
-                                        .then(() => resetPlayers())
-                                    }}>Add Friend</button>
-                                </li>
-                            )
+            <h1 id="userListTitle">User List</h1>
+            <ul id="userList">
+                {
+                    players.map(p => {
+                        if (p.id !== localVillagerObj.userId) {
+                            if (p.is_friend === 0) {
+                                return (
+                                    <li key={p.id}
+                                        className="userListItem">
+                                        {p.full_name}
+                                        <button onClick={() => {
+                                            addFriend(p.id)
+                                                .then(() => resetPlayers())
+                                        }}>Add Friend</button>
+                                    </li>
+                                )
+                            }
+                            else {
+                                return (
+                                    <li key={p.id}
+                                        className="userListFriendItem">
+                                        {p.full_name}
+                                        <button onClick={() => {
+                                            removeFriend(p.id)
+                                                .then(() => resetPlayers())
+                                        }}>Remove Friend</button>
+                                    </li>
+                                )
+                            }
                         }
-                        else {
-                            return (
-                                <li key={p.id}>
-                                    {p.full_name}
-                                    <button onClick={() => {
-                                        removeFriend(p.id)
-                                        .then(() => resetPlayers())
-                                    }}>Remove Friend</button>
-                                </li>
-                            )
-                        }
-                    }
-                })
-            }
+                    })
+                }
+            </ul>
         </main>
     </>
 }

@@ -120,11 +120,9 @@ export const HomePage = () => {
                 })
         }
     }
-
     return <>
         <main id="homepageContainer">
-            {/* <h1>Homepage</h1> */}
-            <div id="forumAndOpenChallenges">
+            <div id="forumAndActiveGames">
                 <article id="communityForum">
                     <h2>community posts</h2>
                     <section id="communityForumMsgs" >
@@ -179,7 +177,38 @@ export const HomePage = () => {
                         >send</button>
                     </section>
                 </article>
-                <div id="openChallengesList">
+                <article key="activeGames" >
+                    <section id="myActiveGames">
+                        <h2>My Games</h2>
+                        <div id="myUnfinishedGamesScrollWindow">
+                            {
+                                myUnfinishedGames?.map(ug => {
+                                    // const opponent = ug.player_w?.id === localVillagerObj.userId ? ug.player_b : ug.player_w
+                                    const opponent = ug.player_w?.id === localVillagerObj.userId ? players.find(p => p.id === ug.player_b?.id) : players.find(p => p.id === ug.player_w?.id)
+                                    const isTournamentGame = () => {
+                                        return ug.tournament ? "tournamentActiveGameListItem" : "activeGameListItem"
+                                    }
+                                    if (opponent) {
+                                        return (
+                                            <div key={ug.id} className={isTournamentGame()}>
+                                                <div>Play as <span id={ug.player_w.id === localVillagerObj.userId ? "whiteChallengeSpan" : "blackChallengeSpan"}>{ug.player_w?.id === localVillagerObj.userId ? "white" : "black"}</span></div>
+                                                <div className="opponentSectionForListItem">Opponent: {opponent.username}</div>
+                                                <button className="challengeBtn"
+                                                    onClick={() => {
+                                                        setSelectedGame(ug.id)
+                                                    }}>play</button>
+                                            </div>
+                                        )
+                                    }
+                                })
+                            }
+                        </div>
+                    </section>
+
+                </article>
+            </div>
+            <div>
+                <div id="challengesArticle">
                     <h2>open challenges</h2>
                     {
                         challenges?.map(c => {
@@ -188,7 +217,7 @@ export const HomePage = () => {
                                 return (
                                     <div key={c.id} className="challengeListItem">
                                         <div>
-                                            <div>Challenger:</div> 
+                                            <div>Challenger:</div>
                                             <div className="openChallengerInfo">{challengingPlayer.full_name} playing as <span id={c.player_w ? "whiteChallengeSpan" : "blackChallengeSpan"}>{c.player_w ? "white" : "black"}</span></div>
                                         </div>
                                         <div>
@@ -207,83 +236,48 @@ export const HomePage = () => {
                             }
                         })
                     }
-                </div>
-            </div>
-            <article key="challenges" id="challengesArticle">
-                <section id="myActiveGames">
-                    <h2>My Games</h2>
-                    <div id="myUnfinishedGamesScrollWindow">
-                        {
-                            myUnfinishedGames?.map(ug => {
-                                // const opponent = ug.player_w?.id === localVillagerObj.userId ? ug.player_b : ug.player_w
-                                const opponent = ug.player_w?.id === localVillagerObj.userId ? players.find(p => p.id === ug.player_b?.id) : players.find(p => p.id === ug.player_w?.id)
-                                const isTournamentGame = () => {
-                                    return ug.tournament ? "tournamentActiveGameListItem" : "activeGameListItem"
-                                }
-                                if (opponent) {
-                                    return (
-                                        <div key={ug.id} className={isTournamentGame()}>
-                                            <div>Play as <span id={ug.player_w.id === localVillagerObj.userId ? "whiteChallengeSpan" : "blackChallengeSpan"}>{ug.player_w?.id === localVillagerObj.userId ? "white" : "black"}</span></div>
-                                            <div className="opponentSectionForListItem">Opponent: {opponent.username}</div>
-                                            <button className="challengeBtn"
-                                                onClick={() => {
-                                                    setSelectedGame(ug.id)
-                                                }}>play</button>
-                                        </div>
-                                    )
-                                }
-                            })
-                        }
-                    </div>
-                </section>
-                <section id="createChallengeSection">
-                    <h3>create challenge</h3>
-                    <div>play as:
-                        <div id="piecesSelectionContainer">
-                            <div id="whitePiecesSelect" onClick={() => {
+                    <section id="createChallengeSection">
+                        <h3>create challenge</h3>
+                        <div>play as:
+                            <div id="piecesSelectionContainer">
+                                <div id="whitePiecesSelect" onClick={() => {
+                                    const challengeCopy = { ...challengeForApi }
+                                    challengeCopy.player_w = localVillagerObj.userId
+                                    challengeCopy.player_b = null
+                                    updateChallengeForApi(challengeCopy)
+                                }}>white</div>
+                                <div id="blackPiecesSelect" onClick={() => {
+                                    const challengeCopy = { ...challengeForApi }
+                                    challengeCopy.player_b = localVillagerObj.userId
+                                    challengeCopy.player_w = null
+                                    updateChallengeForApi(challengeCopy)
+                                }}>black</div>
+                            </div>
+                            <div id="randomSelect" onClick={() => {
                                 const challengeCopy = { ...challengeForApi }
-                                challengeCopy.player_w = localVillagerObj.userId
-                                challengeCopy.player_b = null
+                                const randomNumber = Math.floor(Math.random() * 2)
+                                if (randomNumber === 1) {
+                                    challengeCopy.player_w = localVillagerObj.userId
+                                    challengeCopy.player_b = null
+                                }
+                                else {
+                                    challengeCopy.player_b = localVillagerObj.userId
+                                    challengeCopy.player_w = null
+                                }
                                 updateChallengeForApi(challengeCopy)
-                            }}>white</div>
-                            <div id="blackPiecesSelect" onClick={() => {
-                                const challengeCopy = { ...challengeForApi }
-                                challengeCopy.player_b = localVillagerObj.userId
-                                challengeCopy.player_w = null
-                                updateChallengeForApi(challengeCopy)
-                            }}>black</div>
+                            }}>random</div>
+                            <button onClick={() => {
+                                if (window.confirm("create open challenge?")) {
+                                    sendNewGame(challengeForApi)
+                                }
+                            }}>create</button>
                         </div>
-                        <div id="randomSelect" onClick={() => {
-                            const challengeCopy = { ...challengeForApi }
-                            const randomNumber = Math.floor(Math.random() * 2)
-                            if (randomNumber === 1) {
-                                challengeCopy.player_w = localVillagerObj.userId
-                                challengeCopy.player_b = null
-                            }
-                            else {
-                                challengeCopy.player_b = localVillagerObj.userId
-                                challengeCopy.player_w = null
-                            }
-                            updateChallengeForApi(challengeCopy)
-                        }}>random</div>
-                        <button onClick={() => {
-                            if (window.confirm("create open challenge?")) {
-                                sendNewGame(challengeForApi)
-                            }
-                        }}>create</button>
-                    </div>
-                </section>
-            </article>
-            {/* <article>
-                <h2>my tournaments</h2>
-                {
-                    myTournaments?.map(t => {
-                        return (
-                            <div key={t.id}>{t.title}</div>
-                        )
-                    })
-                }
-            </article> */}
+                    </section>
+                </div>
+
+            </div>
+
+
         </main>
     </>
 }

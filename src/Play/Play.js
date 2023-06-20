@@ -46,23 +46,23 @@ export const Play = () => {
     })
     //set up game based on whether it is against human or computer
     //USE EFFECT CURRENTLY RUNNING BEFORE SELECTEDGAMEOBJ RETRIEVED 
-    const leaveGame = (e) => {
-        if (document.getElementById("navMenu")?.contains(e.target)) {
-            if (e.target.id !== "navMenu" && e.target.id !== "navLinks" && e.target.id !== "logo" && e.target.className !== "") {
-                setSelectedGame(0)
-                setReview(false)
-                navigate(e.target.id)
-            }
-        }
-        if (e.target.id === "logout") {
-            setSelectedGame(0)
-            setReview(false)
-            localStorage.removeItem("villager")
-            navigate("/", { replace: true })
-        }
+    // const leaveGame = (e) => {
+    //     if (document.getElementById("navMenu")?.contains(e.target)) {
+    //         if (e.target.id !== "navMenu" && e.target.id !== "navLinks" && e.target.id !== "logo" && e.target.className !== "") {
+    //             setSelectedGame(0)
+    //             setReview(false)
+    //             navigate(e.target.id)
+    //         }
+    //     }
+    //     if (e.target.id === "logout") {
+    //         setSelectedGame(0)
+    //         setReview(false)
+    //         localStorage.removeItem("villager")
+    //         navigate("/", { replace: true })
+    //     }
 
-    }
-    document.addEventListener('click', leaveGame)
+    // }
+    // document.addEventListener('click', leaveGame)
     useEffect(
         () => {
             if (selectedGame) {

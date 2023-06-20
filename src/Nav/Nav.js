@@ -42,10 +42,7 @@ export const Nav = () => {
         document.getElementById("active").checked = false
     }
     document.addEventListener(`click`, closeOpenMenus)
-    useEffect(
-        () => {
-        }, []
-    )
+
     // const msgNotification = () => {
     //     if (unread !== 0) {
     //         return <>
@@ -72,7 +69,6 @@ export const Nav = () => {
                     <li className="tempListItem"><Link id="/tournament" className="navigation_link" to="/tournament" onClick={closeMenuAction}>Tournaments</Link></li>
                     <li className="tempListItem"><Link id="/userList" className="navigation_link" to="/userList" onClick={closeMenuAction}>Make Friends</Link></li>
                     <li className="tempListItem"><Link id="logout" className="navigation_logout" to="" onClick={() => {
-
                         localStorage.removeItem("villager")
                         navigate("/", { replace: true })
                     }}>Logout</Link>

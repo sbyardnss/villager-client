@@ -48,7 +48,7 @@ export const Play = () => {
     //USE EFFECT CURRENTLY RUNNING BEFORE SELECTEDGAMEOBJ RETRIEVED 
     const leaveGame = (e) => {
         if (document.getElementById("navMenu")?.contains(e.target)) {
-            if (e.target.id !== "navMenu" && e.target.id !== "navLinks" && e.target.id !== "logo") {
+            if (e.target.id !== "navMenu" && e.target.id !== "navLinks" && e.target.id !== "logo" && e.target.className !== "") {
                 setSelectedGame(0)
                 setReview(false)
                 navigate(e.target.id)

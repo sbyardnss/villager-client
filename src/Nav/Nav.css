@@ -49,6 +49,12 @@ li .navigation_link {
     display: flex;
     align-items: center;
 }
+li .profileLink {
+    color: #ccfaff;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+}
 
 .navigation__name {
     font-size: 1.5rem;

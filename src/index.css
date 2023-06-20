@@ -1,3 +1,7 @@
+@viewport {
+  width: device-width;
+  zoom: 1.0;
+}
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
@@ -10,4 +14,7 @@ body {
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+html {
+  background-image: url("./images/smokey_background.jpg");
 }

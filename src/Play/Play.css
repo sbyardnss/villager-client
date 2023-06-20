@@ -8,8 +8,9 @@
     margin-right: auto;
 }
 #boardInterface {
-    width: 90%;
+    width: 80vh;
     margin: 1em;
+
 }
 #clickStartPrompt {
     font-size: x-large;

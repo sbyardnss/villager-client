@@ -60,6 +60,7 @@ export const Play = () => {
         }
     }
     document.addEventListener('click', leaveGame)
+    //set initial state for game vs computer or game vs human
     useEffect(
         () => {
             if (selectedGame) {
@@ -90,6 +91,8 @@ export const Play = () => {
             }
         }, [orientation, selectedGameObj]
     )
+
+    // if game is vs computer, watch for confirmation that player is ready via "start" window
     useEffect(
         () => {
             if (matchReady) {
@@ -108,6 +111,7 @@ export const Play = () => {
             }
         }, [game, matchReady]
     )
+
     //update turn variable for saving turn and controlling ai request
     useEffect(
         () => {
@@ -115,8 +119,8 @@ export const Play = () => {
             setTurn(gameTurn)
         }, [game]
     )
-    // useEffect for updating gameForAPI at end of game 
-    // against computer opponent
+
+    // useEffect for updating gameForAi at end of game against computer opponent
     useEffect(
         () => {
             if (turn === orientation === "white" ? 'b' : 'w') {
@@ -129,6 +133,7 @@ export const Play = () => {
             }
         }, [turn]
     )
+    // submit results automatically if game is vs human
     useEffect(
         () => {
             if (selectedGameObj) {
@@ -158,6 +163,7 @@ export const Play = () => {
             }
         }, [game]
     )
+    // if game is a review, set pgn array state
     useEffect(
         () => {
             if (review === true) {
@@ -166,12 +172,16 @@ export const Play = () => {
             }
         }, [game, selectedGameObj]
     )
+
+    // find initial length of review pgn
     useEffect(
         () => {
-            const length = reviewPgn.length - 1
+            // const length = reviewPgn.length - 1
+            const length = reviewPgn.length
             setReviewLength(length)
         }, [reviewPgn]
     )
+    //convert review pgn to string format compatible with react-chessboard
     useEffect(
         () => {
             if (reviewLength > 0) {
@@ -181,9 +191,11 @@ export const Play = () => {
             }
         }, [reviewLength]
     )
+    //when strPgn changes, update ui state
     useEffect(
         () => {
             if (strPgn !== "") {
+                console.log(strPgn)
                 game.load_pgn(strPgn)
             }
         }, [strPgn]
@@ -276,21 +288,21 @@ export const Play = () => {
             }
         }
     }
-
     const pgnStringBuilder = (pgnArr) => {
         let index = 1
         const arr = [...pgnArr]
         arr.length = reviewLength
         const newArr = []
-        for (let i = 0; i < arr.length; i = i + 2) {
-            if (arr[i + 1] !== undefined) {
-                newArr.push(`${index}. ${arr[i]} ${arr[i + 1]}`)
-            }
-            else {
-                newArr.push(`${index}. ${arr[i]}`)
-            }
+        for (let i = 0; i <= arr.length; i = i + 2) {
+            // if (arr[i + 1]) {
+            newArr.push(`${index}. ${arr[i]} ${arr[i + 1] || ""}`)
+            // }
+            // else {
+            //     newArr.push(`${index}. ${arr[i]}`)
+            // }
             index++
         }
+        // console.log(newArr)
         return newArr.join(" ")
     }
     const grabMovesFromPGN = () => {

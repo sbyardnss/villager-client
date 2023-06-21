@@ -12,7 +12,7 @@ export const Tournament = () => {
     const [currentRoundMatchups, setCurrentRoundMatchups] = useState([])
     const [scoring, setScoring] = useState(false)
     const [editScores, setEditScores] = useState(false)
-    const [outcomes, updateOutcomes] = useState([])
+    // const [outcomes, updateOutcomes] = useState([])
     const [gameForApi, updateGameForApi] = useState({
         player_w: 0,
         player_b: 0,

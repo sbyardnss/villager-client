@@ -43,7 +43,7 @@
     margin: auto;
     height: 70px;
     /* background-color: #0d6767; */
-    box-shadow: rgba(255, 255, 255, 0.26) 0px -2px 4px inset;
+    /* box-shadow: rgba(255, 255, 255, 0.26) 0px -2px 4px inset; */
     background-color: #202020;
     /* background-image: linear-gradient(to right, #0e483efd, whitesmoke); */
 }

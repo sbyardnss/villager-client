@@ -316,9 +316,10 @@ export const HomePage = () => {
                     </div>
                     <div id="puzzlesArticle">
                         <div id="puzzleParamaters">
-                            <label id="puzzleLabel" htmlFor="puzzleRatingSelect">select puzzle rating</label>
+                            {/* <label id="puzzleLabel" htmlFor="puzzleRatingSelect">select puzzle rating</label> */}
                             <div id="puzzleSelectAndSubmit">
                                 <select id="puzzleSelect" onChange={(e) => setSelectedRange(e.target.value)}>
+                                    <option value={800}>select puzzle rating</option>
                                     <option value={800}>800</option>
                                     <option value={900}>900</option>
                                     <option value={1000}>1000</option>

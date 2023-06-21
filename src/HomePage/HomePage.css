@@ -298,6 +298,7 @@ h4 {
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: space-evenly;
     border: 1px solid #2a2e34;
     /* padding: 1em; */
     /* border-radius: 6px 6px 0 0; */
@@ -326,9 +327,7 @@ h4 {
     flex-direction: column;
     align-items: start;
     width: 100%;
-    /* border: 1px solid #2a2e34; */
-    /* padding: 1em; */
-    /* border-radius: 6px 6px 0 0; */
+
 }
 #puzzleSelectAndSubmit {
     display: flex;

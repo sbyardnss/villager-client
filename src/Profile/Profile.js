@@ -21,6 +21,15 @@ export const Profile = () => {
     const [messages, setMessages] = useState([])
     const [myGames, setMyGames] = useState([])
     const [profileEdit, setProfileEdit] = useState(false)
+    const [performanceData, setPerformanceData] = useState({
+        wins: 0,
+        winPercent: 0.0,
+        losses: 0,
+        lossPercent: 0.0,
+        draws: 0,
+        drawPercent: 0.0
+
+    })
     const [update, setUpdate] = useState({
         username: "",
         first_name: "",
@@ -29,7 +38,6 @@ export const Profile = () => {
         email: ""
     })
     const [passwordVisible, setPasswordVisible] = useState(false)
-
     useEffect(
         () => {
             Promise.all([getAllMessages(), getProfile(), getMyGames(), getMyTournaments()]).then(([messageData, profileData, myGameData, tournamentData]) => {
@@ -41,12 +49,28 @@ export const Profile = () => {
             })
         }, []
     )
+    useEffect(
+        () => {
+            const gamesIWon = myGames.filter(g => g.winner?.id === localVillagerObj.userId).length
+            const losses = myGames.filter(g => g.winner !== null && g.winner.id !== localVillagerObj.userId).length
+            const draws = myGames.filter(g => g.win_style === "draw").length
+            const completedGames = myGames.filter(g => g.winner !== null).length
+            setPerformanceData({
+                wins: gamesIWon,
+                winPercent: (completedGames / gamesIWon) * 100,
+                losses: losses,
+                lossPercent: (completedGames / losses) * 100,
+                draws: draws,
+                drawPercent: (completedGames / draws) * 100
+            })
+        }, [myGames]
+    )
     // useEffect(
     //     () => {
-    //         if (selectedGame !== 0) {
+    //         if (review === true) {
     //             navigate("/play")
     //         }
-    //     }, [selectedGame]
+    //     },[selectedGameObj]
     // )
     const showPassword = (passwordVisible) => {
         if (passwordVisible === true) {
@@ -141,17 +165,21 @@ export const Profile = () => {
             </>
         }
         else {
-            return null
+            return (
+                <div id="profileInfo">
+                    <div>{profileInfo.full_name}</div>
+                    <div>{profileInfo.username}</div>
+                    <div>{profileInfo.email}</div>
+                </div>
+            )
         }
     }
     return <>
         <main id="profileContainer">
             <article>
-                Profile
-                <section id="profileInfo">
-                    <div>{profileInfo.full_name}</div>
-                    <div>{profileInfo.username}</div>
-                    <div>{profileInfo.email}</div>
+                <h2 id="profileHead">Profile</h2>
+                <section id="profileInfoAndEdit">
+
                     {updateProfileSection()}
                     <button className="editProfileButton" onClick={
                         () => {
@@ -159,31 +187,38 @@ export const Profile = () => {
                         }
                     }>Edit</button>
                 </section>
-                <section id="profileFriendContainer">
-                    <h4>friends</h4>
-                    {
-                        profileInfo.friends?.map(f => {
-                            // const unreadMsgsFromPlayer = messages.find(msg => msg.sender === f.id && msg.read === false)
-                            // if (unreadMsgsFromPlayer) {
-                            //     return (
-                            //         <li className="profileUserListItem" key={f.id}>
-                            //             <div>
-                            //                 {f.full_name}
-                            //             </div>
-                            //             <h5>new messages!</h5>
-                            //         </li>
-                            //     )
-                            // }
-                            // else {
+                <div id="profilePerformanceAndFriends">
+                    <section id="profilePerformaceData">
+                        <div>Won: {performanceData.wins}  ({performanceData.winPercent}%)</div>
+                        <div>Lost: {performanceData.losses}  ({performanceData.losses === 0 ? 0 : performanceData.lossPercent}%)</div>
+                        <div>Draw: {performanceData.draws}  ({performanceData.draws === 0 ? 0 : performanceData.drawPercent}%)</div>
+                    </section>
+                    <section id="profileFriendContainer">
+                        <h4>friends</h4>
+                        {
+                            profileInfo.friends?.map(f => {
+                                // const unreadMsgsFromPlayer = messages.find(msg => msg.sender === f.id && msg.read === false)
+                                // if (unreadMsgsFromPlayer) {
+                                //     return (
+                                //         <li className="profileUserListItem" key={f.id}>
+                                //             <div>
+                                //                 {f.full_name}
+                                //             </div>
+                                //             <h5>new messages!</h5>
+                                //         </li>
+                                //     )
+                                // }
+                                // else {
                                 return (
                                     <li className="profileUserListItem" key={f.id}>
                                         {f.full_name}
                                     </li>
                                 )
-                            // }
-                        })
-                    }
-                </section>
+                                // }
+                            })
+                        }
+                    </section>
+                </div>
                 <section id="'profilePastGames">
                     {
                         myGames.map(game => {
@@ -239,9 +274,11 @@ export const Profile = () => {
                                         <button onClick={() => {
                                             setReview(true)
                                             setSelectedGame(game.id)
-                                            const gameObjForPlay = myGames.find(g => g.id === selectedGame)
-                                            updateSelectedGameObj(gameObjForPlay)
+                                            // const gameObjForPlay = myGames.find(g => g.id === selectedGame)
+                                            // updateSelectedGameObj(gameObjForPlay)
+                                            // if (selectedGameObj === gameObjForPlay) {
                                             navigate("/play")
+                                            // }
                                         }}>Review Game</button>
                                     </div>
                                 )

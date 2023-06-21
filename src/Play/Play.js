@@ -164,7 +164,7 @@ export const Play = () => {
                 const pgnArr = grabMovesFromPGN()
                 setReviewPgn(pgnArr)
             }
-        }, [game]
+        }, [game, selectedGameObj]
     )
     useEffect(
         () => {

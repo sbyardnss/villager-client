@@ -1,15 +1,33 @@
 #profileContainer {
-    margin-top: 80px;
+    margin-top: 120px;
     display: flex;
     justify-content: center;
+    width: 90vw;
 }
-
+#profileHead {
+    color:rgb(231, 231, 231)
+}
+#profilePerformanceAndFriends {
+    display: flex;
+    justify-content: space-between;
+}
 /* profile info and update */
+#profileInfoAndEdit {
+    display: flex;
+    justify-content: space-between;
+    height: fit-content;
+    margin-bottom: 2em;
+}
 #profileInfo {
     color: rgb(231, 231, 231);
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: start;
+
+}
+.editProfileButton {
+    width: fit-content;
+    height: 1.5em;
 }
 #updateProfileSection {
     display: flex;
@@ -21,8 +39,11 @@
 /* profile friend list */
 #profileFriendContainer {
     border: 1px solid orange;
+    width: fit-content;
+    padding: 1em;
+    border-radius: 4px;
     color: rgb(231, 231, 231);
-
+    margin-bottom: 2em;
 }
 
 .profileUserListItem {
@@ -30,6 +51,13 @@
     align-items: center;
 }
 
+
+/* performance data */
+#profilePerformaceData {
+    color: rgb(231, 231, 231);
+    font-size: xx-large;
+    font-weight: 200;
+}
 
 /* past games section */
 .profilePastGamesListItem {
@@ -41,7 +69,7 @@
     justify-content: space-between;
     align-items: center;
     /* border: 1px solid orange; */
-    width: 30em;
+    width: 100%;
     height: 2em;
     padding: .5em;
     backdrop-filter: blur(30px);
@@ -54,7 +82,7 @@
     color: rgb(231, 231, 231);
     display: flex;
     justify-content: space-between;
-    width: 30em;
+    width: 100%;
     align-items: center;
     height: 2em;
     padding: .5em;

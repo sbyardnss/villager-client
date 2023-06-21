@@ -86,7 +86,6 @@ export const PlayProvider = (props) => {
             }, ...] */
         },[selectedRating]
     )
-    console.log(players)
     const resetGames = () => {
         getAllGames()
             .then(data => setGames(data))

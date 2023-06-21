@@ -176,8 +176,8 @@ export const Play = () => {
     // find initial length of review pgn
     useEffect(
         () => {
-            // const length = reviewPgn.length - 1
-            const length = reviewPgn.length
+            const length = reviewPgn.length - 1
+            // const length = reviewPgn.length 
             setReviewLength(length)
         }, [reviewPgn]
     )
@@ -188,18 +188,19 @@ export const Play = () => {
                 const newPgn = [...reviewPgn]
                 const stringPgn = pgnStringBuilder(newPgn)
                 setStrPgn(stringPgn)
+                game.load_pgn(stringPgn)
             }
         }, [reviewLength]
     )
     //when strPgn changes, update ui state
-    useEffect(
-        () => {
-            if (strPgn !== "") {
-                console.log(strPgn)
-                game.load_pgn(strPgn)
-            }
-        }, [strPgn]
-    )
+    // useEffect(
+    //     () => {
+    //         if (strPgn !== "") {
+    //             console.log(strPgn)
+    //             game.load_pgn(strPgn)
+    //         }
+    //     }, [strPgn]
+    // )
 
     //function for populating start game prompt window
     //only for non human opponents
@@ -291,11 +292,13 @@ export const Play = () => {
     const pgnStringBuilder = (pgnArr) => {
         let index = 1
         const arr = [...pgnArr]
-        arr.length = reviewLength
+        arr.length = reviewLength + 1
         const newArr = []
         for (let i = 0; i <= arr.length; i = i + 2) {
             // if (arr[i + 1]) {
-            newArr.push(`${index}. ${arr[i]} ${arr[i + 1] || ""}`)
+            if (arr[i] !== undefined) {
+                newArr.push(`${index}. ${arr[i]} ${arr[i + 1] || ""}`)
+            }
             // }
             // else {
             //     newArr.push(`${index}. ${arr[i]}`)

@@ -1,16 +1,51 @@
 #tournamentContainer {
-    margin-top: 80px;
+    margin-top: 120px;
+    
+}
+.setColor {
+    color: rgb(231, 231, 231);
 }
 
 /* tournament setup */
 #newTournamentForm {
     border: 1px solid slateblue;
 }
+#tournamentPlayerSelectionSection {
+    display: flex;
+}
 #tournamentPotentialCompetitorSelection {
     border: 1px solid blue;
+    width: 40%;
 }
 #tournamentSelectedCompetitors {
+    width: 40%;
+}
+
+#tournamentSelectedCompetitors {
     border: 1px solid brown;
+    /* color: rgb(231, 231, 231); */
+}
+.newTournamentPlayerListItem {
+    color: rgb(231, 231, 231);
+    cursor: pointer;
+}
+.newTournamentPlayerListItem:hover {
+    background-color: aqua;
+}
+
+/* tournament list */
+#activeTournaments {
+    width: 60%;
+}
+.activeTournamentListItem {
+    color: rgb(231, 231, 231);
+    cursor: pointer;
+}
+.activeTournamentListItem:hover {
+    background-color: aqua;
+}
+#digitalTournamentCheckbox {
+    cursor: pointer;
 }
 
 /* matchup table */
@@ -23,6 +58,7 @@
     border: 1px solid rgb(40, 40, 40);
     text-align: center;
 }
+
 .blackPiecesMatchup {
     background-color: rgb(40, 40, 40);
     color: whitesmoke;
@@ -31,6 +67,7 @@
     border-radius: 5px 0 5px 0;
     text-align: center;
 }
+
 .drawMatchupButton {
     background-color: rgb(96, 219, 250);
     font-weight: 500;
@@ -46,6 +83,8 @@
     background-color: blanchedalmond;
     border: 1px solid green;
 }
+
 .roundHeader {
     background-color: gray;
 }
+

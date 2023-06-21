@@ -270,7 +270,7 @@ export const Tournament = () => {
                                     return (
                                         <tr key={matchup.round + matchup.match}>
                                             <td className="whitePiecesMatchup">{white.full_name}</td>
-                                            <td className="matchupTableVS">vs</td>
+                                            <td className="matchupTableVS setColor">vs</td>
                                             <td className="blackPiecesMatchup">{black.full_name}</td>
                                         </tr>
                                     )
@@ -366,7 +366,7 @@ export const Tournament = () => {
         if (activeTournament && activeTournamentPlayers) {
             return <>
                 <main id="tournamentContainer">
-                    {activeTournament.title}
+                    <div className="setColor">{activeTournament.title}</div>
                     <button onClick={() => {
                         if (window.confirm("create round?")) {
                             if (byePlayer) {
@@ -392,7 +392,7 @@ export const Tournament = () => {
                     }}>edit scores</button>
                     {scoringButtonOrNone()}
                     <section id="matchupsContainer">
-                        <div>
+                        <div className="setColor">
                             Round {currentRound}
                         </div>
                         {/* {matchupsOrScoring()} */}
@@ -480,6 +480,7 @@ export const Tournament = () => {
         return <>
             <main id="tournamentContainer">
                 <section id="newTournamentForm">
+                    <label htmlFor="title">Tournament name: </label>
                     <input
                         type="text"
                         name="title"
@@ -490,46 +491,50 @@ export const Tournament = () => {
                             updateNewTournament(copy)
                         }}
                     />
-                    <div id="tournamentPotentialCompetitorSelection">
-                        {
-                            potentialCompetitors.map((p, index) => {
-                                return (
-                                    <li key={p.id}
-                                        className="newTournamentPlayerListItem"
-                                        onClick={() => {
-                                            const copy = [...potentialCompetitors]
-                                            copy.splice(index, 1)
-                                            setPotentialCompetitors(copy)
-                                            const tournamentCopy = { ...newTournament }
-                                            tournamentCopy.competitors.push(p.id)
-                                            updateNewTournament(tournamentCopy)
-                                        }}>
-                                        {p.full_name}
-                                    </li>
-                                )
-                            })
-                        }
-                    </div>
-                    <div id="tournamentSelectedCompetitors">
-                        {
-                            newTournament.competitors.map((competitor, index) => {
-                                const player = players.find(p => p.id === competitor)
-                                return (
-                                    <li key={player.id + '-- competitor'}
-                                        className="newTournamentPlayerListItem"
-                                        onClick={() => {
-                                            const tournamentCopy = { ...newTournament }
-                                            tournamentCopy.competitors.splice(index, 1)
-                                            updateNewTournament(tournamentCopy)
-                                            const copy = [...potentialCompetitors]
-                                            copy.push(competitor)
-                                            setPotentialCompetitors(copy)
-                                        }}>
-                                        {player.full_name}
-                                    </li>
-                                )
-                            })
-                        }
+                    <div id="tournamentPlayerSelectionSection">
+                        <div id="tournamentPotentialCompetitorSelection">
+                            Potential:
+                            {
+                                potentialCompetitors.map((p, index) => {
+                                    return (
+                                        <li key={p.id}
+                                            className="newTournamentPlayerListItem"
+                                            onClick={() => {
+                                                const copy = [...potentialCompetitors]
+                                                copy.splice(index, 1)
+                                                setPotentialCompetitors(copy)
+                                                const tournamentCopy = { ...newTournament }
+                                                tournamentCopy.competitors.push(p.id)
+                                                updateNewTournament(tournamentCopy)
+                                            }}>
+                                            {p.full_name}
+                                        </li>
+                                    )
+                                })
+                            }
+                        </div>
+                        <div id="tournamentSelectedCompetitors">
+                            Selected:
+                            {
+                                newTournament.competitors.map((competitor, index) => {
+                                    const player = players.find(p => p.id === competitor)
+                                    return (
+                                        <li key={player.id + '-- competitor'}
+                                            className="newTournamentPlayerListItem"
+                                            onClick={() => {
+                                                const tournamentCopy = { ...newTournament }
+                                                tournamentCopy.competitors.splice(index, 1)
+                                                updateNewTournament(tournamentCopy)
+                                                const copy = [...potentialCompetitors]
+                                                copy.push(competitor)
+                                                setPotentialCompetitors(copy)
+                                            }}>
+                                            {player.full_name}
+                                        </li>
+                                    )
+                                })
+                            }
+                        </div>
                     </div>
                     <div id="tournamentTimeSettingSelection">
                         <select
@@ -552,8 +557,8 @@ export const Tournament = () => {
                         </select>
                     </div>
                     <div>
-                        <input type="checkbox" onChange={handleChange} />
-                        <label>digital tournament</label>
+                        <input id="digitalTournamentCheckbox" className="setColor" type="checkbox" onChange={handleChange} />
+                        <label id="digitalTournamentLabel" className="setColor">digital tournament</label>
                     </div>
                     <div id="tournamentSubmit">
                         <button onClick={() => {
@@ -573,7 +578,7 @@ export const Tournament = () => {
                     </div>
                 </section>
                 <article key="activeTournaments">
-                    <h2>active tournaments</h2>
+                    <h2 className="setColor">active tournaments</h2>
                     <section id="activeTournaments">
                         {
                             tournaments?.map(t => {
@@ -595,95 +600,3 @@ export const Tournament = () => {
         </>
     }
 }
-//function for populating section for submitting new game results
-    // const matchupsOrScoring = () => {
-    //     if (scoring) {
-    //         return (
-    //             <section>
-    //                 {
-    //                     currentRoundMatchups?.map(matchup => {
-    //                         const white = activeTournamentPlayers?.find(player => player.id === matchup.player1)
-    //                         const black = activeTournamentPlayers?.find(player => player.id === matchup.player2)
-    //                         if (black === undefined) {
-    //                             return (
-    //                                 <div key={`${matchup.round} -- ${matchup.match} -- bye`}>
-    //                                     {white.full_name} has bye
-    //                                 </div>
-    //                             )
-    //                         }
-    //                         return (
-    //                             <div key={`${matchup.round} -- ${matchup.match}`}>
-    //                                 <div
-    //                                     className="whitePiecesMatchup"
-    //                                     id="whitePieces"
-    //                                     onClick={(evt) => {
-    //                                         handleGameForApiUpdate(evt.target.id, white, black)
-    //                                     }}>{white?.full_name}
-    //                                 </div>
-    //                                 <div
-    //                                     className="drawMatchupButton"
-    //                                     id="drawUpdate"
-    //                                     onClick={(evt) => {
-    //                                         handleGameForApiUpdate(evt.target.id, white, black)
-    //                                     }}>Draw
-    //                                 </div>
-    //                                 <div
-    //                                     className="blackPiecesMatchup"
-    //                                     id="blackPieces"
-    //                                     onClick={(evt) => {
-    //                                         handleGameForApiUpdate(evt.target.id, white, black)
-    //                                     }}>{black?.full_name}
-    //                                 </div>
-    //                                 <button onClick={() => {
-    //                                     sendNewGame(gameForApi)
-    //                                         .then(() => resetGames())
-    //                                 }}>
-    //                                     submit
-    //                                 </button>
-    //                             </div>
-    //                         )
-    //                     })
-    //                 }
-    //             </section>
-    //         )
-    //     }
-    //     else {
-    //         return (
-    //             <table>
-    //                 <thead>
-    //                     <tr className="tableHeaderRow">
-    //                         <th>white player</th>
-    //                         <th></th>
-    //                         <th>black player</th>
-    //                     </tr>
-    //                 </thead>
-    //                 <tbody>
-    //                     {
-    //                         currentRoundMatchups?.map(matchup => {
-    //                             const white = activeTournamentPlayers.find(player => player.id === matchup.player1)
-    //                             const black = activeTournamentPlayers.find(player => player.id === matchup.player2)
-    //                             if (white?.id && black?.id) {
-    //                                 return (
-    //                                     <tr key={matchup.round + matchup.match}>
-    //                                         <td className="whitePiecesMatchup">{white.full_name}</td>
-    //                                         <td className="matchupTableVS">vs</td>
-    //                                         <td className="blackPiecesMatchup">{black.full_name}</td>
-    //                                     </tr>
-    //                                 )
-    //                             }
-    //                             if (white?.id && black === undefined) {
-    //                                 return (
-    //                                     <tr key={matchup.round + matchup.match}>
-    //                                         <td className="whitePiecesMatchup">{white.full_name}</td>
-    //                                         <td className="matchupTableVS"></td>
-    //                                         <td className="blackPiecesMatchup">BYE</td>
-    //                                     </tr>
-    //                                 )
-    //                             }
-    //                         })
-    //                     }
-    //                 </tbody>
-    //             </table>
-    //         )
-    //     }
-    // }

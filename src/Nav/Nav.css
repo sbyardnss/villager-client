@@ -146,7 +146,7 @@ li .profileLink {
     border-color: rgba(113, 20, 144, 0.909);
 }
 
-input[type="checkbox"] {
+#active {
     display: none;
 }
 

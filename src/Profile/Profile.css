@@ -1,17 +1,74 @@
 #profileContainer {
     margin-top: 80px;
+    display: flex;
+    justify-content: center;
 }
+
 /* profile info and update */
+#profileInfo {
+    color: rgb(231, 231, 231);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
 #updateProfileSection {
     display: flex;
     flex-direction: column;
     width: 50%;
+    color: rgb(231, 231, 231);
 }
+
 /* profile friend list */
 #profileFriendContainer {
     border: 1px solid orange;
+    color: rgb(231, 231, 231);
+
 }
+
 .profileUserListItem {
     display: flex;
     align-items: center;
+}
+
+
+/* past games section */
+.profilePastGamesListItem {
+    color: rgb(231, 231, 231);
+}
+.tournamentPastGameListItem {
+    color: rgb(231, 231, 231);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    /* border: 1px solid orange; */
+    width: 30em;
+    height: 2em;
+    padding: .5em;
+    backdrop-filter: blur(30px);
+    border: 1px solid #694873;
+    border-radius: 4px;
+    margin-bottom: .25em;
+}
+
+.pastGameListItem {
+    color: rgb(231, 231, 231);
+    display: flex;
+    justify-content: space-between;
+    width: 30em;
+    align-items: center;
+    height: 2em;
+    padding: .5em;
+    backdrop-filter: blur(30px);
+    border: 1px solid #4a9392;
+    border-radius: 4px;
+    margin-bottom: .25em;
+}
+
+.trophyIconProfile {
+    height: 3em;
+}
+
+.pastGamesListLogisticsInfo{
+    font-size: small;
+    margin-right: 1em;
 }

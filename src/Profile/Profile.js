@@ -3,12 +3,13 @@ import { getProfile, getAllMessages, updateProfile, getMyGames, getTournament, g
 import "./Profile.css"
 import { PlayContext } from "../Play/PlayProvider"
 import { useNavigate } from "react-router-dom"
+import trophyIcon from "../images/small_trophy_with_background.png"
 
 export const Profile = () => {
     const localVillager = localStorage.getItem("villager")
     const localVillagerObj = JSON.parse(localVillager)
     const navigate = useNavigate()
-    const { selectedGame, setSelectedGame, updateSelectedGameObj, selectedGameObj, orientation, setOrientation, resetGames, setReview, review } = useContext(PlayContext)
+    const { selectedGame, setSelectedGame, updateSelectedGameObj, selectedGameObj, orientation, setOrientation, resetGames, setReview, review, players } = useContext(PlayContext)
     const [profileInfo, setProfileInfo] = useState({
         username: "",
         first_name: "",
@@ -148,6 +149,9 @@ export const Profile = () => {
             <article>
                 Profile
                 <section id="profileInfo">
+                    <div>{profileInfo.full_name}</div>
+                    <div>{profileInfo.username}</div>
+                    <div>{profileInfo.email}</div>
                     {updateProfileSection()}
                     <button className="editProfileButton" onClick={
                         () => {
@@ -159,50 +163,79 @@ export const Profile = () => {
                     <h4>friends</h4>
                     {
                         profileInfo.friends?.map(f => {
-                            const unreadMsgsFromPlayer = messages.find(msg => msg.sender === f.id && msg.read === false)
-                            if (unreadMsgsFromPlayer) {
-                                return (
-                                    <li className="profileUserListItem" key={f.id}>
-                                        <div>
-                                            {f.full_name}
-                                        </div>
-                                        <h5>new messages!</h5>
-                                    </li>
-                                )
-                            }
-                            else {
+                            // const unreadMsgsFromPlayer = messages.find(msg => msg.sender === f.id && msg.read === false)
+                            // if (unreadMsgsFromPlayer) {
+                            //     return (
+                            //         <li className="profileUserListItem" key={f.id}>
+                            //             <div>
+                            //                 {f.full_name}
+                            //             </div>
+                            //             <h5>new messages!</h5>
+                            //         </li>
+                            //     )
+                            // }
+                            // else {
                                 return (
                                     <li className="profileUserListItem" key={f.id}>
                                         {f.full_name}
                                     </li>
                                 )
-                            }
+                            // }
                         })
                     }
                 </section>
                 <section id="'profilePastGames">
                     {
                         myGames.map(game => {
-                            const opponent = game.player_w?.id === localVillagerObj.userId ? game.player_b : game.player_w
-                            const color = game.player_w?.id === localVillagerObj.userId ? "white" : "black"
-                            const opponentColor = game.player_w?.id === localVillagerObj.userId ? "black" : "white"
-                            const tournamentInfo = () => {
-                                if (game.tournament) {
-                                    const gameTournament = myTournaments.find(t => t.id === game.tournament)
-                                    console.log(gameTournament)
-                                    return (
-                                        <div>{gameTournament.title}</div>
-                                    )
-                                }
-                            }
-                            
+                            const opponent = game.player_w?.id === localVillagerObj.userId ? players.find(p => p.id === game.player_b.id) : players.find(p => p.id === game.player_w.id)
+                            // console.log(players)
+                            // const color = game.player_w?.id === localVillagerObj.userId ? "white" : "black"
+                            // const opponentColor = game.player_w?.id === localVillagerObj.userId ? "black" : "white"
+                            // const tournamentInfo = () => {
+                            //     if (game.tournament) {
+                            //         const gameTournament = myTournaments.find(t => t.id === game.tournament)
+                            //         return (
+                            //             <div>{gameTournament.title}</div>
+                            //         )
+                            //     }
+                            // }
                             if (game.pgn !== "" && game.pgn !== null && game.winner !== null) {
+                                let tournament = {}
+                                if (game.tournament) {
+                                    tournament = getTournament(game.tournament)
+                                }
+                                const classNameBuilder = () => {
+                                    return game.tournament ? "tournamentPastGameListItem" : "pastGameListItem"
+                                }
                                 return (
-                                    <div key={game.id}>
-                                        <div>{new Date(game.date_time).toLocaleDateString('en-us')}</div>
-                                        <div>{opponent.full_name} -- {opponentColor}</div>
-                                        <div>Playing as {color}</div>
-                                        {tournamentInfo()}
+                                    // <div key={game.id} className={classNameBuilder()}>
+                                    //     <div>{new Date(game.date_time).toLocaleDateString('en-us')}</div>
+                                    //     <div>{opponent.username} -- {opponentColor}</div>
+                                    //     <div>{game.tournament ? <img className="trophyIconProfile" src={trophyIcon} /> : ""}</div>
+                                    //     <div>Playing as {color}</div>
+                                    //     {tournamentInfo()}
+                                    //     <div className="pastGamesListLogisticsInfo">
+                                    //         <div>{tournament?.title || ""}</div>
+                                    //         <div>{new Date(game.date_time).toLocaleDateString('en-us')}</div>
+                                    //     </div>
+                                    //     <button onClick={() => {
+                                    //         setReview(true)
+                                    //         setSelectedGame(game.id)
+                                    //         const gameObjForPlay = myGames.find(g => g.id === selectedGame)
+                                    //         updateSelectedGameObj(gameObjForPlay)
+                                    //         navigate("/play")
+                                    //     }}>Review Game</button>
+                                    // </div>
+                                    <div key={game.id} className={classNameBuilder()}>
+                                        <div><span id={game.player_w.id === localVillagerObj.userId ? "whiteChallengeSpan" : "blackChallengeSpan"}>{game.player_w?.id === localVillagerObj.userId ? "white" : "black"}</span></div>
+                                        <div className="activeGameInfo">
+                                            <div className="opponentSectionForListItem">Vs {opponent?.username}</div>
+                                            <div>{game.tournament ? <img className="trophyIconHomepage" src={trophyIcon} /> : ""}</div>
+                                            <div className="myGamesListLogisticsInfo">
+                                                <div>{tournament?.title || ""}</div>
+                                                <div>{new Date(game.date_time).toLocaleDateString('en-us')}</div>
+                                            </div>
+                                        </div>
                                         <button onClick={() => {
                                             setReview(true)
                                             setSelectedGame(game.id)

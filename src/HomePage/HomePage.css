@@ -3,9 +3,14 @@
     margin-top: 120px;
     display: flex;
     justify-content: center;
+}
+#homepageLayoutDiv{
+    max-width: 760px;
+    width: 760px;
+    display: flex;
+    justify-content: space-between;
     flex-wrap: wrap;
 }
-
 #forumAndActiveGames {
     display: flex;
     flex-direction: column;
@@ -13,6 +18,11 @@
     flex-wrap: wrap;
     max-width: 480px;
     width: 100%;
+    color: rgb(231, 231, 231);
+}
+#challengesAndPuzzles {
+    /* width: 30%; */
+    min-width: 16em;
 }
 
 
@@ -30,9 +40,12 @@
     /* width: 30%; */
     min-width: 14em;
     /* border: 1px solid blue; */
+    color: rgb(231, 231, 231);
+    margin-bottom: 1em;
+
 }
 #activeGamesArticle {
-    height: 259px;
+    height: 328px;
     /* padding: 1em; */
 }
 
@@ -60,6 +73,7 @@ h4 {
     /* border-radius: 6px; */
     padding: 1em;
     box-shadow: rgba(255, 255, 255, 0.26) 0 1px 2px inset;
+    margin-bottom: 1em;
 }
 
 #communityForumMsgs {
@@ -68,6 +82,7 @@ h4 {
     height: 14.5em;
     border-radius: 4px;
     box-shadow: rgba(255, 255, 255, 0.26) 0 2px 2px;
+    color: #2a2e34;
 
 }
 
@@ -106,7 +121,11 @@ h4 {
     height: 100%;
     /* width: 50%; */
     backdrop-filter: blur(10px);
-    background-color: #336b8775;
+    /* background-color: #336b8775; */
+    background-image: url("../images/closup_dark_board.jpeg");
+    background-position: bottom;
+    background-size: 100vh;
+    
 }
 #activeGamesHeader {
     margin-left: 1em;
@@ -266,4 +285,21 @@ h4 {
 #homePagePuzzle {
     cursor: pointer;
     z-index: 99;
+}
+#puzzleLabel {
+    color:rgb(231, 231, 231);
+    width: 100%;
+}
+#puzzleSelect {
+    color:rgb(231, 231, 231);
+    background-color: #2a2e34;
+    width: 100%;
+}
+#puzzleParamaters {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    border: 1px solid #2a2e34;
+    padding: 1em;
+    border-radius: 6px 6px 0 0;
 }

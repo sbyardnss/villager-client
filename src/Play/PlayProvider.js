@@ -16,6 +16,7 @@ export const PlayProvider = (props) => {
     const [players, setPlayers] = useState([])
     const [review, setReview] = useState(false)
     const [puzzles, setPuzzles] = useState([])
+    const [selectedRange, setSelectedRange] = useState(1300)
     const [selectedPuzzle, setSelectedPuzzle] = useState({
         id: "", //THIS MIGHT BE THE WRONG PROPERTY NAME
         fen: "",
@@ -92,7 +93,8 @@ export const PlayProvider = (props) => {
     return (
         <PlayContext.Provider value={{
             selectedGame, setSelectedGame, selectedGameObj, games, players, resetGames,
-            orientation, setOrientation, review, setReview, puzzles, selectedPuzzle, setSelectedPuzzle
+            orientation, setOrientation, review, setReview, puzzles, selectedPuzzle, setSelectedPuzzle,
+            selectedRange, setSelectedRange
         }}>
             {props.children}
         </PlayContext.Provider>

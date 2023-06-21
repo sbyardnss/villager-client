@@ -15,7 +15,7 @@
     width: 60%;
     transition: all 0.4s ease;
     border-radius: 0 0 0 12px;
-    
+
 }
 
 #logo {
@@ -59,12 +59,13 @@
 
 li .navigation_link {
     /* margin-right: 1em; */
-    color: #ccfaff;
+    color: rgb(231, 231, 231);
     text-decoration: none;
     display: flex;
     align-items: center;
     margin-bottom: .5em;
 }
+
 li .profileLink {
     color: #ccfaff;
     text-decoration: none;
@@ -77,10 +78,8 @@ li .profileLink {
     font-size: 1.5rem;
     padding-left: 0.5rem;
     padding-top: 0.1rem;
-    color: #ccfaff;
+    color: #f4d35e;
     text-decoration: none;
-
-
 }
 
 /* animation effect and associated design */
@@ -165,4 +164,3 @@ input[type="checkbox"] {
     position: absolute;
     right: 10%;
 }
-

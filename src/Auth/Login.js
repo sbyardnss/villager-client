@@ -38,28 +38,27 @@ export const Login = () => {
             <section id="loginBox">
                 <form className="form--login" onSubmit={handleLogin}>
                     <div id="loginLogo">
-
                         <h1>Villager Chess</h1>
                     </div>
-                    <fieldset className="centerItems">
-                        <label className="loginLabels" htmlFor="inputUsername">Username</label>
-                        <input type="username"
-                            ref={username}
-                            className="form-control"
-                            placeholder="username"
-                            required autoFocus />
-                        <label className="loginLabels" htmlFor="inputPassword"> Password </label>
-                        <input type="password"
-                            ref={password}
-                            className="form-control"
-                            placeholder="password"
-                            required autoFocus />
-                        <button className="signInButton" type="submit">
-                            Sign in
-                        </button>
-                    </fieldset>
-                    <section className="link--register">
-                        <Link to="/register">Not a member yet?</Link>
+                        <fieldset id="centerItems">
+                            <label className="loginLabels" htmlFor="inputUsername">Username</label>
+                            <input type="username"
+                                ref={username}
+                                className="form-control"
+                                placeholder="username"
+                                required autoFocus />
+                            <label className="loginLabels" htmlFor="inputPassword"> Password </label>
+                            <input type="password"
+                                ref={password}
+                                className="form-control"
+                                placeholder="password"
+                                required autoFocus />
+                            <button className="signInButton" type="submit">
+                                Sign in
+                            </button>
+                        </fieldset>
+                    <section>
+                        <Link className="link--register" to="/register">Not a member yet?</Link>
                     </section>
                 </form>
             </section>

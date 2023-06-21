@@ -32,7 +32,7 @@ export const Nav = () => {
             document.getElementById("active").checked = false
         }
         //why does adding the conditional work here??!!! this function now allows me to close the menu if and only if the user clicks outside of the menu or manually closes it with the icon
-        if (!navMenu.current && document.getElementById("active")) {
+        if (!navMenu.current && document?.getElementById("active")) {
             if (document.getElementById("active").contains(e.target)) {
                 document.getElementById("active").checked = false
             }
@@ -50,7 +50,7 @@ export const Nav = () => {
     //         </>
     //     }
     // }
-
+    
     return (
         <header className="navigation" id="navMenu">
             <div id="logo">

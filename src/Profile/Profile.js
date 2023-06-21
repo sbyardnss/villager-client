@@ -8,7 +8,7 @@ export const Profile = () => {
     const localVillager = localStorage.getItem("villager")
     const localVillagerObj = JSON.parse(localVillager)
     const navigate = useNavigate()
-    const { selectedGame, setSelectedGame, selectedGameObj, orientation, setOrientation, resetGames, setReview, review } = useContext(PlayContext)
+    const { selectedGame, setSelectedGame, updateSelectedGameObj, selectedGameObj, orientation, setOrientation, resetGames, setReview, review } = useContext(PlayContext)
     const [profileInfo, setProfileInfo] = useState({
         username: "",
         first_name: "",
@@ -40,13 +40,13 @@ export const Profile = () => {
             })
         }, []
     )
-    useEffect(
-        () => {
-            if (selectedGame !== 0) {
-                navigate("/play")
-            }
-        }, [selectedGame]
-    )
+    // useEffect(
+    //     () => {
+    //         if (selectedGame !== 0) {
+    //             navigate("/play")
+    //         }
+    //     }, [selectedGame]
+    // )
     const showPassword = (passwordVisible) => {
         if (passwordVisible === true) {
             return "text"
@@ -206,6 +206,9 @@ export const Profile = () => {
                                         <button onClick={() => {
                                             setReview(true)
                                             setSelectedGame(game.id)
+                                            const gameObjForPlay = myGames.find(g => g.id === selectedGame)
+                                            updateSelectedGameObj(gameObjForPlay)
+                                            navigate("/play")
                                         }}>Review Game</button>
                                     </div>
                                 )

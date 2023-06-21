@@ -11,7 +11,7 @@ export const HomePage = () => {
     const localVillager = localStorage.getItem("villager")
     const localVillagerObj = JSON.parse(localVillager)
     const navigate = useNavigate()
-    const { players, games, resetGames, selectedGameObj, selectedGame, setSelectedGame, puzzles, selectedPuzzle, setSelectedPuzzle, selectedRange, setSelectedRange } = useContext(PlayContext)
+    const { players, games, resetGames, selectedGameObj, updateSelectedGameObj, selectedGame, setSelectedGame, puzzles, selectedPuzzle, setSelectedPuzzle, selectedRange, setSelectedRange } = useContext(PlayContext)
     const [communityPosts, setCommunityPosts] = useState([])
     const [tournaments, setTournaments] = useState([])
     const [myTournaments, setMyTournaments] = useState([])
@@ -38,6 +38,7 @@ export const HomePage = () => {
             })
         }, []
     )
+    
     useEffect(
         () => {
             const challengeGames = games?.filter(game => game.accepted === false)
@@ -75,13 +76,13 @@ export const HomePage = () => {
     //         }
     //     }, [myTournaments]
     // )
-    useEffect(
-        () => {
-            if (selectedGame !== 0) {
-                navigate("/play")
-            }
-        }, [selectedGame]
-    )
+    // useEffect(
+    //     () => {
+    //         if (selectedGame !== 0) {
+    //             navigate("/play")
+    //         }
+    //     }, [selectedGame]
+    // )
     useEffect(
         () => {
             if (selectedPuzzle.fen !== "") {
@@ -139,7 +140,7 @@ export const HomePage = () => {
 
                 <div id="forumAndActiveGames">
                     <article id="communityForum">
-                        <h2>community posts</h2>
+                        <h2>Public Forum</h2>
                         <section id="communityForumMsgs" >
                             {
                                 communityPosts.map(post => {
@@ -194,6 +195,7 @@ export const HomePage = () => {
                     <article key="activeGames" id="activeGamesArticle">
                         <section id="myActiveGames">
                             <h2 id="activeGamesHeader">My Games</h2>
+                            {/* <button id="homepagePlayButton">play</button> */}
                             <div id="myUnfinishedGamesScrollWindow">
                                 <div id="activeGamesUl">
                                     {
@@ -207,9 +209,12 @@ export const HomePage = () => {
                                             const isTournamentGame = () => {
                                                 return ug.tournament ? "tournamentActiveGameListItem" : "activeGameListItem"
                                             }
+                                            const isSelected = () => {
+                                                return ug.id === selectedGame ? "selectedGameListItem" : "gameListItem"
+                                            }
                                             if (opponent) {
                                                 return (
-                                                    <div key={ug.id} className={isTournamentGame()}>
+                                                    <div key={ug.id} className={isTournamentGame()} id={isSelected()}>
                                                         <div><span id={ug.player_w.id === localVillagerObj.userId ? "whiteChallengeSpan" : "blackChallengeSpan"}>{ug.player_w?.id === localVillagerObj.userId ? "white" : "black"}</span></div>
                                                         <div className="activeGameInfo">
                                                             <div className="opponentSectionForListItem">Vs {opponent.username}</div>
@@ -222,7 +227,10 @@ export const HomePage = () => {
                                                         <button className="challengeBtn"
                                                             onClick={() => {
                                                                 setSelectedGame(ug.id)
-                                                            }}>play</button>
+                                                                const gameObjForPlay = games.find(g => g.id === selectedGame)
+                                                                updateSelectedGameObj(gameObjForPlay)
+                                                                navigate("/play")
+                                                            }}>select</button>
                                                     </div>
                                                 )
                                             }

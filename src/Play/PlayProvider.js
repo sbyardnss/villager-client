@@ -92,7 +92,7 @@ export const PlayProvider = (props) => {
     }
     return (
         <PlayContext.Provider value={{
-            selectedGame, setSelectedGame, selectedGameObj, games, players, resetGames,
+            selectedGame, setSelectedGame, selectedGameObj, updateSelectedGameObj, games, players, resetGames,
             orientation, setOrientation, review, setReview, puzzles, selectedPuzzle, setSelectedPuzzle,
             selectedRange, setSelectedRange
         }}>

@@ -6,13 +6,13 @@ import Chess from "chess.js"
 import "./Play.css"
 import { alterGame, getAIMove, sendNewGame } from "../ServerManager"
 import { PlayContext } from "./PlayProvider"
-import { useNavigate } from "react-router-dom"
+import { useLocation, useNavigate } from "react-router-dom"
 
 export const Play = () => {
     //update game obj based on selectedGameObj or simply populate computer opponent
     //update selectedGameObj and send to api when a move is made
     //make turns based on game.turn()
-
+    const location = useLocation()
     const localVillager = localStorage.getItem("villager")
     const localVillagerObj = JSON.parse(localVillager)
     const navigate = useNavigate()
@@ -44,34 +44,31 @@ export const Play = () => {
         timeSetting: null,
         pgn: ""
     })
-    //set up game based on whether it is against human or computer
-    //USE EFFECT CURRENTLY RUNNING BEFORE SELECTEDGAMEOBJ RETRIEVED 
-    // const leaveGame = (e) => {
-    //     if (document.getElementById("navMenu")?.contains(e.target)) {
-    //         if (e.target.id !== "navMenu" && e.target.id !== "navLinks" && e.target.id !== "logo" && e.target.className !== "") {
-    //             setSelectedGame(0)
-    //             setReview(false)
-    //             navigate(e.target.id)
-    //         }
-    //     }
-    //     if (e.target.id === "logout") {
-    //         setSelectedGame(0)
-    //         setReview(false)
-    //         localStorage.removeItem("villager")
-    //         navigate("/", { replace: true })
-    //     }
-
-    // }
-    // document.addEventListener('click', leaveGame)
+    const leaveGame = (e) => {
+        if (document.getElementById("navMenu")?.contains(e.target)) {
+            if (e.target.className !== "menu-btn" && e.target.id !== "inactive" && e.target.id !== "active" && e.target.id !== "navMenu" && e.target.id !== "navLinks" && e.target.id !== "logo" && e.target.className !== "" && e.target.id !== "play") {
+                setSelectedGame(0)
+                // setReview(false)
+                // navigate(e.target.id)
+            }
+        }
+        if (e.target.id === "logout") {
+            setSelectedGame(0)
+            setReview(false)
+            localStorage.removeItem("villager")
+            navigate("/", { replace: true })
+        }
+    }
+    document.addEventListener('click', leaveGame)
     useEffect(
         () => {
             if (selectedGame) {
-                if (selectedGameObj.pgn) {
+                if (selectedGameObj?.pgn) {
                     game.load_pgn(selectedGameObj.pgn)
                 }
                 const copy = { ...selectedGameObj }
-                copy.player_b = selectedGameObj.player_b.id
-                copy.player_w = selectedGameObj.player_w.id
+                copy.player_b = selectedGameObj?.player_b.id
+                copy.player_w = selectedGameObj?.player_w.id
                 updateGameForApi(copy)
                 setMatchReady(true)
             }
@@ -91,7 +88,7 @@ export const Play = () => {
                     updateGameForApi(copy)
                 }
             }
-        }, [orientation]
+        }, [orientation, selectedGameObj]
     )
     useEffect(
         () => {

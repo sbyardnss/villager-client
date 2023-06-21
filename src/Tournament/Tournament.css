@@ -68,12 +68,17 @@
 }
 
 #activeTournamentsSection {
-    /* width: 100%; */
+    width: 80%;
+    padding: 1em;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     margin: 0;
+    border: 1px solid gold;
 }
 
 #activeTournamentsList {
-    width: 60%;
+    width: 100%;
 }
 
 .activeTournamentListItem {

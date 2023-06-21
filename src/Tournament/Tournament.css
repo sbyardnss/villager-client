@@ -1,6 +1,8 @@
 #tournamentContainer {
     margin-top: 120px;
-    
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
 }
 .setColor {
     color: rgb(231, 231, 231);
@@ -8,9 +10,13 @@
 
 /* tournament setup */
 #newTournamentForm {
+    
     border: 1px solid slateblue;
+    width: 80%;
+    margin: 0%;
 }
 #tournamentPlayerSelectionSection {
+    
     display: flex;
 }
 #tournamentPotentialCompetitorSelection {
@@ -34,7 +40,16 @@
 }
 
 /* tournament list */
-#activeTournaments {
+#activeTournamentsHeader {
+    width: fit-content;
+    color: rgb(231, 231, 231);
+    margin: 0;
+}
+#activeTournamentsSection {
+    /* width: 100%; */
+    margin: 0;
+}
+#activeTournamentsList {
     width: 60%;
 }
 .activeTournamentListItem {

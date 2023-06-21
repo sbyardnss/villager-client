@@ -480,7 +480,7 @@ export const Tournament = () => {
         return <>
             <main id="tournamentContainer">
                 <section id="newTournamentForm">
-                    <label htmlFor="title">Tournament name: </label>
+                    <label className="setColor" htmlFor="title">Tournament name: </label>
                     <input
                         type="text"
                         name="title"
@@ -493,7 +493,7 @@ export const Tournament = () => {
                     />
                     <div id="tournamentPlayerSelectionSection">
                         <div id="tournamentPotentialCompetitorSelection">
-                            Potential:
+                            <div className="setColor">Potential:</div>
                             {
                                 potentialCompetitors.map((p, index) => {
                                     return (
@@ -514,7 +514,7 @@ export const Tournament = () => {
                             }
                         </div>
                         <div id="tournamentSelectedCompetitors">
-                            Selected:
+                            <div className="setColor">Selected:</div>
                             {
                                 newTournament.competitors.map((competitor, index) => {
                                     const player = players.find(p => p.id === competitor)
@@ -577,9 +577,9 @@ export const Tournament = () => {
                         </button>
                     </div>
                 </section>
-                <article key="activeTournaments">
-                    <h2 className="setColor">active tournaments</h2>
-                    <section id="activeTournaments">
+                <article key="activeTournaments" id="activeTournamentsSection">
+                    <h2 id="activeTournamentsHeader">active tournaments</h2>
+                    <section id="activeTournamentsList">
                         {
                             tournaments?.map(t => {
                                 return (

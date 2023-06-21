@@ -38,7 +38,7 @@ export const HomePage = () => {
             })
         }, []
     )
-    
+
     useEffect(
         () => {
             const challengeGames = games?.filter(game => game.accepted === false)
@@ -217,7 +217,7 @@ export const HomePage = () => {
                                                     <div key={ug.id} className={isTournamentGame()} id={isSelected()}>
                                                         <div><span id={ug.player_w.id === localVillagerObj.userId ? "whiteChallengeSpan" : "blackChallengeSpan"}>{ug.player_w?.id === localVillagerObj.userId ? "white" : "black"}</span></div>
                                                         <div className="activeGameInfo">
-                                                            <div className="opponentSectionForListItem">Vs {opponent.username}</div>
+                                                            <div className="opponentSectionForListItem">vs {opponent.username}</div>
                                                             <div>{ug.tournament ? <img className="trophyIconHomepage" src={trophyIcon} /> : ""}</div>
                                                             <div className="myGamesListLogisticsInfo">
                                                                 <div>{tournament?.title || ""}</div>
@@ -294,7 +294,7 @@ export const HomePage = () => {
                                         <div key={c.id} className="challengeListItem">
                                             <div>
                                                 {/* <div>Challenger:</div> */}
-                                                <div className="openChallengerInfo">Play as <span id={c.player_w ? "blackChallengeSpan" : "whiteChallengeSpan"}>{c.player_w ? "black" : "white"}</span> VS {challengingPlayer.full_name} as <span id={c.player_w ? "whiteChallengeSpan" : "blackChallengeSpan"}>{c.player_w ? "white" : "black"}</span></div>
+                                                <div className="openChallengerInfo">Play as <span id={c.player_w ? "blackChallengeSpan" : "whiteChallengeSpan"}>{c.player_w ? "black" : "white"}</span> vs <span id={c.player_w ? "whiteChallengeSpan" : "blackChallengeSpan"}>{challengingPlayer.username}</span></div>
                                             </div>
                                             <div>
                                                 {/* Play as {c.player_w ? "black" : "white"} */}
@@ -317,28 +317,34 @@ export const HomePage = () => {
                     <div id="puzzlesArticle">
                         <div id="puzzleParamaters">
                             <label id="puzzleLabel" htmlFor="puzzleRatingSelect">select puzzle rating</label>
-                            <select id="puzzleSelect" onChange={(e) => setSelectedRange(e.target.value)}>
-                                <option value={800}>800</option>
-                                <option value={900}>900</option>
-                                <option value={1000}>1000</option>
-                                <option value={1100}>1100</option>
-                                <option value={1200}>1200</option>
-                                <option value={1300}>1300</option>
-                                <option value={1400}>1400</option>
-                                <option value={1500}>1500</option>
-                                <option value={1600}>1600</option>
-                                <option value={1700}>1700</option>
-                                <option value={1800}>1800</option>
-                                <option value={1900}>1900</option>
-                                <option value={2000}>2000</option>
-                                <option value={2100}>2100</option>
-                                <option value={2200}>2200</option>
-                            </select>
+                            <div id="puzzleSelectAndSubmit">
+                                <select id="puzzleSelect" onChange={(e) => setSelectedRange(e.target.value)}>
+                                    <option value={800}>800</option>
+                                    <option value={900}>900</option>
+                                    <option value={1000}>1000</option>
+                                    <option value={1100}>1100</option>
+                                    <option value={1200}>1200</option>
+                                    <option value={1300}>1300</option>
+                                    <option value={1400}>1400</option>
+                                    <option value={1500}>1500</option>
+                                    <option value={1600}>1600</option>
+                                    <option value={1700}>1700</option>
+                                    <option value={1800}>1800</option>
+                                    <option value={1900}>1900</option>
+                                    <option value={2000}>2000</option>
+                                    <option value={2100}>2100</option>
+                                    <option value={2200}>2200</option>
+                                </select>
+                                <button id="submitPuzzleSelectionBtn">submit</button>
+                            </div>
                         </div>
-                        <Chessboard
-                            id="chessboardHomepage"
-                            position={displayedPuzzle?.fen}
-                            arePiecesDraggable={false} />
+                        <div id="chessBoardContainer">
+                            <Chessboard
+                                id="chessboardHomepage"
+                                position={displayedPuzzle?.fen}
+                                arePiecesDraggable={false} />
+                        </div>
+                        <button>try this puzzle</button>
                     </div>
                 </div>
             </div>

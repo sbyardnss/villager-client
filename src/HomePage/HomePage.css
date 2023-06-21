@@ -119,7 +119,7 @@ h4 {
 #myActiveGames {
     display: flex;
     flex-direction: column;
-    height: 100%;
+    height: 20em;
     /* width: 50%; */
     backdrop-filter: blur(10px);
     /* background-color: #336b8775; */
@@ -266,7 +266,9 @@ h4 {
     border: 1px solid rgb(52, 52, 52);
     border-radius: 3px;
     text-align: center;
-    margin-left: .5em;
+    /* margin-left: .5em; */
+    margin: 0 .5em;
+
 
 }
 
@@ -280,7 +282,8 @@ h4 {
     border: 1px solid rgb(52, 52, 52);
     border-radius: 3px;
     text-align: center;
-    margin-left: .5em;
+    /* margin-left: .5em; */
+    margin: 0 .5em;
 }
 
 .challengeBtn {
@@ -291,6 +294,18 @@ h4 {
 
 
 /* puzzle section */
+#puzzlesArticle {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: 1px solid #2a2e34;
+    /* padding: 1em; */
+    /* border-radius: 6px 6px 0 0; */
+    height: 20em;
+}
+#chessBoardContainer {
+    width: 80%;
+}
 #homePagePuzzle {
     cursor: pointer;
     z-index: 99;
@@ -298,17 +313,33 @@ h4 {
 #puzzleLabel {
     color:rgb(231, 231, 231);
     width: 100%;
+    margin: 1em 0 0 1em;
 }
 #puzzleSelect {
     color:rgb(231, 231, 231);
     background-color: #2a2e34;
-    width: 100%;
+    width: 80%;
+    margin: 1em;
 }
 #puzzleParamaters {
     display: flex;
     flex-direction: column;
     align-items: start;
-    border: 1px solid #2a2e34;
-    padding: 1em;
-    border-radius: 6px 6px 0 0;
+    width: 100%;
+    /* border: 1px solid #2a2e34; */
+    /* padding: 1em; */
+    /* border-radius: 6px 6px 0 0; */
+}
+#puzzleSelectAndSubmit {
+    display: flex;
+    align-items: center;
+    width: 90%
+}
+#submitPuzzleSelectionBtn {
+    height: 2em;
+    border: none;
+    border-radius: 2px;
+    background-color: #694873;
+    color: rgb(231, 231, 231);
+
 }

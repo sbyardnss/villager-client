@@ -1,5 +1,5 @@
 import { useState, useEffect, createContext } from "react";
-import { getAllGames, getAllPlayers, getAllTimeSettings, getAllTournaments } from "../ServerManager";
+import { getAllGames, getAllPlayers, getAllTimeSettings, getAllTournaments, getTournamentGames } from "../ServerManager";
 
 export const TournamentContext = createContext()
 
@@ -24,16 +24,25 @@ export const TournamentProvider = (props) => {
             })
         }, []
     )
+    // useEffect(
+    //     () => {
+    //         if (selectedTournament) {
+    //             const selectedTournamentObj = tournaments.find(t => t.id === selectedTournament)
+    //             // const tourneyGamesOnly = games.filter(g => g.tournament === selectedTournament)
+    //             console.log(selectedTournamentObj)
+    //             setTournamentGames(selectedTournamentObj.games)
+    //         }
+    //     }, [games, selectedTournament]
+    // )
     useEffect(
         () => {
             if (selectedTournament) {
-                const selectedTournamentObj = tournaments.find(t => t.id === selectedTournament)
-                // const tourneyGamesOnly = games.filter(g => g.tournament === selectedTournament)
-                console.log(selectedTournamentObj)
-                setTournamentGames(selectedTournamentObj.games)
+                getTournamentGames(selectedTournament)
+                    .then((data) => setTournamentGames(data))
             }
-        }, [games, selectedTournament]
+        }, [selectedTournament]
     )
+    
     useEffect(
         () => {
             const previousPairings = []
@@ -42,17 +51,20 @@ export const TournamentProvider = (props) => {
                 previousPairings.push(pairing)
             })
             setPastPairings(previousPairings)
-        },[tournamentGames]
+        }, [tournamentGames]
     )
     const resetGames = () => {
         getAllGames()
             .then(data => setGames(data))
     }
-
+    const resetTournamentGames = () => {
+        getTournamentGames(selectedTournament)
+            .then(data => setTournamentGames(data))
+    }
     return (
         <TournamentContext.Provider value={{
             localVillagerObj, players, timeSettings, tournaments, setTournaments, tournamentGames, setGames,
-            selectedTournament, setSelectedTournament, pastPairings, resetGames
+            selectedTournament, setSelectedTournament, pastPairings, resetGames, resetTournamentGames
         }}>
             {props.children}
         </TournamentContext.Provider>

@@ -87,6 +87,16 @@ export const getMyTournaments = () => {
     })
         .then(res => res.json())
 }
+export const getTournamentGames = (tournamentId) => {
+    const localVillagerObj = getToken()
+    return fetch(`${apiKey}/games/${tournamentId}/get_selected_tournament_games`, {
+        headers: {
+            "Authorization": `Token ${localVillagerObj.token}`,
+            "Content-Type": "application/json"
+        }
+    })
+        .then(res => res.json())
+}
 export const getPuzzles = (rating) => {
     return fetch(`https://chess-puzzles.p.rapidapi.com/?themes=%5B%22middlegame%22%2C%22advantage%22%5D&rating=${rating}&themesType=ALL&playerMoves=4&count=25`, {
         method: 'GET',

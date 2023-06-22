@@ -4,7 +4,7 @@ import { TournamentContext } from "./TournamentProvider"
 import "./Tournament.css"
 import { alterGame, getAllGames, getAllTournaments, sendNewGame, sendNewTournament, sendTournamentRoundOutcomes, sendUpdatedGames, updateTournament } from "../ServerManager"
 export const Tournament = () => {
-    const { localVillagerObj, tournamentGames, tournaments, setTournaments, players, timeSettings, setGames, selectedTournament, setSelectedTournament, pastPairings, resetGames } = useContext(TournamentContext)
+    const { localVillagerObj, tournamentGames, tournaments, setTournaments, players, timeSettings, setGames, selectedTournament, setSelectedTournament, pastPairings, resetGames, resetTournamentGames } = useContext(TournamentContext)
     const [potentialCompetitors, setPotentialCompetitors] = useState([])
     const [activeTournament, setActiveTournament] = useState({})
     const [activeTournamentPlayers, setActiveTournamentPlayers] = useState([])
@@ -241,7 +241,7 @@ export const Tournament = () => {
                                     </div>
                                     <button onClick={() => {
                                         sendNewGame(gameForApi)
-                                            .then(() => resetGames())
+                                            .then(() => resetTournamentGames())
                                     }}>
                                         submit
                                     </button>
@@ -273,7 +273,7 @@ export const Tournament = () => {
                                 //tournament games not being updated correctly causing digital tournament to send a ton of post requests
                                 const alreadyCreatedGameObj = tournamentGames.find(g => g.tournament === copy.tournament && g.player_b?.id === copy.player_b && g.player_w?.id === copy.player_w)
                                 const alreadyCreatedByeGame = tournamentGames.find(g => g.tournament === copy.tournament && g.player_b === copy.player_b && g.player_w?.id === copy.player_w)
-                                if (tournamentGames) {
+                                if (tournamentGames && white && black) {
                                     if (!alreadyCreatedGameObj && !alreadyCreatedByeGame) {
                                         copy.pgn = ""
                                         if (copy.player_b === null) {
@@ -282,13 +282,13 @@ export const Tournament = () => {
                                             copy.win_style = "bye"
                                             // console.log(copy)
                                             sendNewGame(copy)
-                                                .then(() => resetGames())
+                                                .then(() => resetTournamentGames())
                                         }
                                         else {
                                             copy.winner = null
                                             // console.log(copy)
                                             sendNewGame(copy)
-                                                .then(() => resetGames())
+                                                .then(() => resetTournamentGames())
                                         }
                                     }
                                 }
@@ -317,6 +317,7 @@ export const Tournament = () => {
             )
         }
     }
+    console.log(tournamentGames)
     //function for populating section for updating previous games
     const tableOrEdit = () => {
         if (editScores) {
@@ -361,7 +362,7 @@ export const Tournament = () => {
                                                 }}>{black?.full_name}</div>
                                             <button onClick={() => {
                                                 alterGame(gameForApi)
-                                                    .then(() => resetGames())
+                                                    .then(() => resetTournamentGames())
                                             }}>
                                                 submit
                                             </button>
@@ -404,7 +405,7 @@ export const Tournament = () => {
                                 updateTournament(tournamentCopy)
                                     .then(() => {
                                         resetTournaments()
-                                        resetGames()
+                                        resetTournamentGames()
                                     })
                             }
                         }}>Start Next Round</button>
@@ -467,7 +468,7 @@ export const Tournament = () => {
                                                                 <td key={tpg.id} value={1} id={tpg.id + "--" + tourneyPlayer.id} className="tournamentGameResultBye">bye</td>
                                                             )
                                                         }
-                                                        if (tpg.winner === tourneyPlayer.id) {
+                                                        if (tpg.winner.id === tourneyPlayer.id) {
                                                             score++
                                                             return (
                                                                 <td key={tpg.id} value={1} id={tpg.id + "--" + tourneyPlayer.id} className="tournamentGameResult">1</td>

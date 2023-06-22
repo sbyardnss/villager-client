@@ -590,12 +590,12 @@ export const Tournament = () => {
                 </section>
                 <article key="activeTournaments" id="activeTournamentsSection">
                     <h2 id="activeTournamentsHeader">active tournaments</h2>
-                    <section id="activeTournamentsList">
+                    <section id="activeTournamentsList" className="setCustomFont">
                         {
                             tournaments?.map(t => {
                                 return (
                                     <li key={t.id}
-                                        className="activeTournamentListItem"
+                                        className="tournamentListItem"
                                         value={t.id}
                                         onClick={(e) => {
                                             setSelectedTournament(e.target.value)

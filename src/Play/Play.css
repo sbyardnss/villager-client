@@ -9,6 +9,7 @@
 }
 #boardInterface {
     width: 80%;
+    max-width: 40em;
     margin: 1em;
 
 }
@@ -60,7 +61,11 @@
 
 #playControls {
     display: flex;
+    margin-top: .5em;
 }
 .reviewButtons {
     font-size: larger;
+}
+.playBtns {
+    margin-right: .5em;
 }

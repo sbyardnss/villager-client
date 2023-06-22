@@ -66,17 +66,24 @@ export const Messages = () => {
                     <section id="chat">
                         {
                             selectedChatMsgs.map(msg => {
+                                const date = new Date(msg.date_time).toLocaleDateString('en-us')
+                                const time = new Date(msg.date_time).toLocaleTimeString('en-us', { hour: 'numeric', minute: '2-digit' })
+                                
                                 if (msg.recipient === localVillagerObj.userId) {
                                     return (
                                         <li key={msg.id} className="receivedMsg">
-                                            {msg.message}
+                                            <div>{msg.message}</div>
+                                            <div className="msgDateTimeFormat">{date}</div>
+                                            <div className="msgDateTimeFormat">{time}</div>
                                         </li>
                                     )
                                 }
                                 else {
                                     return (
                                         <li key={msg.id} className="sentMsg">
-                                            {msg.message}
+                                            <div>{msg.message}</div>
+                                            <div className="msgDateTimeFormat">{date}</div>
+                                            <div className="msgDateTimeFormat">{time}</div>
                                         </li>
                                     )
                                 }
@@ -96,6 +103,8 @@ export const Messages = () => {
                                 updateNewMsg(copy)
                             }} />
                         <button
+                            id="sendMsgBtn"
+                            className="buttonStyleApprove"
                             onClick={() => sendDirectMessage(newMsg)
                                 .then(() => {
                                     resetMessages()
@@ -122,8 +131,8 @@ export const Messages = () => {
     })
     return <>
         <main id="messagingContainer">
-
             <section id="messagesFriends">
+                {selectedChat === 0 ? <div className="setCustomFont">select chat</div> : ""}
                 <ul id="messagingFriendList">
                     {
                         friends?.map(f => {

@@ -25,6 +25,7 @@
 .logo__icon {
     width: fit-content;
     text-decoration: none;
+    
 }
 
 .navigation {
@@ -75,11 +76,12 @@ li .profileLink {
 }
 
 .navigation__name {
-    font-size: 1.5rem;
+    font-size: 2rem;
     padding-left: 0.5rem;
     padding-top: 0.1rem;
     color: #f4d35e;
-    text-decoration: none;
+    font-family: 'Public Sans', sans-serif;
+    font-weight: 100;
 }
 
 /* animation effect and associated design */

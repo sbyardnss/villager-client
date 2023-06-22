@@ -106,7 +106,7 @@ export const Profile = () => {
                 <section id="updateProfileSection">
                     <h4>update profile</h4>
                     <label className="editProfileInputLabel" htmlFor="first_name">first name</label>
-                    <input className="editProfileInput" type="text" value={update.first_name} onChange={
+                    <input className="editProfileInput text-input" type="text" value={update.first_name} onChange={
                         (evt) => {
                             const copy = { ...profileInfo }
                             copy.first_name = evt.target.value
@@ -114,7 +114,7 @@ export const Profile = () => {
                         }
                     }></input>
                     <label className="editProfileInputLabel" htmlFor="last_name">last name</label>
-                    <input className="editProfileInput" type="text" value={update.last_name} onChange={
+                    <input className="editProfileInput text-input" type="text" value={update.last_name} onChange={
                         (evt) => {
                             const copy = { ...profileInfo }
                             copy.last_name = evt.target.value
@@ -122,7 +122,7 @@ export const Profile = () => {
                         }
                     }></input>
                     <label className="editProfileInputLabel" htmlFor="username">username</label>
-                    <input className="editProfileInput" type="text" value={update.username} onChange={
+                    <input className="editProfileInput text-input" type="text" value={update.username} onChange={
                         (evt) => {
                             const copy = { ...profileInfo }
                             copy.username = evt.target.value
@@ -130,7 +130,7 @@ export const Profile = () => {
                         }
                     }></input>
                     <label className="editProfileInputLabel" htmlFor="email">email</label>
-                    <input className="editProfileInput" type="text" value={update.email} onChange={
+                    <input className="editProfileInput text-input" type="text" value={update.email} onChange={
                         (evt) => {
                             const copy = { ...profileInfo }
                             copy.email = evt.target.value
@@ -138,7 +138,7 @@ export const Profile = () => {
                         }
                     }></input>
                     <label className="editProfileInputLabel" htmlFor="password">password</label>
-                    <input className="editProfileInput" type={showPassword(passwordVisible)} value={update.password} onChange={
+                    <input className="editProfileInput text-input" type={showPassword(passwordVisible)} value={update.password} onChange={
                         (evt) => {
                             const copy = { ...profileInfo }
                             copy.password = evt.target.value
@@ -167,18 +167,18 @@ export const Profile = () => {
         else {
             return (
                 <div id="profileInfo">
-                    <div>{profileInfo.full_name}</div>
-                    <div>{profileInfo.username}</div>
-                    <div>{profileInfo.email}</div>
+                    <div className="staticProfileInfo">{profileInfo.full_name}</div>
+                    <div className="staticProfileInfo">{profileInfo.username}</div>
+                    <div className="staticProfileInfo">{profileInfo.email}</div>
                 </div>
             )
         }
     }
     return <>
         <main id="profileContainer">
-            <article>
-                <h2 id="profileHead">Profile</h2>
-                <section id="profileInfoAndEdit">
+            <article id="profileCard">
+                <h2 id="profileHead" className="setCustomFont">Profile</h2>
+                <section id="profileInfoAndEdit" className="setCustomFont">
 
                     {updateProfileSection()}
                     <button className="editProfileButton" onClick={
@@ -197,43 +197,20 @@ export const Profile = () => {
                         <h4>friends</h4>
                         {
                             profileInfo.friends?.map(f => {
-                                // const unreadMsgsFromPlayer = messages.find(msg => msg.sender === f.id && msg.read === false)
-                                // if (unreadMsgsFromPlayer) {
-                                //     return (
-                                //         <li className="profileUserListItem" key={f.id}>
-                                //             <div>
-                                //                 {f.full_name}
-                                //             </div>
-                                //             <h5>new messages!</h5>
-                                //         </li>
-                                //     )
-                                // }
-                                // else {
                                 return (
                                     <li className="profileUserListItem" key={f.id}>
                                         {f.full_name}
                                     </li>
                                 )
-                                // }
                             })
                         }
                     </section>
                 </div>
                 <section id="'profilePastGames">
+                    <h2 className="setCustomFont profileHeader">Past Games</h2>
                     {
                         myGames.map(game => {
                             const opponent = game.player_w?.id === localVillagerObj.userId ? players.find(p => p.id === game.player_b.id) : players.find(p => p.id === game.player_w.id)
-                            // console.log(players)
-                            // const color = game.player_w?.id === localVillagerObj.userId ? "white" : "black"
-                            // const opponentColor = game.player_w?.id === localVillagerObj.userId ? "black" : "white"
-                            // const tournamentInfo = () => {
-                            //     if (game.tournament) {
-                            //         const gameTournament = myTournaments.find(t => t.id === game.tournament)
-                            //         return (
-                            //             <div>{gameTournament.title}</div>
-                            //         )
-                            //     }
-                            // }
                             if (game.pgn !== "" && game.pgn !== null && game.winner !== null) {
                                 let tournament = {}
                                 if (game.tournament) {
@@ -243,24 +220,6 @@ export const Profile = () => {
                                     return game.tournament ? "tournamentPastGameListItem" : "pastGameListItem"
                                 }
                                 return (
-                                    // <div key={game.id} className={classNameBuilder()}>
-                                    //     <div>{new Date(game.date_time).toLocaleDateString('en-us')}</div>
-                                    //     <div>{opponent.username} -- {opponentColor}</div>
-                                    //     <div>{game.tournament ? <img className="trophyIconProfile" src={trophyIcon} /> : ""}</div>
-                                    //     <div>Playing as {color}</div>
-                                    //     {tournamentInfo()}
-                                    //     <div className="pastGamesListLogisticsInfo">
-                                    //         <div>{tournament?.title || ""}</div>
-                                    //         <div>{new Date(game.date_time).toLocaleDateString('en-us')}</div>
-                                    //     </div>
-                                    //     <button onClick={() => {
-                                    //         setReview(true)
-                                    //         setSelectedGame(game.id)
-                                    //         const gameObjForPlay = myGames.find(g => g.id === selectedGame)
-                                    //         updateSelectedGameObj(gameObjForPlay)
-                                    //         navigate("/play")
-                                    //     }}>Review Game</button>
-                                    // </div>
                                     <div key={game.id} className={classNameBuilder()}>
                                         <div><span id={game.player_w.id === localVillagerObj.userId ? "whiteChallengeSpan" : "blackChallengeSpan"}>{game.player_w?.id === localVillagerObj.userId ? "white" : "black"}</span></div>
                                         <div className="activeGameInfo">
@@ -271,15 +230,14 @@ export const Profile = () => {
                                                 <div>{new Date(game.date_time).toLocaleDateString('en-us')}</div>
                                             </div>
                                         </div>
-                                        <button onClick={() => {
+                                        <button 
+                                            id="reviewBtn"
+                                            className="buttonStyleApprove"
+                                            onClick={() => {
                                             setReview(true)
                                             setSelectedGame(game.id)
-                                            // const gameObjForPlay = myGames.find(g => g.id === selectedGame)
-                                            // updateSelectedGameObj(gameObjForPlay)
-                                            // if (selectedGameObj === gameObjForPlay) {
                                             navigate("/play")
-                                            // }
-                                        }}>Review Game</button>
+                                        }}>Review </button>
                                     </div>
                                 )
                             }

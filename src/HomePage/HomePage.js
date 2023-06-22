@@ -245,46 +245,45 @@ export const HomePage = () => {
                 </div>
                 <div id="challengesAndPuzzles">
                     <div id="challengesArticle">
+                        <div className="challengesBackground"></div>
                         <section id="createChallengeSection">
                             <h3 className="setCustomFont">create challenge</h3>
                             <div id="createChallengeDiv">
-                                <div>play as:
-                                    <div id="piecesSelectionContainer">
-                                        <div id="whitePiecesSelect" onClick={() => {
-                                            const challengeCopy = { ...challengeForApi }
-                                            challengeCopy.player_w = localVillagerObj.userId
-                                            challengeCopy.player_b = null
-                                            updateChallengeForApi(challengeCopy)
-                                        }}>white</div>
-                                        <div id="blackPiecesSelect" onClick={() => {
-                                            const challengeCopy = { ...challengeForApi }
-                                            challengeCopy.player_b = localVillagerObj.userId
-                                            challengeCopy.player_w = null
-                                            updateChallengeForApi(challengeCopy)
-                                        }}>black</div>
-                                    </div>
-                                </div>
-                                <div>
-                                    <div id="randomSelect" onClick={() => {
+                                <div id="piecesSelectionContainer">
+                                    <div id="whitePiecesSelect" onClick={() => {
                                         const challengeCopy = { ...challengeForApi }
-                                        const randomNumber = Math.floor(Math.random() * 2)
-                                        if (randomNumber === 1) {
-                                            challengeCopy.player_w = localVillagerObj.userId
-                                            challengeCopy.player_b = null
-                                        }
-                                        else {
-                                            challengeCopy.player_b = localVillagerObj.userId
-                                            challengeCopy.player_w = null
-                                        }
+                                        challengeCopy.player_w = localVillagerObj.userId
+                                        challengeCopy.player_b = null
                                         updateChallengeForApi(challengeCopy)
-                                    }}>random</div>
-                                    <button onClick={() => {
-                                        if (window.confirm("create open challenge?")) {
-                                            sendNewGame(challengeForApi)
-                                        }
-                                    }}>create</button>
+                                    }}>white</div>
+                                    <div id="blackPiecesSelect" onClick={() => {
+                                        const challengeCopy = { ...challengeForApi }
+                                        challengeCopy.player_b = localVillagerObj.userId
+                                        challengeCopy.player_w = null
+                                        updateChallengeForApi(challengeCopy)
+                                    }}>black</div>
                                 </div>
+                                <div id="randomSelect" onClick={() => {
+                                    const challengeCopy = { ...challengeForApi }
+                                    const randomNumber = Math.floor(Math.random() * 2)
+                                    if (randomNumber === 1) {
+                                        challengeCopy.player_w = localVillagerObj.userId
+                                        challengeCopy.player_b = null
+                                    }
+                                    else {
+                                        challengeCopy.player_b = localVillagerObj.userId
+                                        challengeCopy.player_w = null
+                                    }
+                                    updateChallengeForApi(challengeCopy)
+                                }}>random</div>
                             </div>
+                            <button
+                                className="buttonStyleAmbiguous"
+                                onClick={() => {
+                                    if (window.confirm("create open challenge?")) {
+                                        sendNewGame(challengeForApi)
+                                    }
+                                }}>create</button>
                         </section>
                         <h2 className="setCustomFont">open challenges</h2>
                         {
@@ -295,19 +294,18 @@ export const HomePage = () => {
                                         <div key={c.id} className="challengeListItem">
                                             <div>
                                                 {/* <div>Challenger:</div> */}
-                                                <div className="openChallengerInfo">Play as <span id={c.player_w ? "blackChallengeSpan" : "whiteChallengeSpan"}>{c.player_w ? "black" : "white"}</span> vs <span id={c.player_w ? "whiteChallengeSpan" : "blackChallengeSpan"}>{challengingPlayer.username}</span></div>
-                                            </div>
-                                            <div>
-                                                {/* Play as {c.player_w ? "black" : "white"} */}
-                                                <button className="challengeBtn buttonStyleApprove"
-                                                    onClick={() => {
-                                                        const copy = { ...c }
-                                                        c.player_w ? copy.player_b = localVillagerObj.userId : copy.player_w = localVillagerObj.userId
-                                                        c.player_w ? copy.player_w = c.player_w.id : copy.player_b = c.player_b.id
-                                                        copy.accepted = true
-                                                        acceptChallenge(copy)
-                                                            .then(() => resetGames())
-                                                    }}>accept</button>
+                                                <div className="openChallengerInfo">
+                                                    Play <span id={c.player_w ? "blackChallengeSpan" : "whiteChallengeSpan"}>{c.player_w ? "black" : "white"}</span> vs <span id={c.player_w ? "whiteChallengeSpan" : "blackChallengeSpan"}>{challengingPlayer.username}</span>
+                                                    <button className="challengeBtn buttonStyleAmbiguous"
+                                                        onClick={() => {
+                                                            const copy = { ...c }
+                                                            c.player_w ? copy.player_b = localVillagerObj.userId : copy.player_w = localVillagerObj.userId
+                                                            c.player_w ? copy.player_w = c.player_w.id : copy.player_b = c.player_b.id
+                                                            copy.accepted = true
+                                                            acceptChallenge(copy)
+                                                                .then(() => resetGames())
+                                                        }}>accept</button>
+                                                </div>
                                             </div>
                                         </div>
                                     )
@@ -346,7 +344,7 @@ export const HomePage = () => {
                                 position={displayedPuzzle?.fen}
                                 arePiecesDraggable={false} />
                         </div>
-                        <button>try this puzzle</button>
+                        <button className="buttonStyleReject">try this puzzle</button>
                     </div>
                 </div>
             </div>

@@ -120,7 +120,7 @@ export const Play = () => {
         }, [game]
     )
 
-    // useEffect for updating gameForAi at end of game against computer opponent
+    // useEffect for updating gameForAi
     useEffect(
         () => {
             if (turn === orientation === "white" ? 'b' : 'w') {
@@ -247,14 +247,16 @@ export const Play = () => {
             if (matchReady) {
                 return (
                     <div>
-                        <button onClick={() => {
+                        <button 
+                            className="buttonStyleApprove playBtns"
+                            onClick={() => {
                             safeGameMutate((game) => {
                                 game.reset();
                             });
                             setMoveSquares({});
                         }}
                         >reset</button>
-                        <button
+                        {/* <button
                             onClick={() => {
                                 const copy = { ...gameForApi }
                                 copy.pgn = game.pgn()
@@ -262,7 +264,7 @@ export const Play = () => {
                             }}
                         >
                             submit game
-                        </button>
+                        </button> */}
                     </div>
                 )
             }
@@ -452,9 +454,10 @@ export const Play = () => {
                         ...optionSquares,
                     }}
                 />
-                <div id="playControls">
+                <div id="playControls" >
                     {resetOrStartGame()}
                     <button
+                        className="buttonStyleApprove playBtns"
                         onClick={() => {
                             safeGameMutate((game) => {
                                 game.undo();
@@ -465,7 +468,10 @@ export const Play = () => {
                     >
                         undo
                     </button>
-                    <button onClick={() => {
+                    <button 
+
+                        className="buttonStyleReject playBtns"
+                        onClick={() => {
                         setSelectedGame(0)
                         navigate("/")
                     }}>

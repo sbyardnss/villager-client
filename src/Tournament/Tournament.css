@@ -20,34 +20,42 @@
     width: 80%;
     margin-bottom: 1em;
     padding: 1em;
-    
+}
+
+#competitorSelectionSplit {
+    display: flex;
+    flex-direction: column;
+    width: 40%
+        /* width: 40%; */
 }
 
 #tournamentPlayerSelectionSection {
     display: flex;
     justify-content: space-around;
     list-style: none;
+    margin-bottom: 1em;
 }
 
 #tournamentPotentialCompetitorSelection {
     border: 1px solid #694873;
     border-radius: 4px;
     padding: .5em;
-    width: 40%;
     backdrop-filter: blur(2px);
-    
+    height: 14em;
+    overflow: scroll;
 
 }
 
 #tournamentSelectedCompetitors {
-    width: 40%;
     backdrop-filter: blur(2px);
+    height: 14em;
+    overflow: scroll;
 
 }
 
 #tournamentSelectedCompetitors {
     border: 1px solid #4a9392;
-        border-radius: 4px;
+    border-radius: 4px;
     padding: .5em;
     /* color: rgb(231, 231, 231); */
 }
@@ -59,6 +67,20 @@
 
 .newTournamentPlayerListItem:hover {
     background-color: aqua;
+}
+
+#tournamentParameters {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 2em;
+}
+
+#tournamentParameterControls {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 6em;
 }
 
 /* tournament list */

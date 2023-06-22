@@ -480,102 +480,112 @@ export const Tournament = () => {
         return <>
             <main id="tournamentContainer">
                 <section id="newTournamentForm">
-                    <label className="setColor" htmlFor="title">Tournament name: </label>
-                    <input
-                        type="text"
-                        name="title"
-                        value={newTournament.title}
-                        onChange={(e) => {
-                            const copy = { ...newTournament }
-                            copy.title = e.target.value
-                            updateNewTournament(copy)
-                        }}
-                    />
+
                     <div id="tournamentPlayerSelectionSection">
-                        <div id="tournamentPotentialCompetitorSelection">
+                        <div id="competitorSelectionSplit">
                             <div className="setColor">Potential:</div>
-                            {
-                                potentialCompetitors.map((p, index) => {
-                                    return (
-                                        <li key={p.id}
-                                            className="newTournamentPlayerListItem"
-                                            onClick={() => {
-                                                const copy = [...potentialCompetitors]
-                                                copy.splice(index, 1)
-                                                setPotentialCompetitors(copy)
-                                                const tournamentCopy = { ...newTournament }
-                                                tournamentCopy.competitors.push(p.id)
-                                                updateNewTournament(tournamentCopy)
-                                            }}>
-                                            {p.full_name}
-                                        </li>
-                                    )
-                                })
-                            }
-                        </div>
-                        <div id="tournamentSelectedCompetitors">
-                            <div className="setColor">Selected:</div>
-                            {
-                                newTournament.competitors.map((competitor, index) => {
-                                    const player = players.find(p => p.id === competitor)
-                                    return (
-                                        <li key={player.id + '-- competitor'}
-                                            className="newTournamentPlayerListItem"
-                                            onClick={() => {
-                                                const tournamentCopy = { ...newTournament }
-                                                tournamentCopy.competitors.splice(index, 1)
-                                                updateNewTournament(tournamentCopy)
-                                                const copy = [...potentialCompetitors]
-                                                copy.push(competitor)
-                                                setPotentialCompetitors(copy)
-                                            }}>
-                                            {player.full_name}
-                                        </li>
-                                    )
-                                })
-                            }
-                        </div>
-                    </div>
-                    <div id="tournamentTimeSettingSelection">
-                        <select
-                            className="tournamentFormDropdownSelection"
-                            onChange={(e) => {
-                                const copy = { ...newTournament }
-                                copy.timeSetting = parseInt(e.target.value)//WHY DO I HAVE TO PARSEINT HERE?
-                                updateNewTournament(copy)
-                            }}>
-                            <option key={0} className="timeSelectOption" value={0}>select time and increment</option>
-                            {
-                                timeSettings.map(ts => {
-                                    return (
-                                        <option key={ts.id} value={ts.id} className="newTournamentTimeSettingListItem">
-                                            {ts.time_amount} minutes -- {ts.increment} second increment
-                                        </option>
-                                    )
-                                })
-                            }
-                        </select>
-                    </div>
-                    <div>
-                        <input id="digitalTournamentCheckbox" className="setColor" type="checkbox" onChange={handleChange} />
-                        <label id="digitalTournamentLabel" className="setColor">digital tournament</label>
-                    </div>
-                    <div id="tournamentSubmit">
-                        <button onClick={() => {
-                            if (newTournament.competitors && newTournament.timeSetting && newTournament.title) {
-                                if (window.confirm("Everybody ready?")) {
-                                    const copy = { ...newTournament }
-                                    copy.pairings = RoundRobin(newTournament.competitors)
-                                    sendNewTournament(copy)
-                                        .then(() => {
-                                            resetTournaments()
-                                        })
+                            <div id="tournamentPotentialCompetitorSelection">
+                                {
+                                    potentialCompetitors.map((p, index) => {
+                                        return (
+                                            <li key={p.id}
+                                                className="newTournamentPlayerListItem"
+                                                onClick={() => {
+                                                    const copy = [...potentialCompetitors]
+                                                    copy.splice(index, 1)
+                                                    setPotentialCompetitors(copy)
+                                                    const tournamentCopy = { ...newTournament }
+                                                    tournamentCopy.competitors.push(p.id)
+                                                    updateNewTournament(tournamentCopy)
+                                                }}>
+                                                {p.full_name}
+                                            </li>
+                                        )
+                                    })
                                 }
-                            }
-                        }}>
-                            Start Tournament
-                        </button>
+                            </div>
+                        </div>
+                        <div id="competitorSelectionSplit">
+                            <div className="setColor">Selected:</div>
+                            <div id="tournamentSelectedCompetitors">
+                                {
+                                    newTournament.competitors.map((competitor, index) => {
+                                        const player = players.find(p => p.id === competitor)
+                                        return (
+                                            <li key={player.id + '-- competitor'}
+                                                className="newTournamentPlayerListItem"
+                                                onClick={() => {
+                                                    const tournamentCopy = { ...newTournament }
+                                                    tournamentCopy.competitors.splice(index, 1)
+                                                    updateNewTournament(tournamentCopy)
+                                                    const copy = [...potentialCompetitors]
+                                                    copy.push(competitor)
+                                                    setPotentialCompetitors(copy)
+                                                }}>
+                                                {player.full_name}
+                                            </li>
+                                        )
+                                    })
+                                }
+                            </div>
+                        </div>
                     </div>
+                    <section id="tournamentParameters">
+                        <div id="tournamentParameterControls">
+                            {/* <label className="setColor" htmlFor="title">Tournament name: </label> */}
+                            <input
+                                type="text"
+                                name="title"
+                                placeholder="tournament title"
+                                value={newTournament.title}
+                                onChange={(e) => {
+                                    const copy = { ...newTournament }
+                                    copy.title = e.target.value
+                                    updateNewTournament(copy)
+                                }}
+                            />
+                            <div id="tournamentTimeSettingSelection">
+                                <select
+                                    className="tournamentFormDropdownSelection"
+                                    onChange={(e) => {
+                                        const copy = { ...newTournament }
+                                        copy.timeSetting = parseInt(e.target.value)//WHY DO I HAVE TO PARSEINT HERE?
+                                        updateNewTournament(copy)
+                                    }}>
+                                    <option key={0} className="timeSelectOption" value={0}>select time and increment</option>
+                                    {
+                                        timeSettings.map(ts => {
+                                            return (
+                                                <option key={ts.id} value={ts.id} className="newTournamentTimeSettingListItem">
+                                                    {ts.time_amount} minutes -- {ts.increment} second increment
+                                                </option>
+                                            )
+                                        })
+                                    }
+                                </select>
+                            </div>
+                            <div>
+                                <input id="digitalTournamentCheckbox" className="setColor" type="checkbox" onChange={handleChange} />
+                                <label id="digitalTournamentLabel" className="setColor">digital tournament</label>
+                            </div>
+                        </div>
+                        <div id="tournamentSubmit">
+                            <button onClick={() => {
+                                if (newTournament.competitors && newTournament.timeSetting && newTournament.title) {
+                                    if (window.confirm("Everybody ready?")) {
+                                        const copy = { ...newTournament }
+                                        copy.pairings = RoundRobin(newTournament.competitors)
+                                        sendNewTournament(copy)
+                                            .then(() => {
+                                                resetTournaments()
+                                            })
+                                    }
+                                }
+                            }}>
+                                Start Tournament
+                            </button>
+                        </div>
+                    </section>
                 </section>
                 <article key="activeTournaments" id="activeTournamentsSection">
                     <h2 id="activeTournamentsHeader">active tournaments</h2>

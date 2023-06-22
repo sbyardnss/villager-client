@@ -35,6 +35,15 @@
     list-style: none;
     margin-bottom: 1em;
 }
+#potentialLabel {
+    font-size: x-large;
+    font-weight: 200;
+
+}
+#selectedLabel {
+    font-size: x-large;
+    font-weight: 200;
+}
 
 #tournamentPotentialCompetitorSelection {
     border: 1px solid #694873;

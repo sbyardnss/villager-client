@@ -20,7 +20,7 @@ export const UserList = () => {
     }
     return <>
         <main id="userListContainer">
-            <h1 id="userListTitle">User List</h1>
+            <h1 id="userListTitle" className="setCustomFont">User List</h1>
             <ul id="userList">
                 {
                     players.map(p => {
@@ -30,10 +30,12 @@ export const UserList = () => {
                                     <li key={p.id}
                                         className="userListItem">
                                         {p.full_name}
-                                        <button onClick={() => {
-                                            addFriend(p.id)
-                                                .then(() => resetPlayers())
-                                        }}>Add Friend</button>
+                                        <button
+                                            className="buttonStyleApprove"
+                                            onClick={() => {
+                                                addFriend(p.id)
+                                                    .then(() => resetPlayers())
+                                            }}>Add Friend</button>
                                     </li>
                                 )
                             }
@@ -42,10 +44,12 @@ export const UserList = () => {
                                     <li key={p.id}
                                         className="userListFriendItem">
                                         {p.full_name}
-                                        <button onClick={() => {
-                                            removeFriend(p.id)
-                                                .then(() => resetPlayers())
-                                        }}>Remove Friend</button>
+                                        <button
+                                            className="buttonStyleReject"
+                                            onClick={() => {
+                                                removeFriend(p.id)
+                                                    .then(() => resetPlayers())
+                                            }}>Remove Friend</button>
                                     </li>
                                 )
                             }

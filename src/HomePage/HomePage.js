@@ -140,7 +140,7 @@ export const HomePage = () => {
 
                 <div id="forumAndActiveGames">
                     <article id="communityForum">
-                        <h2>Public Forum</h2>
+                        <h2 className="setCustomFont">Public Forum</h2>
                         <section id="communityForumMsgs" >
                             {
                                 communityPosts.map(post => {
@@ -195,7 +195,7 @@ export const HomePage = () => {
                     </article>
                     <article key="activeGames" id="activeGamesArticle">
                         <section id="myActiveGames">
-                            <h2 id="activeGamesHeader">My Games</h2>
+                            <h2 id="activeGamesHeader" className="setCustomFont">My Games</h2>
                             {/* <button id="homepagePlayButton">play</button> */}
                             <div id="myUnfinishedGamesScrollWindow">
                                 <div id="activeGamesUl">
@@ -225,7 +225,7 @@ export const HomePage = () => {
                                                                 <div>{new Date(ug.date_time).toLocaleDateString('en-us')}</div>
                                                             </div>
                                                         </div>
-                                                        <button className="challengeBtn"
+                                                        <button className="challengeBtn buttonStyleApprove"
                                                             onClick={() => {
                                                                 setSelectedGame(ug.id)
                                                                 const gameObjForPlay = games.find(g => g.id === selectedGame)
@@ -246,7 +246,7 @@ export const HomePage = () => {
                 <div id="challengesAndPuzzles">
                     <div id="challengesArticle">
                         <section id="createChallengeSection">
-                            <h3>create challenge</h3>
+                            <h3 className="setCustomFont">create challenge</h3>
                             <div id="createChallengeDiv">
                                 <div>play as:
                                     <div id="piecesSelectionContainer">
@@ -286,7 +286,7 @@ export const HomePage = () => {
                                 </div>
                             </div>
                         </section>
-                        <h2>open challenges</h2>
+                        <h2 className="setCustomFont">open challenges</h2>
                         {
                             challenges?.map(c => {
                                 const challengingPlayer = c.player_w ? c.player_w : c.player_b
@@ -299,7 +299,7 @@ export const HomePage = () => {
                                             </div>
                                             <div>
                                                 {/* Play as {c.player_w ? "black" : "white"} */}
-                                                <button className="challengeBtn"
+                                                <button className="challengeBtn buttonStyleApprove"
                                                     onClick={() => {
                                                         const copy = { ...c }
                                                         c.player_w ? copy.player_b = localVillagerObj.userId : copy.player_w = localVillagerObj.userId
@@ -337,7 +337,7 @@ export const HomePage = () => {
                                     <option value={2100}>2100</option>
                                     <option value={2200}>2200</option>
                                 </select>
-                                <button id="submitPuzzleSelectionBtn">submit</button>
+                                <button id="submitPuzzleSelectionBtn" className="buttonStyleApprove">submit</button>
                             </div>
                         </div>
                         <div id="chessBoardContainer">

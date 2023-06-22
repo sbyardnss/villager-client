@@ -483,7 +483,7 @@ export const Tournament = () => {
 
                     <div id="tournamentPlayerSelectionSection">
                         <div id="competitorSelectionSplit">
-                            <div className="setColor">Potential:</div>
+                            <div id="potentialLabel" className="setColor setCustomFont">Potential:</div>
                             <div id="tournamentPotentialCompetitorSelection">
                                 {
                                     potentialCompetitors.map((p, index) => {
@@ -506,7 +506,7 @@ export const Tournament = () => {
                             </div>
                         </div>
                         <div id="competitorSelectionSplit">
-                            <div className="setColor">Selected:</div>
+                            <div id="selectedLabel" className="setColor setCustomFont">Selected:</div>
                             <div id="tournamentSelectedCompetitors">
                                 {
                                     newTournament.competitors.map((competitor, index) => {

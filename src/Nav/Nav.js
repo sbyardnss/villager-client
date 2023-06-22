@@ -1,22 +1,5 @@
 import "./Nav.css"
 
-// export const Nav = () => {
-
-//     return <>
-//         <div className="nav">
-//             <input type="checkbox" />
-//                 <span></span>
-//                 <span></span>
-//                 <div className="menu">
-//                     <li><a href="#">home</a></li>
-//                     <li><a href="#">about</a></li>
-//                     <li><a href="#">cursos</a></li>
-//                     <li><a href="#">blog</a></li>
-//                     <li><a href="#">contactos</a></li>
-//                 </div>
-//         </div>
-//     </>
-// }
 import { Link, Navigate, useNavigate } from "react-router-dom"
 import { useContext, useEffect, useRef, useState } from "react"
 import "./Nav.css"

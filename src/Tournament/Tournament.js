@@ -194,7 +194,7 @@ export const Tournament = () => {
             updateNewTournament(copy)
         }
     }
-
+    console.log(tournamentGames)
     const roundHtml = roundPopulation()
     //function for populating scoring options if tournament is played in person
     const submitResultsOrNull = () => {
@@ -267,31 +267,32 @@ export const Tournament = () => {
                             currentRoundMatchups?.map(matchup => {
                                 const white = activeTournamentPlayers.find(player => player.id === matchup.player1)
                                 const black = activeTournamentPlayers.find(player => player.id === matchup.player2)
-                                const copy = { ...gameForApi }
-                                copy.player_w = white?.id
-                                copy.player_b = black?.id ? black.id : null
-                                //tournament games not being updated correctly causing digital tournament to send a ton of post requests
-                                const alreadyCreatedGameObj = tournamentGames.find(g => g.tournament === copy.tournament && g.player_b?.id === copy.player_b && g.player_w?.id === copy.player_w)
-                                const alreadyCreatedByeGame = tournamentGames.find(g => g.tournament === copy.tournament && g.player_b === copy.player_b && g.player_w?.id === copy.player_w)
-                                if (tournamentGames && white && black) {
-                                    if (!alreadyCreatedGameObj && !alreadyCreatedByeGame) {
-                                        copy.pgn = ""
-                                        if (copy.player_b === null) {
-                                            copy.bye = true
-                                            copy.winner = white?.id
-                                            copy.win_style = "bye"
-                                            // console.log(copy)
-                                            sendNewGame(copy)
-                                                .then(() => resetTournamentGames())
-                                        }
-                                        else {
-                                            copy.winner = null
-                                            // console.log(copy)
-                                            sendNewGame(copy)
-                                                .then(() => resetTournamentGames())
-                                        }
-                                    }
-                                }
+                                //CODE BELOW RUNNING TOO FAST NOW. NOT SURE WHY BUT REPLACING WITH CREATE GAMES BUTTON
+                                // const copy = { ...gameForApi }
+                                // copy.player_w = white?.id
+                                // copy.player_b = black?.id ? black.id : null
+                                // //tournament games not being updated correctly causing digital tournament to send a ton of post requests
+                                // const alreadyCreatedGameObj = tournamentGames.find(g => g.tournament === copy.tournament && g.player_b?.id === copy.player_b && g.player_w?.id === copy.player_w)
+                                // const alreadyCreatedByeGame = tournamentGames.find(g => g.tournament === copy.tournament && g.player_b?.id === copy.player_b && g.player_w?.id === copy.player_w)
+                                // if (tournamentGames && white && black) {
+                                //     if (!alreadyCreatedGameObj && !alreadyCreatedByeGame) {
+                                //         copy.pgn = ""
+                                //         if (copy.player_b === null) {
+                                //             copy.bye = true
+                                //             copy.winner = white?.id
+                                //             copy.win_style = "bye"
+                                //             // console.log(copy)
+                                //             sendNewGame(copy)
+                                //                 .then(() => resetTournamentGames())
+                                //         }
+                                //         else {
+                                //             copy.winner = null
+                                //             // console.log(copy)
+                                //             sendNewGame(copy)
+                                //                 .then(() => resetTournamentGames())
+                                //         }
+                                //     }
+                                // }
                                 if (white?.id && black?.id) {
                                     return (
                                         <tr key={matchup.round + matchup.match}>
@@ -317,7 +318,7 @@ export const Tournament = () => {
             )
         }
     }
-    console.log(tournamentGames)
+    console.log(currentRoundMatchups)
     //function for populating section for updating previous games
     const tableOrEdit = () => {
         if (editScores) {
@@ -379,7 +380,29 @@ export const Tournament = () => {
     if (selectedTournament) {
         const scoringButtonOrNone = () => {
             if (activeTournament.in_person === false) {
-                return null
+                return (
+                    <button onClick={() => {
+                        {
+                            currentRoundMatchups.map(matchup => {
+                                if (matchup.player2 !== null){
+                                    const copy = {...gameForApi}
+                                    copy.winner = null
+                                    copy.player_w = matchup.player1
+                                    copy.player_b = matchup.player2
+                                    sendNewGame(copy)
+                                }
+                                else {
+                                    const copy = {...gameForApi}
+                                    copy.winner = null
+                                    copy.player_w = matchup.player1
+                                    copy.player_b = null
+                                    sendNewGame(copy)
+                                }
+                                
+                            })
+                        }
+                    }}>create round games</button>
+                )
             }
             else {
                 return (
@@ -468,7 +491,7 @@ export const Tournament = () => {
                                                                 <td key={tpg.id} value={1} id={tpg.id + "--" + tourneyPlayer.id} className="tournamentGameResultBye">bye</td>
                                                             )
                                                         }
-                                                        if (tpg.winner.id === tourneyPlayer.id) {
+                                                        if (tpg.winner?.id === tourneyPlayer.id) {
                                                             score++
                                                             return (
                                                                 <td key={tpg.id} value={1} id={tpg.id + "--" + tourneyPlayer.id} className="tournamentGameResult">1</td>

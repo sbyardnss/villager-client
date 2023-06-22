@@ -49,6 +49,7 @@ export const HomePage = () => {
             setMyUnfinishedGames(unfinishedGames)
         }, [games]
     )
+    console.log(myUnfinishedGames)
     useEffect(
         () => {
             if (tournaments) {
@@ -100,6 +101,7 @@ export const HomePage = () => {
     //         }
     //     },[puzzles]
     // )
+
     const resetCommunityPosts = () => {
         getAllCommunityPosts()
             .then(data => setCommunityPosts(data))
@@ -206,8 +208,9 @@ export const HomePage = () => {
                                             // const opponent = ug.player_w?.id === localVillagerObj.userId ? ug.player_b : ug.player_w
                                             let tournament = {}
                                             if (ug.tournament) {
-                                                tournament = tournaments.find(t => t.id = ug.tournament)
+                                                tournament = tournaments.find(t => t.id === ug.tournament)
                                             }
+                                            console.log(tournament)
                                             const opponent = ug.player_w?.id === localVillagerObj.userId ? players.find(p => p.id === ug.player_b?.id) : players.find(p => p.id === ug.player_w?.id)
                                             const isTournamentGame = () => {
                                                 return ug.tournament ? "tournamentActiveGameListItem" : "activeGameListItem"

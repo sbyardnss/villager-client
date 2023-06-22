@@ -201,10 +201,10 @@
     width: 2em;
 }
 
-.tournamentGameResult {
+/* .tournamentGameResult {
     display: flex;
     justify-content: center;
-}
+} */
 
 .tournamentGameResultBye {
     display: flex;

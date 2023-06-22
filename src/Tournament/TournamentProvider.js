@@ -44,11 +44,15 @@ export const TournamentProvider = (props) => {
             setPastPairings(previousPairings)
         },[tournamentGames]
     )
+    const resetGames = () => {
+        getAllGames()
+            .then(data => setGames(data))
+    }
 
     return (
         <TournamentContext.Provider value={{
             localVillagerObj, players, timeSettings, tournaments, setTournaments, tournamentGames, setGames,
-            selectedTournament, setSelectedTournament, pastPairings
+            selectedTournament, setSelectedTournament, pastPairings, resetGames
         }}>
             {props.children}
         </TournamentContext.Provider>

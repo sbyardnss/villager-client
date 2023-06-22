@@ -4,7 +4,7 @@ import { TournamentContext } from "./TournamentProvider"
 import "./Tournament.css"
 import { alterGame, getAllGames, getAllTournaments, sendNewGame, sendNewTournament, sendTournamentRoundOutcomes, sendUpdatedGames, updateTournament } from "../ServerManager"
 export const Tournament = () => {
-    const { localVillagerObj, tournamentGames, tournaments, setTournaments, players, timeSettings, setGames, selectedTournament, setSelectedTournament, pastPairings } = useContext(TournamentContext)
+    const { localVillagerObj, tournamentGames, tournaments, setTournaments, players, timeSettings, setGames, selectedTournament, setSelectedTournament, pastPairings, resetGames } = useContext(TournamentContext)
     const [potentialCompetitors, setPotentialCompetitors] = useState([])
     const [activeTournament, setActiveTournament] = useState({})
     const [activeTournamentPlayers, setActiveTournamentPlayers] = useState([])
@@ -113,10 +113,10 @@ export const Tournament = () => {
         getAllTournaments()
             .then(data => setTournaments(data))
     }
-    const resetGames = () => {
-        getAllGames()
-            .then(data => setGames(data))
-    }
+    // const resetGames = () => {
+    //     getAllGames()
+    //         .then(data => setGames(data))
+    // }
     //code for populating number of table columns based on number of rounds in activeTournament
     const roundPopulation = () => {
         let roundNumber = activeTournament?.rounds;
@@ -457,7 +457,9 @@ export const Tournament = () => {
                                                 <td key={tourneyPlayer.id} className="tablePlayerCell">{tourneyPlayer.full_name}</td>
                                                 {
                                                     tourneyPlayerGames.map(tpg => {
-
+                                                        if (tpg.player_b?.id === 3 || tpg.player_w?.id === 3) {
+                                                            console.log(tpg)
+                                                        }
                                                         if (tpg.bye === true) {
                                                             score++
                                                             return (

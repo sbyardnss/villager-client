@@ -10,6 +10,7 @@
     color: rgb(231, 231, 231);
 }
 
+
 /* tournament setup */
 #newTournamentForm {
     border: 2px solid rgb(40, 40, 40);
@@ -35,11 +36,13 @@
     list-style: none;
     margin-bottom: 1em;
 }
+
 #potentialLabel {
     font-size: x-large;
     font-weight: 200;
 
 }
+
 #selectedLabel {
     font-size: x-large;
     font-weight: 200;
@@ -129,8 +132,31 @@
 #digitalTournamentCheckbox {
     cursor: pointer;
 }
+/* tournament progression controls for selected tournament */
+#tournamentProgressionControls {
+    display: flex;
+    justify-content: space-between;
+    width: 60%;
+    margin: 1em 0;
+}
+/* scoring */
+#tournamentScoringSection {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+}
+
+.tournamentScoringMatchup {
+    width: 30%;
+}
 
 /* matchup table */
+#matchupsContainer {
+    width: 80%;
+    margin: 1em 0;
+}
+
 .whitePiecesMatchup {
     background-color: whitesmoke;
     color: black;
@@ -161,11 +187,26 @@
 }
 
 /* tournament table */
+
 #tournamentTable {
-    background-color: blanchedalmond;
-    border: 1px solid green;
+    /* background-color: blanchedalmond; */
+    color: rgb(231, 231, 231);
+    border: 1px solid #f4d35e;
+    border-radius: 6px;
+    padding: 1em;
 }
 
 .roundHeader {
     background-color: gray;
+    width: 2em;
+}
+
+.tournamentGameResult {
+    display: flex;
+    justify-content: center;
+}
+
+.tournamentGameResultBye {
+    display: flex;
+    justify-content: center;
 }

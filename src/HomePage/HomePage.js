@@ -137,7 +137,6 @@ export const HomePage = () => {
     return <>
         <main id="homepageContainer">
             <div id="homepageLayoutDiv">
-
                 <div id="forumAndActiveGames">
                     <article id="communityForum">
                         <h2 className="setCustomFont">Public Forum</h2>
@@ -240,7 +239,6 @@ export const HomePage = () => {
                                 </div>
                             </div>
                         </section>
-
                     </article>
                 </div>
                 <div id="challengesAndPuzzles">

@@ -29,6 +29,7 @@ export const TournamentProvider = (props) => {
             if (selectedTournament) {
                 const selectedTournamentObj = tournaments.find(t => t.id === selectedTournament)
                 // const tourneyGamesOnly = games.filter(g => g.tournament === selectedTournament)
+                console.log(selectedTournamentObj)
                 setTournamentGames(selectedTournamentObj.games)
             }
         }, [games, selectedTournament]

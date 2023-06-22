@@ -10,7 +10,7 @@ export const Tournament = () => {
     const [activeTournamentPlayers, setActiveTournamentPlayers] = useState([])
     const [currentRound, setCurrentRound] = useState(0)
     const [currentRoundMatchups, setCurrentRoundMatchups] = useState([])
-    const [scoring, setScoring] = useState(false)
+    const [scoring, setScoring] = useState(true)
     const [editScores, setEditScores] = useState(false)
     // const [outcomes, updateOutcomes] = useState([])
     const [gameForApi, updateGameForApi] = useState({
@@ -136,26 +136,49 @@ export const Tournament = () => {
             copy.player_b = blackPieces.id
             copy.tournament = activeTournament?.id
             copy.tournament_round = currentRound
+            // updateGameForApi(copy)
         }
         else {
             copy = { ...pastGame }
             copy.player_w = whitePieces.id
             copy.player_b = blackPieces.id
+            // updateGameForApi(copy)
         }
-        if (targetId === "whiteUpdate") {
-            copy.winner = whitePieces.id
-            copy.win_style = "checkmate"
-            updateGameForApi(copy)
-        }
-        else if (targetId === "drawUpdate") {
-            copy.winner = null
-            copy.win_style = "draw"
-            updateGameForApi(copy)
+        if (!pastGame) {
+            if (targetId === "whitePieces") {
+                // console.log(blackPieces)
+                copy.winner = whitePieces.id
+                copy.win_style = "checkmate"
+                updateGameForApi(copy)
+            }
+            if (targetId === "drawUpdate") {
+                copy.winner = null
+                copy.win_style = "draw"
+                updateGameForApi(copy)
+            }
+            if (targetId === "blackPieces") {
+                copy.winner = blackPieces.id
+                copy.win_style = "checkmate"
+                updateGameForApi(copy)
+            }
         }
         else {
-            copy.winner = blackPieces.id
-            copy.win_style = "checkmate"
-            updateGameForApi(copy)
+            if (targetId === "whiteUpdate") {
+                // console.log(blackPieces)
+                copy.winner = whitePieces.id
+                copy.win_style = "checkmate"
+                updateGameForApi(copy)
+            }
+            if (targetId === "drawUpdate") {
+                copy.winner = null
+                copy.win_style = "draw"
+                updateGameForApi(copy)
+            }
+            if (targetId === "blackUpdate") {
+                copy.winner = blackPieces.id
+                copy.win_style = "checkmate"
+                updateGameForApi(copy)
+            }
         }
     }
 
@@ -173,12 +196,11 @@ export const Tournament = () => {
     }
 
     const roundHtml = roundPopulation()
-
     //function for populating scoring options if tournament is played in person
     const submitResultsOrNull = () => {
         if (activeTournament?.in_person === true) {
             return (
-                <section>
+                <section id="tournamentScoringSection">
                     {
                         currentRoundMatchups?.map(matchup => {
                             const white = activeTournamentPlayers?.find(player => player.id === matchup.player1)
@@ -188,19 +210,20 @@ export const Tournament = () => {
                             copy.player_b = black?.id
                             if (black === undefined) {
                                 return (
-                                    <div key={`${matchup.round} -- ${matchup.match} -- bye`}>
-                                        {white?.full_name} has bye
+                                    <div key={`${matchup.round} -- ${matchup.match} -- bye`} className="setColor setCustomFont">
+                                        {white?.username} has bye
                                     </div>
                                 )
                             }
                             return (
-                                <div key={`${matchup.round} -- ${matchup.match}`}>
+                                <div key={`${matchup.round} -- ${matchup.match}`}
+                                    className="tournamentScoringMatchup">
                                     <div
                                         className="whitePiecesMatchup"
                                         id="whitePieces"
                                         onClick={(evt) => {
                                             handleGameForApiUpdate(evt.target.id, white, black)
-                                        }}>{white?.full_name}
+                                        }}>{white?.username}
                                     </div>
                                     <div
                                         className="drawMatchupButton"
@@ -214,7 +237,7 @@ export const Tournament = () => {
                                         id="blackPieces"
                                         onClick={(evt) => {
                                             handleGameForApiUpdate(evt.target.id, white, black)
-                                        }}>{black?.full_name}
+                                        }}>{black?.username}
                                     </div>
                                     <button onClick={() => {
                                         sendNewGame(gameForApi)
@@ -258,11 +281,13 @@ export const Tournament = () => {
                                             copy.win_style = "bye"
                                             // console.log(copy)
                                             sendNewGame(copy)
+                                                .then(() => resetGames())
                                         }
                                         else {
                                             copy.winner = null
                                             // console.log(copy)
                                             sendNewGame(copy)
+                                                .then(() => resetGames())
                                         }
                                     }
                                 }
@@ -367,34 +392,36 @@ export const Tournament = () => {
             return <>
                 <main id="tournamentContainer">
                     <div className="setColor">{activeTournament.title}</div>
-                    <button onClick={() => {
-                        if (window.confirm("create round?")) {
-                            if (byePlayer) {
-                                sendNewGame(byeGame)
+                    <div id="tournamentProgressionControls">
+                        <button onClick={() => {
+                            if (window.confirm("create round?")) {
+                                if (byePlayer) {
+                                    sendNewGame(byeGame)
+                                }
+                                const tournamentCopy = { ...activeTournament }
+                                tournamentCopy.rounds++
+                                updateTournament(tournamentCopy)
+                                    .then(() => {
+                                        resetTournaments()
+                                        resetGames()
+                                    })
                             }
-                            const tournamentCopy = { ...activeTournament }
-                            tournamentCopy.rounds++
-                            updateTournament(tournamentCopy)
-                                .then(() => {
-                                    resetTournaments()
-                                    resetGames()
-                                })
-                        }
-                    }}>Start Next Round</button>
-                    <button onClick={() => {
-                        setSelectedTournament(0)
-                        setEditScores(false)
-                        setScoring(false)
-                    }}>exit tournament</button>
-                    <button onClick={() => {
-                        setEditScores(true)
-                        setScoring(false)
-                    }}>edit scores</button>
-                    {scoringButtonOrNone()}
+                        }}>Start Next Round</button>
+                        <button onClick={() => {
+                            setSelectedTournament(0)
+                            setEditScores(false)
+                            setScoring(false)
+                        }}>exit tournament</button>
+                        <button onClick={() => {
+                            setEditScores(true)
+                            setScoring(false)
+                        }}>edit scores</button>
+                        {scoringButtonOrNone()}
+                    </div>
+                    <div className="setColor">
+                        Round {currentRound}
+                    </div>
                     <section id="matchupsContainer">
-                        <div className="setColor">
-                            Round {currentRound}
-                        </div>
                         {/* {matchupsOrScoring()} */}
                         {submitResultsOrNull()}
                     </section>
@@ -430,6 +457,7 @@ export const Tournament = () => {
                                                 <td key={tourneyPlayer.id} className="tablePlayerCell">{tourneyPlayer.full_name}</td>
                                                 {
                                                     tourneyPlayerGames.map(tpg => {
+
                                                         if (tpg.bye === true) {
                                                             score++
                                                             return (
@@ -480,7 +508,6 @@ export const Tournament = () => {
         return <>
             <main id="tournamentContainer">
                 <section id="newTournamentForm">
-
                     <div id="tournamentPlayerSelectionSection">
                         <div id="competitorSelectionSplit">
                             <div id="potentialLabel" className="setColor setCustomFont">Potential:</div>

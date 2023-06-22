@@ -24,7 +24,7 @@
     background-color: #2a2e34;
     /* border-radius: 12px; */
     display: flex;
-    /* flex-direction: column; */
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     /* box-shadow: rgba(255, 255, 255, 0.26) 0px 4px 4px inset; */
@@ -54,4 +54,9 @@
 }
 .link--register {
     color:rgb(64, 150, 184)
+}
+
+#registerContainer {
+    display: flex;
+    flex-direction: column;
 }

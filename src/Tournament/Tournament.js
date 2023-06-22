@@ -270,6 +270,7 @@ export const Tournament = () => {
                                 const copy = { ...gameForApi }
                                 copy.player_w = white?.id
                                 copy.player_b = black?.id ? black.id : null
+                                //tournament games not being updated correctly causing digital tournament to send a ton of post requests
                                 const alreadyCreatedGameObj = tournamentGames.find(g => g.tournament === copy.tournament && g.player_b?.id === copy.player_b && g.player_w?.id === copy.player_w)
                                 const alreadyCreatedByeGame = tournamentGames.find(g => g.tournament === copy.tournament && g.player_b === copy.player_b && g.player_w?.id === copy.player_w)
                                 if (tournamentGames) {
@@ -457,9 +458,9 @@ export const Tournament = () => {
                                                 <td key={tourneyPlayer.id} className="tablePlayerCell">{tourneyPlayer.full_name}</td>
                                                 {
                                                     tourneyPlayerGames.map(tpg => {
-                                                        if (tpg.player_b?.id === 3 || tpg.player_w?.id === 3) {
-                                                            console.log(tpg)
-                                                        }
+                                                        // if (tpg.player_b?.id === 3 || tpg.player_w?.id === 3) {
+                                                        //     console.log(tpg)
+                                                        // }
                                                         if (tpg.bye === true) {
                                                             score++
                                                             return (

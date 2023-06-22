@@ -93,8 +93,11 @@ export const HomePage = () => {
     //update displayed puzzle
     // useEffect(
     //     () => {
-    //         const firstPuzzle = puzzles.puzzles[0]
-    //         setDisplayedPuzzle(firstPuzzle)
+    //         if (puzzles) {
+
+    //             const firstPuzzle = puzzles.puzzles[0]
+    //             setDisplayedPuzzle(firstPuzzle)
+    //         }
     //     },[puzzles]
     // )
     const resetCommunityPosts = () => {

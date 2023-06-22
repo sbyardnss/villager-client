@@ -87,6 +87,7 @@ export const Messages = () => {
                         <input
                             id="chatInterface"
                             type="text"
+                            className="text-input"
                             value={newMsg.message}
                             onKeyDown={handleKeyDown}
                             onChange={(e) => {

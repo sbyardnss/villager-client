@@ -21,3 +21,12 @@ html {
   /* background-position: bottom fixed top 25%;
   background-size: 80dvh; */
 }
+
+
+/* form styling */
+.text-input {
+  background-color: rgb(203, 203, 203);
+  padding: .5em;
+  border: 0;
+  border-radius: 2px;
+}

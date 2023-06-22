@@ -175,6 +175,7 @@ export const HomePage = () => {
                         <section id="communityForumInterface">
                             <input id="communityForumInput"
                                 type="text"
+                                className="text-input"
                                 value={newPost.message}
                                 onChange={handleChange}
                                 onKeyDown={handlekeyDown}

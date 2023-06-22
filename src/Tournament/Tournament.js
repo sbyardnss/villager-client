@@ -536,6 +536,7 @@ export const Tournament = () => {
                             <input
                                 type="text"
                                 name="title"
+                                className="text-input"
                                 placeholder="tournament title"
                                 value={newTournament.title}
                                 onChange={(e) => {

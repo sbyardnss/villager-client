@@ -11,6 +11,9 @@
     margin-right: auto; */
     text-align: center;
 }
+#graffiti_logo {
+    width: 20em;
+}
 
 .form--login {
     height: 400px;
@@ -21,7 +24,7 @@
     background-color: #2a2e34;
     /* border-radius: 12px; */
     display: flex;
-    flex-direction: column;
+    /* flex-direction: column; */
     justify-content: center;
     align-items: center;
     /* box-shadow: rgba(255, 255, 255, 0.26) 0px 4px 4px inset; */

@@ -20,7 +20,7 @@ import "./Nav.css"
 import { Link, Navigate, useNavigate } from "react-router-dom"
 import { useContext, useEffect, useRef, useState } from "react"
 import "./Nav.css"
-
+import graffiti from "../images/villager_graffiti.png"
 
 export const Nav = () => {
     const navMenu = useRef(null)
@@ -56,6 +56,7 @@ export const Nav = () => {
             <div id="logo">
                 <Link className="logo__icon" to="/">
                     <h1 id="/" className="navigation__name">Villager Chess</h1>
+                    {/* <img id="graffiti_logo" src={graffiti}></img> */}
                 </Link>
             </div>
             <div id="navList" ref={(navMenu)}>

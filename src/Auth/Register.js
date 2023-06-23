@@ -49,33 +49,33 @@ export const Register = (props) => {
     return (
         <main id="registerContainer" style={{ textAlign: "center" }}>
             <form className="form--login" onSubmit={handleRegister}>
-                <h3 className="h3 mb-3 font-weight-normal">Please Register for LinkUp</h3>
+                <h3 className="h3 mb-3 font-weight-normal">Please Register for Villager Chess</h3>
                 <fieldset className="registerFieldset">
-                    <label className="loginLabels" htmlFor="first_name"> First name </label>
+                    {/* <label className="loginLabels" htmlFor="first_name"> First name </label> */}
                     <input onChange={updateUser}
                         type="text" id="first_name" className="form-control"
                         placeholder="Enter your first name" required autoFocus />
                 </fieldset>
                 <fieldset className="registerFieldset">
-                    <label className="loginLabels" htmlFor="last_name"> Last name </label>
+                    {/* <label className="loginLabels" htmlFor="last_name"> Last name </label> */}
                     <input onChange={updateUser}
                         type="text" id="last_name" className="form-control"
                         placeholder="Enter your last name" required autoFocus />
                 </fieldset>
                 <fieldset className="registerFieldset">
-                    <label className="loginLabels" htmlFor="username"> Username </label>
+                    {/* <label className="loginLabels" htmlFor="username"> Username </label> */}
                     <input onChange={updateUser}
                         type="text" id="username" className="form-control"
                         placeholder="Enter username" required autoFocus />
                 </fieldset>
                 <fieldset className="registerFieldset">
-                    <label className="loginLabels" htmlFor="email"> Email address </label>
+                    {/* <label className="loginLabels" htmlFor="email"> Email </label> */}
                     <input onChange={updateUser}
                         type="email" id="email" className="form-control"
-                        placeholder="Email address" required />
+                        placeholder="Enter your email address" required />
                 </fieldset>
                 <fieldset className="registerFieldset">
-                    <label className="loginLabels" htmlFor="email"> Password </label>
+                    {/* <label className="loginLabels" htmlFor="password"> Password </label> */}
                     <input onChange={updateUser}
                         type="password" id="password" className="form-control"
                         placeholder="Password" required />

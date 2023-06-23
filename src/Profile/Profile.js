@@ -54,14 +54,14 @@ export const Profile = () => {
             const gamesIWon = myGames.filter(g => g.winner?.id === localVillagerObj.userId).length
             const losses = myGames.filter(g => g.winner !== null && g.winner.id !== localVillagerObj.userId).length
             const draws = myGames.filter(g => g.win_style === "draw").length
-            const completedGames = myGames.filter(g => g.winner !== null).length
+            const completedGames = gamesIWon + losses + draws
             setPerformanceData({
                 wins: gamesIWon,
-                winPercent: (completedGames / gamesIWon) * 100,
+                winPercent: Math.round((gamesIWon/completedGames) * 100),
                 losses: losses,
-                lossPercent: (completedGames / losses) * 100,
+                lossPercent: Math.round((losses/completedGames) * 100),
                 draws: draws,
-                drawPercent: (completedGames / draws) * 100
+                drawPercent: Math.round((draws/completedGames) * 100)
             })
         }, [myGames]
     )

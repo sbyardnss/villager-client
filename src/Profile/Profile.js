@@ -210,7 +210,7 @@ export const Profile = () => {
                     <h2 className="setCustomFont profileHeader">Past Games</h2>
                     {
                         myGames.map(game => {
-                            const opponent = game.player_w?.id === localVillagerObj.userId ? players.find(p => p.id === game.player_b.id) : players.find(p => p.id === game.player_w.id)
+                            const opponent = game.player_w?.id === localVillagerObj.userId ? players.find(p => p.id === game.player_b?.id) : players.find(p => p.id === game.player_w?.id)
                             if (game.pgn !== "" && game.pgn !== null && game.winner !== null) {
                                 let tournament = {}
                                 if (game.tournament) {

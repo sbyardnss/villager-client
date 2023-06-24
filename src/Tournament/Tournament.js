@@ -384,21 +384,21 @@ export const Tournament = () => {
                     <button onClick={() => {
                         {
                             currentRoundMatchups.map(matchup => {
-                                if (matchup.player2 !== null){
-                                    const copy = {...gameForApi}
+                                if (matchup.player2 !== null) {
+                                    const copy = { ...gameForApi }
                                     copy.winner = null
                                     copy.player_w = matchup.player1
                                     copy.player_b = matchup.player2
                                     sendNewGame(copy)
                                 }
                                 else {
-                                    const copy = {...gameForApi}
+                                    const copy = { ...gameForApi }
                                     copy.winner = null
                                     copy.player_w = matchup.player1
                                     copy.player_b = null
                                     sendNewGame(copy)
                                 }
-                                
+
                             })
                         }
                     }}>create round games</button>
@@ -414,8 +414,20 @@ export const Tournament = () => {
             }
         }
         if (activeTournament && activeTournamentPlayers) {
+            const modal = document.getElementById('finishTournamentModal')
             return <>
                 <main id="tournamentContainer">
+                    <div id="finishTournamentModal">
+                        <div>
+                            Finish Tournament
+                        </div>
+                        <div id="modalBtns">
+                            <button>confirm</button>
+                            <button onClick={() => {
+                                modal.style.display = "none"
+                            }}>cancel</button>
+                        </div>
+                    </div>
                     <div className="setColor">{activeTournament.title}</div>
                     <div id="tournamentProgressionControls">
                         <button onClick={() => {
@@ -442,6 +454,9 @@ export const Tournament = () => {
                             setScoring(false)
                         }}>edit scores</button>
                         {scoringButtonOrNone()}
+                        <button onClick={() => {
+                            modal.style.display = "flex";
+                        }}>Finish Tournament</button>
                     </div>
                     <div className="setColor">
                         Round {currentRound}

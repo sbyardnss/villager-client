@@ -26,6 +26,11 @@
     flex-direction: column;
     font-size: larger;
 }
+.resultsModalListItem {
+    width: 6em;
+    display: flex;
+    justify-content: space-between;
+}
 /* tournament setup */
 #newTournamentForm {
     border: 2px solid rgb(40, 40, 40);

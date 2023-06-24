@@ -426,16 +426,17 @@ export const Tournament = () => {
                 resultArr.sort((a, b) => { return b[1] - a[1] })
                 return resultArr.map(r => {
                     return (
-                        <div>{r[0]}: {r[1]}</div>
+                        <div className="resultsModalListItem">
+                            <div>{r[0]}: </div>
+                            <div>{r[1]}</div>
+                        </div>
                     )
                 })
             }
             return <>
                 <main id="tournamentContainer">
                     <div id="finishTournamentModal">
-                        <div>
-                            Finish Tournament
-                        </div>
+                        Results
                         {resultsDisplay()}
                         <div id="modalResults">
 

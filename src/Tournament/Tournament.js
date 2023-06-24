@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from "react"
+import { useState, useEffect, useContext, useRef } from "react"
 import { RoundRobin } from "tournament-pairings"
 import { TournamentContext } from "./TournamentProvider"
 import "./Tournament.css"
@@ -12,7 +12,7 @@ export const Tournament = () => {
     const [currentRoundMatchups, setCurrentRoundMatchups] = useState([])
     const [scoring, setScoring] = useState(true)
     const [editScores, setEditScores] = useState(false)
-    // const [outcomes, updateOutcomes] = useState([])
+    const [resultsObj, updateResultsObj] = useState({})
     const [gameForApi, updateGameForApi] = useState({
         player_w: 0,
         player_b: 0,
@@ -75,7 +75,6 @@ export const Tournament = () => {
             }
         }, [activeTournament]
     )
-
     useEffect(
         () => {
             if (activeTournament) {
@@ -194,7 +193,6 @@ export const Tournament = () => {
             updateNewTournament(copy)
         }
     }
-    console.log(tournamentGames)
     const roundHtml = roundPopulation()
     //function for populating scoring options if tournament is played in person
     const submitResultsOrNull = () => {
@@ -318,7 +316,7 @@ export const Tournament = () => {
             )
         }
     }
-    console.log(currentRoundMatchups)
+
     //function for populating section for updating previous games
     const tableOrEdit = () => {
         if (editScores) {
@@ -415,11 +413,32 @@ export const Tournament = () => {
         }
         if (activeTournament && activeTournamentPlayers) {
             const modal = document.getElementById('finishTournamentModal')
+            const resultsDisplay = () => {
+                const results = {}
+                const resultArr = []
+                activeTournamentPlayers.map(player => {
+                    const scoreElement = document.getElementById(player.id + "-- score")
+                    results[player.username] = parseFloat(scoreElement?.innerHTML)
+                })
+                for (let player in results) {
+                    resultArr.push([player, results[player]])
+                }
+                resultArr.sort((a, b) => { return b[1] - a[1] })
+                return resultArr.map(r => {
+                    return (
+                        <div>{r[0]}: {r[1]}</div>
+                    )
+                })
+            }
             return <>
                 <main id="tournamentContainer">
                     <div id="finishTournamentModal">
                         <div>
                             Finish Tournament
+                        </div>
+                        {resultsDisplay()}
+                        <div id="modalResults">
+
                         </div>
                         <div id="modalBtns">
                             <button>confirm</button>
@@ -456,7 +475,7 @@ export const Tournament = () => {
                         {scoringButtonOrNone()}
                         <button onClick={() => {
                             modal.style.display = "flex";
-                        }}>Finish Tournament</button>
+                        }}>Results</button>
                     </div>
                     <div className="setColor">
                         Round {currentRound}
@@ -491,12 +510,14 @@ export const Tournament = () => {
                                                 )
                                             }
                                         }
+
                                         let score = 0
                                         return (
                                             <tr key={tourneyPlayer.id} id={tourneyPlayer.id + "--tourneyRow"}>
                                                 <td key={tourneyPlayer.id} className="tablePlayerCell">{tourneyPlayer.full_name}</td>
                                                 {
                                                     tourneyPlayerGames.map(tpg => {
+
                                                         // if (tpg.player_b?.id === 3 || tpg.player_w?.id === 3) {
                                                         //     console.log(tpg)
                                                         // }
@@ -519,11 +540,16 @@ export const Tournament = () => {
                                                             )
                                                         }
                                                         else if (tpg.winner === null && !tpg.win_style) {
+                                                            score = score
+
+
                                                             return (
                                                                 <td key={tpg.id} id={tpg.id + "--" + tourneyPlayer.id} className="tournamentGameResult"></td>
                                                             )
                                                         }
                                                         else {
+                                                            score = score
+
                                                             return (
                                                                 <td key={tpg.id} value={0} id={tpg.id + "--" + tourneyPlayer.id} className="tournamentGameResult">0</td>
                                                             )
@@ -531,7 +557,7 @@ export const Tournament = () => {
                                                     })
                                                 }
                                                 {emptyCellCompensation()}
-                                                <td key={tourneyPlayer.id + "-- score"} id={tourneyPlayer.id + "-- score"}>
+                                                <td key={tourneyPlayer.id + "-- score"} id={tourneyPlayer.id + "-- score"} value={score || "0"}>
                                                     {score}
                                                 </td>
                                             </tr>

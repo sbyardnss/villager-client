@@ -3,84 +3,182 @@
   zoom: 1.0;
 }
 
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
+@media screen and (min-width: 641px) {
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+      'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+      sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
-}
+  code {
+    font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+      monospace;
+  }
 
-html {
-  background-image: url("./images/dark_smokey_background.jpg");
-  /* background-image: url("./images/aberrated_perspective_board.jpg"); */
-  /* background-position: bottom fixed top 25%;
-  background-size: 80dvh; */
-}
+  html {
+    background-image: url("./images/dark_smokey_background.jpg");
+    /* background-image: url("./images/aberrated_perspective_board.jpg"); */
+    /* background-position: bottom fixed top 25%;
+    background-size: 80dvh; */
+    max-width: 100vw;
+
+  }
 
 
-/* form styling */
-.text-input {
-  background-color: rgb(233, 233, 233);
-  padding: .5em;
-  border: 0;
-  border-radius: 2px;
-}
+  /* form styling */
+  .text-input {
+    background-color: rgb(233, 233, 233);
+    padding: .5em;
+    border: 0;
+    border-radius: 2px;
+  }
 
-.setCustomFont {
-  font-family: 'Public Sans', sans-serif;
-  color: rgb(231, 231, 231);
-}
+  .setCustomFont {
+    font-family: 'Public Sans', sans-serif;
+    color: rgb(231, 231, 231);
+  }
 
-.buttonStyleApprove {
-  background-color: #694873;
-  color: rgb(231, 231, 231);
+  .buttonStyleApprove {
+    background-color: #694873;
+    color: rgb(231, 231, 231);
 
-  height: 2em;
-  border: none;
-  border-radius: 2px;
-  cursor: pointer;
-  transition: .2s cubic-bezier(0.215, 0.61, 0.355, 1);
+    height: 2em;
+    border: none;
+    border-radius: 2px;
+    cursor: pointer;
+    transition: .2s cubic-bezier(0.215, 0.61, 0.355, 1);
 
-}
+  }
 
-.buttonStyleApprove:hover {
-  background-color: #cf4d81;
-  color: rgb(231, 231, 231);
-  transition: .2s cubic-bezier(0.215, 0.61, 0.355, 1);
-}
+  .buttonStyleApprove:hover {
+    background-color: #cf4d81;
+    color: rgb(231, 231, 231);
+    transition: .2s cubic-bezier(0.215, 0.61, 0.355, 1);
+  }
 
-.buttonStyleReject {
-  background-color: #934a67;
-  color: rgb(231, 231, 231);
-  height: 2em;
-  border: none;
-  border-radius: 2px;
-  cursor: pointer;
-  transition: .2s cubic-bezier(0.215, 0.61, 0.355, 1);
+  .buttonStyleReject {
+    background-color: #934a67;
+    color: rgb(231, 231, 231);
+    height: 2em;
+    border: none;
+    border-radius: 2px;
+    cursor: pointer;
+    transition: .2s cubic-bezier(0.215, 0.61, 0.355, 1);
+  }
+
+  .buttonStyleReject:hover {
+    background-color: #cf4d81;
+    color: rgb(231, 231, 231);
+    transition: .2s cubic-bezier(0.215, 0.61, 0.355, 1);
+  }
+
+  .buttonStyleAmbiguous {
+    background-color: #125f30;
+    color: rgb(231, 231, 231);
+    height: 2em;
+    border: none;
+    border-radius: 2px;
+    cursor: pointer;
+    transition: .2s cubic-bezier(0.215, 0.61, 0.355, 1);
+  }
+
+  .buttonStyleAmbiguous:hover {
+    background-color: #227632;
+    color: rgb(231, 231, 231);
+    transition: .2s cubic-bezier(0.215, 0.61, 0.355, 1);
+  }
 }
-.buttonStyleReject:hover {
-  background-color: #cf4d81;
-  color: rgb(231, 231, 231);
-  transition: .2s cubic-bezier(0.215, 0.61, 0.355, 1);
-}
-.buttonStyleAmbiguous {
-  background-color: #125f30;
-  color: rgb(231, 231, 231);
-  height: 2em;
-  border: none;
-  border-radius: 2px;
-  cursor: pointer;
-  transition: .2s cubic-bezier(0.215, 0.61, 0.355, 1);
-}
-.buttonStyleAmbiguous:hover {
-  background-color: #227632;
-  color: rgb(231, 231, 231);
-  transition: .2s cubic-bezier(0.215, 0.61, 0.355, 1);
+/* mobile styling */
+@media screen and (min-width: 320px) and (max-width: 640px) {
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+      'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+      sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  code {
+    font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+      monospace;
+  }
+
+  html {
+    background-image: url("./images/dark_smokey_background.jpg");
+    /* background-image: url("./images/aberrated_perspective_board.jpg"); */
+    /* background-position: bottom fixed top 25%;
+    */
+    /* background-size: 100%;  */
+    max-width: 100vw;
+    display: flex;
+    flex-direction: column;
+  }
+
+
+  /* form styling */
+  .text-input {
+    background-color: rgb(233, 233, 233);
+    padding: .5em;
+    border: 0;
+    border-radius: 2px;
+  }
+
+  .setCustomFont {
+    font-family: 'Public Sans', sans-serif;
+    color: rgb(231, 231, 231);
+  }
+
+  .buttonStyleApprove {
+    background-color: #694873;
+    color: rgb(231, 231, 231);
+
+    height: 2em;
+    border: none;
+    border-radius: 2px;
+    cursor: pointer;
+    transition: .2s cubic-bezier(0.215, 0.61, 0.355, 1);
+
+  }
+
+  .buttonStyleApprove:hover {
+    background-color: #cf4d81;
+    color: rgb(231, 231, 231);
+    transition: .2s cubic-bezier(0.215, 0.61, 0.355, 1);
+  }
+
+  .buttonStyleReject {
+    background-color: #934a67;
+    color: rgb(231, 231, 231);
+    height: 2em;
+    border: none;
+    border-radius: 2px;
+    cursor: pointer;
+    transition: .2s cubic-bezier(0.215, 0.61, 0.355, 1);
+  }
+
+  .buttonStyleReject:hover {
+    background-color: #cf4d81;
+    color: rgb(231, 231, 231);
+    transition: .2s cubic-bezier(0.215, 0.61, 0.355, 1);
+  }
+
+  .buttonStyleAmbiguous {
+    background-color: #125f30;
+    color: rgb(231, 231, 231);
+    height: 2em;
+    border: none;
+    border-radius: 2px;
+    cursor: pointer;
+    transition: .2s cubic-bezier(0.215, 0.61, 0.355, 1);
+  }
+
+  .buttonStyleAmbiguous:hover {
+    background-color: #227632;
+    color: rgb(231, 231, 231);
+    transition: .2s cubic-bezier(0.215, 0.61, 0.355, 1);
+  }
 }

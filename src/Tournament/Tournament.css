@@ -46,8 +46,8 @@
 #competitorSelectionSplit {
     display: flex;
     flex-direction: column;
-    width: 40%
-        /* width: 40%; */
+    width: 40%;
+    border: 1px solid #694873;
 }
 
 #tournamentPlayerSelectionSection {

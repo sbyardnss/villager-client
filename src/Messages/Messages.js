@@ -132,7 +132,7 @@ export const Messages = () => {
     return <>
         <main id="messagingContainer">
             <section id="messagesFriends">
-                {selectedChat === 0 ? <div className="setCustomFont">select chat</div> : ""}
+                {/* {selectedChat === 0 ? <div className="setCustomFont">select chat</div> : ""} */}
                 <ul id="messagingFriendList">
                     {
                         friends?.map(f => {

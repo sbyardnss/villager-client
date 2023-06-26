@@ -239,7 +239,7 @@
         width: 100%;
         /* background-color: whitesmoke; */
         margin: auto;
-        height: 70px;
+        height: 50px;
         /* background-color: #0d6767; */
         /* box-shadow: rgba(255, 255, 255, 0.26) 0px -2px 4px inset; */
         background-color: #202020;
@@ -273,7 +273,7 @@
     }
 
     .navigation__name {
-        font-size: 2rem;
+        font-size: 1.25rem;
         padding-left: 0.5rem;
         padding-top: 0.1rem;
         color: #f4d35e;
@@ -288,7 +288,7 @@
         z-index: 3;
         right: 20px;
         /*left: 20px; */
-        top: 20px;
+        top: 12.5px;
         height: 50px;
         width: 50px;
         text-align: center;

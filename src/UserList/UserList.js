@@ -20,7 +20,7 @@ export const UserList = () => {
     }
     return <>
         <main id="userListContainer">
-            <h1 id="userListTitle" className="setCustomFont">User List</h1>
+            <h1 id="userListTitle" className="setCustomFont">Users</h1>
             <ul id="userList">
                 {
                     players.map(p => {

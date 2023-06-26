@@ -187,6 +187,7 @@
         width: 100vw;
         height: 100vh;
         opacity: 0;
+        z-index: -100;
     }
 
     #active:checked~#navLinks {
@@ -202,6 +203,7 @@
         align-items: center;
         transition: .4s cubic-bezier(0.215, 0.61, 0.355, 1);
         opacity: 1;
+        z-index: 2;
     }
     .navDiv {
         height: 30%;

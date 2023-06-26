@@ -23,6 +23,7 @@
         max-width: 480px;
         width: 100%;
         color: rgb(231, 231, 231);
+        z-index: 10;
     }
 
     #challengesAndPuzzles {
@@ -32,7 +33,7 @@
 
     .challengesBackground {
         content: "";
-        background-image: url("../images/playing_chess.jpeg");
+        /* background-image: url("../images/playing_chess.jpeg"); */
         background-position: 60% 60%;
         opacity: .25;
         position: absolute;
@@ -421,6 +422,7 @@
         max-width: 480px;
         width: 100%;
         color: rgb(231, 231, 231);
+        z-index: 10;
     }
 
     #challengesAndPuzzles {
@@ -430,7 +432,7 @@
 
     .challengesBackground {
         content: "";
-        background-image: url("../images/playing_chess.jpeg");
+        /* background-image: url("../images/playing_chess.jpeg"); */
         background-position: 60% 60%;
         opacity: .25;
         position: absolute;

@@ -111,7 +111,7 @@ export const Play = () => {
             }
         }, [game, matchReady]
     )
-
+    console.log(gameForApi)
     //update turn variable for saving turn and controlling ai request
     useEffect(
         () => {

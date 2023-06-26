@@ -199,6 +199,7 @@
 
     /* profile friend list */
     #profileFriendContainer {
+        display: none;
         border: 1px solid orange;
         width: fit-content;
         padding: 1em;
@@ -218,6 +219,7 @@
         color: rgb(231, 231, 231);
         font-size: xx-large;
         font-weight: 200;
+        margin-bottom: 1em;
     }
 
     /* past games section */

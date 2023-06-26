@@ -321,14 +321,14 @@
         border-radius: 4px;
         padding: .5em;
         backdrop-filter: blur(2px);
-        height: 14em;
+        height: 10em;
         overflow: scroll;
 
     }
 
     #tournamentSelectedCompetitors {
         backdrop-filter: blur(2px);
-        height: 14em;
+        height: 10em;
         overflow: scroll;
 
     }
@@ -354,7 +354,10 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-        padding: 0 2em;
+        /* padding: 0 2em; */
+    }
+    .tournamentFormDropdownSelection {
+        width: 100%;
     }
 
     #tournamentParameterControls {
@@ -362,7 +365,9 @@
         flex-direction: column;
         justify-content: space-between;
         height: 6em;
+        width: 10em;
     }
+
 
     /* tournament list */
     #activeTournamentsHeader {

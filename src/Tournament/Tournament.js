@@ -13,6 +13,7 @@ export const Tournament = () => {
     const [scoring, setScoring] = useState(true)
     const [editScores, setEditScores] = useState(false)
     const [resultsObj, updateResultsObj] = useState({})
+    const [pastTournaments, setPastTournaments] = useState(false)
     const [gameForApi, updateGameForApi] = useState({
         player_w: 0,
         player_b: 0,
@@ -53,7 +54,6 @@ export const Tournament = () => {
             setPotentialCompetitors(unselectedPlayers)
         }, [players, newTournament]
     )
-    console.log(newTournament)
     useEffect(
         () => {
             const selectedTournamentObj = tournaments.find(t => t.id === selectedTournament)
@@ -379,6 +379,41 @@ export const Tournament = () => {
             )
         }
     }
+    const pastTournamentSection = () => {
+        if (pastTournaments === false) {
+            return (
+                <section>
+
+                <button onClick={() => setPastTournaments(true)}>
+                    view past tournaments
+                </button>
+                </section>
+            )
+        }
+        else {
+            return (
+                <section>
+                    <button onClick={() => setPastTournaments(false)}>exit</button>
+                    {
+                        tournaments?.map(t => {
+                            if (t.complete === true) {
+                                return (
+                                    <li key={t.id}
+                                        className="tournamentListItem"
+                                        value={t.id}
+                                        onClick={(e) => {
+                                            setSelectedTournament(e.target.value)
+                                        }}>
+                                        {t.title}
+                                    </li>
+                                )
+                            }
+                        })
+                    }
+                </section>
+            )
+        }
+    }
     if (selectedTournament) {
         const scoringButtonOrNone = () => {
             if (activeTournament.in_person === false) {
@@ -653,7 +688,7 @@ export const Tournament = () => {
                                         copy.timeSetting = parseInt(e.target.value)//WHY DO I HAVE TO PARSEINT HERE?
                                         updateNewTournament(copy)
                                     }}>
-                                    <option key={0} className="timeSelectOption" value={0}>select time and increment</option>
+                                    <option key={0} className="timeSelectOption" value={0}>time setting</option>
                                     {
                                         timeSettings.map(ts => {
                                             return (
@@ -693,19 +728,22 @@ export const Tournament = () => {
                     <section id="activeTournamentsList" className="setCustomFont">
                         {
                             tournaments?.map(t => {
-                                return (
-                                    <li key={t.id}
-                                        className="tournamentListItem"
-                                        value={t.id}
-                                        onClick={(e) => {
-                                            setSelectedTournament(e.target.value)
-                                        }}>
-                                        {t.title}
-                                    </li>
-                                )
+                                if (t.complete === false) {
+                                    return (
+                                        <li key={t.id}
+                                            className="tournamentListItem"
+                                            value={t.id}
+                                            onClick={(e) => {
+                                                setSelectedTournament(e.target.value)
+                                            }}>
+                                            {t.title}
+                                        </li>
+                                    )
+                                }
                             })
                         }
                     </section>
+                    {pastTournamentSection()}
                 </article>
             </main>
         </>

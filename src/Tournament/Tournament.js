@@ -12,7 +12,7 @@ export const Tournament = () => {
     const [currentRoundMatchups, setCurrentRoundMatchups] = useState([])
     const [scoring, setScoring] = useState(true)
     const [editScores, setEditScores] = useState(false)
-    const [resultsObj, updateResultsObj] = useState({})
+    const [resultsForTieBreak, updateResultsForTieBreak] = useState([])
     const [pastTournaments, setPastTournaments] = useState(false)
     const [gameForApi, updateGameForApi] = useState({
         player_w: 0,
@@ -110,6 +110,12 @@ export const Tournament = () => {
                 }
             }
         }, [currentRound]
+    )
+    useEffect(
+        () => {
+            const resultsForTieBreak = []
+
+        },[tournamentGames]
     )
     //getter/setter for tournaments
     const resetTournaments = () => {
@@ -384,9 +390,9 @@ export const Tournament = () => {
             return (
                 <section>
 
-                <button onClick={() => setPastTournaments(true)}>
-                    view past tournaments
-                </button>
+                    <button onClick={() => setPastTournaments(true)}>
+                        view past tournaments
+                    </button>
                 </section>
             )
         }
@@ -452,6 +458,7 @@ export const Tournament = () => {
         }
         if (activeTournament && activeTournamentPlayers) {
             const modal = document.getElementById('finishTournamentModal')
+            //current method for displaying results. delete when new useEffect is working
             const resultsDisplay = () => {
                 const results = {}
                 const resultArr = []
@@ -550,14 +557,12 @@ export const Tournament = () => {
                                                 )
                                             }
                                         }
-
                                         let score = 0
                                         return (
                                             <tr key={tourneyPlayer.id} id={tourneyPlayer.id + "--tourneyRow"}>
                                                 <td key={tourneyPlayer.id} className="tablePlayerCell">{tourneyPlayer.full_name}</td>
                                                 {
                                                     tourneyPlayerGames.map(tpg => {
-
                                                         // if (tpg.player_b?.id === 3 || tpg.player_w?.id === 3) {
                                                         //     console.log(tpg)
                                                         // }
@@ -743,8 +748,8 @@ export const Tournament = () => {
                             })
                         }
                     </section>
-                    {pastTournamentSection()}
                 </article>
+                {pastTournamentSection()}
             </main>
         </>
     }

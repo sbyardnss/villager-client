@@ -2,7 +2,7 @@ import { useState, useEffect, useContext, useRef } from "react"
 import { RoundRobin } from "tournament-pairings"
 import { TournamentContext } from "./TournamentProvider"
 import "./Tournament.css"
-import { alterGame, getAllGames, getAllTournaments, sendNewGame, sendNewTournament, sendTournamentRoundOutcomes, sendUpdatedGames, updateTournament } from "../ServerManager"
+import { alterGame, getAllGames, getAllPlayers, getAllTournaments, sendNewGame, sendNewTournament, sendTournamentRoundOutcomes, sendUpdatedGames, updateTournament } from "../ServerManager"
 export const Tournament = () => {
     const { localVillagerObj, tournamentGames, tournaments, setTournaments, players, timeSettings, setGames, selectedTournament, setSelectedTournament, pastPairings, resetGames, resetTournamentGames } = useContext(TournamentContext)
     const [potentialCompetitors, setPotentialCompetitors] = useState([])
@@ -47,9 +47,13 @@ export const Tournament = () => {
     })
     useEffect(
         () => {
-            setPotentialCompetitors(players)
-        }, [players]
+            const unselectedPlayers = players.filter(p => {
+                return !newTournament.competitors.find(c => c === p.id)
+            })
+            setPotentialCompetitors(unselectedPlayers)
+        }, [players, newTournament]
     )
+    console.log(newTournament)
     useEffect(
         () => {
             const selectedTournamentObj = tournaments.find(t => t.id === selectedTournament)
@@ -112,10 +116,10 @@ export const Tournament = () => {
         getAllTournaments()
             .then(data => setTournaments(data))
     }
-    // const resetGames = () => {
-    //     getAllGames()
-    //         .then(data => setGames(data))
-    // }
+    const resetPlayers = () => {
+        getAllPlayers()
+            .then(data => setGames(data))
+    }
     //code for populating number of table columns based on number of rounds in activeTournament
     const roundPopulation = () => {
         let roundNumber = activeTournament?.rounds;

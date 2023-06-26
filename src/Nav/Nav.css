@@ -176,6 +176,7 @@
 /* mobile styling */
 @media screen and (min-width: 320px) and (max-width: 640px) {
     #navLinks {
+        display: none;
         justify-content: center;
         align-items: center;
         flex-wrap: wrap;
@@ -209,8 +210,8 @@
         flex-direction: column;
         justify-content: space-around;
         font-size: xx-large;
-
     }
+
 
     #logo {
         width: fit-content;

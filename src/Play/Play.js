@@ -123,15 +123,21 @@ export const Play = () => {
     // useEffect for updating gameForAi
     useEffect(
         () => {
-            if (turn === orientation === "white" ? 'b' : 'w') {
-                const aiGameCopy = { ...gameForAi }
-                aiGameCopy.color = orientation === "white" ? "black" : 'white'
-                aiGameCopy.pgn = game.pgn()
-                aiGameCopy.fen = game.fen()
-                aiGameCopy.possibleMoves = game.moves()
-                updateGameForAi(aiGameCopy)
-            }
-        }, [turn]
+            // if (turn === orientation === "white" ? 'b' : 'w') {
+            //     const aiGameCopy = { ...gameForAi }
+            //     aiGameCopy.color = orientation === "white" ? "black" : 'white'
+            //     aiGameCopy.pgn = game.pgn()
+            //     aiGameCopy.fen = game.fen()
+            //     aiGameCopy.possibleMoves = game.moves()
+            //     updateGameForAi(aiGameCopy)
+            // }
+            const aiGameCopy = { ...gameForAi }
+            aiGameCopy.color = orientation === "white" ? "black" : 'white'
+            aiGameCopy.pgn = game.pgn()
+            aiGameCopy.fen = game.fen()
+            aiGameCopy.possibleMoves = game.moves()
+            updateGameForAi(aiGameCopy)
+        }, [turn, matchReady]
     )
     // submit results automatically if game is vs human
     useEffect(
@@ -247,14 +253,14 @@ export const Play = () => {
             if (matchReady) {
                 return (
                     <div>
-                        <button 
+                        <button
                             className="buttonStyleApprove playBtns"
                             onClick={() => {
-                            safeGameMutate((game) => {
-                                game.reset();
-                            });
-                            setMoveSquares({});
-                        }}
+                                safeGameMutate((game) => {
+                                    game.reset();
+                                });
+                                setMoveSquares({});
+                            }}
                         >reset</button>
                         {/* <button
                             onClick={() => {
@@ -468,13 +474,13 @@ export const Play = () => {
                     >
                         undo
                     </button>
-                    <button 
+                    <button
 
                         className="buttonStyleReject playBtns"
                         onClick={() => {
-                        setSelectedGame(0)
-                        navigate("/")
-                    }}>
+                            setSelectedGame(0)
+                            navigate("/")
+                        }}>
                         exit game
                     </button>
                 </div>

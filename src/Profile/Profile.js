@@ -57,11 +57,11 @@ export const Profile = () => {
             const completedGames = gamesIWon + losses + draws
             setPerformanceData({
                 wins: gamesIWon,
-                winPercent: Math.round((gamesIWon/completedGames) * 100),
+                winPercent: Math.round((gamesIWon / completedGames) * 100),
                 losses: losses,
-                lossPercent: Math.round((losses/completedGames) * 100),
+                lossPercent: Math.round((losses / completedGames) * 100),
                 draws: draws,
-                drawPercent: Math.round((draws/completedGames) * 100)
+                drawPercent: Math.round((draws / completedGames) * 100)
             })
         }, [myGames]
     )
@@ -179,7 +179,6 @@ export const Profile = () => {
             <article id="profileCard">
                 <h2 id="profileHead" className="setCustomFont">Profile</h2>
                 <section id="profileInfoAndEdit" className="setCustomFont">
-
                     {updateProfileSection()}
                     <button className="editProfileButton" onClick={
                         () => {
@@ -224,20 +223,22 @@ export const Profile = () => {
                                         <div><span id={game.player_w.id === localVillagerObj.userId ? "whiteChallengeSpan" : "blackChallengeSpan"}>{game.player_w?.id === localVillagerObj.userId ? "white" : "black"}</span></div>
                                         <div className="activeGameInfo">
                                             <div className="opponentSectionForListItem">Vs {opponent?.username}</div>
-                                            <div>{game.tournament ? <img className="trophyIconHomepage" src={trophyIcon} /> : ""}</div>
-                                            <div className="myGamesListLogisticsInfo">
-                                                <div>{tournament?.title || ""}</div>
-                                                <div>{new Date(game.date_time).toLocaleDateString('en-us')}</div>
+                                            <div className="mobileTournamentDiv">
+                                                <div>{game.tournament ? <img className="trophyIconHomepage" src={trophyIcon} /> : ""}</div>
+                                                <div className="myGamesListLogisticsInfo">
+                                                    <div>{tournament?.title || ""}</div>
+                                                    <div>{new Date(game.date_time).toLocaleDateString('en-us')}</div>
+                                                </div>
                                             </div>
                                         </div>
-                                        <button 
+                                        <button
                                             id="reviewBtn"
                                             className="buttonStyleApprove"
                                             onClick={() => {
-                                            setReview(true)
-                                            setSelectedGame(game.id)
-                                            navigate("/play")
-                                        }}>Review </button>
+                                                setReview(true)
+                                                setSelectedGame(game.id)
+                                                navigate("/play")
+                                            }}>Review </button>
                                     </div>
                                 )
                             }

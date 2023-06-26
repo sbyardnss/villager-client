@@ -111,12 +111,25 @@ export const Tournament = () => {
             }
         }, [currentRound]
     )
+    //compile data for tiebreaks
     useEffect(
         () => {
             const resultsForTieBreak = []
-
-        },[tournamentGames]
+            {
+                tournamentGames.map(tg => {
+                    const gameResult = {}
+                    gameResult.white = tg.player_w
+                    gameResult.black = tg.player_b
+                    gameResult.winner = tg.winner
+                    gameResult.win_style = tg.win_style
+                    gameResult.round = tg.tournament_round
+                    resultsForTieBreak.push(gameResult)
+                })
+            }
+            updateResultsForTieBreak(resultsForTieBreak)
+        },[tournamentGames, selectedTournament]
     )
+    console.log(resultsForTieBreak)
     //getter/setter for tournaments
     const resetTournaments = () => {
         getAllTournaments()

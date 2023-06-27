@@ -522,42 +522,60 @@ export const Tournament = () => {
                 const arrForTieBreakers = []
                 activeTournamentPlayers.map(player => {
                     const scoreElement = document.getElementById(player.id + "-- score")
-                    results[player.username] = parseFloat(scoreElement?.innerHTML)
+                    results[player.username] = [parseFloat(scoreElement?.innerHTML), player.id]
                 })
                 for (let player in results) {
                     resultArr.push([player, results[player]])
                 }
-                resultArr.sort((a, b) => { return b[1] - a[1] })
-                
+                resultArr.sort((a, b) => { return b[1][0] - a[1][0] })
+
                 return (
                     <section id="fullResults" className="setCustomFont">
                         <div id="standardResults" >
-                                standard
-                                {
-                                    resultArr.map(r => {
-                                        arrForTieBreakers.push(r)
-                                        return (
-                                            <div key={r[0]} className="resultsModalListItem">
-                                                <div>{r[0]}: </div>
-                                                <div>{r[1].toString()}</div>
-                                            </div>
-                                        )
-                                    })
-                                }
-                        </div>
-                        <div id="solkoffResults">
-                            solkoff
+                            <div className="resultsHeader">standard</div>
                             {
-                                solkoffTieBreaker(arrForTieBreakers).map(r => {
-                                    console.log(arrForTieBreakers)
+                                resultArr.map(r => {
+                                    arrForTieBreakers.push(r[1][1])
                                     return (
-                                        <div key={'playerId' + r} className="resultsModalListItem">
-                                            <div>{r}: </div>
-                                            {/* <div>{r[1].toString()}</div> */}
+                                        <div key={r[0]} className="resultsModalListItem">
+                                            <div>{r[0]}: </div>
+                                            <div>{r[1][0].toString()}</div>
                                         </div>
                                     )
                                 })
                             }
+                        </div>
+                        <div id="tieBreakResults">
+                            <div id="solkoffResults">
+                                <div className="resultsHeader">solkoff</div>
+                                {
+                                    arrForTieBreakers.map(r => {
+                                        const player = activeTournamentPlayers.find(p => p.id === r)
+                                        // console.log(activeTournamentPlayers)
+                                        return (
+                                            <div key={'playerId' + r} className="resultsModalListItem">
+                                                <div>{player?.username}: </div>
+                                                <div>{solkoffTieBreaker([r]).toString()}</div>
+                                            </div>
+                                        )
+                                    })
+                                }
+                            </div>
+                            <div id="cumulativeResults">
+                                <div className="resultsHeader">cumulative</div>
+                                {
+                                    arrForTieBreakers.map(r => {
+                                        const player = activeTournamentPlayers.find(p => p.id === r)
+                                        // console.log(activeTournamentPlayers)
+                                        return (
+                                            <div key={'playerId' + r} className="resultsModalListItem">
+                                                <div>{player?.username}: </div>
+                                                <div>{cumulativeTieBreaker([r]).toString()}</div>
+                                            </div>
+                                        )
+                                    })
+                                }
+                            </div>
                         </div>
                     </section>
                 )

@@ -129,17 +129,18 @@ export const Tournament = () => {
             updateResultsForTieBreak(resultsForTieBreak)
         }, [tournamentGames, selectedTournament]
     )
-    console.log(resultsForTieBreak)
+    console.log(resultsForTieBreak.filter(g => g.black?.id === 9))
+    const tieBreakTestArr = resultsForTieBreak.filter(g => g.black?.id === 1 || g.white?.id === 1)
     const solkoffTieBreaker = (playerAId, playerBId) => {
         let aCount = 0
         let bCount = 0
-        const playerAGames = resultsForTieBreak.filter(r => r.black.id === playerAId || r.white.id === playerAId)
-        const playerBGames = resultsForTieBreak.filter(r => r.black.id === playerBId || r.white.id === playerBId)
+        const playerAGames = resultsForTieBreak.filter(r => r.black?.id === playerAId || r.white?.id === playerAId)
+        const playerBGames = resultsForTieBreak.filter(r => r.black?.id === playerBId || r.white?.id === playerBId)
         const opponentIterator = (resultArr, playerId) => {
             let opponentsTotalScore = 0.0
             for (const gameResult of resultArr) {
-                let opponentId = gameResult.white === playerId ? gameResult.black.id : gameResult.white.id
-                const opponentGames = resultsForTieBreak.filter(r => r.black.id === opponentId || r.white.id === opponentId)
+                let opponentId = gameResult.white === playerId ? gameResult.black?.id : gameResult.white?.id
+                const opponentGames = resultsForTieBreak.filter(r => r.black?.id === opponentId || r.white?.id === opponentId)
                 for (const gameResult of opponentGames) {
                     if (gameResult.winner.id === opponentId) {
                         opponentsTotalScore += 1
@@ -155,7 +156,9 @@ export const Tournament = () => {
             return opponentsTotalScore
         }
         return [opponentIterator(playerAGames, playerAId), opponentIterator(playerBGames, playerBId)]
+
     }
+    console.log(solkoffTieBreaker(9, 3))
     //getter/setter for tournaments
     const resetTournaments = () => {
         getAllTournaments()
@@ -511,9 +514,9 @@ export const Tournament = () => {
                 resultArr.sort((a, b) => { return b[1] - a[1] })
                 return resultArr.map(r => {
                     return (
-                        <div className="resultsModalListItem">
+                        <div key={r[0]} className="resultsModalListItem">
                             <div>{r[0]}: </div>
-                            <div>{r[1]}</div>
+                            <div>{r[1].toString()}</div>
                         </div>
                     )
                 })

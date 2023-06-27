@@ -519,6 +519,7 @@ export const Tournament = () => {
             const resultsDisplay = () => {
                 const results = {}
                 const resultArr = []
+                const arrForTieBreakers = []
                 activeTournamentPlayers.map(player => {
                     const scoreElement = document.getElementById(player.id + "-- score")
                     results[player.username] = parseFloat(scoreElement?.innerHTML)
@@ -527,23 +528,49 @@ export const Tournament = () => {
                     resultArr.push([player, results[player]])
                 }
                 resultArr.sort((a, b) => { return b[1] - a[1] })
-                return resultArr.map(r => {
-                    return (
-                        <div key={r[0]} className="resultsModalListItem">
-                            <div>{r[0]}: </div>
-                            <div>{r[1].toString()}</div>
+                
+                return (
+                    <section id="fullResults" className="setCustomFont">
+                        <div id="standardResults" >
+                                standard
+                                {
+                                    resultArr.map(r => {
+                                        arrForTieBreakers.push(r)
+                                        return (
+                                            <div key={r[0]} className="resultsModalListItem">
+                                                <div>{r[0]}: </div>
+                                                <div>{r[1].toString()}</div>
+                                            </div>
+                                        )
+                                    })
+                                }
                         </div>
-                    )
-                })
+                        <div id="solkoffResults">
+                            solkoff
+                            {
+                                solkoffTieBreaker(arrForTieBreakers).map(r => {
+                                    console.log(arrForTieBreakers)
+                                    return (
+                                        <div key={'playerId' + r} className="resultsModalListItem">
+                                            <div>{r}: </div>
+                                            {/* <div>{r[1].toString()}</div> */}
+                                        </div>
+                                    )
+                                })
+                            }
+                        </div>
+                    </section>
+                )
+
             }
             return <>
                 <main id="tournamentContainer">
                     <div id="finishTournamentModal">
                         Results
                         {resultsDisplay()}
-                        <div id="modalResults">
+                        {/* <div id="modalResults">
 
-                        </div>
+                        </div> */}
                         <div id="modalBtns">
                             <button>End Tournament</button>
                             <button onClick={() => {

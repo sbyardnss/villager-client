@@ -267,11 +267,11 @@
         border-radius: 8px;
         color: rgb(231, 231, 231);
         position: absolute;
-        top: 40%;
+        top: 20%;
         backdrop-filter: blur(10px);
         background-color: #20202099;
         width: 15em;
-        height: 10em;
+        height: fit-content;
         justify-content: center;
         align-items: center;
         flex-direction: column;

@@ -129,16 +129,12 @@ export const Tournament = () => {
             updateResultsForTieBreak(resultsForTieBreak)
         }, [tournamentGames, selectedTournament]
     )
-    console.log(resultsForTieBreak.filter(g => g.black?.id === 9))
-    const tieBreakTestArr = resultsForTieBreak.filter(g => g.black?.id === 1 || g.white?.id === 1)
-    const solkoffTieBreaker = (playerAId, playerBId) => {
-        let aCount = 0
-        let bCount = 0
-        const playerAGames = resultsForTieBreak.filter(r => r.black?.id === playerAId || r.white?.id === playerAId)
-        const playerBGames = resultsForTieBreak.filter(r => r.black?.id === playerBId || r.white?.id === playerBId)
-        const opponentIterator = (resultArr, playerId) => {
+    const solkoffTieBreaker = (playerArr) => {
+        const tieBreakArr = []
+        for (const playerId of playerArr) {
+            const playerGames = resultsForTieBreak.filter(r => r.black?.id === playerId || r.white?.id === playerId)
             let opponentsTotalScore = 0.0
-            for (const gameResult of resultArr) {
+            for (const gameResult of playerGames) {
                 let opponentId = gameResult.white === playerId ? gameResult.black?.id : gameResult.white?.id
                 const opponentGames = resultsForTieBreak.filter(r => r.black?.id === opponentId || r.white?.id === opponentId)
                 for (const gameResult of opponentGames) {
@@ -153,12 +149,31 @@ export const Tournament = () => {
                     }
                 }
             }
-            return opponentsTotalScore
+            tieBreakArr.push(opponentsTotalScore)
         }
-        return [opponentIterator(playerAGames, playerAId), opponentIterator(playerBGames, playerBId)]
-
+        return tieBreakArr
     }
-    console.log(solkoffTieBreaker(9, 3))
+    const cumulativeTieBreaker = (playerArr) => {
+        const tieBreakArr = []
+        for (const playerId of playerArr) {
+            let score = 0
+            const playerGames = resultsForTieBreak.filter(r => r.black?.id === playerId || r.white?.id === playerId)
+            for (const game of playerGames) {
+                if (game.winner.id === playerId) {
+                    score = score + (score + 1)
+                }
+                else if (game.win_style === "draw") {
+                    score = score + (score + .5)
+                }
+                else {
+                    score = score + score
+                }
+            }
+            tieBreakArr.push(score)
+        }
+        return tieBreakArr
+    }
+
     //getter/setter for tournaments
     const resetTournaments = () => {
         getAllTournaments()

@@ -158,8 +158,10 @@ export const HomePage = () => {
                                                     {post.poster?.username}
                                                 </h3>
                                                 <h5>{date} {time}</h5>
-                                                {post.message}
-                                                <button onClick={() => handleDelete(post.id)}>delete</button>
+                                                <div className="communityPostWithDelete">
+                                                    {post.message}
+                                                    <button onClick={() => handleDelete(post.id)}>delete</button>
+                                                </div>
                                             </li>
                                         )
                                     }

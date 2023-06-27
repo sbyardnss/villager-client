@@ -107,7 +107,10 @@
         border-radius: 4px;
         box-shadow: rgba(255, 255, 255, 0.26) 0 2px 2px;
         color: #2a2e34;
-
+    }
+    .communityPostWithDelete {
+        display: flex;
+        justify-content: space-between;
     }
 
     #communityForumInterface {
@@ -507,6 +510,10 @@
         color: #2a2e34;
 
     }
+    .communityPostWithDelete {
+        display: flex;
+        justify-content: space-between;
+    }
 
     #communityForumInterface {
         width: 100%;
@@ -525,6 +532,7 @@
 
     .communityPost {
         list-style: none;
+        width: 90%;
         margin: 1em;
     }
 

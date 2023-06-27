@@ -127,7 +127,7 @@ export const Tournament = () => {
                 })
             }
             updateResultsForTieBreak(resultsForTieBreak)
-        },[tournamentGames, selectedTournament]
+        }, [tournamentGames, selectedTournament]
     )
     console.log(resultsForTieBreak)
     //getter/setter for tournaments
@@ -501,43 +501,51 @@ export const Tournament = () => {
 
                         </div>
                         <div id="modalBtns">
-                            <button>confirm</button>
+                            <button>End Tournament</button>
                             <button onClick={() => {
                                 modal.style.display = "none"
                             }}>cancel</button>
                         </div>
                     </div>
-                    <div className="setColor">{activeTournament.title}</div>
+                    <div className="setColor setTournamentFontSize">{activeTournament.title}</div>
                     <div id="tournamentProgressionControls">
-                        <button onClick={() => {
-                            if (window.confirm("create round?")) {
-                                if (byePlayer) {
-                                    sendNewGame(byeGame)
+                        <button
+                            className="progressionControlBtn"
+                            onClick={() => {
+                                if (window.confirm("create round?")) {
+                                    if (byePlayer) {
+                                        sendNewGame(byeGame)
+                                    }
+                                    const tournamentCopy = { ...activeTournament }
+                                    tournamentCopy.rounds++
+                                    updateTournament(tournamentCopy)
+                                        .then(() => {
+                                            resetTournaments()
+                                            resetTournamentGames()
+                                        })
                                 }
-                                const tournamentCopy = { ...activeTournament }
-                                tournamentCopy.rounds++
-                                updateTournament(tournamentCopy)
-                                    .then(() => {
-                                        resetTournaments()
-                                        resetTournamentGames()
-                                    })
-                            }
-                        }}>Start Next Round</button>
-                        <button onClick={() => {
-                            setSelectedTournament(0)
-                            setEditScores(false)
-                            setScoring(false)
-                        }}>exit tournament</button>
-                        <button onClick={() => {
-                            setEditScores(true)
-                            setScoring(false)
-                        }}>edit scores</button>
+                            }}>Finish Round</button>
+                        <button
+                            className="progressionControlBtn"
+                            onClick={() => {
+                                setSelectedTournament(0)
+                                setEditScores(false)
+                                setScoring(false)
+                            }}>exit</button>
+                        <button
+                            className="progressionControlBtn"
+                            onClick={() => {
+                                setEditScores(true)
+                                setScoring(false)
+                            }}>edit scores</button>
                         {scoringButtonOrNone()}
-                        <button onClick={() => {
-                            modal.style.display = "flex";
-                        }}>Results</button>
+                        <button
+                            className="progressionControlBtn"
+                            onClick={() => {
+                                modal.style.display = "flex";
+                            }}>Results</button>
                     </div>
-                    <div className="setColor">
+                    <div className="setColor setTournamentFontSize">
                         Round {currentRound}
                     </div>
                     <section id="matchupsContainer">

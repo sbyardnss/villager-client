@@ -249,11 +249,15 @@
         display: flex;
         flex-direction: column;
         align-items: center;
-        width: 100%;
+        /* width: 100%; */
     }
 
     .setColor {
         color: rgb(231, 231, 231);
+    }
+    .setTournamentFontSize {
+        font-size: xx-large;
+        font-weight: 200;
     }
 
     /* finish tournament modal */
@@ -265,6 +269,7 @@
         position: absolute;
         top: 40%;
         backdrop-filter: blur(10px);
+        background-color: #20202099;
         width: 15em;
         height: 10em;
         justify-content: center;
@@ -411,13 +416,16 @@
     #tournamentProgressionControls {
         display: flex;
         justify-content: space-between;
-        width: 60%;
-        margin: 1em 0;
+        width: 95%;
+        margin: 2em 0;
+    }
+    .progressionControlBtn {
+        width: 5em;
     }
 
     /* scoring */
     #tournamentScoringSection {
-        /* width: 100%; */
+        width: 100%;
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -425,13 +433,15 @@
 
     .tournamentScoringMatchup {
         display: flex;
+        justify-content: space-evenly;
         padding: .25em;
+        width: 100%;
     }
 
     /* matchup table */
     #matchupsContainer {
-        width: 80%;
-        margin: 1em 0;
+        width: 95%;
+        margin: 2em 0;
         display: flex;
         justify-content: center;
     }
@@ -442,19 +452,23 @@
         font-weight: 500;
         padding: .5em;
         border-radius: 5px 0 5px 0;
-        border: 1px solid rgb(40, 40, 40);
+        /* border: 1px solid rgb(40, 40, 40); */
+        border: 1px solid #694873;
+
         text-align: center;
-        width: 10em;
+        width: 5em;
     }
 
     .blackPiecesMatchup {
-        background-color: rgb(40, 40, 40);
+        /* background-color: rgb(40, 40, 40); */
+        border: 1px solid #694873;
+
         color: whitesmoke;
         font-weight: 500;
         padding: .5em;
         border-radius: 5px 0 5px 0;
         text-align: center;
-        width: 10em;
+        width: 5em;
     }
 
     .drawMatchupButton {
@@ -464,7 +478,7 @@
         border-radius: 5px 0 5px 0;
         text-align: center;
         border: 1px solid rgb(40, 40, 40);
-        width: 6em;
+        width: 3em;
 
     }
 

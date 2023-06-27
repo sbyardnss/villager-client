@@ -432,9 +432,8 @@
 
     .challengesBackground {
         content: "";
-        /* background-image: url("../images/playing_chess.jpeg"); */
+        background-image: url("../images/playing_chess.jpg");
         background-position: 60% 60%;
-        opacity: .25;
         position: absolute;
         top: 0px;
         bottom: 0px;

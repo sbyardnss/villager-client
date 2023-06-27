@@ -130,6 +130,32 @@ export const Tournament = () => {
         }, [tournamentGames, selectedTournament]
     )
     console.log(resultsForTieBreak)
+    const solkoffTieBreaker = (playerAId, playerBId) => {
+        let aCount = 0
+        let bCount = 0
+        const playerAGames = resultsForTieBreak.filter(r => r.black.id === playerAId || r.white.id === playerAId)
+        const playerBGames = resultsForTieBreak.filter(r => r.black.id === playerBId || r.white.id === playerBId)
+        const opponentIterator = (resultArr, playerId) => {
+            let opponentsTotalScore = 0.0
+            for (const gameResult of resultArr) {
+                let opponentId = gameResult.white === playerId ? gameResult.black.id : gameResult.white.id
+                const opponentGames = resultsForTieBreak.filter(r => r.black.id === opponentId || r.white.id === opponentId)
+                for (const gameResult of opponentGames) {
+                    if (gameResult.winner.id === opponentId) {
+                        opponentsTotalScore += 1
+                    }
+                    else if (gameResult.win_style === "draw") {
+                        opponentsTotalScore += .5
+                    }
+                    else {
+                        opponentsTotalScore = opponentsTotalScore
+                    }
+                }
+            }
+            return opponentsTotalScore
+        }
+        return [opponentIterator(playerAGames, playerAId), opponentIterator(playerBGames, playerBId)]
+    }
     //getter/setter for tournaments
     const resetTournaments = () => {
         getAllTournaments()

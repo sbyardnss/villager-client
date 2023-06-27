@@ -750,7 +750,7 @@ export const Tournament = () => {
                     </section>
                 </section>
                 <article key="activeTournaments" id="activeTournamentsSection">
-                    <h2 id="activeTournamentsHeader">active tournaments</h2>
+                    <h3 id="activeTournamentsHeader">active tournaments</h3>
                     <section id="activeTournamentsList" className="setCustomFont">
                         {
                             tournaments?.map(t => {

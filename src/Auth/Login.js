@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom"
 import "./Auth.css"
 import { loginUser } from "../ServerManager";
 import graffiti from "../images/villager_graffiti.png"
-
+import skellyHand from "../images/Copy of The Villager Skull Hand.png"
 export const Login = () => {
     const username = useRef()
     const password = useRef()
@@ -41,7 +41,8 @@ export const Login = () => {
                     {/* <div id="loginLogo">
                         <h1>Villager Chess</h1>
                     </div> */}
-                    <img id="graffiti_logo" src={graffiti}></img>
+                    {/* <img id="graffiti_logo" src={graffiti}></img> */}
+                    <img id="skellyHand" src={skellyHand}></img>
                     <fieldset id="centerItems">
                         <label className="loginLabels" htmlFor="inputUsername">Username</label>
                         <input type="username"

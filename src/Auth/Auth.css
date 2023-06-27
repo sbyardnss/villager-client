@@ -3,7 +3,7 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    height: 70vh;
 
 }
 #loginLogo{
@@ -13,6 +13,11 @@
 }
 #graffiti_logo {
     width: 20em;
+}
+#skellyHand {
+    width: 20em;
+    position: absolute;
+    top: -10%;
 }
 
 .form--login {
@@ -40,6 +45,8 @@
     width: 20em;
     height: 10em;
     border: none;
+    position: absolute;
+    top: 55%;
 }
 #loginBox {
     display: flex;

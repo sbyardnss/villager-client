@@ -48,8 +48,9 @@
     #challengesArticle {
         opacity: 100%;
         backdrop-filter: blur(10px);
-        /* background-image: url("../images/playing_chess.jpeg"); */
+        background-image: url("../images/playing_chess.jpg");
         background-position: 60% 60%;
+        background-repeat: no-repeat;
         display: flex;
         flex-direction: column;
         align-items: start;
@@ -432,7 +433,7 @@
 
     .challengesBackground {
         content: "";
-        background-image: url("../images/playing_chess.jpg");
+        /* background-image: url("../images/playing_chess.jpg"); */
         background-position: 60% 60%;
         position: absolute;
         top: 0px;
@@ -446,7 +447,7 @@
     #challengesArticle {
         opacity: 100%;
         backdrop-filter: blur(10px);
-        /* background-image: url("../images/playing_chess.jpeg"); */
+        background-image: url("../images/playing_chess.jpg");
         background-position: 60% 60%;
         display: flex;
         flex-direction: column;

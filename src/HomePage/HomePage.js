@@ -15,7 +15,6 @@ export const HomePage = () => {
     const [communityPosts, setCommunityPosts] = useState([])
     const [tournaments, setTournaments] = useState([])
     const [myTournaments, setMyTournaments] = useState([])
-    const [tournamentGames, setTournamentGames] = useState([])
     const [challenges, setChallenges] = useState([])
     const [myUnfinishedGames, setMyUnfinishedGames] = useState([])
     const [displayedPuzzle, setDisplayedPuzzle] = useState({})
@@ -49,7 +48,6 @@ export const HomePage = () => {
             setMyUnfinishedGames(unfinishedGames)
         }, [games]
     )
-    console.log(myUnfinishedGames)
     useEffect(
         () => {
             if (tournaments) {
@@ -62,28 +60,7 @@ export const HomePage = () => {
             }
         }, [tournaments]
     )
-    // update tournament games
-    // useEffect(
-    //     () => {
-    //         if (myTournaments) {
-    //             const myTournamentGames = games.filter(g => {
-    //                 return myTournaments.find(t => {
-    //                     if (t.in_person === false) {
-    //                         return t.id === g.tournament
-    //                     }
-    //                 })
-    //             })
-    //             setTournamentGames(myTournamentGames)
-    //         }
-    //     }, [myTournaments]
-    // )
-    // useEffect(
-    //     () => {
-    //         if (selectedGame !== 0) {
-    //             navigate("/play")
-    //         }
-    //     }, [selectedGame]
-    // )
+
     useEffect(
         () => {
             if (selectedPuzzle.fen !== "") {
@@ -144,7 +121,7 @@ export const HomePage = () => {
             <div id="homepageLayoutDiv">
                 <div id="forumAndActiveGames">
                     <article id="communityForum">
-                        <h2 className="setCustomFont">Public Forum</h2>
+                        <h2 className="setCustomFont">Public Chat</h2>
                         <section id="communityForumMsgs" >
                             {
                                 communityPosts.map(post => {
@@ -212,7 +189,6 @@ export const HomePage = () => {
                                             if (ug.tournament) {
                                                 tournament = tournaments.find(t => t.id === ug.tournament)
                                             }
-                                            console.log(tournament)
                                             const opponent = ug.player_w?.id === localVillagerObj.userId ? players.find(p => p.id === ug.player_b?.id) : players.find(p => p.id === ug.player_w?.id)
                                             const isTournamentGame = () => {
                                                 return ug.tournament ? "tournamentActiveGameListItem" : "activeGameListItem"

@@ -534,6 +534,8 @@
         list-style: none;
         width: 90%;
         margin: 1em;
+        border:1px solid rgb(52, 52, 52);
+        padding: .25em;
     }
 
     /* active tournament section styling */

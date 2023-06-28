@@ -97,6 +97,16 @@ export const getTournamentGames = (tournamentId) => {
     })
         .then(res => res.json())
 }
+export const getAllGuestPlayers = () => {
+    const localVillagerObj = getToken()
+    return fetch(`${apiKey}/guests`, {
+        headers: {
+            "Authorization": `Token ${localVillagerObj.token}`,
+            "Content-Type": "application/json"
+        }
+    })
+        .then(res => res.json())
+}
 export const getPuzzles = (rating) => {
     return fetch(`https://chess-puzzles.p.rapidapi.com/?themes=%5B%22middlegame%22%2C%22advantage%22%5D&rating=${rating}&themesType=ALL&playerMoves=4&count=25`, {
         method: 'GET',
@@ -121,6 +131,16 @@ export const getProfile = () => {
 export const getTournament = (tournamentId) => {
     const localVillagerObj = getToken()
     return fetch(`${apiKey}/tournaments/${tournamentId}`, {
+        headers: {
+            "Authorization": `Token ${localVillagerObj.token}`,
+            "Content-Type": "application/json"
+        }
+    })
+        .then(res => res.json())
+}
+export const getGuest = (guestId) => {
+    const localVillagerObj = getToken()
+    return fetch(`${apiKey}/guests/${guestId}`, {
         headers: {
             "Authorization": `Token ${localVillagerObj.token}`,
             "Content-Type": "application/json"
@@ -210,6 +230,17 @@ export const getAIMove = (objForAi) => {
     })
         .then(res => res.json())
 }
+export const createGuest = (guestObj) => {
+    const localVillagerObj = getToken()
+    return fetch(`${apiKey}/guests`, {
+        method: "POST",
+        headers: {
+            "Authorization": `Token ${localVillagerObj.token}`,
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(guestObj)
+    })
+}
 
 //PUT FETCHES
 export const updateProfile = (userId, profileObj) => {
@@ -288,6 +319,17 @@ export const removeFriend = (friendId) => {
             "Authorization": `Token ${localVillagerObj.token}`,
             "Content-Type": "application/json"
         }
+    })
+}
+export const deleteGuest = (guestIdObj) => {
+    const localVillagerObj = getToken()
+    return fetch(`${apiKey}/guests`, {
+        method: "DELETE",
+        headers: {
+            "Authorization": `Token ${localVillagerObj.token}`,
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(guestIdObj)
     })
 }
 //auth

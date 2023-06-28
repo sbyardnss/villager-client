@@ -263,7 +263,10 @@
         align-items: center;
         margin-bottom: .5em;
     }
-
+    /* the entry below added for deploy */
+    #navProfileLink {
+        font-size: xx-large;
+    }
     li .profileLink {
         color: #ccfaff;
         text-decoration: none;

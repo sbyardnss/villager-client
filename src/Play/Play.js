@@ -385,14 +385,14 @@ export const Play = () => {
             }
             return;
         }
-        Promise.resolve(getAIMove(gameForAi)).then(res => {
-            let [, notation] = res.split(" ")
-            if (notation) {
-                safeGameMutate((game) => {
-                    game.move(notation)
-                })
-            }
-        })
+        // Promise.resolve(getAIMove(gameForAi)).then(res => {
+        //     let [, notation] = res.split(" ")
+        //     if (notation) {
+        //         safeGameMutate((game) => {
+        //             game.move(notation)
+        //         })
+        //     }
+        // })
     }
     const onSquareClick = (square) => {
         // setRightClickedSquares({});

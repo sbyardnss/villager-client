@@ -292,7 +292,7 @@ export const removeFriend = (friendId) => {
 }
 //auth
 export const loginUser = (user) => {
-    return fetch(`${apiKey}/login`, {
+    return fetch(`${apiKey}login`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",

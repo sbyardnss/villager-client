@@ -266,6 +266,7 @@
     /* the entry below added for deploy */
     #navProfileLink {
         font-size: xx-large;
+        margin-bottom: .5em;
     }
     li .profileLink {
         color: #ccfaff;

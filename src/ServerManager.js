@@ -107,6 +107,7 @@ export const getAllGuestPlayers = () => {
     })
         .then(res => res.json())
 }
+//pulling from rapidAPI
 export const getPuzzles = (rating) => {
     return fetch(`https://chess-puzzles.p.rapidapi.com/?themes=%5B%22middlegame%22%2C%22advantage%22%5D&rating=${rating}&themesType=ALL&playerMoves=4&count=25`, {
         method: 'GET',

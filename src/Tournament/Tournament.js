@@ -4,7 +4,7 @@ import { TournamentContext } from "./TournamentProvider"
 import "./Tournament.css"
 import { alterGame, getAllGames, getAllPlayers, getAllTournaments, sendNewGame, sendNewTournament, sendTournamentRoundOutcomes, sendUpdatedGames, updateTournament } from "../ServerManager"
 export const Tournament = () => {
-    const { localVillagerObj, tournamentGames, tournaments, setTournaments, players, timeSettings, setGames, selectedTournament, setSelectedTournament, pastPairings, resetGames, resetTournamentGames } = useContext(TournamentContext)
+    const { localVillagerObj, tournamentGames, tournaments, setTournaments, players, timeSettings, setGames, selectedTournament, setSelectedTournament, resetTournamentGames, guests } = useContext(TournamentContext)
     const [potentialCompetitors, setPotentialCompetitors] = useState([])
     const [activeTournament, setActiveTournament] = useState({})
     const [activeTournamentPlayers, setActiveTournamentPlayers] = useState([])
@@ -179,10 +179,10 @@ export const Tournament = () => {
         getAllTournaments()
             .then(data => setTournaments(data))
     }
-    const resetPlayers = () => {
-        getAllPlayers()
-            .then(data => setGames(data))
-    }
+    // const resetPlayers = () => {
+    //     getAllPlayers()
+    //         .then(data => setGames(data))
+    // }
     //code for populating number of table columns based on number of rounds in activeTournament
     const roundPopulation = () => {
         let roundNumber = activeTournament?.rounds;
@@ -446,7 +446,6 @@ export const Tournament = () => {
         if (pastTournaments === false) {
             return (
                 <section>
-
                     <button onClick={() => setPastTournaments(true)}>
                         view past tournaments
                     </button>
@@ -528,7 +527,6 @@ export const Tournament = () => {
                     resultArr.push([player, results[player]])
                 }
                 resultArr.sort((a, b) => { return b[1][0] - a[1][0] })
-
                 return (
                     <section id="fullResults" className="setCustomFont">
                         <div id="standardResults" >
@@ -579,7 +577,6 @@ export const Tournament = () => {
                         </div>
                     </section>
                 )
-
             }
             return <>
                 <main id="tournamentContainer">
@@ -587,7 +584,6 @@ export const Tournament = () => {
                         Results
                         {resultsDisplay()}
                         {/* <div id="modalResults">
-
                         </div> */}
                         <div id="modalBtns">
                             <button>End Tournament</button>
@@ -696,15 +692,12 @@ export const Tournament = () => {
                                                         }
                                                         else if (tpg.winner === null && !tpg.win_style) {
                                                             score = score
-
-
                                                             return (
                                                                 <td key={tpg.id} id={tpg.id + "--" + tourneyPlayer.id} className="tournamentGameResult"></td>
                                                             )
                                                         }
                                                         else {
                                                             score = score
-
                                                             return (
                                                                 <td key={tpg.id} value={0} id={tpg.id + "--" + tourneyPlayer.id} className="tournamentGameResult">0</td>
                                                             )

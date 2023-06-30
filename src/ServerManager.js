@@ -3,8 +3,8 @@ const getToken = () => {
     const localVillagerObj = JSON.parse(localVillager)
     return localVillagerObj
 }
-// const apiKey = process.env.REACT_APP_API;
-const apiKey = "http://localhost:8000"
+const apiKey = process.env.REACT_APP_API;
+// const apiKey = "http://localhost:8000"
 
 //LIST FETCHES
 export const getAllPlayers = () => {

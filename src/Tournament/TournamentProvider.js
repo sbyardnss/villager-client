@@ -1,5 +1,5 @@
 import { useState, useEffect, createContext } from "react";
-import { getAllGames, getAllPlayers, getAllTimeSettings, getAllTournaments, getTournamentGames } from "../ServerManager";
+import { getAllGames, getAllGuestPlayers, getAllPlayers, getAllTimeSettings, getAllTournaments, getTournamentGames } from "../ServerManager";
 
 export const TournamentContext = createContext()
 
@@ -13,14 +13,16 @@ export const TournamentProvider = (props) => {
     const [games, setGames] = useState([])
     const [tournamentGames, setTournamentGames] = useState([])
     const [pastPairings, setPastPairings] = useState([])
+    const [guests, setGuests] = useState([])
 
     useEffect(
         () => {
-            Promise.all([getAllPlayers(), getAllTournaments(), getAllTimeSettings(), getAllGames()]).then(([playerData, tournamentData, timeSettingData, gameData]) => {
+            Promise.all([getAllPlayers(), getAllTournaments(), getAllTimeSettings(), getAllGames(), getAllGuestPlayers()]).then(([playerData, tournamentData, timeSettingData, gameData, guestData]) => {
                 setPlayers(playerData)
                 setTournaments(tournamentData)
                 setTimeSettings(timeSettingData)
                 setGames(gameData)
+                setGuests(guestData)
             })
         }, []
     )
@@ -42,7 +44,6 @@ export const TournamentProvider = (props) => {
             }
         }, [selectedTournament]
     )
-    
     useEffect(
         () => {
             const previousPairings = []
@@ -64,7 +65,8 @@ export const TournamentProvider = (props) => {
     return (
         <TournamentContext.Provider value={{
             localVillagerObj, players, timeSettings, tournaments, setTournaments, tournamentGames, setGames,
-            selectedTournament, setSelectedTournament, pastPairings, resetGames, resetTournamentGames
+            selectedTournament, setSelectedTournament, pastPairings, resetGames, resetTournamentGames,
+            guests
         }}>
             {props.children}
         </TournamentContext.Provider>

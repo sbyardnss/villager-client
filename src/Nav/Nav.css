@@ -275,6 +275,10 @@
         display: flex;
         align-items: center;
     }
+    #navProfileLink {
+        font-size: xx-large;
+        margin-bottom: .5em;
+    }
 
     .navigation__name {
         font-size: 1.25rem;

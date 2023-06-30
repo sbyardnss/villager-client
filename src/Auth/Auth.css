@@ -16,10 +16,16 @@
 }
 #skellyHand {
     width: 20em;
-    position: absolute;
-    top: 25%;
+    display: block;
+    margin-top: -15%;
+    margin-left: auto;
+    margin-right: auto;
+
+    /* position: absolute;
+    top: -5%;
     right: 17.75%;
-    z-index: 2;
+    z-index: 2; */
+
 }
 
 .form--login {
@@ -30,36 +36,45 @@
     border: 1px solid #2a2e34;   
     background-color: #2a2e34;
     /* border-radius: 12px; */
-    display: flex;
+    /* display: flex;
     flex-direction: column;
     justify-content: center;
-    align-items: center;
+    align-items: center; */
     /* box-shadow: rgba(255, 255, 255, 0.26) 0px 4px 4px inset; */
     backdrop-filter: blur(50px);
     filter: drop-shadow(0 30px 10px rgba(0, 0, 0, 0.125));
     color: rgb(231, 231, 231);
 }
 #centerItems {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-evenly;
-    align-items: center;
-    width: 20em;
-    height: 10em;
+    display: block;
+    /* flex-direction: column;
+    justify-content: space-evenly; */
+    /* align-items: center; */
+    /* width: 100%; */
+    margin: 0;
+    /* height: 10em; */
     border: none;
-    position: absolute;
-    top: 55%;
+    /* position: absolute; */
+    /* top: 55%; */
 }
 #loginBox {
     display: flex;
-    flex-direction: column;
-    justify-content: center;
+    /* flex-direction: column;
+    justify-content: center; */
     align-items: center;
     height: 100vh;
 }
-.loginLabels, .form-control {
+.login-form-control {
     margin-bottom: 1em;
-    width: 16em;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 50%;
+}
+.loginLabels {
+    display: block;
+    margin-bottom: 1em;
+    width: 100%;
 }
 .link--register {
     color:rgb(64, 150, 184)
@@ -85,9 +100,19 @@
     justify-content: space-between;
 }
 .loginLabels {
+    display: none;
     text-align: start;
-    width: fit-content;
+    /* width: fit-content; */
 }
 .link--register {
+    display: block;
+    text-align: center;
     margin-bottom: 2em;
+    
+}
+.signInButton {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 1em;
 }

@@ -49,22 +49,20 @@ export const Login = () => {
                         <label className="loginLabels" htmlFor="inputUsername">Username</label>
                         <input type="username"
                             ref={username}
-                            className="form-control"
+                            className="login-form-control"
                             placeholder="username"
                             required autoFocus />
                         <label className="loginLabels" htmlFor="inputPassword"> Password </label>
                         <input type="password"
                             ref={password}
-                            className="form-control"
+                            className="login-form-control"
                             placeholder="password"
                             required autoFocus />
                         <button className="signInButton" type="submit">
                             Sign in
                         </button>
-                        <section>
-                            <Link className="link--register" to="/register">Not a member yet?</Link>
-                        </section>
                     </fieldset>
+                            <Link className="link--register" to="/register">Not a member yet?</Link>
                 </form>
             </section>
         </main>

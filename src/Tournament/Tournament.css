@@ -12,7 +12,7 @@
     }
 
     /* finish tournament modal */
-    #finishTournamentModal {
+    #resultsModal {
         display: none;
         border: 1px solid #f4d35e;
         border-radius: 8px;
@@ -260,8 +260,8 @@
         font-weight: 200;
     }
 
-    /* finish tournament modal */
-    #finishTournamentModal {
+    /* tournament results modal */
+    #resultsModal {
         display: none;
         border: 1px solid #f4d35e;
         border-radius: 8px;
@@ -300,6 +300,27 @@
         width: 100%;
         margin-top: 1em;
         justify-content: space-between;
+    }
+    /* end Tournament modal */
+    #endTournamentModal {
+        display: none;
+        border: 1px solid #f4d35e;
+        border-radius: 8px;
+        color: rgb(231, 231, 231);
+        position: absolute;
+        top: 20%;
+        backdrop-filter: blur(10px);
+        background-color: #20202099;
+        width: 15em;
+        height: fit-content;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        font-size: larger;
+        padding: .5em;
+    }
+    #endTournamentBtnBlock {
+        display: flex;
     }
 
     /* tournament setup */

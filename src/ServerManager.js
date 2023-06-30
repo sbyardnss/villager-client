@@ -300,6 +300,16 @@ export const acceptChallenge = (gameObj) => {
         body: JSON.stringify(gameObj)
     })
 }
+export const endTournament = (tournamentId) => {
+    const localVillagerObj = getToken()
+    return fetch(`${apiKey}/tournaments/${tournamentId}/end_tournament`, {
+        method: "PUT",
+        headers: {
+            "Authorization": `Token ${localVillagerObj.token}`,
+            "Content-Type": "application/json"
+        }
+    })
+}
 
 //DELETE FETCHES
 export const deleteCommunityPost = (postId) => {

@@ -197,18 +197,20 @@ export const Tournament = () => {
                             </div>
                         </div>
                         <div id="tournamentSubmit">
-                            <button onClick={() => {
-                                if (newTournament.competitors && newTournament.timeSetting && newTournament.title) {
-                                    if (window.confirm("Everybody ready?")) {
-                                        const copy = { ...newTournament }
-                                        copy.pairings = RoundRobin(newTournament.competitors)
-                                        sendNewTournament(copy)
-                                            .then(() => {
-                                                resetTournaments()
-                                            })
+                            <button
+                                className="buttonStyleApprove"
+                                onClick={() => {
+                                    if (newTournament.competitors && newTournament.timeSetting && newTournament.title) {
+                                        if (window.confirm("Everybody ready?")) {
+                                            const copy = { ...newTournament }
+                                            copy.pairings = RoundRobin(newTournament.competitors)
+                                            sendNewTournament(copy)
+                                                .then(() => {
+                                                    resetTournaments()
+                                                })
+                                        }
                                     }
-                                }
-                            }}>
+                                }}>
                                 Start Tournament
                             </button>
                             <button onClick={() => setCreateTournament(false)}>cancel</button>

@@ -384,6 +384,15 @@
     }
 
     /* tournament setup */
+    #createTournamentButton {
+        width: 12em;
+        font-size: larger;
+        border: none;
+        border-radius: 4px;
+        padding: .5em;
+        background-color: #694873;
+    }
+    
     #newTournamentForm {
         border: 2px solid rgb(40, 40, 40);
         border-radius: 8px;

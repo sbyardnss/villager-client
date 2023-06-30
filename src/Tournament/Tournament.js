@@ -187,7 +187,7 @@ export const Tournament = () => {
         }
         else {
             return (
-                <button onClick={() => setCreateTournament(true)}>create new tournament</button>
+                <button id="createTournamentButton" className="setCustomFont" onClick={() => setCreateTournament(true)}>create new tournament</button>
             )
         }
     }

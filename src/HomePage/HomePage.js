@@ -121,11 +121,8 @@ export const HomePage = () => {
         const othersChallenges = challenges.filter(c => c.player_b?.id !== localVillagerObj.userId && c.player_w?.id !== localVillagerObj.userId)
         if (!othersChallenges.length) {
             return (
-                <div id="openChallengesList">
-                    <div id="noChallengesMsg">
-
+                <div id="noChallengesMsg">
                     There are currently no open challenges
-                    </div>
                 </div>
             )
         }

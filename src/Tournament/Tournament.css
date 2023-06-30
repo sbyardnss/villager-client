@@ -35,6 +35,7 @@
         display: flex;
         justify-content: space-between;
     }
+
     /* end Tournament modal */
     #endTournamentModal {
         display: flex;
@@ -53,6 +54,7 @@
         font-size: x-large;
         /* padding: .5em; */
     }
+
     #endTournamentBtnBlock {
         display: flex;
         margin-top: 2em;
@@ -164,7 +166,30 @@
 
     #activeTournamentsList {
         width: 100%;
+        height: 12em;
+        margin-top: 1em;
+        overflow: scroll;
         list-style: none;
+        padding: .5em;
+        border: 1px solid #694873;
+    }
+
+
+
+    #pastTournamentList {
+        width: 100%;
+        height: 8.5em;
+        overflow: scroll;
+        list-style: none;
+        margin-top: 2em;
+        padding: .5em;
+        border: 1px solid #4a9392;    }
+
+    .pastTournamentsBtn {
+        align-self: start;
+        margin-bottom: .5em;
+        margin-top: 1em;
+
     }
 
     .tournamentListItem {
@@ -281,6 +306,7 @@
     .setColor {
         color: rgb(231, 231, 231);
     }
+
     .setTournamentFontSize {
         font-size: xx-large;
         font-weight: 200;
@@ -310,9 +336,11 @@
         display: flex;
         justify-content: space-between;
     }
+
     .resultsHeader {
         color: #f4d35e;
     }
+
     #fullResults {
         font-size: smaller;
         display: flex;
@@ -321,12 +349,14 @@
         width: 80%;
         padding: .5em;
     }
+
     #tieBreakResults {
         display: flex;
         width: 100%;
         margin-top: 1em;
         justify-content: space-between;
     }
+
     /* end Tournament modal */
     #endTournamentModal {
         display: none;
@@ -345,6 +375,7 @@
         font-size: x-large;
         /* padding: .5em; */
     }
+
     #endTournamentBtnBlock {
         display: flex;
         margin-top: 2em;
@@ -429,6 +460,13 @@
         align-items: center;
         /* padding: 0 2em; */
     }
+    #tournamentSubmit {
+        height: 6em;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+    }
+
     .tournamentFormDropdownSelection {
         width: 100%;
     }
@@ -462,21 +500,25 @@
 
     #activeTournamentsList {
         width: 100%;
-        height: 8.5em;
+        height: 12em;
+        margin-top: 1em;
         overflow: scroll;
         list-style: none;
-        
+        padding: .5em;
+        border: 1px solid #694873;
     }
-    #pastTournamentsDiv {
-        width: 100%;
-    }
+
+
+
     #pastTournamentList {
         width: 100%;
         height: 8.5em;
         overflow: scroll;
         list-style: none;
         margin-top: 2em;
-    }
+        padding: .5em;
+        border: 1px solid #4a9392;    }
+
     .pastTournamentsBtn {
         align-self: start;
         margin-bottom: .5em;
@@ -506,6 +548,7 @@
         width: 95%;
         margin: 2em 0;
     }
+
     .progressionControlBtn {
         width: 5em;
     }

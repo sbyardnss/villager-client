@@ -9,6 +9,7 @@ export const Tournament = () => {
     const { localVillagerObj, tournamentGames, tournaments, setTournaments, players, timeSettings, setGames, selectedTournament, setSelectedTournament, resetTournamentGames, guests } = useContext(TournamentContext)
     const [potentialCompetitors, setPotentialCompetitors] = useState([])
     const [pastTournaments, setPastTournaments] = useState(false)
+    const [createTournament, setCreateTournament] = useState(false)
     const [newTournament, updateNewTournament] = useState({
         title: "",
         creator: localVillagerObj.userId,
@@ -47,50 +48,32 @@ export const Tournament = () => {
         }
     }
     const pastTournamentSection = () => {
-        if (pastTournaments === false) {
+        if (pastTournaments === true) {
             return (
-                    <button className="pastTournamentsBtn" onClick={() => setPastTournaments(true)}>
-                        toggle past tournaments
-                    </button>
-            )
-        }
-        else {
-            return (
-                <div id="pastTournamentsDiv">
-
-                <button className="pastTournamentsBtn" onClick={() => setPastTournaments(false)}>toggle past tournaments</button>
-                <section id="pastTournamentList">
-                    {
-                        tournaments?.map(t => {
-                            if (t.complete === true) {
-                                return (
-                                    <li key={t.id}
-                                        className="tournamentListItem"
-                                        value={t.id}
-                                        onClick={(e) => {
-                                            setSelectedTournament(e.target.value)
-                                        }}>
-                                        {t.title}
-                                    </li>
-                                )
-                            }
-                        })
-                    }
-                </section>
-                </div>
+                    <section id="pastTournamentList">
+                        {
+                            tournaments?.map(t => {
+                                if (t.complete === true) {
+                                    return (
+                                        <li key={t.id}
+                                            className="tournamentListItem"
+                                            value={t.id}
+                                            onClick={(e) => {
+                                                setSelectedTournament(e.target.value)
+                                            }}>
+                                            {t.title}
+                                        </li>
+                                    )
+                                }
+                            })
+                        }
+                    </section>
             )
         }
     }
-    if (selectedTournament) {
-        return <>
-            <ActiveTournament
-                tournamentId={selectedTournament}
-            />
-        </>
-    }
-    else {
-        return <>
-            <main id="tournamentContainer">
+    const newTournamentForm = () => {
+        if (createTournament === true) {
+            return (
                 <section id="newTournamentForm">
                     <div id="tournamentPlayerSelectionSection">
                         <div id="competitorSelectionSplit">
@@ -196,9 +179,29 @@ export const Tournament = () => {
                             }}>
                                 Start Tournament
                             </button>
+                            <button onClick={() => setCreateTournament(false)}>cancel</button>
                         </div>
                     </section>
                 </section>
+            )
+        }
+        else {
+            return (
+                <button onClick={() => setCreateTournament(true)}>create new tournament</button>
+            )
+        }
+    }
+    if (selectedTournament) {
+        return <>
+            <ActiveTournament
+                tournamentId={selectedTournament}
+            />
+        </>
+    }
+    else {
+        return <>
+            <main id="tournamentContainer">
+                {newTournamentForm()}
                 <article key="activeTournaments" id="activeTournamentsSection">
                     <h3 id="activeTournamentsHeader">active tournaments</h3>
                     <section id="activeTournamentsList" className="setCustomFont">
@@ -219,7 +222,9 @@ export const Tournament = () => {
                             })
                         }
                     </section>
-                {pastTournamentSection()}
+                    <button className="pastTournamentsBtn" onClick={() => setPastTournaments(!pastTournaments)}>toggle past tournaments</button>
+
+                    {pastTournamentSection()}
                 </article>
             </main>
         </>

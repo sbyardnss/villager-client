@@ -49,6 +49,7 @@
         display: flex;
         justify-content: space-between;
     }
+
     #modalBtns {
         width: 100%;
         display: flex;
@@ -165,6 +166,14 @@
         background-color: aqua;
     }
 
+    #playerSearch {
+        margin: 0 0 1em 2em;
+
+    }
+    #playerSearchInput {
+        width: 15.5em;
+    }
+
     #tournamentParameters {
         display: flex;
         justify-content: space-between;
@@ -192,7 +201,7 @@
         color: rgb(231, 231, 231);
         margin: 0;
     }
-    
+
 
     #activeTournamentsSection {
         width: 80%;
@@ -267,12 +276,13 @@
         width: 20em;
         margin: 1em 0;
     }
+
     #activeTournamentHeader {
         display: flex;
         width: 20em;
         justify-content: space-between;
     }
-    
+
 
     .progressionControlBtn {
         width: 5em;
@@ -301,23 +311,27 @@
         margin-top: 1em;
 
     }
+
     #previousMatchups {
         /* width: 100%; */
         display: flex;
         flex-direction: column;
     }
+
     .editScoreListItem {
         display: flex;
         width: 100%;
         flex-direction: column;
         align-items: center;
     }
+
     .editMatchup {
         display: flex;
         justify-content: space-around;
         padding: .25em;
         width: 100%;
     }
+
     /* matchup table */
     #matchupsContainer {
         width: 80%;
@@ -401,6 +415,7 @@
         font-size: x-large;
         font-weight: 200;
     }
+
     .controlBtnApprove {
         background-color: #694873;
         color: rgb(231, 231, 231);
@@ -439,6 +454,7 @@
     .resultsHeader {
         color: #f4d35e;
     }
+
     #modalBtns {
         width: 100%;
         display: flex;
@@ -574,6 +590,15 @@
         align-items: center;
         /* padding: 0 2em; */
     }
+    #playerSearch {
+        margin: 1em .5em;
+        display: flex;
+        justify-content: space-between;
+
+    }
+    #playerSearchInput {
+        width: 16em;
+    }
 
     #tournamentSubmit {
         height: 6em;
@@ -673,6 +698,7 @@
         width: 95%;
         justify-content: space-between;
     }
+
     #tournamentProgressionControls {
         display: flex;
         justify-content: space-between;
@@ -708,17 +734,20 @@
         margin-top: 1em;
 
     }
+
     #previousMatchups {
         width: 100%;
         display: flex;
         flex-direction: column;
     }
+
     .editScoreListItem {
         display: flex;
         width: 100%;
         flex-direction: column;
         align-items: center;
     }
+
     .editMatchup {
         display: flex;
         justify-content: space-around;

@@ -137,7 +137,7 @@ export const HomePage = () => {
                                                 <h5>{date} {time}</h5>
                                                 <div className="communityPostWithDelete">
                                                     {post.message}
-                                                    <button onClick={() => handleDelete(post.id)}>delete</button>
+                                                    <button className="buttonStyleReject" onClick={() => handleDelete(post.id)}>delete</button>
                                                 </div>
                                             </li>
                                         )
@@ -164,6 +164,7 @@ export const HomePage = () => {
                                 onKeyDown={handlekeyDown}
                             />
                             <button id="communityForumSubmitBtn"
+                                className="buttonStyleApprove"
                                 onClick={() => {
                                     submitNewPostToAPI(newPost).then(() => {
                                         const copy = { ...newPost }

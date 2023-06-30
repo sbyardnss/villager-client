@@ -9,6 +9,7 @@ export const Tournament = () => {
     const { localVillagerObj, tournamentGames, tournaments, setTournaments, players, timeSettings, setGames, selectedTournament, setSelectedTournament, resetTournamentGames, guests } = useContext(TournamentContext)
     const [potentialCompetitors, setPotentialCompetitors] = useState([])
     const [pastTournaments, setPastTournaments] = useState(false)
+    const [search, setSearch] = useState("")
     const [createTournament, setCreateTournament] = useState(false)
     const [newTournament, updateNewTournament] = useState({
         title: "",
@@ -20,13 +21,31 @@ export const Tournament = () => {
         pairings: []
     })
 
+    // useEffect(
+    //     () => {
+    //         const unselectedPlayers = players.filter(p => {
+    //             return !newTournament.competitors.find(c => c === p.id)
+    //         })
+    //         setPotentialCompetitors(unselectedPlayers)
+    //     }, [players, newTournament]
+    // )
+
+    //search player useEffect
     useEffect(
         () => {
-            const unselectedPlayers = players.filter(p => {
-                return !newTournament.competitors.find(c => c === p.id)
-            })
-            setPotentialCompetitors(unselectedPlayers)
-        }, [players, newTournament]
+            if (search !== "") {
+                const filteredUsers = players.filter(pc => {
+                    return pc.full_name.toLowerCase().includes(search.toLowerCase())
+                })
+                setPotentialCompetitors(filteredUsers)
+            }
+            else {
+                const unselectedPlayers = players.filter(p => {
+                    return !newTournament.competitors.find(c => c === p.id)
+                })
+                setPotentialCompetitors(unselectedPlayers)
+            }
+        }, [search, players, newTournament]
     )
 
     //getter/setter for tournaments
@@ -50,24 +69,24 @@ export const Tournament = () => {
     const pastTournamentSection = () => {
         if (pastTournaments === true) {
             return (
-                    <section id="pastTournamentList">
-                        {
-                            tournaments?.map(t => {
-                                if (t.complete === true) {
-                                    return (
-                                        <li key={t.id}
-                                            className="tournamentListItem"
-                                            value={t.id}
-                                            onClick={(e) => {
-                                                setSelectedTournament(e.target.value)
-                                            }}>
-                                            {t.title}
-                                        </li>
-                                    )
-                                }
-                            })
-                        }
-                    </section>
+                <section id="pastTournamentList">
+                    {
+                        tournaments?.map(t => {
+                            if (t.complete === true) {
+                                return (
+                                    <li key={t.id}
+                                        className="tournamentListItem"
+                                        value={t.id}
+                                        onClick={(e) => {
+                                            setSelectedTournament(e.target.value)
+                                        }}>
+                                        {t.title}
+                                    </li>
+                                )
+                            }
+                        })
+                    }
+                </section>
             )
         }
     }
@@ -123,6 +142,19 @@ export const Tournament = () => {
                                 }
                             </div>
                         </div>
+                    </div>
+                    <div id="playerSearch" className="setCustomFont">
+                        <input
+                            id="playerSearchInput"
+                            className="text-input"
+                            type="text"
+                            placeholder="search for player"
+                            value={search}
+                            onChange={(e) => setSearch(e.target.value)}
+                        />
+                        <button className="buttonStyleReject"
+                            onClick={() => setSearch("")}
+                        >reset</button>
                     </div>
                     <section id="tournamentParameters">
                         <div id="tournamentParameterControls">
@@ -223,7 +255,6 @@ export const Tournament = () => {
                         }
                     </section>
                     <button className="pastTournamentsBtn setCustomFont" onClick={() => setPastTournaments(!pastTournaments)}>toggle past tournaments</button>
-
                     {pastTournamentSection()}
                 </article>
             </main>

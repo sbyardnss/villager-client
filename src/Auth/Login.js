@@ -36,34 +36,31 @@ export const Login = () => {
                 <div>Username or password was not valid.</div>
                 <button className="button--close" onClick={e => invalidDialog.current.close()}>Close</button>
             </dialog>
-            <img id="skellyHand" src={skellyHand}></img>
             <section id="loginBox">
                 <form className="form--login" onSubmit={handleLogin}>
                     {/* <div id="loginLogo">
                         <h1>Villager Chess</h1>
                     </div> */}
                     {/* <img id="graffiti_logo" src={graffiti}></img> */}
-                    {/* <img id="skellyHand" src={skellyHand}></img> */}
+                    <img id="skellyHand" src={skellyHand}></img>
                     <fieldset id="centerItems">
                         <label className="loginLabels" htmlFor="inputUsername">Username</label>
                         <input type="username"
                             ref={username}
-                            className="form-control"
+                            className="login-form-control"
                             placeholder="username"
                             required autoFocus />
                         <label className="loginLabels" htmlFor="inputPassword"> Password </label>
                         <input type="password"
                             ref={password}
-                            className="form-control"
+                            className="login-form-control"
                             placeholder="password"
                             required autoFocus />
                         <button className="signInButton" type="submit">
                             Sign in
                         </button>
-                        <section>
-                            <Link className="link--register" to="/register">Not a member yet?</Link>
-                        </section>
                     </fieldset>
+                            <Link className="link--register" to="/register">Not a member yet?</Link>
                 </form>
             </section>
         </main>

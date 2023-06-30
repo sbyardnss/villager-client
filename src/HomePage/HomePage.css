@@ -8,8 +8,8 @@
     }
 
     #homepageLayoutDiv {
-        max-width: 760px;
-        width: 760px;
+        max-width: 960px;
+        width: 800px;
         display: flex;
         justify-content: space-between;
         flex-wrap: wrap;
@@ -54,7 +54,7 @@
         display: flex;
         flex-direction: column;
         align-items: start;
-        justify-content: space-evenly;
+        justify-content: start;
         padding: 1em;
         max-width: 960px;
         flex-wrap: wrap;
@@ -108,6 +108,7 @@
         box-shadow: rgba(255, 255, 255, 0.26) 0 2px 2px;
         color: #2a2e34;
     }
+
     .communityPostWithDelete {
         display: flex;
         justify-content: space-between;
@@ -215,6 +216,10 @@
     #createChallengeSection {
         width: 100%;
         margin: 0px;
+        display: flex;
+        flex-direction: column;
+        align-items: start;
+        justify-content: start;
     }
 
     #createChallengeDiv {
@@ -225,6 +230,9 @@
 
     #piecesSelectionContainer {
         display: flex;
+        border-radius: 11px;
+        padding: 0px;
+        align-items: center;
     }
 
     #challengeColorSelectContainerAndCreateBtn {
@@ -233,37 +241,54 @@
     }
 
     #whitePiecesSelect {
+        display: flex;
+        align-items: center;
+        justify-content: center;
         color: rgb(52, 52, 52);
         font-style: oblique;
-        font-size: large;
+        /* font-size: x-large; */
         font-weight: 400;
         background-color: whitesmoke;
-        width: fit-content;
+        width: 5em;
+        height: 3em;
         padding: .5em;
-        border: 2px solid rgb(52, 52, 52);
+        /* border: 2px solid rgb(52, 52, 52); */
         border-radius: 8px 0 0 8px;
         border-right: none;
-        text-align: center;
         cursor: pointer;
     }
 
     #blackPiecesSelect {
+        display: flex;
+        align-items: center;
+        justify-content: center;
         color: whitesmoke;
         font-style: oblique;
-        font-size: large;
+        /* font-size: x-large; */
         font-weight: 400;
         background-color: rgb(52, 52, 52);
-        width: fit-content;
+        width: 5em;
+        height: 3em;
         padding: .5em;
-        border: 2px solid rgb(52, 52, 52);
+        /* border: 2px solid rgb(52, 52, 52); */
         border-radius: 0 8px 8px 0;
         border-right: none;
-        text-align: center;
         cursor: pointer;
     }
 
     #randomSelect {
         cursor: pointer;
+        background-color: gray;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: whitesmoke;
+        font-style: oblique;
+        /* font-size: x-large; */
+        width: 5em;
+        height: 3em;
+        padding: .5em;
+        border-radius: 0 8px 8px 0;
     }
 
     #blackPiecesSelect:hover {
@@ -274,6 +299,20 @@
         background-color: rgb(241, 133, 214);
     }
 
+    #randomSelect:hover {
+        background-color: rgb(241, 133, 214);
+
+    }
+
+    #createChallengeBtn {
+        display: block;
+        font-size: large;
+        width: 7em;
+        margin-top: 1em;
+        margin-left: auto;
+        margin-right: auto;
+
+    }
 
     /* open challenges section */
     #openChallengesList {
@@ -454,11 +493,11 @@
         background-position: 60% 60%;
         display: flex;
         flex-direction: column;
-        align-items: start;
-        justify-content: space-evenly;
+        align-items: center;
+        justify-content: start;
         padding: 1em;
         flex-wrap: wrap;
-        height: 19em;
+        /* height: 19em; */
         /* width: 100%; */
         min-width: 14em;
         /* border: 1px solid blue; */
@@ -510,6 +549,7 @@
         color: #2a2e34;
 
     }
+
     .communityPostWithDelete {
         display: flex;
         justify-content: space-between;
@@ -534,7 +574,7 @@
         list-style: none;
         width: 90%;
         margin: 1em;
-        border:1px solid rgb(52, 52, 52);
+        border: 1px solid rgb(52, 52, 52);
         padding: .25em;
     }
 
@@ -621,6 +661,9 @@
     #createChallengeSection {
         width: 100%;
         margin: 0px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
     }
 
     #createChallengeDiv {
@@ -631,45 +674,67 @@
 
     #piecesSelectionContainer {
         display: flex;
+        border: 3px solid rgb(188, 160, 0);
+        border-radius: 11px;
+        padding: 0px;
+        align-items: center;
     }
 
     #challengeColorSelectContainerAndCreateBtn {
         display: flex;
         flex-direction: column;
+
     }
 
     #whitePiecesSelect {
+        display: flex;
+        align-items: center;
+        justify-content: center;
         color: rgb(52, 52, 52);
         font-style: oblique;
         font-size: large;
         font-weight: 400;
         background-color: whitesmoke;
-        width: fit-content;
+        width: 5em;
+        height: 3em;
         padding: .5em;
-        border: 2px solid rgb(52, 52, 52);
+        /* border: 2px solid rgb(52, 52, 52); */
         border-radius: 8px 0 0 8px;
         border-right: none;
-        text-align: center;
         cursor: pointer;
     }
 
     #blackPiecesSelect {
+        display: flex;
+        align-items: center;
+        justify-content: center;
         color: whitesmoke;
         font-style: oblique;
         font-size: large;
         font-weight: 400;
         background-color: rgb(52, 52, 52);
-        width: fit-content;
+        width: 5em;
+        height: 3em;
         padding: .5em;
-        border: 2px solid rgb(52, 52, 52);
+        /* border: 2px solid rgb(52, 52, 52); */
         border-radius: 0 8px 8px 0;
         border-right: none;
-        text-align: center;
         cursor: pointer;
     }
 
     #randomSelect {
         cursor: pointer;
+        background-color: gray;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: whitesmoke;
+        font-style: oblique;
+        font-size: large;
+        width: 5em;
+        height: 3em;
+        padding: .5em;
+        border-radius: 0 8px 8px 0;
     }
 
     #blackPiecesSelect:hover {
@@ -680,28 +745,50 @@
         background-color: rgb(241, 133, 214);
     }
 
+    #randomSelect:hover {
+        background-color: rgb(241, 133, 214);
+
+    }
+    #createChallengeBtn {
+        display: block;
+        font-size: large;
+        width: 7em;
+        margin-top: 1em;
+        margin-left: auto;
+        margin-right: auto;
+
+    }
 
     /* open challenges section */
     #openChallengesList {
         display: flex;
         flex-direction: column;
-        width: 30%;
-        min-width: 14em;
+        width: 80%;
+        align-items: center;
+        /* min-width: 14em; */
         padding: 1em;
-        border: 1px solid blue;
+        border: 2px solid #694873;
+        border-radius: 6px;
+        height: 10em;
+        overflow: scroll;
+    }
+    #noChallengesMsg {
+        font-size: x-large;
     }
 
     .challengeListItem {
         height: fit-content;
         display: flex;
+        width: 100%;
         flex-direction: column;
-        font-size: small;
+        font-size: medium;
     }
 
     .openChallengerInfo {
         height: 2em;
         display: flex;
         align-items: center;
+        justify-content: space-between;
         border: 1px solid #f4d35e;
         padding: .5em;
         border-radius: 4px;

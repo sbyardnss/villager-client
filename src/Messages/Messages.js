@@ -8,6 +8,7 @@ export const Messages = () => {
     const [messages, setMessages] = useState([])
     const [players, setPlayers] = useState([])
     const [friends, setFriends] = useState([])
+    const [recipient, setRecipient] = useState({})
     const [selectedChat, setSelectedChat] = useState(0)
     const [selectedChatMsgs, setSelectedChatMsgs] = useState([])
     const [newMsg, updateNewMsg] = useState({
@@ -45,6 +46,12 @@ export const Messages = () => {
             updateNewMsg(msgCopy)
         }, [selectedChat, messages]
     )
+    useEffect(
+        () => {
+            const chatRecipient = friends.find(f => f.id === selectedChat)
+            setRecipient(chatRecipient)
+        },[selectedChat]
+    )
     const resetMessages = () => {
         getAllMessages()
             .then(data => setMessages(data))
@@ -61,13 +68,12 @@ export const Messages = () => {
     }
     const selectChatOrActiveChat = () => {
         if (selectedChat !== 0) {
-            const chatRecipient = friends?.find(f => f.id = selectedChat)
+            // const chatRecipient = friends?.find(f => f.id = selectedChat)
             return <>
                 <div id="fullChatAndInterface">
-                    {chatRecipient ?
-
+                    {recipient ?
                         <div id="chatRecipientHeader" className=" setCustomFont">
-                            {chatRecipient.username}
+                            {recipient.full_name}
                             <button className="buttonStyleReject"
                                 onClick={() => setSelectedChat(0)}>exit chat</button>
                         </div>

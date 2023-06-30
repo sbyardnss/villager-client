@@ -116,6 +116,53 @@ export const HomePage = () => {
                 })
         }
     }
+
+    const openChallengesOrMsg = () => {
+        const othersChallenges = challenges.filter(c => c.player_b?.id !== localVillagerObj.userId && c.player_w?.id !== localVillagerObj.userId)
+        if (!othersChallenges.length) {
+            return (
+                <div id="noChallengesMsg">
+                    There are currently no open challenges
+                </div>
+            )
+        }
+        else {
+            return <>
+                <section id="openChallengesList">
+                    {
+                        challenges?.map(c => {
+                            const challengingPlayer = c.player_w ? c.player_w : c.player_b
+
+                            if (challengingPlayer.id !== localVillagerObj.userId) {
+                                return (
+                                    <div key={c.id} className="challengeListItem">
+                                        <div>
+                                            {/* <div>Challenger:</div> */}
+                                            <div className="openChallengerInfo">
+                                                <div>
+                                                    Play <span id={c.player_w ? "blackChallengeSpan" : "whiteChallengeSpan"}>{c.player_w ? "black" : "white"}</span> vs <span id={c.player_w ? "whiteChallengeSpan" : "blackChallengeSpan"}>{challengingPlayer.username}</span>
+                                                </div>
+                                                <button className="challengeBtn buttonStyleAmbiguous"
+                                                    onClick={() => {
+                                                        const copy = { ...c }
+                                                        c.player_w ? copy.player_b = localVillagerObj.userId : copy.player_w = localVillagerObj.userId
+                                                        c.player_w ? copy.player_w = c.player_w.id : copy.player_b = c.player_b.id
+                                                        copy.accepted = true
+                                                        acceptChallenge(copy)
+                                                            .then(() => resetGames())
+                                                    }}>accept</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                )
+                            }
+                        })
+                    }
+                </section>
+            </>
+
+        }
+    }
     return <>
         <main id="homepageContainer">
             <div id="homepageLayoutDiv">
@@ -137,7 +184,7 @@ export const HomePage = () => {
                                                 <h5>{date} {time}</h5>
                                                 <div className="communityPostWithDelete">
                                                     {post.message}
-                                                    <button onClick={() => handleDelete(post.id)}>delete</button>
+                                                    <button className="buttonStyleReject" onClick={() => handleDelete(post.id)}>delete</button>
                                                 </div>
                                             </li>
                                         )
@@ -164,6 +211,7 @@ export const HomePage = () => {
                                 onKeyDown={handlekeyDown}
                             />
                             <button id="communityForumSubmitBtn"
+                                className="buttonStyleApprove"
                                 onClick={() => {
                                     submitNewPostToAPI(newPost).then(() => {
                                         const copy = { ...newPost }
@@ -244,22 +292,23 @@ export const HomePage = () => {
                                         challengeCopy.player_w = null
                                         updateChallengeForApi(challengeCopy)
                                     }}>black</div>
+                                    <div id="randomSelect" onClick={() => {
+                                        const challengeCopy = { ...challengeForApi }
+                                        const randomNumber = Math.floor(Math.random() * 2)
+                                        if (randomNumber === 1) {
+                                            challengeCopy.player_w = localVillagerObj.userId
+                                            challengeCopy.player_b = null
+                                        }
+                                        else {
+                                            challengeCopy.player_b = localVillagerObj.userId
+                                            challengeCopy.player_w = null
+                                        }
+                                        updateChallengeForApi(challengeCopy)
+                                    }}>random</div>
                                 </div>
-                                <div id="randomSelect" onClick={() => {
-                                    const challengeCopy = { ...challengeForApi }
-                                    const randomNumber = Math.floor(Math.random() * 2)
-                                    if (randomNumber === 1) {
-                                        challengeCopy.player_w = localVillagerObj.userId
-                                        challengeCopy.player_b = null
-                                    }
-                                    else {
-                                        challengeCopy.player_b = localVillagerObj.userId
-                                        challengeCopy.player_w = null
-                                    }
-                                    updateChallengeForApi(challengeCopy)
-                                }}>random</div>
                             </div>
                             <button
+                                id="createChallengeBtn"
                                 className="buttonStyleAmbiguous"
                                 onClick={() => {
                                     if (window.confirm("create open challenge?")) {
@@ -268,14 +317,15 @@ export const HomePage = () => {
                                 }}>create</button>
                         </section>
                         <h2 className="setCustomFont">open challenges</h2>
-                        {
+                        {openChallengesOrMsg()}
+                        {/* {
                             challenges?.map(c => {
                                 const challengingPlayer = c.player_w ? c.player_w : c.player_b
+
                                 if (challengingPlayer.id !== localVillagerObj.userId) {
                                     return (
                                         <div key={c.id} className="challengeListItem">
                                             <div>
-                                                {/* <div>Challenger:</div> */}
                                                 <div className="openChallengerInfo">
                                                     Play <span id={c.player_w ? "blackChallengeSpan" : "whiteChallengeSpan"}>{c.player_w ? "black" : "white"}</span> vs <span id={c.player_w ? "whiteChallengeSpan" : "blackChallengeSpan"}>{challengingPlayer.username}</span>
                                                     <button className="challengeBtn buttonStyleAmbiguous"
@@ -293,7 +343,7 @@ export const HomePage = () => {
                                     )
                                 }
                             })
-                        }
+                        } */}
                     </div>
                     <div id="puzzlesArticle">
                         <div id="puzzleParamaters">

@@ -36,10 +36,10 @@ export const Login = () => {
                 <div>Username or password was not valid.</div>
                 <button className="button--close" onClick={e => invalidDialog.current.close()}>Close</button>
             </dialog>
-            <img id="skellyHand" src={skellyHand}></img>
 
             <section id="loginBox">
                 <form className="form--login" onSubmit={handleLogin}>
+            <img id="skellyHand" src={skellyHand}></img>
                     {/* <div id="loginLogo">
                         <h1>Villager Chess</h1>
                     </div> */}

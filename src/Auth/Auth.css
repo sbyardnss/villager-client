@@ -4,6 +4,7 @@
     justify-content: center;
     align-items: center;
     height: 70vh;
+    width: 100vw;
 
 }
 #loginLogo{
@@ -16,15 +17,18 @@
 }
 #skellyHand {
     width: 20em;
-    position: absolute;
-    top: 25%;
-    right: 17.75%;
+    /* position: absolute; */
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    top: 15%;
+    right: 6%;
     z-index: 2;
 }
 
 .form--login {
-    height: 400px;
-    width: 100%;
+    height: 500px;
+    /* width: 100%; */
     max-width: 960px;
     padding: 2em;
     border: 1px solid #2a2e34;   
@@ -47,7 +51,7 @@
     width: 20em;
     height: 10em;
     border: none;
-    position: absolute;
+    /* position: absolute; */
     top: 55%;
 }
 #loginBox {

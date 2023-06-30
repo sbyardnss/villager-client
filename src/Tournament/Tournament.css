@@ -11,6 +11,20 @@
         color: rgb(231, 231, 231);
     }
 
+    .setTournamentFontSize {
+        font-size: x-large;
+        font-weight: 200;
+    }
+
+    .controlBtnApprove {
+        background-color: #694873;
+        color: rgb(231, 231, 231);
+        border: none;
+        border-radius: 2px;
+        cursor: pointer;
+        transition: .2s cubic-bezier(0.215, 0.61, 0.355, 1);
+    }
+
     /* finish tournament modal */
     #resultsModal {
         display: none;
@@ -38,7 +52,7 @@
 
     /* end Tournament modal */
     #endTournamentModal {
-        display: flex;
+        display: none;
         border: 1px solid #f4d35e;
         border-radius: 8px;
         color: rgb(231, 231, 231);
@@ -63,6 +77,21 @@
     }
 
     /* tournament setup */
+    #createTournamentButton {
+        width: 12em;
+        font-size: larger;
+        border: none;
+        border-radius: 4px;
+        padding: .5em;
+        background-color: #694873;
+        cursor: pointer;
+    }
+
+    #createTournamentButton:hover {
+        background-color: rgb(180, 100, 160);
+
+    }
+
     #newTournamentForm {
         border: 2px solid rgb(40, 40, 40);
         border-radius: 8px;
@@ -78,7 +107,6 @@
         display: flex;
         flex-direction: column;
         width: 40%;
-        border: 1px solid #694873;
     }
 
     #tournamentPlayerSelectionSection {
@@ -139,6 +167,13 @@
         padding: 0 2em;
     }
 
+    #tournamentSubmit {
+        height: 6em;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+    }
+
     #tournamentParameterControls {
         display: flex;
         flex-direction: column;
@@ -172,6 +207,7 @@
         list-style: none;
         padding: .5em;
         border: 1px solid #694873;
+        border-radius: 6px;
     }
 
 
@@ -183,12 +219,21 @@
         list-style: none;
         margin-top: 2em;
         padding: .5em;
-        border: 1px solid #4a9392;    }
+        border: 1px solid #4a9392;
+        border-radius: 6px;
+    }
 
     .pastTournamentsBtn {
         align-self: start;
-        margin-bottom: .5em;
-        margin-top: 1em;
+        margin-bottom: 1em;
+        margin-top: 2em;
+        width: fit-content;
+        font-size: medium;
+        border: none;
+        border-radius: 4px;
+        padding: .5em;
+        background-color: #694873;
+        cursor: pointer;
 
     }
 
@@ -197,6 +242,8 @@
         cursor: pointer;
         padding: .5em;
         border: 1px solid rgb(143, 121, 0);
+        border-radius: 2px;
+        margin-bottom: .25em;
     }
 
     .activeTournamentListItem:hover {
@@ -308,8 +355,17 @@
     }
 
     .setTournamentFontSize {
-        font-size: xx-large;
+        font-size: x-large;
         font-weight: 200;
+    }
+    .controlBtnApprove {
+        background-color: #694873;
+        color: rgb(231, 231, 231);
+        /* height: 2em; */
+        border: none;
+        border-radius: 2px;
+        cursor: pointer;
+        transition: .2s cubic-bezier(0.215, 0.61, 0.355, 1);
     }
 
     /* tournament results modal */
@@ -391,8 +447,9 @@
         border-radius: 4px;
         padding: .5em;
         background-color: #694873;
+        cursor: pointer;
     }
-    
+
     #newTournamentForm {
         border: 2px solid rgb(40, 40, 40);
         border-radius: 8px;
@@ -469,6 +526,7 @@
         align-items: center;
         /* padding: 0 2em; */
     }
+
     #tournamentSubmit {
         height: 6em;
         display: flex;
@@ -515,6 +573,7 @@
         list-style: none;
         padding: .5em;
         border: 1px solid #694873;
+        border-radius: 6px;
     }
 
 
@@ -524,15 +583,23 @@
         height: 8.5em;
         overflow: scroll;
         list-style: none;
-        margin-top: 2em;
+        /* margin-top: 1em; */
         padding: .5em;
-        border: 1px solid #4a9392;    }
+        border: 1px solid #4a9392;
+        border-radius: 6px;
+    }
 
     .pastTournamentsBtn {
         align-self: start;
-        margin-bottom: .5em;
-        margin-top: 1em;
-
+        margin-bottom: 1em;
+        margin-top: 2em;
+        width: fit-content;
+        font-size: medium;
+        border: none;
+        border-radius: 4px;
+        padding: .5em;
+        background-color: #694873;
+        cursor: pointer;
     }
 
     .tournamentListItem {
@@ -540,6 +607,8 @@
         cursor: pointer;
         padding: .5em;
         border: 1px solid rgb(143, 121, 0);
+        border-radius: 2px;
+        margin-bottom: .25em;
     }
 
     .activeTournamentListItem:hover {

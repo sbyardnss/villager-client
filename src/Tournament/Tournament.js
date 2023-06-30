@@ -222,7 +222,7 @@ export const Tournament = () => {
                             })
                         }
                     </section>
-                    <button className="pastTournamentsBtn" onClick={() => setPastTournaments(!pastTournaments)}>toggle past tournaments</button>
+                    <button className="pastTournamentsBtn setCustomFont" onClick={() => setPastTournaments(!pastTournaments)}>toggle past tournaments</button>
 
                     {pastTournamentSection()}
                 </article>

@@ -333,7 +333,7 @@ export const ActiveTournament = () => {
             const editPairings = [...activeTournament?.pairings]
             const filteredPairings = editPairings.filter(pairing => pairing.round < activeTournament?.rounds)
             return (
-                <section>
+                <section id="tournamentEditSection">
                     <button onClick={() => setEditScores(false)}>cancel</button>
                     {
                         tournamentGames.map(game => {
@@ -392,7 +392,7 @@ export const ActiveTournament = () => {
     const scoringButtonOrNone = () => {
         if (activeTournament.in_person === false) {
             return (
-                <button onClick={() => {
+                <button className="controlBtnApprove" onClick={() => {
                     {
                         currentRoundMatchups.map(matchup => {
                             if (matchup.player2 !== null) {
@@ -526,9 +526,16 @@ export const ActiveTournament = () => {
                         </div>
                     </div>
                     <div className="setColor setTournamentFontSize">{activeTournament.title}</div>
+                    <button
+                        className="progressionControlBtn buttonStyleReject"
+                        onClick={() => {
+                            setSelectedTournament(0)
+                            setEditScores(false)
+                            setScoring(false)
+                        }}>exit</button>
                     <div id="tournamentProgressionControls">
                         <button
-                            className="progressionControlBtn"
+                            className="progressionControlBtn controlBtnApprove"
                             onClick={() => {
                                 if (window.confirm("create round?")) {
                                     if (byePlayer) {
@@ -544,21 +551,14 @@ export const ActiveTournament = () => {
                                 }
                             }}>Finish Round</button>
                         <button
-                            className="progressionControlBtn"
-                            onClick={() => {
-                                setSelectedTournament(0)
-                                setEditScores(false)
-                                setScoring(false)
-                            }}>exit</button>
-                        <button
-                            className="progressionControlBtn"
+                            className="progressionControlBtn controlBtnApprove"
                             onClick={() => {
                                 setEditScores(true)
                                 setScoring(false)
                             }}>edit scores</button>
                         {scoringButtonOrNone()}
                         <button
-                            className="progressionControlBtn"
+                            className="progressionControlBtn controlBtnApprove"
                             onClick={() => {
                                 modal.style.display = "flex";
                             }}>Results</button>

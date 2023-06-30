@@ -334,53 +334,59 @@ export const ActiveTournament = () => {
             const filteredPairings = editPairings.filter(pairing => pairing.round < activeTournament?.rounds)
             return (
                 <section id="tournamentEditSection">
-                    <button onClick={() => setEditScores(false)}>cancel</button>
-                    {
-                        tournamentGames.map(game => {
-                            const white = activeTournamentPlayers.find(player => player.id === game.player_w.id)
-                            const black = activeTournamentPlayers.find(player => player.id === game.player_b?.id)
-                            // const matchup = tournamentGames?.find(game => game.tournament_round === pairing.round && game.player_w?.id === white?.id && game.player_b?.id === black?.id)
-                            if (game.winner !== null) {
-                                if (game.bye === true) {
-                                    return (
-                                        <div key={`${game.tournament_round} + ${game.id} + editing`}>
-                                            <div>Round {game.tournament_round}</div>
-                                            <div className="whitePiecesMatchup"
-                                                id="whiteUpdate">{white.full_name}</div>
-                                        </div>
-                                    )
+                    <button className="buttonStyleReject" id="cancelEditBtn" onClick={() => setEditScores(false)}>cancel edit</button>
+                    <section id="previousMatchups">
+                        {
+                            tournamentGames.map(game => {
+                                const white = activeTournamentPlayers.find(player => player.id === game.player_w.id)
+                                const black = activeTournamentPlayers.find(player => player.id === game.player_b?.id)
+                                // const matchup = tournamentGames?.find(game => game.tournament_round === pairing.round && game.player_w?.id === white?.id && game.player_b?.id === black?.id)
+                                if (game.winner !== null) {
+                                    if (game.bye === true) {
+                                        return (
+                                            <div key={`${game.tournament_round} + ${game.id} + editing`} className="editMatchup">
+                                                <div>Round {game.tournament_round}</div>
+                                                <div className="whitePiecesMatchup"
+                                                    id="whiteUpdate">{white.full_name}</div>
+                                            </div>
+                                        )
+                                    }
+                                    else {
+                                        return (
+                                            <div key={`${game.tournament_round} + ${game.id} + editing`} className="editScoreListItem">
+                                                <div>
+                                                    <div className="setCustomFont">Round {game.tournament_round}</div>
+                                                </div>
+                                                <div className="editMatchup">
+                                                    <div className="whitePiecesMatchup"
+                                                        id="whiteUpdate"
+                                                        onClick={(evt) => {
+                                                            handleGameForApiUpdate(evt.target.id, white, black, game)
+                                                        }}>{white.username}</div>
+                                                    <div className="drawMatchupButton"
+                                                        id="drawUpdate"
+                                                        onClick={(evt) => {
+                                                            handleGameForApiUpdate(evt.target.id, white, black, game)
+                                                        }}>Draw</div>
+                                                    <div className="blackPiecesMatchup"
+                                                        id="blackUpdate"
+                                                        onClick={(evt) => {
+                                                            handleGameForApiUpdate(evt.target.id, white, black, game)
+                                                        }}>{black?.username}</div>
+                                                    <button onClick={() => {
+                                                        alterGame(gameForApi)
+                                                            .then(() => resetTournamentGames())
+                                                    }}>
+                                                        submit
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        )
+                                    }
                                 }
-                                else {
-                                    return (
-                                        <div key={`${game.tournament_round} + ${game.id} + editing`}>
-                                            <div>Round {game.tournament_round}</div>
-                                            <div className="whitePiecesMatchup"
-                                                id="whiteUpdate"
-                                                onClick={(evt) => {
-                                                    handleGameForApiUpdate(evt.target.id, white, black, game)
-                                                }}>{white.full_name}</div>
-                                            <div className="drawMatchupButton"
-                                                id="drawUpdate"
-                                                onClick={(evt) => {
-                                                    handleGameForApiUpdate(evt.target.id, white, black, game)
-                                                }}>Draw</div>
-                                            <div className="blackPiecesMatchup"
-                                                id="blackUpdate"
-                                                onClick={(evt) => {
-                                                    handleGameForApiUpdate(evt.target.id, white, black, game)
-                                                }}>{black?.full_name}</div>
-                                            <button onClick={() => {
-                                                alterGame(gameForApi)
-                                                    .then(() => resetTournamentGames())
-                                            }}>
-                                                submit
-                                            </button>
-                                        </div>
-                                    )
-                                }
-                            }
-                        })
-                    }
+                            })
+                        }
+                    </section>
                 </section>
             )
         }
@@ -415,12 +421,7 @@ export const ActiveTournament = () => {
             )
         }
         else {
-            return (
-                <button onClick={() => {
-                    setScoring(true)
-                    setEditScores(false)
-                }}>score</button>
-            )
+            return null
         }
     }
     if (selectedTournament) {
@@ -525,14 +526,16 @@ export const ActiveTournament = () => {
                             }}>cancel</button>
                         </div>
                     </div>
-                    <div className="setColor setTournamentFontSize">{activeTournament.title}</div>
-                    <button
-                        className="progressionControlBtn buttonStyleReject"
-                        onClick={() => {
-                            setSelectedTournament(0)
-                            setEditScores(false)
-                            setScoring(false)
-                        }}>exit</button>
+                    <div id="activeTournamentHeader">
+                        <div className="setColor setTournamentFontSize">{activeTournament.title}</div>
+                        <button
+                            className="progressionControlBtn buttonStyleReject"
+                            onClick={() => {
+                                setSelectedTournament(0)
+                                setEditScores(false)
+                                setScoring(false)
+                            }}>exit</button>
+                    </div>
                     <div id="tournamentProgressionControls">
                         <button
                             className="progressionControlBtn controlBtnApprove"

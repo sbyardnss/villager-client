@@ -172,6 +172,7 @@
     }
     #playerSearchInput {
         width: 15.5em;
+        margin-right: 1em;
     }
 
     #tournamentParameters {

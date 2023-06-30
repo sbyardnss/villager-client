@@ -97,16 +97,16 @@ export const getTournamentGames = (tournamentId) => {
     })
         .then(res => res.json())
 }
-export const getAllGuestPlayers = () => {
-    const localVillagerObj = getToken()
-    return fetch(`${apiKey}/guests`, {
-        headers: {
-            "Authorization": `Token ${localVillagerObj.token}`,
-            "Content-Type": "application/json"
-        }
-    })
-        .then(res => res.json())
-}
+// export const getAllGuestPlayers = () => {
+//     const localVillagerObj = getToken()
+//     return fetch(`${apiKey}/guests`, {
+//         headers: {
+//             "Authorization": `Token ${localVillagerObj.token}`,
+//             "Content-Type": "application/json"
+//         }
+//     })
+//         .then(res => res.json())
+// }
 //pulling from rapidAPI
 export const getPuzzles = (rating) => {
     return fetch(`https://chess-puzzles.p.rapidapi.com/?themes=%5B%22middlegame%22%2C%22advantage%22%5D&rating=${rating}&themesType=ALL&playerMoves=4&count=25`, {

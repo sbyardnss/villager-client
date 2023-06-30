@@ -302,32 +302,6 @@ export const ActiveTournament = () => {
                                 currentRoundMatchups?.map(matchup => {
                                     const white = activeTournamentPlayers.find(player => player.id === matchup.player1)
                                     const black = activeTournamentPlayers.find(player => player.id === matchup.player2)
-                                    //CODE BELOW RUNNING TOO FAST NOW. NOT SURE WHY BUT REPLACING WITH CREATE GAMES BUTTON
-                                    // const copy = { ...gameForApi }
-                                    // copy.player_w = white?.id
-                                    // copy.player_b = black?.id ? black.id : null
-                                    // //tournament games not being updated correctly causing digital tournament to send a ton of post requests
-                                    // const alreadyCreatedGameObj = tournamentGames.find(g => g.tournament === copy.tournament && g.player_b?.id === copy.player_b && g.player_w?.id === copy.player_w)
-                                    // const alreadyCreatedByeGame = tournamentGames.find(g => g.tournament === copy.tournament && g.player_b?.id === copy.player_b && g.player_w?.id === copy.player_w)
-                                    // if (tournamentGames && white && black) {
-                                    //     if (!alreadyCreatedGameObj && !alreadyCreatedByeGame) {
-                                    //         copy.pgn = ""
-                                    //         if (copy.player_b === null) {
-                                    //             copy.bye = true
-                                    //             copy.winner = white?.id
-                                    //             copy.win_style = "bye"
-                                    //             // console.log(copy)
-                                    //             sendNewGame(copy)
-                                    //                 .then(() => resetTournamentGames())
-                                    //         }
-                                    //         else {
-                                    //             copy.winner = null
-                                    //             // console.log(copy)
-                                    //             sendNewGame(copy)
-                                    //                 .then(() => resetTournamentGames())
-                                    //         }
-                                    //     }
-                                    // }
                                     if (white?.id && black?.id) {
                                         return (
                                             <tr key={matchup.round + matchup.match}>
@@ -545,7 +519,10 @@ export const ActiveTournament = () => {
                                     })
                             }
                             }>confirm</button>
-                            <button>cancel</button>
+                            <button onClick={() => {
+                                endTournamentModal.style.display = "none"
+                                modal.style.display = "flex"
+                            }}>cancel</button>
                         </div>
                     </div>
                     <div className="setColor setTournamentFontSize">{activeTournament.title}</div>

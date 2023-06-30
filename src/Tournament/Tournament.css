@@ -18,20 +18,46 @@
         border-radius: 8px;
         color: rgb(231, 231, 231);
         position: absolute;
-        top: 40%;
-        backdrop-filter: blur(10px);
+        top: 20%;
+        backdrop-filter: blur(30px);
+        background-color: #20202099;
         width: 15em;
-        height: 10em;
+        height: fit-content;
         justify-content: center;
         align-items: center;
         flex-direction: column;
         font-size: larger;
+        padding: .5em;
     }
 
     .resultsModalListItem {
         width: 6em;
         display: flex;
         justify-content: space-between;
+    }
+    /* end Tournament modal */
+    #endTournamentModal {
+        display: flex;
+        border: 1px solid #f4d35e;
+        border-radius: 8px;
+        color: rgb(231, 231, 231);
+        position: absolute;
+        top: 20%;
+        backdrop-filter: blur(30px);
+        background-color: #20202099;
+        width: 12.8em;
+        height: 10em;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        font-size: x-large;
+        /* padding: .5em; */
+    }
+    #endTournamentBtnBlock {
+        display: flex;
+        margin-top: 2em;
+        width: 60%;
+        justify-content: space-around;
     }
 
     /* tournament setup */
@@ -268,7 +294,7 @@
         color: rgb(231, 231, 231);
         position: absolute;
         top: 20%;
-        backdrop-filter: blur(10px);
+        backdrop-filter: blur(30px);
         background-color: #20202099;
         width: 15em;
         height: fit-content;
@@ -309,18 +335,21 @@
         color: rgb(231, 231, 231);
         position: absolute;
         top: 20%;
-        backdrop-filter: blur(10px);
+        backdrop-filter: blur(30px);
         background-color: #20202099;
-        width: 15em;
-        height: fit-content;
+        width: 12.8em;
+        height: 10em;
         justify-content: center;
         align-items: center;
         flex-direction: column;
-        font-size: larger;
-        padding: .5em;
+        font-size: x-large;
+        /* padding: .5em; */
     }
     #endTournamentBtnBlock {
         display: flex;
+        margin-top: 2em;
+        width: 60%;
+        justify-content: space-around;
     }
 
     /* tournament setup */
@@ -436,6 +465,23 @@
         height: 8.5em;
         overflow: scroll;
         list-style: none;
+        
+    }
+    #pastTournamentsDiv {
+        width: 100%;
+    }
+    #pastTournamentList {
+        width: 100%;
+        height: 8.5em;
+        overflow: scroll;
+        list-style: none;
+        margin-top: 2em;
+    }
+    .pastTournamentsBtn {
+        align-self: start;
+        margin-bottom: .5em;
+        margin-top: 1em;
+
     }
 
     .tournamentListItem {

@@ -14,6 +14,7 @@ export const TournamentProvider = (props) => {
     const [tournamentGames, setTournamentGames] = useState([])
     const [pastPairings, setPastPairings] = useState([])
     const [guests, setGuests] = useState([])
+    const [playersAndGuests, setPlayersAndGuests] = useState([])
 
     useEffect(
         () => {
@@ -46,6 +47,14 @@ export const TournamentProvider = (props) => {
     )
     useEffect(
         () => {
+            // const guestsCopy = [...guests]
+            // guestsCopy.map(g => g.id = g.guest_id)
+            const allPlayersAndGuests = players.concat(guests)
+            setPlayersAndGuests(allPlayersAndGuests)
+        },[players, guests]
+    )
+    useEffect(
+        () => {
             const previousPairings = []
             tournamentGames.map(tg => {
                 const pairing = [tg.player_w?.id, tg.player_b?.id]
@@ -70,7 +79,7 @@ export const TournamentProvider = (props) => {
         <TournamentContext.Provider value={{
             localVillagerObj, players, timeSettings, tournaments, setTournaments, tournamentGames, setGames,
             selectedTournament, setSelectedTournament, pastPairings, resetGames, resetTournamentGames,
-            guests
+            guests, playersAndGuests, setPlayersAndGuests
         }}>
             {props.children}
         </TournamentContext.Provider>

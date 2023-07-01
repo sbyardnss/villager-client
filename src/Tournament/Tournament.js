@@ -6,12 +6,13 @@ import { alterGame, getAllGames, getAllPlayers, getAllTournaments, sendNewGame, 
 import { ActiveTournament } from "./ActiveTournament"
 
 export const Tournament = () => {
-    const { localVillagerObj, tournamentGames, tournaments, setTournaments, players, timeSettings, setGames, selectedTournament, setSelectedTournament, resetTournamentGames, guests } = useContext(TournamentContext)
+    const { localVillagerObj, tournamentGames, tournaments, setTournaments, players, timeSettings, setGames, selectedTournament, setSelectedTournament, resetTournamentGames, guests, playersAndGuests } = useContext(TournamentContext)
     const [potentialCompetitors, setPotentialCompetitors] = useState([])
     const [pastTournaments, setPastTournaments] = useState(false)
     const [search, setSearch] = useState("")
     const [createTournament, setCreateTournament] = useState(false)
-    const [playersAndGuests, setPlayersAndGuests] = useState([])
+    const [showGuests, setShowGuests] = useState(false)
+    // const [playersAndGuests, setPlayersAndGuests] = useState([])
     const [newTournament, updateNewTournament] = useState({
         title: "",
         creator: localVillagerObj.userId,
@@ -32,14 +33,14 @@ export const Tournament = () => {
     //     }, [players, newTournament]
     // )
 
-    useEffect(
-        () => {
-            // const guestsCopy = [...guests]
-            // guestsCopy.map(g => g.id = g.guest_id)
-            const allPlayersAndGuests = players.concat(guests)
-            setPlayersAndGuests(allPlayersAndGuests)
-        },[players, guests]
-    )
+    // useEffect(
+    //     () => {
+    //         // const guestsCopy = [...guests]
+    //         // guestsCopy.map(g => g.id = g.guest_id)
+    //         const allPlayersAndGuests = players.concat(guests)
+    //         setPlayersAndGuests(allPlayersAndGuests)
+    //     },[players, guests]
+    // )
     //search player useEffect
     useEffect(
         () => {
@@ -51,10 +52,13 @@ export const Tournament = () => {
             }
             else {
                 const unselectedPlayers = players.filter(p => !newTournament.competitors.find(c => c.id === p.id))
-                const unselectedGuests = guests.filter(g => !newTournament.guest_competitors.find(gc => gc.id === g.id))
+                let unselectedGuests = []
+                if (showGuests) {
+                    unselectedGuests = guests.filter(g => !newTournament.guest_competitors.find(gc => gc.id === g.id))
+                }
                 setPotentialCompetitors(unselectedPlayers.concat(unselectedGuests))
             }
-        }, [search, playersAndGuests, newTournament, createTournament]
+        }, [search, showGuests, playersAndGuests, newTournament, createTournament]
     )
     //getter/setter for tournaments
     const resetTournaments = () => {
@@ -181,7 +185,7 @@ export const Tournament = () => {
                             id="playerSearchInput"
                             className="text-input"
                             type="text"
-                            placeholder="search for player"
+                            placeholder="search for player or guest"
                             value={search}
                             onChange={(e) => setSearch(e.target.value)}
                         />
@@ -246,6 +250,7 @@ export const Tournament = () => {
                                 }}>
                                 Start Tournament
                             </button>
+                            <button onClick={() => setShowGuests(!showGuests)}>toggle guests</button>
                             <button onClick={() => setCreateTournament(false)}>cancel</button>
                         </div>
                     </section>

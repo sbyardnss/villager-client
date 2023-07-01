@@ -5,7 +5,7 @@ import "./Tournament.css"
 
 
 export const ActiveTournament = () => {
-    const { tournaments, setTournaments, players, timeSettings, tournamentGames, selectedTournament, setSelectedTournament, resetTournamentGames } = useContext(TournamentContext)
+    const { tournaments, setTournaments, players, guests, playersAndGuests, timeSettings, tournamentGames, selectedTournament, setSelectedTournament, resetTournamentGames } = useContext(TournamentContext)
     //initial setup state variables
     const [activeTournament, setActiveTournament] = useState({})
     const [activeTournamentPlayers, setActiveTournamentPlayers] = useState([])
@@ -43,7 +43,7 @@ export const ActiveTournament = () => {
         winner: 0,
         bye: true
     })
-
+    console.log(activeTournament)
     useEffect(
         () => {
             const selectedTournamentObj = tournaments?.find(t => t.id === selectedTournament)
@@ -52,7 +52,15 @@ export const ActiveTournament = () => {
     )
     useEffect(
         () => {
-            const playersForSelectedTournament = players.filter(p => activeTournament?.competitors?.find(c => c === p.id))
+            // const playersForSelectedTournament = players.filter(p => activeTournament?.competitors?.find(c => c === p.id))
+            const playersForSelectedTournament = playersAndGuests.filter(p => {
+                if (p.guest_id) {
+                    return activeTournament?.guest_competitors?.find(gc => p.guest_id === gc.guest_id)
+                }
+                else {
+                    return activeTournament?.competitors?.find(c => c === p.id)
+                }
+            })
             setActiveTournamentPlayers(playersForSelectedTournament)
             const copy = { ...gameForApi }
             copy.tournament = activeTournament?.id

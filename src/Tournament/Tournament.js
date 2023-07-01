@@ -16,6 +16,7 @@ export const Tournament = () => {
         title: "",
         creator: localVillagerObj.userId,
         competitors: [],
+        guest_competitors: [],
         timeSetting: 0,
         rounds: 1,
         in_person: true,
@@ -33,9 +34,9 @@ export const Tournament = () => {
 
     useEffect(
         () => {
-            const guestsCopy = [...guests]
-            guestsCopy.map(g => g.id = g.guest_id)
-            const allPlayersAndGuests = players.concat(guestsCopy)
+            // const guestsCopy = [...guests]
+            // guestsCopy.map(g => g.id = g.guest_id)
+            const allPlayersAndGuests = players.concat(guests)
             setPlayersAndGuests(allPlayersAndGuests)
         },[players, guests]
     )
@@ -49,10 +50,9 @@ export const Tournament = () => {
                 setPotentialCompetitors(filteredUsers)
             }
             else {
-                const unselectedPlayers = playersAndGuests.filter(p => {
-                    return !newTournament.competitors.find(c => c === p.id)
-                })
-                setPotentialCompetitors(unselectedPlayers)
+                const unselectedPlayers = players.filter(p => !newTournament.competitors.find(c => c.id === p.id))
+                const unselectedGuests = guests.filter(g => !newTournament.guest_competitors.find(gc => gc.id === g.id))
+                setPotentialCompetitors(unselectedPlayers.concat(unselectedGuests))
             }
         }, [search, playersAndGuests, newTournament, createTournament]
     )
@@ -109,14 +109,19 @@ export const Tournament = () => {
                                 {
                                     potentialCompetitors.map((p, index) => {
                                         return (
-                                            <li key={p.id + '-- potentialCompetitor'}
+                                            <li key={p.guest_id ? p.guest_id + '-- potentialCompetitor' : p.id + '-- potentialCompetitor'}
                                                 className="newTournamentPlayerListItem"
                                                 onClick={() => {
                                                     const copy = [...potentialCompetitors]
                                                     copy.splice(index, 1)
                                                     setPotentialCompetitors(copy)
                                                     const tournamentCopy = { ...newTournament }
-                                                    tournamentCopy.competitors.push(p.id)
+                                                    if (p.guest_id) {
+                                                        tournamentCopy.guest_competitors.push(p)
+                                                    }
+                                                    else {
+                                                        tournamentCopy.competitors.push(p)
+                                                    }
                                                     updateNewTournament(tournamentCopy)
                                                 }}>
                                                 {p.full_name}
@@ -131,9 +136,9 @@ export const Tournament = () => {
                             <div id="tournamentSelectedCompetitors">
                                 {
                                     newTournament.competitors.map((competitor, index) => {
-                                        const player = playersAndGuests.find(p => p.id === competitor)
+                                        const player = playersAndGuests.find(p => p.id === competitor.id)
                                         return (
-                                            <li key={player.id + '-- competitor'}
+                                            <li key={competitor.id + '-- competitor'}
                                                 className="newTournamentPlayerListItem"
                                                 onClick={() => {
                                                     const tournamentCopy = { ...newTournament }
@@ -148,6 +153,26 @@ export const Tournament = () => {
                                         )
                                     })
                                 }
+                                {
+                                    newTournament.guest_competitors.map((competitor, index) => {
+                                        const player = playersAndGuests.find(p => p.guest_id === competitor.guest_id)
+                                        return (
+                                            <li key={competitor.guest_id + '-- competitor'}
+                                                className="newTournamentPlayerListItem"
+                                                onClick={() => {
+                                                    const tournamentCopy = { ...newTournament }
+                                                    tournamentCopy.guest_competitors.splice(index, 1)
+                                                    updateNewTournament(tournamentCopy)
+                                                    const copy = [...potentialCompetitors]
+                                                    copy.push(competitor)
+                                                    setPotentialCompetitors(copy)
+                                                }}>
+                                                {player.full_name}
+                                            </li>
+                                        )
+                                    })
+                                }
+                            
                             </div>
                         </div>
                     </div>

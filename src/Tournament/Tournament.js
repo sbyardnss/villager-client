@@ -43,20 +43,19 @@ export const Tournament = () => {
     useEffect(
         () => {
             if (search !== "") {
-                const filteredUsers = players.filter(pc => {
+                const filteredUsers = playersAndGuests.filter(pc => {
                     return pc.full_name.toLowerCase().includes(search.toLowerCase())
                 })
                 setPotentialCompetitors(filteredUsers)
             }
             else {
-                const unselectedPlayers = players.filter(p => {
+                const unselectedPlayers = playersAndGuests.filter(p => {
                     return !newTournament.competitors.find(c => c === p.id)
                 })
                 setPotentialCompetitors(unselectedPlayers)
             }
-        }, [search, players, newTournament]
+        }, [search, playersAndGuests, newTournament, createTournament]
     )
-
     //getter/setter for tournaments
     const resetTournaments = () => {
         getAllTournaments()
@@ -110,7 +109,7 @@ export const Tournament = () => {
                                 {
                                     potentialCompetitors.map((p, index) => {
                                         return (
-                                            <li key={p.id}
+                                            <li key={p.id + '-- potentialCompetitor'}
                                                 className="newTournamentPlayerListItem"
                                                 onClick={() => {
                                                     const copy = [...potentialCompetitors]
@@ -132,7 +131,7 @@ export const Tournament = () => {
                             <div id="tournamentSelectedCompetitors">
                                 {
                                     newTournament.competitors.map((competitor, index) => {
-                                        const player = players.find(p => p.id === competitor)
+                                        const player = playersAndGuests.find(p => p.id === competitor)
                                         return (
                                             <li key={player.id + '-- competitor'}
                                                 className="newTournamentPlayerListItem"

@@ -11,6 +11,7 @@ export const Tournament = () => {
     const [pastTournaments, setPastTournaments] = useState(false)
     const [search, setSearch] = useState("")
     const [createTournament, setCreateTournament] = useState(false)
+    const [playersAndGuests, setPlayersAndGuests] = useState([])
     const [newTournament, updateNewTournament] = useState({
         title: "",
         creator: localVillagerObj.userId,
@@ -30,6 +31,14 @@ export const Tournament = () => {
     //     }, [players, newTournament]
     // )
 
+    useEffect(
+        () => {
+            const guestsCopy = [...guests]
+            guestsCopy.map(g => g.id = g.guest_id)
+            const allPlayersAndGuests = players.concat(guestsCopy)
+            setPlayersAndGuests(allPlayersAndGuests)
+        },[players, guests]
+    )
     //search player useEffect
     useEffect(
         () => {

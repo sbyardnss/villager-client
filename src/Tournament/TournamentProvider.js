@@ -1,5 +1,5 @@
 import { useState, useEffect, createContext } from "react";
-import { getAllGames, getAllPlayers, getAllTimeSettings, getAllTournaments, getTournamentGames } from "../ServerManager";
+import { getAllGames, getAllGuestPlayers, getAllPlayers, getAllTimeSettings, getAllTournaments, getTournamentGames } from "../ServerManager";
 
 export const TournamentContext = createContext()
 
@@ -17,12 +17,12 @@ export const TournamentProvider = (props) => {
 
     useEffect(
         () => {
-            Promise.all([getAllPlayers(), getAllTournaments(), getAllTimeSettings(), getAllGames()]).then(([playerData, tournamentData, timeSettingData, gameData]) => {
+            Promise.all([getAllPlayers(), getAllTournaments(), getAllTimeSettings(), getAllGames(), getAllGuestPlayers()]).then(([playerData, tournamentData, timeSettingData, gameData, guestData]) => {
                 setPlayers(playerData)
                 setTournaments(tournamentData)
                 setTimeSettings(timeSettingData)
                 setGames(gameData)
-                // setGuests(guestData)
+                setGuests(guestData)
             })
         }, []
     )
@@ -61,6 +61,10 @@ export const TournamentProvider = (props) => {
     const resetTournamentGames = () => {
         getTournamentGames(selectedTournament)
             .then(data => setTournamentGames(data))
+    }
+    const resetGuests = () => {
+        getAllGuestPlayers()
+            .then(data => setGuests(data))
     }
     return (
         <TournamentContext.Provider value={{

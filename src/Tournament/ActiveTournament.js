@@ -142,7 +142,6 @@ export const ActiveTournament = () => {
 
     const solkoffTieBreaker = (playerArr) => {
         const tieBreakArr = []
-        console.log(playerArr)
         for (const playerId of playerArr) {
             const playerGames = resultsForTieBreak.filter(r => {
                 if (typeof playerId === 'string') {
@@ -152,7 +151,34 @@ export const ActiveTournament = () => {
             })
             let opponentsTotalScore = 0.0
             for (const gameResult of playerGames) {
-                let opponentId = gameResult.white === playerId ? gameResult.black?.id : gameResult.white?.id
+                // let opponentId = gameResult.white === playerId ? gameResult.black?.id : gameResult.white?.id
+                let opponentId = ''
+                let opponentIdNum = 0
+                //opponentId currently staying null
+                if (typeof playerId === 'string') {
+                    if (gameResult.white.guest_id === playerId) {
+                        console.log('getting here')
+                        console.log(gameResult)
+                        // gameResult.black?.guest_id ? opponentId = gameResult.black?.guest_id : opponentIdNum = gameResult.black?.id
+                        if (gameResult.black?.guest_id) {
+                            opponentId = gameResult.black.guest_id || null
+                        }
+                        else {
+                            opponentIdNum = gameResult.black?.id || null
+                        }
+                    }
+                    else {
+                        // gameResult.white?.guest_id ? opponentId = gameResult.white?.guest_id : opponentIdNum = gameResult.white?.id
+                        if (gameResult.white?.guest_id) {
+                            opponentId = gameResult.white.guest_id
+                        }
+                        else {
+                            opponentIdNum = gameResult.white?.id
+                        }
+                    }
+                }
+
+                //code failing before this line
                 const opponentGames = resultsForTieBreak.filter(r => r.black?.id === opponentId || r.white?.id === opponentId)
                 for (const gameResult of opponentGames) {
                     if (gameResult.winner?.id === opponentId) {
@@ -248,6 +274,7 @@ export const ActiveTournament = () => {
             }
         }
     }
+    console.log(activeTournamentPlayers)
     const submitResultsOrNull = () => {
         if (activeTournament?.complete === false) {
 
@@ -256,8 +283,8 @@ export const ActiveTournament = () => {
                     <section id="tournamentScoringSection">
                         {
                             currentRoundMatchups?.map(matchup => {
-                                const white = activeTournamentPlayers?.find(player => player.id === matchup.player1)
-                                const black = activeTournamentPlayers?.find(player => player.id === matchup.player2)
+                                const white = activeTournamentPlayers?.find(player => player.id === matchup.player1 || player.guest_id === matchup.player1)
+                                const black = activeTournamentPlayers?.find(player => player.id === matchup.player2 || player.guest_id === matchup.player2)
                                 const copy = { ...gameForApi }
                                 copy.player_w = white?.id
                                 copy.player_b = black?.id
@@ -276,7 +303,7 @@ export const ActiveTournament = () => {
                                             id="whitePieces"
                                             onClick={(evt) => {
                                                 handleGameForApiUpdate(evt.target.id, white, black)
-                                            }}>{white?.username}
+                                            }}>{white?.guest_id ? white.full_name : white?.username}
                                         </div>
                                         <div
                                             className="drawMatchupButton"
@@ -290,7 +317,7 @@ export const ActiveTournament = () => {
                                             id="blackPieces"
                                             onClick={(evt) => {
                                                 handleGameForApiUpdate(evt.target.id, white, black)
-                                            }}>{black?.username}
+                                            }}>{black?.guest_id ? black.full_name : black?.username}
                                         </div>
                                         <button onClick={() => {
                                             sendNewGame(gameForApi)

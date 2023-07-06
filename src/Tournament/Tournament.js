@@ -240,7 +240,20 @@ export const Tournament = () => {
                                     if (newTournament.competitors && newTournament.timeSetting && newTournament.title) {
                                         if (window.confirm("Everybody ready?")) {
                                             const copy = { ...newTournament }
-                                            copy.pairings = RoundRobin(newTournament.competitors)
+                                            const registeredPairingArr = newTournament.competitors.map(c => {return c.id})
+                                            const guestPairingArr = newTournament.guest_competitors.map(gc => {return gc.guest_id})
+                                            if (guestPairingArr) {
+                                                copy.pairings = RoundRobin(registeredPairingArr.concat(guestPairingArr))
+                                                copy.competitors = registeredPairingArr
+                                                copy.guest_competitors = newTournament.guest_competitors.map(gc => {return gc.id})
+                                            }
+                                            else {
+                                                copy.pairings = RoundRobin(registeredPairingArr)
+                                                copy.competitors = registeredPairingArr
+                                            }
+                                            
+                                            
+                                            // copy.pairings = RoundRobin(newTournament.competitors)
                                             sendNewTournament(copy)
                                                 .then(() => {
                                                     resetTournaments()

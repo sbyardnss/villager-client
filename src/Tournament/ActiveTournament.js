@@ -23,17 +23,21 @@ export const ActiveTournament = () => {
     //prepping data for api state variables
     const [gameForApi, updateGameForApi] = useState({
         player_w: 0,
+        player_w_model_type: "",
         player_b: 0,
+        player_b_model_type: "",
         tournament: 0,
         time_setting: 0,
         win_style: "",
         accepted: true,
         tournament_round: 0,
         winner: 0,
+        winner_model_type: "",
         bye: false
     })
     const [byeGame, setByeGame] = useState({
         player_w: 0,
+        player_w_model_type: "",
         player_b: null,
         tournament: 0,
         time_setting: 0,
@@ -41,6 +45,7 @@ export const ActiveTournament = () => {
         accepted: true,
         tournament_round: 0,
         winner: 0,
+        winner_model_type: "",
         bye: true
     })
     useEffect(
@@ -66,9 +71,9 @@ export const ActiveTournament = () => {
             copy.time_setting = activeTournament?.time_setting
             copy.tournament_round = activeTournament?.rounds
             updateGameForApi(copy)
-
         }, [activeTournament]
     )
+    console.log(gameForApi)
     useEffect(
         () => {
             if (activeTournament) {
@@ -225,22 +230,61 @@ export const ActiveTournament = () => {
         let copy = {}
         if (scoring) {
             copy = { ...gameForApi }
-            copy.player_w = whitePieces.id
-            copy.player_b = blackPieces.id
+            copy.time_setting = activeTournament.time_setting
+            if (whitePieces.guest_id) {
+                copy.player_w_model_type = 'guestplayer'
+                copy.player_w = whitePieces.guest_id
+            }
+            else {
+                copy.player_w_model_type = 'player'
+                copy.player_w = whitePieces.id
+
+            }
+            if (blackPieces.guest_id) {
+                copy.player_b_model_type = 'guestplayer'
+                copy.player_b = blackPieces.guest_id
+            }
+            else {
+                copy.player_b_model_type = 'player'
+                copy.player_b = blackPieces?.id
+            }
             copy.tournament = activeTournament?.id
             copy.tournament_round = currentRound
             // updateGameForApi(copy)
         }
         else {
             copy = { ...pastGame }
-            copy.player_w = whitePieces.id
-            copy.player_b = blackPieces.id
+            if (whitePieces.guest_id) {
+                copy.player_w_model_type = 'guestplayer'
+                copy.player_w = whitePieces.guest_id
+            }
+            else {
+                copy.player_w_model_type = 'player'
+                copy.player_w = whitePieces.id
+
+            }
+            if (blackPieces.guest_id) {
+                copy.player_b_model_type = 'guestplayer'
+                copy.player_b = blackPieces.guest_id
+            }
+            else {
+                copy.player_b_model_type = 'player'
+                copy.player_b = blackPieces?.id
+
+            }
             // updateGameForApi(copy)
         }
         if (!pastGame) {
             if (targetId === "whitePieces") {
                 // console.log(blackPieces)
-                copy.winner = whitePieces.id
+                if (whitePieces.guest_id) {
+                    copy.winner_model_type = 'guestplayer'
+                    copy.winner = whitePieces.guest_id
+                }
+                else {
+                    copy.winner_model_type = 'player'
+                    copy.winner = whitePieces.id
+                }
                 copy.win_style = "checkmate"
                 updateGameForApi(copy)
             }
@@ -250,7 +294,15 @@ export const ActiveTournament = () => {
                 updateGameForApi(copy)
             }
             if (targetId === "blackPieces") {
-                copy.winner = blackPieces.id
+                
+                if (blackPieces.guest_id) {
+                    copy.winner_model_type = 'guestplayer'
+                    copy.winner = blackPieces.guest_id
+                }
+                else {
+                    copy.winner_model_type = 'player'
+                    copy.winner = blackPieces.id
+                }
                 copy.win_style = "checkmate"
                 updateGameForApi(copy)
             }
@@ -258,7 +310,14 @@ export const ActiveTournament = () => {
         else {
             if (targetId === "whiteUpdate") {
                 // console.log(blackPieces)
-                copy.winner = whitePieces.id
+                if (whitePieces.guest_id) {
+                    copy.winner_model_type = 'guestplayer'
+                    copy.winner = whitePieces.guest_id
+                }
+                else {
+                    copy.winner_model_type = 'player'
+                    copy.winner = whitePieces.id
+                }
                 copy.win_style = "checkmate"
                 updateGameForApi(copy)
             }
@@ -268,13 +327,19 @@ export const ActiveTournament = () => {
                 updateGameForApi(copy)
             }
             if (targetId === "blackUpdate") {
-                copy.winner = blackPieces.id
+                if (blackPieces.guest_id) {
+                    copy.winner_model_type = 'guestplayer'
+                    copy.winner = blackPieces.guest_id
+                }
+                else {
+                    copy.winner_model_type = 'player'
+                    copy.winner = blackPieces.id
+                }
                 copy.win_style = "checkmate"
                 updateGameForApi(copy)
             }
         }
     }
-    console.log(activeTournamentPlayers)
     const submitResultsOrNull = () => {
         if (activeTournament?.complete === false) {
 

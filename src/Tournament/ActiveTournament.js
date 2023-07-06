@@ -607,10 +607,10 @@ export const ActiveTournament = () => {
                                                 return tg.player_b?.guest_id === tourneyPlayer.guest_id || tg.player_w.guest_id === tourneyPlayer.guest_id
                                             }
                                             else {
-                                                return tg.player_b?.id === tourneyPlayer.id || tg.player_w.id === tourneyPlayer.id
+                                                return !tg.player_b?.guest_id && tg.player_b?.id === tourneyPlayer.id || !tg.player_w.guest_id && tg.player_w.id === tourneyPlayer.id
                                             }
                                         })
-                                        console.log(tournamentGames)
+
                                         const emptyCellCompensation = () => {
                                             if (tourneyPlayerGames.length < currentRound) {
                                                 return (

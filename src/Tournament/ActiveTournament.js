@@ -43,7 +43,6 @@ export const ActiveTournament = () => {
         winner: 0,
         bye: true
     })
-    console.log(activeTournament)
     useEffect(
         () => {
             const selectedTournamentObj = tournaments?.find(t => t.id === selectedTournament)
@@ -130,6 +129,7 @@ export const ActiveTournament = () => {
         getAllTournaments()
             .then(data => setTournaments(data))
     }
+    console.log(activeTournament)
     const roundPopulation = () => {
         let roundNumber = activeTournament?.rounds;
         let tableHtml = [];
@@ -442,8 +442,13 @@ export const ActiveTournament = () => {
                 const resultArr = []
                 const arrForTieBreakers = []
                 activeTournamentPlayers.map(player => {
-                    const scoreElement = document.getElementById(player.id + "-- score")
-                    results[player.username] = [parseFloat(scoreElement?.innerHTML), player.id]
+                    const scoreElement = document.getElementById(player.guest_id ? player.guest_id + "-- score" : player.id + "-- score")
+                    if (player.guest_id) {
+                        results[player.full_name] = [parseFloat(scoreElement?.innerHTML), player.id]
+                    }
+                    else {
+                        results[player.username] = [parseFloat(scoreElement?.innerHTML), player.id]
+                    }
                 })
                 for (let player in results) {
                     resultArr.push([player, results[player]])
@@ -598,8 +603,14 @@ export const ActiveTournament = () => {
                                 {
                                     activeTournamentPlayers.map(tourneyPlayer => {
                                         const tourneyPlayerGames = tournamentGames.filter(tg => {
-                                            return tg.player_b?.id === tourneyPlayer.id || tg.player_w.id === tourneyPlayer.id
+                                            if (tourneyPlayer.guest_id) {
+                                                return tg.player_b?.guest_id === tourneyPlayer.guest_id || tg.player_w.guest_id === tourneyPlayer.guest_id
+                                            }
+                                            else {
+                                                return tg.player_b?.id === tourneyPlayer.id || tg.player_w.id === tourneyPlayer.id
+                                            }
                                         })
+                                        console.log(tournamentGames)
                                         const emptyCellCompensation = () => {
                                             if (tourneyPlayerGames.length < currentRound) {
                                                 return (
@@ -609,47 +620,55 @@ export const ActiveTournament = () => {
                                         }
                                         let score = 0
                                         return (
-                                            <tr key={tourneyPlayer.id} id={tourneyPlayer.id + "--tourneyRow"}>
+                                            <tr key={tourneyPlayer.guest_id ? tourneyPlayer.guest_id : tourneyPlayer.id} id={tourneyPlayer.id + "--tourneyRow"}>
                                                 <td key={tourneyPlayer.id} className="tablePlayerCell">{tourneyPlayer.full_name}</td>
                                                 {
                                                     tourneyPlayerGames.map(tpg => {
                                                         // if (tpg.player_b?.id === 3 || tpg.player_w?.id === 3) {
                                                         //     console.log(tpg)
                                                         // }
+                                                        const idMaker = () => {
+                                                            if (tourneyPlayer.guest_id) {
+                                                                return tpg.id + "--" + tourneyPlayer.guest_id
+                                                            }
+                                                            else {
+                                                                return tpg.id + "--" + tourneyPlayer.id
+                                                            }
+                                                        }
                                                         if (tpg.bye === true) {
                                                             score++
                                                             return (
-                                                                <td key={tpg.id} value={1} id={tpg.id + "--" + tourneyPlayer.id} className="tournamentGameResultBye">bye</td>
+                                                                <td key={tpg.id} value={1} id={idMaker()} className="tournamentGameResultBye">bye</td>
                                                             )
                                                         }
                                                         if (tpg.winner?.id === tourneyPlayer.id) {
                                                             score++
                                                             return (
-                                                                <td key={tpg.id} value={1} id={tpg.id + "--" + tourneyPlayer.id} className="tournamentGameResult">1</td>
+                                                                <td key={tpg.id} value={1} id={idMaker()} className="tournamentGameResult">1</td>
                                                             )
                                                         }
                                                         else if (tpg.winner === null && tpg.win_style === "draw") {
                                                             score += .5
                                                             return (
-                                                                <td key={tpg.id} value={.5} id={tpg.id + "--" + tourneyPlayer.id} className="tournamentGameResult">1/2</td>
+                                                                <td key={tpg.id} value={.5} id={idMaker()} className="tournamentGameResult">1/2</td>
                                                             )
                                                         }
                                                         else if (tpg.winner === null && !tpg.win_style) {
                                                             score = score
                                                             return (
-                                                                <td key={tpg.id} id={tpg.id + "--" + tourneyPlayer.id} className="tournamentGameResult"></td>
+                                                                <td key={tpg.id} id={idMaker()} className="tournamentGameResult"></td>
                                                             )
                                                         }
                                                         else {
                                                             score = score
                                                             return (
-                                                                <td key={tpg.id} value={0} id={tpg.id + "--" + tourneyPlayer.id} className="tournamentGameResult">0</td>
+                                                                <td key={tpg.id} value={0} id={idMaker()} className="tournamentGameResult">0</td>
                                                             )
                                                         }
                                                     })
                                                 }
                                                 {emptyCellCompensation()}
-                                                <td key={tourneyPlayer.id + "-- score"} id={tourneyPlayer.id + "-- score"} value={score || "0"}>
+                                                <td key={tourneyPlayer.guest_id ? tourneyPlayer.guest_id + "-- score" : tourneyPlayer.id + "-- score"} id={tourneyPlayer.guest_id ? tourneyPlayer.guest_id + "-- score" : tourneyPlayer.id + "-- score"} value={score || "0"}>
                                                     {score}
                                                 </td>
                                             </tr>

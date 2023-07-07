@@ -348,7 +348,6 @@ export const ActiveTournament = () => {
     }
     const submitResultsOrNull = () => {
         if (activeTournament?.complete === false) {
-
             if (activeTournament?.in_person === true) {
                 return (
                     <section id="tournamentScoringSection">

@@ -70,8 +70,6 @@ export const ActiveTournament = () => {
         }, [activeTournament]
     )
     
-    console.log(activeTournament)
-    console.log(gameForApi)
     useEffect(
         () => {
             if (activeTournament) {
@@ -456,8 +454,25 @@ export const ActiveTournament = () => {
                     <section id="previousMatchups">
                         {
                             tournamentGames.map(game => {
-                                const white = activeTournamentPlayers.find(player => player.id === game.player_w.id)
-                                const black = activeTournamentPlayers.find(player => player.id === game.player_b?.id)
+                                // const white = activeTournamentPlayers.find(player => player.id === game.player_w.id)
+                                // const black = activeTournamentPlayers.find(player => player.id === game.player_b?.id)
+                                const white = activeTournamentPlayers.find(player => {
+                                    if (game.player_w.guest_id) {
+                                        return player.guest_id === game.player_w.guest_id
+                                    }
+                                    else {
+                                        return player.id === game.player_w.id
+                                    }
+                                })
+                                const black = activeTournamentPlayers.find(player => {
+                                    if (game.player_b?.guest_id){
+                                        return player.guest_id === game.player_b?.guest_id
+                                    }
+                                    else {
+                                        return player.id === game.player_b?.id
+                                    }
+                                    
+                                })
                                 // const matchup = tournamentGames?.find(game => game.tournament_round === pairing.round && game.player_w?.id === white?.id && game.player_b?.id === black?.id)
                                 if (game.winner !== null) {
                                     if (game.bye === true) {
@@ -490,7 +505,7 @@ export const ActiveTournament = () => {
                                                         id="blackUpdate"
                                                         onClick={(evt) => {
                                                             handleGameForApiUpdate(evt.target.id, white, black, game)
-                                                        }}>{black?.username}</div>
+                                                        }}>{black?.username || black?.full_name}</div>
                                                     <button onClick={() => {
                                                         alterGame(gameForApi)
                                                             .then(() => resetTournamentGames())

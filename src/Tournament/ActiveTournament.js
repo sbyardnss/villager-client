@@ -66,13 +66,11 @@ export const ActiveTournament = () => {
                 }
             })
             setActiveTournamentPlayers(playersForSelectedTournament)
-            const copy = { ...gameForApi }
-            copy.tournament = activeTournament?.id
-            copy.time_setting = activeTournament?.time_setting
-            copy.tournament_round = activeTournament?.rounds
-            updateGameForApi(copy)
+            
         }, [activeTournament]
     )
+    
+    console.log(activeTournament)
     console.log(gameForApi)
     useEffect(
         () => {
@@ -112,6 +110,17 @@ export const ActiveTournament = () => {
                 }
             }
         }, [currentRound]
+    )
+    useEffect(
+        () => {
+            if (activeTournament){
+                const copy = { ...gameForApi }
+                copy.tournament = activeTournament?.id
+                copy.time_setting = activeTournament?.time_setting
+                copy.tournament_round = activeTournament?.rounds
+                updateGameForApi(copy)
+            }
+        },[activeTournament]
     )
     useEffect(
         () => {
@@ -230,7 +239,6 @@ export const ActiveTournament = () => {
         let copy = {}
         if (scoring) {
             copy = { ...gameForApi }
-            copy.time_setting = activeTournament.time_setting
             if (whitePieces.guest_id) {
                 copy.player_w_model_type = 'guestplayer'
                 copy.player_w = whitePieces.guest_id
@@ -248,8 +256,8 @@ export const ActiveTournament = () => {
                 copy.player_b_model_type = 'player'
                 copy.player_b = blackPieces?.id
             }
-            copy.tournament = activeTournament?.id
-            copy.tournament_round = currentRound
+            // copy.tournament = activeTournament?.id
+            // copy.tournament_round = currentRound
             // updateGameForApi(copy)
         }
         else {

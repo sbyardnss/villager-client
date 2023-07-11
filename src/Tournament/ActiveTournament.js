@@ -169,8 +169,6 @@ export const ActiveTournament = () => {
                 //opponentId currently staying null
                 if (typeof playerId === 'string') {
                     if (gameResult.white.guest_id === playerId) {
-                        console.log('getting here')
-                        console.log(gameResult)
                         // gameResult.black?.guest_id ? opponentId = gameResult.black?.guest_id : opponentIdNum = gameResult.black?.id
                         if (gameResult.black?.guest_id) {
                             opponentId = gameResult.black.guest_id || null
@@ -260,6 +258,7 @@ export const ActiveTournament = () => {
         }
         else {
             copy = { ...pastGame }
+            console.log(copy)
             if (whitePieces.guest_id) {
                 copy.player_w_model_type = 'guestplayer'
                 copy.player_w = whitePieces.guest_id
@@ -474,16 +473,18 @@ export const ActiveTournament = () => {
                                 })
                                 // const matchup = tournamentGames?.find(game => game.tournament_round === pairing.round && game.player_w?.id === white?.id && game.player_b?.id === black?.id)
                                 if (game.winner !== null) {
-                                    if (game.bye === true) {
-                                        return (
-                                            <div key={`${game.tournament_round} + ${game.id} + editing`} className="editMatchup">
-                                                <div>Round {game.tournament_round}</div>
-                                                <div className="whitePiecesMatchup"
-                                                    id="whiteUpdate">{white.full_name}</div>
-                                            </div>
-                                        )
-                                    }
-                                    else {
+                                    // if (game.bye === true) {
+                                    //     return (
+                                    //         <div key={`${game.tournament_round} + ${game.id} + editing`} className="editMatchup">
+                                    //             <div>Round {game.tournament_round}</div>
+                                    //             <div className="whitePiecesMatchup"
+                                    //                 id="whiteUpdate">{white.full_name}</div>
+                                    //         </div>
+                                    //     )
+                                    // }
+                                    // else {
+                                    if (game.bye === false) {
+
                                         return (
                                             <div key={`${game.tournament_round} + ${game.id} + editing`} className="editScoreListItem">
                                                 <div>
@@ -494,7 +495,7 @@ export const ActiveTournament = () => {
                                                         id="whiteUpdate"
                                                         onClick={(evt) => {
                                                             handleGameForApiUpdate(evt.target.id, white, black, game)
-                                                        }}>{white.username}</div>
+                                                        }}>{white.username || white.full_name}</div>
                                                     <div className="drawMatchupButton"
                                                         id="drawUpdate"
                                                         onClick={(evt) => {
@@ -515,7 +516,8 @@ export const ActiveTournament = () => {
                                             </div>
                                         )
                                     }
-                                }
+                                    }
+                                // }
                             })
                         }
                     </section>

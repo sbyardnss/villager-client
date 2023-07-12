@@ -22,13 +22,37 @@ export const HomePage = () => {
         poster: localVillagerObj.userId,
         message: ""
     })
+    //OLD CHALLENGEFOR API
+    // const [challengeForApi, updateChallengeForApi] = useState({
+    //     player_w: 0,
+    //     player_b: 0,
+    //     accepted: false,
+    //     computer_opponent: false
+    // })
+
+    /* 
+    player_w: 0,
+        player_w_model_type: "",
+        player_b: 0,
+        player_b_model_type: "",
+        tournament: 0,
+        time_setting: 0,
+        win_style: "",
+        accepted: true,
+        tournament_round: 0,
+        winner: 0,
+        winner_model_type: "",
+        bye: false
+    */
     const [challengeForApi, updateChallengeForApi] = useState({
         player_w: 0,
+        player_w_model_type: 'player',
         player_b: 0,
+        player_b_model_type: 'player',
         accepted: false,
-        computer_opponent: false
+        computer_opponent: false,
+        winner: null
     })
-
     useEffect(
         () => {
             Promise.all([getAllCommunityPosts(), getAllTournaments()]).then(([communityPostData, tournamentData]) => {

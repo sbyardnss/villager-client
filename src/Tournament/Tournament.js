@@ -23,24 +23,6 @@ export const Tournament = () => {
         in_person: true,
         pairings: []
     })
-
-    // useEffect(
-    //     () => {
-    //         const unselectedPlayers = players.filter(p => {
-    //             return !newTournament.competitors.find(c => c === p.id)
-    //         })
-    //         setPotentialCompetitors(unselectedPlayers)
-    //     }, [players, newTournament]
-    // )
-
-    // useEffect(
-    //     () => {
-    //         // const guestsCopy = [...guests]
-    //         // guestsCopy.map(g => g.id = g.guest_id)
-    //         const allPlayersAndGuests = players.concat(guests)
-    //         setPlayersAndGuests(allPlayersAndGuests)
-    //     },[players, guests]
-    // )
     //search player useEffect
     useEffect(
         () => {

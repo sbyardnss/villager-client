@@ -3,3 +3,59 @@
     display: flex;
     justify-content: center;
 }
+
+#myChessClubsArticle {
+    width: 90%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+#myClubsList {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+}
+#createChessClubButton {
+    width: 12em;
+    font-size: larger;
+    border: none;
+    border-radius: 4px;
+    padding: .5em;
+    background-color: #694873;
+    cursor: pointer;
+}
+#newClubForm {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.formInput {
+    display: flex;
+    flex-direction: column;
+    width: 80%;
+}
+
+textarea {
+    font-family: 'Public Sans', sans-serif;
+    resize: none;
+    height: 5em;
+    margin-bottom: .5em;
+}
+#newClubButtonBlock {
+    width: 60%;
+    display: flex;
+    justify-content: space-around;
+}
+#newClubPasswordSetModal {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    position: fixed;
+    top: 40%;
+    background-color: #202020;
+    border: 1px solid #f4d35e;
+    padding: 2em;
+}

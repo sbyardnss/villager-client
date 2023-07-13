@@ -272,7 +272,17 @@ export const createGuest = (guestObj) => {
         body: JSON.stringify(guestObj)
     })
 }
-
+export const createNewClub = (clubObj) => {
+    const localVillagerObj = getToken()
+    return fetch(`${apiKey}/clubs`, {
+        method: "POST",
+        headers: {
+            "Authorization": `Token ${localVillagerObj.token}`,
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(clubObj)
+    })
+}
 //PUT FETCHES
 export const updateProfile = (userId, profileObj) => {
     const localVillagerObj = getToken()

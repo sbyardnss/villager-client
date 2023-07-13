@@ -23,6 +23,7 @@ export const Tournament = () => {
         in_person: true,
         pairings: []
     })
+    
     //search player useEffect
     useEffect(
         () => {
@@ -219,27 +220,32 @@ export const Tournament = () => {
                             <button
                                 className="buttonStyleApprove"
                                 onClick={() => {
-                                    if (newTournament.competitors && newTournament.timeSetting && newTournament.title) {
-                                        if (window.confirm("Everybody ready?")) {
-                                            const copy = { ...newTournament }
-                                            const registeredPairingArr = newTournament.competitors.map(c => {return c.id})
-                                            const guestPairingArr = newTournament.guest_competitors.map(gc => {return gc.guest_id})
-                                            if (guestPairingArr) {
-                                                copy.pairings = RoundRobin(registeredPairingArr.concat(guestPairingArr))
-                                                copy.competitors = registeredPairingArr
-                                                copy.guest_competitors = newTournament.guest_competitors.map(gc => {return gc.id})
+                                    if (newTournament.guest_competitors.length > 0 && newTournament.in_person === false) {
+                                        window.alert('No guest competitors on digtal tournament')
+                                    }
+                                    else {
+                                        if (newTournament.competitors && newTournament.timeSetting && newTournament.title) {
+                                            if (window.confirm("Everybody ready?")) {
+                                                const copy = { ...newTournament }
+                                                const registeredPairingArr = newTournament.competitors.map(c => {return c.id})
+                                                const guestPairingArr = newTournament.guest_competitors.map(gc => {return gc.guest_id})
+                                                if (guestPairingArr) {
+                                                    copy.pairings = RoundRobin(registeredPairingArr.concat(guestPairingArr))
+                                                    copy.competitors = registeredPairingArr
+                                                    copy.guest_competitors = newTournament.guest_competitors.map(gc => {return gc.id})
+                                                }
+                                                else {
+                                                    copy.pairings = RoundRobin(registeredPairingArr)
+                                                    copy.competitors = registeredPairingArr
+                                                }
+                                                
+                                                
+                                                // copy.pairings = RoundRobin(newTournament.competitors)
+                                                sendNewTournament(copy)
+                                                    .then(() => {
+                                                        resetTournaments()
+                                                    })
                                             }
-                                            else {
-                                                copy.pairings = RoundRobin(registeredPairingArr)
-                                                copy.competitors = registeredPairingArr
-                                            }
-                                            
-                                            
-                                            // copy.pairings = RoundRobin(newTournament.competitors)
-                                            sendNewTournament(copy)
-                                                .then(() => {
-                                                    resetTournaments()
-                                                })
                                         }
                                     }
                                 }}>

@@ -111,7 +111,7 @@ export const Play = () => {
             }
         }, [game, matchReady]
     )
-    console.log(gameForApi)
+    console.log(selectedGameObj)
     //update turn variable for saving turn and controlling ai request
     useEffect(
         () => {
@@ -149,9 +149,11 @@ export const Play = () => {
                         copy.pgn = game.pgn()
                         if (game.turn() === "b") {
                             copy.winner = selectedGameObj.player_w.id
+                            copy.winner_model_type = 'player'
                         }
                         else {
                             copy.winner = selectedGameObj.player_b.id
+                            copy.winner_model_type = 'player'
                         }
                         if (game.in_checkmate()) {
                             copy.win_style = "checkmate"

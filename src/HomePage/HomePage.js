@@ -3,7 +3,7 @@ import "./HomePage.css"
 import { React, useContext, useState, useEffect, useRef } from "react"
 import { Chessboard } from "react-chessboard"
 import Chess from "chess.js"
-import { acceptChallenge, deleteCommunityPost, getAllCommunityPosts, getAllGames, getAllPlayers, getAllTournaments, getPuzzles, sendNewGame, submitNewPostToAPI } from "../ServerManager"
+import { acceptChallenge, deleteCommunityPost, getAllCommunityPosts, getAllGames, getAllPlayers, getAllTournaments, getPuzzles, getTournament, sendNewGame, submitNewPostToAPI } from "../ServerManager"
 import { PlayContext } from "../Play/PlayProvider"
 import { useNavigate } from "react-router-dom"
 import trophyIcon from "../images/small_trophy_with_background.png"
@@ -30,20 +30,6 @@ export const HomePage = () => {
     //     computer_opponent: false
     // })
 
-    /* 
-    player_w: 0,
-        player_w_model_type: "",
-        player_b: 0,
-        player_b_model_type: "",
-        tournament: 0,
-        time_setting: 0,
-        win_style: "",
-        accepted: true,
-        tournament_round: 0,
-        winner: 0,
-        winner_model_type: "",
-        bye: false
-    */
     const [challengeForApi, updateChallengeForApi] = useState({
         player_w: 0,
         player_w_model_type: 'player',
@@ -55,9 +41,9 @@ export const HomePage = () => {
     })
     useEffect(
         () => {
-            Promise.all([getAllCommunityPosts(), getAllTournaments()]).then(([communityPostData, tournamentData]) => {
+            Promise.all([getAllCommunityPosts()/*, getAllTournaments()*/]).then(([communityPostData/*, tournamentData*/]) => {
                 setCommunityPosts(communityPostData)
-                setTournaments(tournamentData)
+                // setTournaments(tournamentData)
             })
         }, []
     )
@@ -72,18 +58,18 @@ export const HomePage = () => {
             setMyUnfinishedGames(unfinishedGames)
         }, [games]
     )
-    useEffect(
-        () => {
-            if (tournaments) {
-                const joinedTournaments = tournaments.filter(t => {
-                    if (t.complete === false) {
-                        return t.competitors.find(c => c === localVillagerObj.userId)
-                    }
-                })
-                setMyTournaments(joinedTournaments)
-            }
-        }, [tournaments]
-    )
+    // useEffect(
+    //     () => {
+    //         if (tournaments) {
+    //             const joinedTournaments = tournaments.filter(t => {
+    //                 if (t.complete === false) {
+    //                     return t.competitors.find(c => c === localVillagerObj.userId)
+    //                 }
+    //             })
+    //             setMyTournaments(joinedTournaments)
+    //         }
+    //     }, [tournaments]
+    // )
 
     useEffect(
         () => {
@@ -259,7 +245,8 @@ export const HomePage = () => {
                                             // const opponent = ug.player_w?.id === localVillagerObj.userId ? ug.player_b : ug.player_w
                                             let tournament = {}
                                             if (ug.tournament) {
-                                                tournament = tournaments.find(t => t.id === ug.tournament)
+                                                // tournament = tournaments.find(t => t.id === ug.tournament)
+                                                tournament = getTournament(ug.tournament)
                                             }
                                             const opponent = ug.player_w?.id === localVillagerObj.userId ? players.find(p => p.id === ug.player_b?.id) : players.find(p => p.id === ug.player_w?.id)
                                             const isTournamentGame = () => {

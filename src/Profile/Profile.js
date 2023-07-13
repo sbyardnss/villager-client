@@ -9,7 +9,7 @@ export const Profile = () => {
     const localVillager = localStorage.getItem("villager")
     const localVillagerObj = JSON.parse(localVillager)
     const navigate = useNavigate()
-    const { selectedGame, setSelectedGame, updateSelectedGameObj, selectedGameObj, orientation, setOrientation, resetGames, setReview, review, players } = useContext(PlayContext)
+    const { selectedGame, setSelectedGame, setReview, players } = useContext(PlayContext)
     const [profileInfo, setProfileInfo] = useState({
         username: "",
         first_name: "",
@@ -18,7 +18,7 @@ export const Profile = () => {
         email: ""
     })
     const [myTournaments, setMyTournaments] = useState({})
-    const [messages, setMessages] = useState([])
+    // const [messages, setMessages] = useState([])
     const [myGames, setMyGames] = useState([])
     const [profileEdit, setProfileEdit] = useState(false)
     const [performanceData, setPerformanceData] = useState({
@@ -40,8 +40,8 @@ export const Profile = () => {
     const [passwordVisible, setPasswordVisible] = useState(false)
     useEffect(
         () => {
-            Promise.all([getAllMessages(), getProfile(), getMyGames(), getMyTournaments()]).then(([messageData, profileData, myGameData, tournamentData]) => {
-                setMessages(messageData)
+            Promise.all([/*getAllMessages(), */getProfile(), getMyGames(), getMyTournaments()]).then(([/*messageData, */profileData, myGameData, tournamentData]) => {
+                // setMessages(messageData)
                 setProfileInfo(profileData)
                 setUpdate(profileData)
                 setMyGames(myGameData)
@@ -213,7 +213,8 @@ export const Profile = () => {
                             if (game.pgn !== "" && game.pgn !== null && game.winner !== null) {
                                 let tournament = {}
                                 if (game.tournament) {
-                                    tournament = getTournament(game.tournament)
+                                    tournament = myTournaments.find(t => t.id === game.tournament)
+                                    
                                 }
                                 const classNameBuilder = () => {
                                     return game.tournament ? "tournamentPastGameListItem" : "pastGameListItem"
@@ -224,7 +225,7 @@ export const Profile = () => {
                                         <div className="activeGameInfo">
                                             <div className="opponentSectionForListItem">Vs {opponent?.username}</div>
                                             <div className="mobileTournamentDiv">
-                                                <div>{game.tournament ? <img className="trophyIconHomepage" src={trophyIcon} /> : ""}</div>
+                                                <div>{game.tournament ? <img className="trophyIconProfile" src={trophyIcon} /> : ""}</div>
                                                 <div className="myGamesListLogisticsInfo">
                                                     <div>{tournament?.title || ""}</div>
                                                     <div>{new Date(game.date_time).toLocaleDateString('en-us')}</div>

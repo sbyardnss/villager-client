@@ -244,6 +244,7 @@
         min-width: fit-content;
     }
 
+
     .pastGameListItem {
         color: rgb(231, 231, 231);
         display: flex;
@@ -265,10 +266,11 @@
         flex-wrap: wrap;
     }
     .trophyIconProfile {
-        height: 3em;
+        height: 1.5em;
     }
     .opponentSectionForListItem {
         width: fit-content;
+        margin: 0;
     }
 
     .pastGamesListLogisticsInfo {

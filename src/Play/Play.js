@@ -481,7 +481,7 @@ export const Play = () => {
                         className="buttonStyleReject playBtns"
                         onClick={() => {
                             setSelectedGame(0)
-                            navigate("/")
+                            navigate(-1)
                         }}>
                         exit game
                     </button>

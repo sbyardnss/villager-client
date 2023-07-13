@@ -178,7 +178,7 @@ export const HomePage = () => {
             <div id="homepageLayoutDiv">
                 <div id="forumAndActiveGames">
                     <article id="communityForum">
-                        <h2 className="setCustomFont">Public Chat</h2>
+                        <h2 className="setCustomFont">Club Chat</h2>
                         <section id="communityForumMsgs" >
                             {
                                 communityPosts.map(post => {

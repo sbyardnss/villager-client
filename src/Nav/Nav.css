@@ -206,7 +206,7 @@
         z-index: 2;
     }
     .navDiv {
-        height: 30%;
+        height: 70%;
         display: flex;
         align-items: center;
         flex-direction: column;
@@ -261,7 +261,7 @@
         text-decoration: none;
         display: flex;
         align-items: center;
-        margin-bottom: .5em;
+        margin-bottom: 1em;
     }
     /* the entry below added for deploy */
     #navProfileLink {

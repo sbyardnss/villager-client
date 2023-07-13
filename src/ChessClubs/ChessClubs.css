@@ -1,0 +1,5 @@
+#chessClubsContainer {
+    margin-top: 120px;
+    display: flex;
+    justify-content: center;
+}

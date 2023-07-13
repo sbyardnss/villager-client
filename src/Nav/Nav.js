@@ -45,8 +45,9 @@ export const Nav = () => {
                     <div className="navDiv">
                         <li className="tempListItem"><Link id="/messages" className="navigation_link" to="/messages" onClick={() => closeMenuOnNavigate()}>Messages </Link></li>
                         <li className="tempListItem"><Link id="/tournament" className="navigation_link" to="/tournament" onClick={() => closeMenuOnNavigate()}>Tournaments</Link></li>
-                    </div>
-                    <div className="navDiv">
+                    {/* </div>
+                    <div className="navDiv"> */}
+                        <li className="tempListItem"><Link id="/clubs" className="navigation_link" to="/clubs" onClick={() => closeMenuOnNavigate()}>Chess Clubs</Link></li>
                         <li className="tempListItem"><Link id="/userList" className="navigation_link" to="/userList" onClick={() => closeMenuOnNavigate()}>Make Friends</Link></li>
                         <li className="tempListItem"><Link id="logout" className="navigation_logout" to="" onClick={() => {
                             localStorage.removeItem("villager")

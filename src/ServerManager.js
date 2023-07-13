@@ -17,6 +17,26 @@ export const getAllPlayers = () => {
     })
         .then(res => res.json())
 }
+export const getAllChessClubs = () => {
+    const localVillagerObj = getToken()
+    return fetch(`${apiKey}/clubs`, {
+        headers: {
+            "Authorization": `Token ${localVillagerObj.token}`,
+            "Content-Type": "application/json"
+        }
+    })
+        .then(res => res.json())
+}
+export const getMyChessClubs = () => {
+    const localVillagerObj = getToken()
+    return fetch(`${apiKey}/clubs/my_clubs`, {
+        headers: {
+            "Authorization": `Token ${localVillagerObj.token}`,
+            "Content-Type": "application/json"
+        }
+    })
+        .then(res => res.json())
+}
 export const getAllGames = () => {
     const localVillagerObj = getToken()
     return fetch(`${apiKey}/games`, {
@@ -142,6 +162,16 @@ export const getTournament = (tournamentId) => {
 export const getGuest = (guestId) => {
     const localVillagerObj = getToken()
     return fetch(`${apiKey}/guests/${guestId}`, {
+        headers: {
+            "Authorization": `Token ${localVillagerObj.token}`,
+            "Content-Type": "application/json"
+        }
+    })
+        .then(res => res.json())
+}
+export const getChessClub = (clubId) => {
+    const localVillagerObj = getToken()
+    return fetch(`${apiKey}/clubs/${clubId}`, {
         headers: {
             "Authorization": `Token ${localVillagerObj.token}`,
             "Content-Type": "application/json"

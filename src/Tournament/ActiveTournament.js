@@ -712,7 +712,9 @@ export const ActiveTournament = () => {
                                                         //         return tpg.id + "--" + tourneyPlayer.id
                                                         //     }
                                                         // }
-                                                        
+                                                        if (tpg.id === 5){
+                                                            console.log(tpg)
+                                                        }
                                                         if (tpg.bye === true) {
                                                             score++
                                                             return (
@@ -720,7 +722,7 @@ export const ActiveTournament = () => {
                                                             )
                                                         }
                                                         //CURRENTLY SHOWING BOTH PLAYERS WON IF GUESTS STANDARD ID === REGISTERED PLAYERS STANDARD ID
-                                                        if (tpg.winner?.guest_id && tpg.winner.guest_id === tourneyPlayer.guest_id || !tpg.winner?.guest_id && tpg.winner?.id === tourneyPlayer.id){
+                                                        if ((tpg.winner?.guest_id && tpg.winner?.guest_id === tourneyPlayer.guest_id) || (!tpg.winner?.guest_id && !tourneyPlayer.guest_id && tpg.winner?.id === tourneyPlayer.id)){
                                                             score++
                                                             return (
                                                                 <td key={tpg.id} value={1} id={guestIdOrId + tpg.id} className="tournamentGameResult">1</td>

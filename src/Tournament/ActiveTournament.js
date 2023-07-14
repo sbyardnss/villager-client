@@ -94,7 +94,6 @@ export const ActiveTournament = () => {
                 updateGameForApi(copy)
                 //creates bye game in the event of uneven number of players in tournament. will send bye game to api when moving to next round
                 const byePairing = currentRoundPairings?.find(pairing => pairing.player2 === null)
-                console.log(byePairing)
                 if (byePairing) {
                     const byeCopy = { ...gameForApi }
                     byeCopy.player_b = null
@@ -124,7 +123,7 @@ export const ActiveTournament = () => {
             }
         }, [currentRound]
     )
-    console.log(byeGame)
+    console.log(gameForApi)
     useEffect(
         () => {
             if (activeTournament) {
@@ -283,7 +282,7 @@ export const ActiveTournament = () => {
                 copy.win_style = 'checkmate'
             }
         }
-        else if (targetId=== 'blackPieces') {
+        else if (targetId === 'blackPieces') {
             //set black as winner either guest_id or id
             if (blackPieces.guest_id) {
                 copy.winner_model_type = 'guestplayer'
@@ -426,39 +425,39 @@ export const ActiveTournament = () => {
                                         return player.id === game.player_b?.id
                                     }
                                 })
-                                    if (game.bye === false) {
+                                if (game.bye === false) {
 
-                                        return (
-                                            <div key={`${game.tournament_round} + ${game.id} + editing`} className="editScoreListItem">
-                                                <div>
-                                                    <div className="setCustomFont">Round {game.tournament_round}</div>
-                                                </div>
-                                                <div className="editMatchup">
-                                                    <div className="whitePiecesMatchup"
-                                                        id="whitePieces"
-                                                        onClick={(evt) => {
-                                                            handleGameForApiUpdate(evt.target.id, white, black, game)
-                                                        }}>{white.username || white.full_name}</div>
-                                                    <div className="drawMatchupButton"
-                                                        id="drawUpdate"
-                                                        onClick={(evt) => {
-                                                            handleGameForApiUpdate(evt.target.id, white, black, game)
-                                                        }}>Draw</div>
-                                                    <div className="blackPiecesMatchup"
-                                                        id="blackPieces"
-                                                        onClick={(evt) => {
-                                                            handleGameForApiUpdate(evt.target.id, white, black, game)
-                                                        }}>{black?.username || black?.full_name}</div>
-                                                    <button onClick={() => {
-                                                        alterGame(gameForApi)
-                                                            .then(() => resetTournamentGames())
-                                                    }}>
-                                                        submit
-                                                    </button>
-                                                </div>
+                                    return (
+                                        <div key={`${game.tournament_round} + ${game.id} + editing`} className="editScoreListItem">
+                                            <div>
+                                                <div className="setCustomFont">Round {game.tournament_round}</div>
                                             </div>
-                                        )
-                                    }
+                                            <div className="editMatchup">
+                                                <div className="whitePiecesMatchup"
+                                                    id="whitePieces"
+                                                    onClick={(evt) => {
+                                                        handleGameForApiUpdate(evt.target.id, white, black, game)
+                                                    }}>{white.username || white.full_name}</div>
+                                                <div className="drawMatchupButton"
+                                                    id="drawUpdate"
+                                                    onClick={(evt) => {
+                                                        handleGameForApiUpdate(evt.target.id, white, black, game)
+                                                    }}>Draw</div>
+                                                <div className="blackPiecesMatchup"
+                                                    id="blackPieces"
+                                                    onClick={(evt) => {
+                                                        handleGameForApiUpdate(evt.target.id, white, black, game)
+                                                    }}>{black?.username || black?.full_name}</div>
+                                                <button onClick={() => {
+                                                    alterGame(gameForApi)
+                                                        .then(() => resetTournamentGames())
+                                                }}>
+                                                    submit
+                                                </button>
+                                            </div>
+                                        </div>
+                                    )
+                                }
                             })
                         }
                     </section>
@@ -548,7 +547,6 @@ export const ActiveTournament = () => {
                                             }
                                             return p.id === r
                                         })
-
                                         // console.log(activeTournamentPlayers)
                                         return (
                                             <div key={'playerId' + r} className="resultsModalListItem">
@@ -687,8 +685,9 @@ export const ActiveTournament = () => {
                                                 return !tg.player_b?.guest_id && tg.player_b?.id === tourneyPlayer.id || !tg.player_w.guest_id && tg.player_w.id === tourneyPlayer.id
                                             }
                                         })
+                                        
                                         const guestIdOrId = tourneyPlayer.guest_id ? tourneyPlayer.guest_id : tourneyPlayer.id
-                                    
+                                        const tpTargetId = tourneyPlayer.guest_id ? 'guest_id' : 'id'
                                         const emptyCellCompensation = () => {
                                             if (tourneyPlayerGames.length < currentRound) {
                                                 return (
@@ -720,7 +719,8 @@ export const ActiveTournament = () => {
                                                                 <td key={tpg.id} value={1} id={guestIdOrId + 'bye'} className="tournamentGameResultBye">bye</td>
                                                             )
                                                         }
-                                                        if (tpg.winner?.id === tourneyPlayer.id) {
+                                                        //CURRENTLY SHOWING BOTH PLAYERS WON IF GUESTS STANDARD ID === REGISTERED PLAYERS STANDARD ID
+                                                        if (tpg.winner?.guest_id && tpg.winner.guest_id === tourneyPlayer.guest_id || !tpg.winner?.guest_id && tpg.winner?.id === tourneyPlayer.id){
                                                             score++
                                                             return (
                                                                 <td key={tpg.id} value={1} id={guestIdOrId + tpg.id} className="tournamentGameResult">1</td>

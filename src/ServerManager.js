@@ -350,6 +350,22 @@ export const endTournament = (tournamentId) => {
         }
     })
 }
+export const updateClub = (clubId, clubObj) => {
+    const localVillagerObj = getToken()
+    return fetch(`${apiKey}/clubs/${clubId}`, {
+        method: "PUT",
+        headers: {
+            "Authorization": `Token ${localVillagerObj.token}`,
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(clubObj)
+    })
+    // .then(res => {
+    //     if (res) {
+    //         res = res.json()
+    //     }
+    // })
+}
 
 //DELETE FETCHES
 export const deleteCommunityPost = (postId) => {

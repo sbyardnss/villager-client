@@ -64,13 +64,16 @@ textarea {
     width: 20em;
     position: absolute;
     top: 20%;
-    /* backdrop-filter: blur(10px);
-    border: 1px solid #694873; */
-    border-radius: 4px;
 }
 #editClubContainer {
     backdrop-filter: blur(10px);
     border: 1px solid #694873;
+    border-radius: 4px;
+    padding: .5em;
+}
+#editClubHeader {
+    display: flex;
+    justify-content: space-between;
 }
 .managedClubsListItem {
     width: 14em;
@@ -81,4 +84,15 @@ textarea {
     border-radius: 4px;
     margin-bottom: .25em;
     padding: .25em;
+}
+#errorModal {
+    display: none;
+    flex-direction: column;
+    position: absolute;
+    color: whitesmoke;
+    backdrop-filter: blur(10px);
+    background-color: #202020;
+    border: 1px solid #694873;
+    border-radius: 4px;
+    padding: .5em;
 }

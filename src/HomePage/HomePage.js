@@ -65,29 +65,31 @@ export const HomePage = () => {
             }
         }, [selectedClub, myChessClubs]
     )
-    console.log(communityPosts)
     useEffect(
         () => {
-            const challengeGames = games?.filter(game => game.accepted === false)
+            // const challengeGames = games?.filter(game => game.accepted === false)
+            const challengeGames = games?.filter(game => {
+                const challengingPlayerId = game.player_b?.id ? game.player_b.id : game.player_w.id
+                const allMembersOfClubs = []
+                myChessClubs.map(club => {
+                    club.members.map(member => member.id !== localVillagerObj.userId ? allMembersOfClubs.push(member.id) : null)
+                })
+                if (game.accepted === false && allMembersOfClubs.find(memberId => memberId === challengingPlayerId)){
+                    return game
+                }
+            })
+
             setChallenges(challengeGames)
-            const unfinishedGames = games?.filter(game => {
+            const nonGuestGames = games?.filter(game => {
+                return (!game.player_b?.guest_id && !game.player_w?.guest_id)
+            })
+            const unfinishedGames = nonGuestGames?.filter(game => {
                 return (game.player_b?.id === localVillagerObj.userId || game.player_w?.id === localVillagerObj.userId) && game.winner === null
             })
             setMyUnfinishedGames(unfinishedGames)
         }, [games]
     )
-    // useEffect(
-    //     () => {
-    //         if (tournaments) {
-    //             const joinedTournaments = tournaments.filter(t => {
-    //                 if (t.complete === false) {
-    //                     return t.competitors.find(c => c === localVillagerObj.userId)
-    //                 }
-    //             })
-    //             setMyTournaments(joinedTournaments)
-    //         }
-    //     }, [tournaments]
-    // )
+
 
     useEffect(
         () => {
@@ -272,8 +274,10 @@ export const HomePage = () => {
                             {/* <button id="homepagePlayButton">play</button> */}
                             <div id="myUnfinishedGamesScrollWindow">
                                 <div id="activeGamesUl">
+                                    {!myUnfinishedGames.length ? <h3 className="setCustomFont" id="noGamesMsg">you have no active games</h3> : ""}
                                     {
                                         myUnfinishedGames?.map(ug => {
+                                            console.log(ug)
                                             // const opponent = ug.player_w?.id === localVillagerObj.userId ? ug.player_b : ug.player_w
                                             let tournament = {}
                                             if (ug.tournament) {

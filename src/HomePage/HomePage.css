@@ -185,7 +185,17 @@
         background-image: url("../images/closup_dark_board.jpeg");
         background-position: bottom;
         background-size: 100vh;
-
+    }
+    #noGamesMsg {
+        display: block;
+        width: fit-content;
+        margin-top: 2em;
+        margin-left: auto;
+        margin-right: auto;
+        backdrop-filter: blur(10px);
+        border: 1px solid rgb(188, 160, 0);
+        border-radius: 6px;
+        padding: .25em;
     }
 
     #activeGamesHeader {
@@ -664,6 +674,18 @@
         background-image: url("../images/closup_dark_board.jpeg");
         background-position: bottom;
         background-size: 100vh;
+
+    }
+    #noGamesMsg {
+        display: block;
+        width: fit-content;
+        margin-top: 2em;
+        margin-left: auto;
+        margin-right: auto;
+        backdrop-filter: blur(10px);
+        border: 1px solid rgb(188, 160, 0);
+        border-radius: 6px;
+        padding: .25em;
 
     }
 

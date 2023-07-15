@@ -102,7 +102,6 @@ export const ActiveTournament = () => {
                     byeCopy.bye = true
                     byeCopy.win_style = ""
                     if (typeof byePairing.player1 === 'string') {
-                        console.log('getting here')
                         byeCopy.winner_model_type = 'guestplayer'
                         byeCopy.player_w_model_type = 'guestplayer'
                         const guestPlayer = activeTournamentPlayers.find(p => p.guest_id === byePairing.player1)
@@ -123,7 +122,6 @@ export const ActiveTournament = () => {
             }
         }, [currentRound]
     )
-    console.log(gameForApi)
     useEffect(
         () => {
             if (activeTournament) {
@@ -165,11 +163,11 @@ export const ActiveTournament = () => {
         }
         return tableHtml.reverse()
     }
-    // useEffect(
-    //     () => {
-    //         console.log(gameForApi)
-    //     },[gameForApi]
-    // )
+    useEffect(
+        () => {
+            console.log(gameForApi)
+        },[gameForApi]
+    )
     const roundHtml = roundPopulation()
     const solkoffTieBreaker = (playerArr) => {
         const tieBreakArr = []
@@ -701,27 +699,12 @@ export const ActiveTournament = () => {
                                                 <td key={tourneyPlayer.id} className="tablePlayerCell">{tourneyPlayer.full_name}</td>
                                                 {
                                                     tourneyPlayerGames.map(tpg => {
-                                                        // if (tpg.player_b?.id === 3 || tpg.player_w?.id === 3) {
-                                                        //     console.log(tpg)
-                                                        // }
-                                                        // const idMaker = () => {
-                                                        //     if (tourneyPlayer.guest_id) {
-                                                        //         return tpg.id + "--" + tourneyPlayer.guest_id
-                                                        //     }
-                                                        //     else {
-                                                        //         return tpg.id + "--" + tourneyPlayer.id
-                                                        //     }
-                                                        // }
-                                                        if (tpg.id === 5){
-                                                            console.log(tpg)
-                                                        }
                                                         if (tpg.bye === true) {
                                                             score++
                                                             return (
                                                                 <td key={tpg.id} value={1} id={guestIdOrId + 'bye'} className="tournamentGameResultBye">bye</td>
                                                             )
                                                         }
-                                                        //CURRENTLY SHOWING BOTH PLAYERS WON IF GUESTS STANDARD ID === REGISTERED PLAYERS STANDARD ID
                                                         if ((tpg.winner?.guest_id && tpg.winner?.guest_id === tourneyPlayer.guest_id) || (!tpg.winner?.guest_id && !tourneyPlayer.guest_id && tpg.winner?.id === tourneyPlayer.id)){
                                                             score++
                                                             return (

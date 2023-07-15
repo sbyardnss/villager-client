@@ -2,12 +2,15 @@ import { useNavigate } from "react-router-dom"
 import "../ChessClubs/ChessClubs.css"
 import { useEffect, useRef, useState } from "react"
 import { createNewClub, getMyChessClubs } from "../ServerManager"
+import { EditClub } from "./EditClub"
 
 export const ChessClubs = () => {
     const localVillager = localStorage.getItem("villager")
     const localVillagerObj = JSON.parse(localVillager)
     const navigate = useNavigate()
     const [myChessClubs, setMyChessClubs] = useState([])
+    const [selectedClubToEdit, setSelectedClubToEdit] = useState(0)
+    const [selectedClubObj, setSelectedClubObj] = useState({})
     const [createClub, setCreateClub] = useState(false)
     const [newClub, updateNewClub] = useState({
         name: "",
@@ -17,11 +20,30 @@ export const ChessClubs = () => {
         zipcode: 0,
         details: ""
     })
+    const editingModal = document.getElementById("editClubModal")
+
     useEffect(
         () => {
             getMyChessClubs()
                 .then(data => setMyChessClubs(data))
         }, []
+    )
+    useEffect(
+        () => {
+            if (selectedClubToEdit) {
+                editingModal.style.display = "block"
+            }
+            //not working
+            // else {
+            //     editingModal?.style?.display = "none"
+            // }
+        }, [selectedClubToEdit]
+    )
+    useEffect(
+        () => {
+            const selectedClub = myChessClubs.find(club => club.id === selectedClubToEdit)
+            setSelectedClubObj(selectedClub)
+        }, [selectedClubToEdit]
     )
     const handleFormChange = (evt) => {
         const copy = { ...newClub }
@@ -35,26 +57,26 @@ export const ChessClubs = () => {
     }
     const initPassword = useRef()
     const confirmPassword = useRef()
-    
+
     const createClubForm = () => {
         if (createClub) {
             const setPasswordModal = document.getElementById("newClubPasswordSetModal")
             return (
-                <section id="newClubForm">
+                <section id="clubForm">
                     <div id="newClubPasswordSetModal">
                         <div className="formInput">
                             <label className="setCustomFont newClubFormLabel">Add password for joining?</label>
-                            <input id="passwordInit" type="text" placeholder="password" ref={initPassword}/>
+                            <input id="passwordInit" type="text" placeholder="password" ref={initPassword} />
                         </div>
                         <div className="formInput">
                             <label className="setCustomFont newClubFormLabel">Confirm password</label>
-                            <input id="passwordConfirm" type="text" placeholder=" confirm password" ref={confirmPassword}/>
+                            <input id="passwordConfirm" type="text" placeholder=" confirm password" ref={confirmPassword} />
                         </div>
                         <div id="newClubButtonBlock">
                             <button className="buttonStyleApprove" onClick={() => {
                                 if (initPassword.current.value === confirmPassword.current.value) {
-                                    const copy = {...newClub}
-                                    if (confirmPassword.current.value === "" && initPassword.current.value === ""){
+                                    const copy = { ...newClub }
+                                    if (confirmPassword.current.value === "" && initPassword.current.value === "") {
                                         copy.password = null
                                     }
                                     else {
@@ -115,14 +137,45 @@ export const ChessClubs = () => {
             )
         }
     }
+    const editClubForm = () => {
+        if (selectedClubToEdit) {
+            return (
+                <EditClub clubId={selectedClubToEdit} clubObj={selectedClubObj} setClub={setSelectedClubToEdit} />
+            )
+        }
+        else {
+            return 
+        }
+    }
     return <>
         <main id="chessClubsContainer">
             <article id="myChessClubsArticle">
+                <section id="editClubModal">
+                    {editClubForm()}
+                </section>
                 <ul id="myClubsList">
                     {
                         myChessClubs.map(club => {
+                            if (club.manager.id === localVillagerObj.userId) {
+                                return (
+                                    <div key={club.id} className="managedClubsListItem setCustomFont">
+                                        <li>{club.name}</li>
+                                        <button className="buttonStyleReject" onClick={() => setSelectedClubToEdit(club.id)}>edit</button>
+                                    </div>
+                                )
+                            }
+                            else if (club.members.find(m => m.id === localVillagerObj.userId) && club.manager.id !== localVillagerObj.userId) {
+                                return (
+                                    <div key={club.id} className="managedClubsListItem setCustomFont">
+                                        <li>{club.name}</li>
+                                        <button className="buttonStyleApprove">join</button>
+                                    </div>
+                                )
+                            }
                             return (
-                                <li key={club.id} className="setCustomFont">{club.name}</li>
+                                <div key={club.id} className="unmanagedClubListItem setCustomFont">
+                                    <li>{club.name}</li>
+                                </div>
                             )
                         })
                     }

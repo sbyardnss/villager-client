@@ -3,7 +3,7 @@ import "./HomePage.css"
 import { React, useContext, useState, useEffect, useRef } from "react"
 import { Chessboard } from "react-chessboard"
 import Chess from "chess.js"
-import { acceptChallenge, deleteCommunityPost, getAllCommunityPosts, getAllGames, getAllPlayers, getAllTournaments, getPuzzles, getTournament, sendNewGame, submitNewPostToAPI } from "../ServerManager"
+import { acceptChallenge, deleteCommunityPost, getAllCommunityPosts, getAllGames, getAllPlayers, getAllTournaments, getMyChessClubs, getPuzzles, getTournament, sendNewGame, submitNewPostToAPI } from "../ServerManager"
 import { PlayContext } from "../Play/PlayProvider"
 import { useNavigate } from "react-router-dom"
 import trophyIcon from "../images/small_trophy_with_background.png"
@@ -13,11 +13,15 @@ export const HomePage = () => {
     const navigate = useNavigate()
     const { players, games, resetGames, selectedGameObj, updateSelectedGameObj, selectedGame, setSelectedGame, puzzles, selectedPuzzle, setSelectedPuzzle, selectedRange, setSelectedRange } = useContext(PlayContext)
     const [communityPosts, setCommunityPosts] = useState([])
+    const [displayedCommunityPosts, setDisplayedCommunityPosts] = useState([])
     const [tournaments, setTournaments] = useState([])
     const [myTournaments, setMyTournaments] = useState([])
     const [challenges, setChallenges] = useState([])
     const [myUnfinishedGames, setMyUnfinishedGames] = useState([])
     const [displayedPuzzle, setDisplayedPuzzle] = useState({})
+    const [myChessClubs, setMyChessClubs] = useState([])
+    const [selectedClub, setSelectedClub] = useState(0)
+
     const [newPost, updateNewPost] = useState({
         poster: localVillagerObj.userId,
         message: ""
@@ -41,13 +45,27 @@ export const HomePage = () => {
     })
     useEffect(
         () => {
-            Promise.all([getAllCommunityPosts()/*, getAllTournaments()*/]).then(([communityPostData/*, tournamentData*/]) => {
+            Promise.all([getAllCommunityPosts(), getMyChessClubs()/*, getAllTournaments()*/]).then(([communityPostData, myClubsData/*, tournamentData*/]) => {
                 setCommunityPosts(communityPostData)
+                setMyChessClubs(myClubsData)
                 // setTournaments(tournamentData)
             })
         }, []
     )
-
+    useEffect(
+        () => {
+            if (selectedClub !== 0) {
+                const filteredCommunityPosts = communityPosts.filter(post => {
+                    return post.club === selectedClub
+                })
+                setDisplayedCommunityPosts(filteredCommunityPosts)
+            }
+            else {
+                setDisplayedCommunityPosts(communityPosts)
+            }
+        }, [selectedClub, myChessClubs]
+    )
+    console.log(communityPosts)
     useEffect(
         () => {
             const challengeGames = games?.filter(game => game.accepted === false)
@@ -178,10 +196,24 @@ export const HomePage = () => {
             <div id="homepageLayoutDiv">
                 <div id="forumAndActiveGames">
                     <article id="communityForum">
-                        <h2 className="setCustomFont">Club Chat</h2>
+                        <div id="communityForumHeader">
+                            <h2 className="setCustomFont">Club Chat</h2>
+                            <div id="forumFilterWithHeader">
+                                <h5 id="forumFilterHeader" className="setCustomFont">select club</h5>
+                                <ul id="communityForumClubFilter">
+                                    {
+                                        myChessClubs.map(club => {
+                                            return (
+                                                <li key={club.id} className="communityForumFilterTab setCustomFont" onClick={() => setSelectedClub(club.id)}>{club.name}</li>
+                                            )
+                                        })
+                                    }
+                                </ul>
+                            </div>
+                        </div>
                         <section id="communityForumMsgs" >
                             {
-                                communityPosts.map(post => {
+                                displayedCommunityPosts.map(post => {
                                     const date_time = new Date(post.date_time)
                                     const date = date_time.toLocaleDateString('en-us')
                                     const time = date_time.toLocaleTimeString('en-us', { hour: 'numeric', minute: '2-digit' })
@@ -329,32 +361,6 @@ export const HomePage = () => {
                         </section>
                         <h2 className="setCustomFont">open challenges</h2>
                         {openChallengesOrMsg()}
-                        {/* {
-                            challenges?.map(c => {
-                                const challengingPlayer = c.player_w ? c.player_w : c.player_b
-
-                                if (challengingPlayer.id !== localVillagerObj.userId) {
-                                    return (
-                                        <div key={c.id} className="challengeListItem">
-                                            <div>
-                                                <div className="openChallengerInfo">
-                                                    Play <span id={c.player_w ? "blackChallengeSpan" : "whiteChallengeSpan"}>{c.player_w ? "black" : "white"}</span> vs <span id={c.player_w ? "whiteChallengeSpan" : "blackChallengeSpan"}>{challengingPlayer.username}</span>
-                                                    <button className="challengeBtn buttonStyleAmbiguous"
-                                                        onClick={() => {
-                                                            const copy = { ...c }
-                                                            c.player_w ? copy.player_b = localVillagerObj.userId : copy.player_w = localVillagerObj.userId
-                                                            c.player_w ? copy.player_w = c.player_w.id : copy.player_b = c.player_b.id
-                                                            copy.accepted = true
-                                                            acceptChallenge(copy)
-                                                                .then(() => resetGames())
-                                                        }}>accept</button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    )
-                                }
-                            })
-                        } */}
                     </div>
                     <div id="puzzlesArticle">
                         <div id="puzzleParamaters">

@@ -38,9 +38,7 @@ export const ChessClubs = () => {
     
     const createClubForm = () => {
         if (createClub) {
-
             const setPasswordModal = document.getElementById("newClubPasswordSetModal")
-            
             return (
                 <section id="newClubForm">
                     <div id="newClubPasswordSetModal">
@@ -49,13 +47,11 @@ export const ChessClubs = () => {
                             <input id="passwordInit" type="text" placeholder="password" ref={initPassword}/>
                         </div>
                         <div className="formInput">
-                            <label className="setCustomFont newClubFormLabel">Add password for joining?</label>
-                            <input id="passwordConfirm" type="text" placeholder="password" ref={confirmPassword}/>
+                            <label className="setCustomFont newClubFormLabel">Confirm password</label>
+                            <input id="passwordConfirm" type="text" placeholder=" confirm password" ref={confirmPassword}/>
                         </div>
                         <div id="newClubButtonBlock">
                             <button className="buttonStyleApprove" onClick={() => {
-                                // const initPassword = document.getElementById("passwordInit")
-                                // const confirmPassword = document.getElementById("passwordconfirm")
                                 if (initPassword.current.value === confirmPassword.current.value) {
                                     const copy = {...newClub}
                                     if (confirmPassword.current.value === "" && initPassword.current.value === ""){
@@ -75,7 +71,6 @@ export const ChessClubs = () => {
                             }}>create new club</button>
                             <button className="buttonStyleReject" onClick={() => {
                                 setPasswordModal.style.display = 'none'
-
                             }}>cancel</button>
                         </div>
                     </div>

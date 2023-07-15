@@ -13,6 +13,8 @@ export const ChessClubs = () => {
     const [unjoinedChessClubs, setUnjoinedChessClubs] = useState([])
     const [selectedClubToEdit, setSelectedClubToEdit] = useState(0)
     const [selectedClubObj, setSelectedClubObj] = useState({})
+    const [joinClub, setJoinClub] = useState(0)
+    const [clubToJoin, setClubToJoin] = useState({})
     const [createClub, setCreateClub] = useState(false)
     const [newClub, updateNewClub] = useState({
         name: "",
@@ -53,6 +55,12 @@ export const ChessClubs = () => {
             const selectedClub = myChessClubs.find(club => club.id === selectedClubToEdit)
             setSelectedClubObj(selectedClub)
         }, [selectedClubToEdit]
+    )
+    useEffect(
+        () => {
+            const selectedClubToJoin = unjoinedChessClubs.find(club => club.id === joinClub)
+            setClubToJoin(selectedClubToJoin)
+        }, [joinClub]
     )
     const handleFormChange = (evt) => {
         const copy = { ...newClub }
@@ -156,11 +164,23 @@ export const ChessClubs = () => {
             return
         }
     }
+    const joinClubModal = document.getElementById('joinClubModal')
     return <>
         <main id="chessClubsContainer">
             <article id="myChessClubsArticle">
                 <section id="editClubModal">
                     {editClubForm()}
+                </section>
+                <section id="joinClubModal" className="setCustomFont">
+                    <h4>Enter password for {clubToJoin?.name}</h4>
+                    <div id="joinClubInputAndBtn">
+                        <input type="text" />
+                        <button className="buttonStyleReject" onClick={() => {
+                            setJoinClub(0)
+                            joinClubModal.style.display = 'none'
+                        }}>cancel</button>
+                    </div>
+
                 </section>
                 {createClubForm()}
                 <section id="myClubsSection">
@@ -201,9 +221,12 @@ export const ChessClubs = () => {
                         {
                             unjoinedChessClubs.map(club => {
                                 return (
-                                    <div key={club.id} className="managedClubsListItem setCustomFont">
+                                    <div key={club.id} className="joinableClubListItem setCustomFont">
                                         <li>{club.name}</li>
-                                        <button className="buttonStyleApprove">join</button>
+                                        <button className="buttonStyleApprove" onClick={() => {
+                                            setJoinClub(club.id)
+                                            joinClubModal.style.display = "flex"
+                                        }}>join</button>
                                     </div>
                                 )
                             })

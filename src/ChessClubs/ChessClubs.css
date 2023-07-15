@@ -133,3 +133,37 @@ textarea {
     margin-bottom: 0;
     overflow: scroll;
 }
+.joinableClubListItem {
+    width: 14em;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid #694873;
+    border-radius: 4px;
+    margin-bottom: .25em;
+    padding: .25em;
+}
+.joinableClubNameAndBtn {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+#joinClubModal {
+    display: none;
+    position: absolute;
+    top: 40%;
+    width: 80%;
+    height: 4em;
+    flex-direction: column;
+    align-items: center;
+    background-color: #202020;
+    border: 1px solid #694873;
+    border-radius: 4px;
+    padding: .25em;
+}
+#joinClubInputAndBtn {
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+}

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"
-import { getAllMessages, getAllPlayers, sendDirectMessage } from "../ServerManager"
+import { getAllMessages, getAllPlayers, getMyChessClubs, sendDirectMessage } from "../ServerManager"
 import "./Messages.css"
 
 export const Messages = () => {
@@ -11,6 +11,7 @@ export const Messages = () => {
     const [recipient, setRecipient] = useState({})
     const [selectedChat, setSelectedChat] = useState(0)
     const [selectedChatMsgs, setSelectedChatMsgs] = useState([])
+    const [myChessClubs, setMyChessClubs] = useState([])
     const [newMsg, updateNewMsg] = useState({
         message: "",
         recipient: selectedChat
@@ -18,19 +19,29 @@ export const Messages = () => {
     useEffect(
         () => {
             // getAllCommunityPosts().then(data => setCommunityPosts(data))
-            Promise.all([getAllMessages(), getAllPlayers()]).then(([messageData, playerData]) => {
+            Promise.all([getAllMessages(), getAllPlayers(), getMyChessClubs()]).then(([messageData, playerData, myClubsData]) => {
                 setMessages(messageData)
                 setPlayers(playerData)
+                setMyChessClubs(myClubsData)
             })
         }, []
     )
-
     useEffect(
         () => {
-            const activeUser = players.find(p => p.id === localVillagerObj.userId)
-            const activeUserFriends = activeUser?.friends
-            setFriends(activeUserFriends)
-        }, [players]
+            // const activeUser = players.find(p => p.id === localVillagerObj.userId)
+            // const activeUserFriends = activeUser?.friends
+
+            // CHANGED FRIENDS TO BE ALL PLAYERS IN MY CLUBS
+            const playersInMyClubs = []
+            myChessClubs.map(club => {
+                club.members.map(member => {
+                    if(member.id !== localVillagerObj.userId && !playersInMyClubs.find(p => p.id === member.id)){
+                        playersInMyClubs.push(member)
+                    }
+                })
+            })
+            setFriends(playersInMyClubs)
+        }, [myChessClubs]
     )
     useEffect(
         () => {

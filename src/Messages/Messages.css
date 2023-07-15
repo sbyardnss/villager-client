@@ -150,6 +150,10 @@
     .setSize {
         font-size: x-large;
     }
+    .selectChatClubFilter {
+        display: flex;
+        justify-content: space-between;
+    }
     /* friend list */
     #messagingFriendList {
         display: flex;
@@ -185,7 +189,6 @@
         width: 80%;
         color: rgb(231, 231, 231);
         background-color: rgb(19, 77, 58);
-
     }
 
     .messagingFriendListItem {

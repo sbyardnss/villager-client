@@ -1,14 +1,16 @@
 import { useNavigate } from "react-router-dom"
 import "../ChessClubs/ChessClubs.css"
 import { useEffect, useRef, useState } from "react"
-import { createNewClub, getMyChessClubs } from "../ServerManager"
+import { createNewClub, getAllChessClubs, getMyChessClubs } from "../ServerManager"
 import { EditClub } from "./EditClub"
 
 export const ChessClubs = () => {
     const localVillager = localStorage.getItem("villager")
     const localVillagerObj = JSON.parse(localVillager)
     const navigate = useNavigate()
+    const [chessClubs, setChessClubs] = useState([])
     const [myChessClubs, setMyChessClubs] = useState([])
+    const [unjoinedChessClubs, setUnjoinedChessClubs] = useState([])
     const [selectedClubToEdit, setSelectedClubToEdit] = useState(0)
     const [selectedClubObj, setSelectedClubObj] = useState({})
     const [createClub, setCreateClub] = useState(false)
@@ -21,12 +23,19 @@ export const ChessClubs = () => {
         details: ""
     })
     const editingModal = document.getElementById("editClubModal")
-
     useEffect(
         () => {
-            getMyChessClubs()
-                .then(data => setMyChessClubs(data))
+            getAllChessClubs()
+                .then(data => setChessClubs(data))
         }, []
+    )
+    useEffect(
+        () => {
+            const joinedChessClubs = chessClubs.filter(club => club.members.find(m => m.id === localVillagerObj.userId))
+            setMyChessClubs(joinedChessClubs)
+            const notJoinedChessClubs = chessClubs.filter(club => !club.members.find(m => m.id === localVillagerObj.userId))
+            setUnjoinedChessClubs(notJoinedChessClubs)
+        }, [chessClubs]
     )
     useEffect(
         () => {
@@ -144,7 +153,7 @@ export const ChessClubs = () => {
             )
         }
         else {
-            return 
+            return
         }
     }
     return <>
@@ -153,34 +162,54 @@ export const ChessClubs = () => {
                 <section id="editClubModal">
                     {editClubForm()}
                 </section>
-                <ul id="myClubsList">
-                    {
-                        myChessClubs.map(club => {
-                            if (club.manager.id === localVillagerObj.userId) {
+                {createClubForm()}
+                <section id="myClubsSection">
+                    <h4 className="setCustomFont">My Clubs</h4>
+                    <ul id="myClubsList">
+                        {!myChessClubs.length ? <div className="setCustomFont">you have not joined any clubs</div> : ""}
+                        {
+                            myChessClubs.map(club => {
+                                if (club.manager.id === localVillagerObj.userId) {
+                                    return (
+                                        <div key={club.id} className="managedClubsListItem setCustomFont">
+                                            <li>{club.name}</li>
+                                            <button className="buttonStyleReject" onClick={() => setSelectedClubToEdit(club.id)}>edit</button>
+                                        </div>
+                                    )
+                                }
+                                else if (club.members.find(m => m.id === localVillagerObj.userId) && club.manager.id !== localVillagerObj.userId) {
+                                    return (
+                                        <div key={club.id} className="managedClubsListItem setCustomFont">
+                                            <li>{club.name}</li>
+                                            <button className="buttonStyleApprove">join</button>
+                                        </div>
+                                    )
+                                }
                                 return (
-                                    <div key={club.id} className="managedClubsListItem setCustomFont">
+                                    <div key={club.id} className="unmanagedClubListItem setCustomFont">
                                         <li>{club.name}</li>
-                                        <button className="buttonStyleReject" onClick={() => setSelectedClubToEdit(club.id)}>edit</button>
                                     </div>
                                 )
-                            }
-                            else if (club.members.find(m => m.id === localVillagerObj.userId) && club.manager.id !== localVillagerObj.userId) {
+                            })
+                        }
+                    </ul>
+                </section>
+                <section id="joinableClubsSection">
+                    <h4 className="setCustomFont">Joinable Clubs</h4>
+                    <ul id="joinableClubList">
+                        {!unjoinedChessClubs.length ? <div className="setCustomFont">you have joined all the clubs</div> : ""}
+                        {
+                            unjoinedChessClubs.map(club => {
                                 return (
                                     <div key={club.id} className="managedClubsListItem setCustomFont">
                                         <li>{club.name}</li>
                                         <button className="buttonStyleApprove">join</button>
                                     </div>
                                 )
-                            }
-                            return (
-                                <div key={club.id} className="unmanagedClubListItem setCustomFont">
-                                    <li>{club.name}</li>
-                                </div>
-                            )
-                        })
-                    }
-                </ul>
-                {createClubForm()}
+                            })
+                        }
+                    </ul>
+                </section>
             </article>
         </main>
     </>

@@ -10,12 +10,7 @@
     flex-direction: column;
     align-items: center;
 }
-#myClubsList {
-    list-style: none;
-    display: flex;
-    flex-direction: column;
-    padding: 0;
-}
+
 #createChessClubButton {
     width: 12em;
     font-size: larger;
@@ -59,6 +54,8 @@ textarea {
     border: 1px solid #f4d35e;
     padding: 2em;
 }
+
+/* edit club */
 #editClubModal {
     display: none;
     width: 20em;
@@ -75,16 +72,6 @@ textarea {
     display: flex;
     justify-content: space-between;
 }
-.managedClubsListItem {
-    width: 14em;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border: 1px solid #694873;
-    border-radius: 4px;
-    margin-bottom: .25em;
-    padding: .25em;
-}
 #errorModal {
     display: none;
     flex-direction: column;
@@ -95,4 +82,54 @@ textarea {
     border: 1px solid #694873;
     border-radius: 4px;
     padding: .5em;
+}
+
+/* my clubs */
+#myClubsSection {
+    border: 1px solid rgb(59, 174, 174);
+    border-radius: 4px;
+    margin: 1em 0 0 0;
+    padding: .5em;
+}
+#myClubsList {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    height: 10em;
+    min-width: 14.75em;
+    border: 1px solid slategray;
+    border-radius: 4px;
+    padding: .25em;
+    margin-bottom: 0;
+    overflow: scroll;
+}
+.managedClubsListItem {
+    width: 14em;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid #694873;
+    border-radius: 4px;
+    margin-bottom: .25em;
+    padding: .25em;
+}
+
+/* joinable clubs */
+#joinableClubsSection {
+    border: 1px solid #f4d35e;
+    border-radius: 4px;
+    margin: 1em 0 0 0;
+    padding: .5em;
+}
+#joinableClubList {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    height: 10em;
+    min-width: 14.75em;
+    border: 1px solid #694873;
+    border-radius: 4px;
+    padding: .25em;
+    margin-bottom: 0;
+    overflow: scroll;
 }

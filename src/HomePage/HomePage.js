@@ -54,6 +54,11 @@ export const HomePage = () => {
     )
     useEffect(
         () => {
+            setSelectedClub(myChessClubs[0]?.id)
+        }, [myChessClubs]
+    )
+    useEffect(
+        () => {
             if (selectedClub !== 0) {
                 const filteredCommunityPosts = communityPosts.filter(post => {
                     return post.club === selectedClub
@@ -74,7 +79,7 @@ export const HomePage = () => {
                 myChessClubs.map(club => {
                     club.members.map(member => member.id !== localVillagerObj.userId ? allMembersOfClubs.push(member.id) : null)
                 })
-                if (game.accepted === false && allMembersOfClubs.find(memberId => memberId === challengingPlayerId)){
+                if (game.accepted === false && allMembersOfClubs.find(memberId => memberId === challengingPlayerId)) {
                     return game
                 }
             })
@@ -214,6 +219,7 @@ export const HomePage = () => {
                             </div>
                         </div>
                         <section id="communityForumMsgs" >
+                            {!displayedCommunityPosts.length ? <div>no community posts</div> : ""}
                             {
                                 displayedCommunityPosts.map(post => {
                                     const date_time = new Date(post.date_time)

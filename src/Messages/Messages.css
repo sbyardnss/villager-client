@@ -132,7 +132,7 @@
 
     .msgDateTimeFormat {
         display: flex;
-        justify-content: end;
+        justify-content: flex-end;
         font-size: small;
         opacity: 50%;
     }
@@ -291,7 +291,7 @@
 
     .msgDateTimeFormat {
         display: flex;
-        justify-content: end;
+        justify-content: flex-end;
         font-size: small;
         opacity: 50%;
     }

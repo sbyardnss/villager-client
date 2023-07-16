@@ -53,8 +53,8 @@
         background-repeat: no-repeat;
         display: flex;
         flex-direction: column;
-        align-items: start;
-        justify-content: start;
+        align-items: flex-start;
+        justify-content: flex-start;
         padding: 1em;
         max-width: 960px;
         flex-wrap: wrap;
@@ -105,9 +105,9 @@
     #communityForumClubFilter {
         list-style: none;
         display: flex;
-        align-items: center;
+        align-items: flex-end;
         width: 20em;
-        height: 2em;
+        height: 3em;
         border: 1px solid #694873;
         border-radius: 4px;
         padding: 0;
@@ -119,6 +119,7 @@
     }
     .communityForumFilterTab {
         margin: 0 .5em;
+        height: 2em;
         background-color: #694873;
         padding: .25em;
         border-radius: 4px 4px 0 0;
@@ -259,8 +260,8 @@
         margin: 0px;
         display: flex;
         flex-direction: column;
-        align-items: start;
-        justify-content: start;
+        align-items: flex-start;
+        justify-content: flex-start;
     }
 
     #createChallengeDiv {
@@ -458,7 +459,7 @@
     #puzzleParamaters {
         display: flex;
         flex-direction: column;
-        align-items: start;
+        align-items: flex-start;
         width: 100%;
 
     }
@@ -538,7 +539,7 @@
         display: flex;
         flex-direction: column;
         align-items: center;
-        justify-content: start;
+        justify-content: flex-start;
         padding: 1em;
         flex-wrap: wrap;
         /* height: 19em; */
@@ -958,7 +959,7 @@
     #puzzleParamaters {
         display: flex;
         flex-direction: column;
-        align-items: start;
+        align-items: flex-start;
         width: 100%;
 
     }

@@ -15,6 +15,8 @@ export const TournamentProvider = (props) => {
     const [pastPairings, setPastPairings] = useState([])
     const [guests, setGuests] = useState([])
     const [playersAndGuests, setPlayersAndGuests] = useState([])
+    const [selectedClub, setSelectedClub] = useState(0)
+    const [selectedClubObj, setSelectedClubObj] = useState({})
 
     useEffect(
         () => {
@@ -27,7 +29,7 @@ export const TournamentProvider = (props) => {
             })
         }, []
     )
-
+    console.log(selectedClubObj)
     useEffect(
         () => {
             if (selectedTournament) {
@@ -39,8 +41,12 @@ export const TournamentProvider = (props) => {
     useEffect(
         () => {
             const allPlayersAndGuests = players.concat(guests)
-            setPlayersAndGuests(allPlayersAndGuests)
-        },[players, guests]
+
+            const playersInSelectedClub = players.filter(p => selectedClubObj?.members.find(m => m.id === p.id))
+            const guestPlayersInSelectedClub = guests.filter(g => selectedClubObj?.guest_members.find(gm => gm.id === g.id))
+            const allPlayersAndGuestsInSelectedClub = playersInSelectedClub.concat(guestPlayersInSelectedClub)
+            setPlayersAndGuests(allPlayersAndGuestsInSelectedClub)
+        },[players, guests, selectedClubObj]
     )
     useEffect(
         () => {
@@ -60,15 +66,16 @@ export const TournamentProvider = (props) => {
         getTournamentGames(selectedTournament)
             .then(data => setTournamentGames(data))
     }
-    const resetGuests = () => {
-        getAllGuestPlayers()
-            .then(data => setGuests(data))
-    }
+    // const resetGuests = () => {
+    //     getAllGuestPlayers()
+    //         .then(data => setGuests(data))
+    // }
     return (
         <TournamentContext.Provider value={{
             localVillagerObj, players, timeSettings, tournaments, setTournaments, tournamentGames, setGames,
             selectedTournament, setSelectedTournament, pastPairings, resetGames, resetTournamentGames,
-            setGuests, guests, playersAndGuests, setPlayersAndGuests
+            setGuests, guests, playersAndGuests, setPlayersAndGuests, selectedClub, setSelectedClub,
+            selectedClubObj, setSelectedClubObj
         }}>
             {props.children}
         </TournamentContext.Provider>

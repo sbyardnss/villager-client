@@ -6,18 +6,19 @@ import { alterGame, createNewGuest, getAllGames, getAllGuestPlayers, getAllPlaye
 import { ActiveTournament } from "./ActiveTournament"
 
 export const Tournament = () => {
-    const { localVillagerObj, tournamentGames, tournaments, setTournaments, players, timeSettings, setGames, selectedTournament, setSelectedTournament, resetTournamentGames, setGuests, guests, playersAndGuests } = useContext(TournamentContext)
+    const { localVillagerObj, tournamentGames, tournaments, setTournaments, players, timeSettings, setGames, selectedTournament, setSelectedTournament, resetTournamentGames, setGuests, guests, playersAndGuests, selectedClub, setSelectedClub, selectedClubObj, setSelectedClubObj } = useContext(TournamentContext)
     const [potentialCompetitors, setPotentialCompetitors] = useState([])
     const [pastTournaments, setPastTournaments] = useState(false)
     const [search, setSearch] = useState("")
     const [createTournament, setCreateTournament] = useState(false)
     const [showGuests, setShowGuests] = useState(false)
     const [createGuest, setCreateGuest] = useState(false)
-    const [selectedClub, setSelectedClub] = useState(0)
-    const [selectedClubObj, setSelectedClubObj] = useState({})
+    // const [selectedClub, setSelectedClub] = useState(0)
+    // const [selectedClubObj, setSelectedClubObj] = useState({})
     const [myChessClubs, setMyChessClubs] = useState([])
     const [newGuest, updateNewGuest] = useState({
-        full_name: ""
+        full_name: "",
+        club: 0
     })
     // const [playersAndGuests, setPlayersAndGuests] = useState([])
     const [newTournament, updateNewTournament] = useState({
@@ -31,17 +32,21 @@ export const Tournament = () => {
         pairings: [],
         club: 0
     })
-
+    console.log(playersAndGuests)
     useEffect(
         () => {
             getMyChessClubs()
                 .then(data => setMyChessClubs(data))
         }, []
     )
+    
     useEffect(
         () => {
             const club = myChessClubs.find(club => club.id === selectedClub)
             setSelectedClubObj(club)
+            const guestCopy = { ...newGuest }
+            guestCopy.club = selectedClub
+            updateNewGuest(guestCopy)
         }, [selectedClub]
     )
     //search player useEffect
@@ -243,7 +248,7 @@ export const Tournament = () => {
                                 value={search}
                                 onChange={(e) => setSearch(e.target.value)}
                             />
-                            <button 
+                            <button
                                 id="resetPlayerSearchBtn"
                                 className="buttonStyleReject"
                                 onClick={() => setSearch("")}
@@ -265,7 +270,7 @@ export const Tournament = () => {
                                 id="newGuestSubmitBtn"
                                 className="setCustomFont"
                                 onClick={() => {
-                                    if (newGuest.full_name !== "") {
+                                    if (newGuest.full_name !== "" && selectedClub) {
                                         createNewGuest(newGuest)
                                             .then(() => resetGuests())
                                     }

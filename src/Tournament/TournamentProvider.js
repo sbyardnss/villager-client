@@ -1,5 +1,5 @@
 import { useState, useEffect, createContext } from "react";
-import { getAllGames, getAllGuestPlayers, getAllPlayers, getAllTimeSettings, getAllTournaments, getTournamentGames } from "../ServerManager";
+import { getAllGames, getAllGuestPlayers, getAllPlayers, getAllTimeSettings, getAllTournaments, getMyTournaments, getTournamentGames } from "../ServerManager";
 
 export const TournamentContext = createContext()
 
@@ -18,7 +18,7 @@ export const TournamentProvider = (props) => {
 
     useEffect(
         () => {
-            Promise.all([getAllPlayers(), getAllTournaments(), getAllTimeSettings(), getAllGames(), getAllGuestPlayers()]).then(([playerData, tournamentData, timeSettingData, gameData, guestData]) => {
+            Promise.all([getAllPlayers(), getMyTournaments(), getAllTimeSettings(), getAllGames(), getAllGuestPlayers()]).then(([playerData, tournamentData, timeSettingData, gameData, guestData]) => {
                 setPlayers(playerData)
                 setTournaments(tournamentData)
                 setTimeSettings(timeSettingData)
@@ -27,16 +27,7 @@ export const TournamentProvider = (props) => {
             })
         }, []
     )
-    // useEffect(
-    //     () => {
-    //         if (selectedTournament) {
-    //             const selectedTournamentObj = tournaments.find(t => t.id === selectedTournament)
-    //             // const tourneyGamesOnly = games.filter(g => g.tournament === selectedTournament)
-    //             console.log(selectedTournamentObj)
-    //             setTournamentGames(selectedTournamentObj.games)
-    //         }
-    //     }, [games, selectedTournament]
-    // )
+
     useEffect(
         () => {
             if (selectedTournament) {
@@ -47,8 +38,6 @@ export const TournamentProvider = (props) => {
     )
     useEffect(
         () => {
-            // const guestsCopy = [...guests]
-            // guestsCopy.map(g => g.id = g.guest_id)
             const allPlayersAndGuests = players.concat(guests)
             setPlayersAndGuests(allPlayersAndGuests)
         },[players, guests]
@@ -79,7 +68,7 @@ export const TournamentProvider = (props) => {
         <TournamentContext.Provider value={{
             localVillagerObj, players, timeSettings, tournaments, setTournaments, tournamentGames, setGames,
             selectedTournament, setSelectedTournament, pastPairings, resetGames, resetTournamentGames,
-            guests, playersAndGuests, setPlayersAndGuests
+            setGuests, guests, playersAndGuests, setPlayersAndGuests
         }}>
             {props.children}
         </TournamentContext.Provider>

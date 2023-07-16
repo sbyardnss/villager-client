@@ -170,6 +170,7 @@
         margin: 0 0 1em 2em;
 
     }
+
     #playerSearchInput {
         width: 15.5em;
         margin-right: 1em;
@@ -527,6 +528,59 @@
         padding: 1em;
     }
 
+    #newTournamentClubNameHeader {
+        display: flex;
+        justify-content: center;
+        margin: .5em 0;
+        background-color: #694873;
+        border: 1px solid rgb(143, 121, 0);
+        border-radius: 4px;
+        padding: .25em;
+        font-size: large;
+    }
+
+    #clubSelectionSection {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    #clubSelectionList {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 90%;
+        padding: .25em;
+        height: 20em;
+        overflow: scroll;
+        border: 1px solid #694873;
+        border-radius: 4px;
+    }
+
+    .selectedClubSelectionTabItem {
+        display: flex;
+        align-items: center;
+        background-color: #5a7c9e;
+        margin: .5em;
+        border-radius: 4px;
+        height: 1.5em;
+        padding: .25em;
+        width: 90%;
+    }
+
+    .clubSelectionTabItem {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #694873;
+        margin: .5em;
+        border-radius: 4px;
+        height: 1.5em;
+        padding: .25em;
+        width: 90%;
+
+    }
+
     #competitorSelectionSplit {
         display: flex;
         flex-direction: column;
@@ -592,29 +646,35 @@
         align-items: center;
         /* padding: 0 2em; */
     }
+
     #playerSearch {
         margin: 1em 0;
         display: flex;
         justify-content: space-between;
     }
+
     #createGuestDiv {
         margin: 1em 0;
         display: flex;
         justify-content: space-between;
     }
+
     #newGuestInput {
         width: 11em;
     }
+
     #newGuestSubmitBtn {
-        background-color:#0e4a78;
+        background-color: #0e4a78;
         border: none;
         border-radius: 2px;
         width: 8.5em;
     }
+
     #newGuestSubmitBtn:hover {
-        background-color:#3280bc;
-        
+        background-color: #3280bc;
+
     }
+
     #playerSearchInput {
         width: 16em;
     }

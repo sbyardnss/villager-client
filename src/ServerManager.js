@@ -262,7 +262,7 @@ export const getAIMove = (objForAi) => {
     })
         .then(res => res.json())
 }
-export const createGuest = (guestObj) => {
+export const createNewGuest = (guestObj) => {
     const localVillagerObj = getToken()
     return fetch(`${apiKey}/guests`, {
         method: "POST",

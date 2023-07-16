@@ -243,7 +243,9 @@ export const Tournament = () => {
                                 value={search}
                                 onChange={(e) => setSearch(e.target.value)}
                             />
-                            <button className="buttonStyleReject"
+                            <button 
+                                id="resetPlayerSearchBtn"
+                                className="buttonStyleReject"
                                 onClick={() => setSearch("")}
                             >reset</button>
                         </div>

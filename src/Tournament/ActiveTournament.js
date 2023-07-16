@@ -458,7 +458,7 @@ export const ActiveTournament = () => {
     const scoringButtonOrNone = () => {
         if (activeTournament.in_person === false) {
             return (
-                <button className="controlBtnApprove" onClick={() => {
+                <button className="controlBtnApprove progressionControlBtn" onClick={() => {
                     {
                         currentRoundMatchups.map(matchup => {
                             if (matchup.player2 !== null) {

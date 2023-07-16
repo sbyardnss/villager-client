@@ -89,12 +89,11 @@ export const HomePage = () => {
                 return (!game.player_b?.guest_id && !game.player_w?.guest_id)
             })
             const unfinishedGames = nonGuestGames?.filter(game => {
-                return (game.player_b?.id === localVillagerObj.userId || game.player_w?.id === localVillagerObj.userId) && game.winner === null
+                return (game.player_b?.id === localVillagerObj.userId || game.player_w?.id === localVillagerObj.userId) && game.winner === null && game.win_style === '' && game.accepted === true
             })
             setMyUnfinishedGames(unfinishedGames)
         }, [games]
     )
-
 
     useEffect(
         () => {

@@ -72,6 +72,11 @@ textarea {
     display: flex;
     justify-content: space-between;
 }
+#editClubBtnBlock {
+    display: flex;
+    width: 7em;
+    justify-content: space-between;
+}
 #errorModal {
     display: none;
     flex-direction: column;

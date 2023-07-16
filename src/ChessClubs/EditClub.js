@@ -35,13 +35,31 @@ export const EditClub = ({ clubId, clubObj, setClub }) => {
                 <h4>
                     Incorrect password or missing club name
                 </h4>
-                <button className="buttonStyleReject" onClick={() => {errorModal.style.display = 'none'}}>dismiss</button>
+                <button className="buttonStyleReject" onClick={() => { errorModal.style.display = 'none' }}>dismiss</button>
             </div>
             <div id="editClubHeader">
                 <div className="setCustomFont">
                     {clubObj?.name}
                 </div>
-                <button className="buttonStyleReject" onClick={() => setClub(0)}>cancel</button>
+                <div id="editClubBtnBlock">
+                    <button className="buttonStyleApprove" onClick={() => {
+                        if (editedClub.name) {
+                            updateClub(clubId, editedClub)
+                                .then(res => {
+                                    if (res) {
+                                        if (res.status === 400 || res.status === 500) {
+                                            // return (
+                                            //     <div id="errorModal">Incorrect password or missing club name</div>
+                                            // )
+                                            errorModal.style.display = 'flex'
+                                        }
+                                    }
+                                })
+
+                        }
+                    }}>submit</button>
+                    <button className="buttonStyleReject" onClick={() => setClub(0)}>cancel</button>
+                </div>
             </div>
             <section id="clubForm">
                 <div className="formInput">
@@ -76,25 +94,7 @@ export const EditClub = ({ clubId, clubObj, setClub }) => {
                     <label className="setCustomFont newClubFormLabel" >New password</label>
                     <input id="newPassword" type="text" placeholder=" set new password" onChange={(evt) => handleFormChange(evt)} />
                 </div>
-                <div id="newClubButtonBlock">
-                    <button className="buttonStyleApprove" onClick={() => {
-                        if (editedClub.name) {
-                            updateClub(clubId, editedClub)
-                                .then(res => {
-                                    if (res) {
-                                        if (res.status === 400 || res.status === 500) {
-                                            // return (
-                                            //     <div id="errorModal">Incorrect password or missing club name</div>
-                                            // )
-                                            errorModal.style.display = 'flex'
-                                        }
-                                    }
-                                })
 
-                        }
-                    }}>submit</button>
-                    {/* <button className="buttonStyleReject" onClick={() => setCreateClub(false)}>cancel</button> */}
-                </div>
             </section>
         </article>
     </>

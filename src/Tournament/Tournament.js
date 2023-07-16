@@ -12,6 +12,10 @@ export const Tournament = () => {
     const [search, setSearch] = useState("")
     const [createTournament, setCreateTournament] = useState(false)
     const [showGuests, setShowGuests] = useState(false)
+    const [createGuest, setCreateGuest] = useState(false)
+    const [newGuest, updateNewGuest] = useState({
+        full_name: ""
+    })
     // const [playersAndGuests, setPlayersAndGuests] = useState([])
     const [newTournament, updateNewTournament] = useState({
         title: "",
@@ -23,7 +27,7 @@ export const Tournament = () => {
         in_person: true,
         pairings: []
     })
-    
+
     //search player useEffect
     useEffect(
         () => {
@@ -159,7 +163,7 @@ export const Tournament = () => {
                                         )
                                     })
                                 }
-                            
+
                             </div>
                         </div>
                     </div>
@@ -175,6 +179,28 @@ export const Tournament = () => {
                         <button className="buttonStyleReject"
                             onClick={() => setSearch("")}
                         >reset</button>
+                    </div>
+                    <div id="createGuestDiv">
+                        <input
+                            className="text-input"
+                            id="newGuestInput"
+                            type="text"
+                            placeholder="guest name"
+                            onChange={(e) => {
+                                const copy = { ...newGuest }
+                                copy.full_name = e.target.value
+                                updateNewGuest(copy)
+                            }}
+                        />
+                        <button
+                            id="newGuestSubmitBtn"
+                            className="setCustomFont"
+                            onClick={() => {
+                                if (newGuest.full_name !== "") {
+                                    createGuest(newGuest)
+                                }
+                            }}
+                        >Create Guest</button>
                     </div>
                     <section id="tournamentParameters">
                         <div id="tournamentParameterControls">
@@ -217,6 +243,7 @@ export const Tournament = () => {
                             </div>
                         </div>
                         <div id="tournamentSubmit">
+                            <button className="buttonStyleApprove" onClick={() => setShowGuests(!showGuests)}>toggle guests</button>
                             <button
                                 className="buttonStyleApprove"
                                 onClick={() => {
@@ -227,19 +254,19 @@ export const Tournament = () => {
                                         if (newTournament.competitors && newTournament.timeSetting && newTournament.title) {
                                             if (window.confirm("Everybody ready?")) {
                                                 const copy = { ...newTournament }
-                                                const registeredPairingArr = newTournament.competitors.map(c => {return c.id})
-                                                const guestPairingArr = newTournament.guest_competitors.map(gc => {return gc.guest_id})
+                                                const registeredPairingArr = newTournament.competitors.map(c => { return c.id })
+                                                const guestPairingArr = newTournament.guest_competitors.map(gc => { return gc.guest_id })
                                                 if (guestPairingArr) {
                                                     copy.pairings = RoundRobin(registeredPairingArr.concat(guestPairingArr))
                                                     copy.competitors = registeredPairingArr
-                                                    copy.guest_competitors = newTournament.guest_competitors.map(gc => {return gc.id})
+                                                    copy.guest_competitors = newTournament.guest_competitors.map(gc => { return gc.id })
                                                 }
                                                 else {
                                                     copy.pairings = RoundRobin(registeredPairingArr)
                                                     copy.competitors = registeredPairingArr
                                                 }
-                                                
-                                                
+
+
                                                 // copy.pairings = RoundRobin(newTournament.competitors)
                                                 sendNewTournament(copy)
                                                     .then(() => {
@@ -251,8 +278,7 @@ export const Tournament = () => {
                                 }}>
                                 Start Tournament
                             </button>
-                            <button onClick={() => setShowGuests(!showGuests)}>toggle guests</button>
-                            <button onClick={() => setCreateTournament(false)}>cancel</button>
+                            <button className="buttonStyleReject" onClick={() => setCreateTournament(false)}>cancel</button>
                         </div>
                     </section>
                 </section>

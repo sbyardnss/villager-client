@@ -593,10 +593,27 @@
         /* padding: 0 2em; */
     }
     #playerSearch {
-        margin: 1em .5em;
+        margin: 1em 0;
         display: flex;
         justify-content: space-between;
-
+    }
+    #createGuestDiv {
+        margin: 1em 0;
+        display: flex;
+        justify-content: space-between;
+    }
+    #newGuestInput {
+        width: 11em;
+    }
+    #newGuestSubmitBtn {
+        background-color:#0e4a78;
+        border: none;
+        border-radius: 2px;
+        width: 8.5em;
+    }
+    #newGuestSubmitBtn:hover {
+        background-color:#3280bc;
+        
     }
     #playerSearchInput {
         width: 16em;

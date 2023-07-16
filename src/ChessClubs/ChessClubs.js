@@ -185,16 +185,20 @@ export const ChessClubs = () => {
                                 // .then(res => window.alert(res['message']))
                                 .then(res => {
                                     if (res.status === 400) {
-                                        window.alert('incorrect password')
+                                        return window.alert('incorrect password')
                                     }
-                                    else {
-
+                                    if (res.status === 201) {
+                                        resetChessClubs()
+                                        setJoinClub(0)
+                                        joinClubModal.style.display = 'none'
                                     }
                                 })
+                                .then(() => joinRequestPassword.current.value = "")
                         }}>submit</button>
                         <button className="buttonStyleReject" onClick={() => {
                             setJoinClub(0)
                             joinClubModal.style.display = 'none'
+                            joinRequestPassword.current.value = ""
                         }}>cancel</button>
                     </div>
 
@@ -219,10 +223,11 @@ export const ChessClubs = () => {
                                         <div key={club.id} className="managedClubsListItem setCustomFont">
                                             <li>{club.name}</li>
                                             <button className="buttonStyleApprove" onClick={() => {
-                                                if (window.confirm(`leave ${club.name}?`)){
+                                                if (window.confirm(`leave ${club.name}?`)) {
                                                     leaveClub(club.id)
+                                                        .then(() => resetChessClubs())
                                                 }
-                                                }}>leave</button>
+                                            }}>leave</button>
                                         </div>
                                     )
                                 }
@@ -250,9 +255,9 @@ export const ChessClubs = () => {
                                                 joinClubModal.style.display = "flex"
                                             }
                                             else {
-                                                joinClub(club.id)
+                                                addMemberToClub(club.id)
+                                                    .then(() => resetChessClubs())
                                             }
-
                                         }}>join</button>
                                     </div>
                                 )

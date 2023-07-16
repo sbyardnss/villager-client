@@ -46,7 +46,7 @@
         color: rgb(231, 231, 231);
         display: flex;
         flex-direction: column;
-        align-items: start;
+        align-items: flex-start;
 
     }
 
@@ -123,12 +123,17 @@
     }
 
     .trophyIconProfile {
-        height: 3em;
+        height: 2em;
     }
 
     .pastGamesListLogisticsInfo {
         font-size: small;
         margin-right: 1em;
+    }
+    .mobileTournamentDiv {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
     }
 
 }
@@ -181,8 +186,7 @@
         color: rgb(231, 231, 231);
         display: flex;
         flex-direction: column;
-        align-items: start;
-
+        align-items: flex-start;
     }
 
     .editProfileButton {

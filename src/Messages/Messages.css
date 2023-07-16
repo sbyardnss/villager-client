@@ -10,6 +10,13 @@
         display: flex;
         justify-content: center;
     }
+    .setSize {
+        font-size: x-large;
+    }
+    .selectChatClubFilter {
+        display: flex;
+        justify-content: space-between;
+    }
 
     /* friend list */
     #messagingFriendList {
@@ -35,7 +42,7 @@
     }
 
     #messagesFriends {
-        width: 30%;
+        width: 50%;
         margin-right: 1em;
 
     }

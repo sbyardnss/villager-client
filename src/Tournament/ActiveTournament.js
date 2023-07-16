@@ -139,9 +139,9 @@ export const ActiveTournament = () => {
             {
                 tournamentGames.map(tg => {
                     const gameResult = {}
-                    gameResult.white = tg.player_w
-                    gameResult.black = tg.player_b
-                    gameResult.winner = tg.winner
+                    gameResult.white = tg.player_w?.guest_id ? tg.player_w.guest_id : tg.player_w.id
+                    gameResult.black = tg.player_b?.guest_id ? tg.player_b?.guest_id : tg.player_b?.id
+                    gameResult.winner = tg.winner?.guest_id ? tg.winner.guest_id : tg.winner?.id
                     gameResult.win_style = tg.win_style
                     gameResult.round = tg.tournament_round
                     resultsForTieBreak.push(gameResult)
@@ -163,90 +163,78 @@ export const ActiveTournament = () => {
         }
         return tableHtml.reverse()
     }
-    useEffect(
-        () => {
-            console.log(gameForApi)
-        },[gameForApi]
-    )
-    const roundHtml = roundPopulation()
-    const solkoffTieBreaker = (playerArr) => {
-        const tieBreakArr = []
-        for (const playerId of playerArr) {
-            const playerGames = resultsForTieBreak.filter(r => {
-                if (typeof playerId === 'string') {
-                    return r.black?.guest_id === playerId || r.white?.guest_id === playerId
-                }
-                return r.black?.id === playerId || r.white?.id === playerId
-            })
-            let opponentsTotalScore = 0.0
-            for (const gameResult of playerGames) {
-                // let opponentId = gameResult.white === playerId ? gameResult.black?.id : gameResult.white?.id
-                let opponentId = ''
-                let opponentIdNum = 0
-                //opponentId currently staying null
-                if (typeof playerId === 'string') {
-                    if (gameResult.white.guest_id === playerId) {
-                        // gameResult.black?.guest_id ? opponentId = gameResult.black?.guest_id : opponentIdNum = gameResult.black?.id
-                        if (gameResult.black?.guest_id) {
-                            opponentId = gameResult.black.guest_id || null
-                        }
-                        else {
-                            opponentIdNum = gameResult.black?.id || null
-                        }
-                    }
-                    else {
-                        // gameResult.white?.guest_id ? opponentId = gameResult.white?.guest_id : opponentIdNum = gameResult.white?.id
-                        if (gameResult.white?.guest_id) {
-                            opponentId = gameResult.white.guest_id
-                        }
-                        else {
-                            opponentIdNum = gameResult.white?.id
-                        }
-                    }
-                }
 
-                //code failing before this line
-                const opponentGames = resultsForTieBreak.filter(r => r.black?.id === opponentId || r.white?.id === opponentId)
-                for (const gameResult of opponentGames) {
-                    if (gameResult.winner?.id === opponentId) {
-                        opponentsTotalScore += 1
-                    }
-                    else if (gameResult.win_style === "draw") {
-                        opponentsTotalScore += .5
-                    }
-                    else {
-                        opponentsTotalScore = opponentsTotalScore
-                    }
-                }
-            }
-            tieBreakArr.push(opponentsTotalScore)
-        }
-        return tieBreakArr
-    }
-    const cumulativeTieBreaker = (playerArr) => {
-        const tieBreakArr = []
-        for (const playerId of playerArr) {
-            let score = 0
-            const playerGames = resultsForTieBreak.filter(r => {
-                if (typeof playerId === 'string') {
-                    return r.black?.guest_id === playerId || r.white?.guest_id === playerId
-                }
-                return r.black?.id === playerId || r.white?.id === playerId
+    const roundHtml = roundPopulation()
+    const solkoffTieBreaker = (playerIdArr) => {
+        const solkoffTieBreakerArr = []
+        for (const playerId of playerIdArr) {
+            let count = 0
+            const playerMatchupResults = resultsForTieBreak.filter(result => {
+                return result.white === playerId || result.black === playerId
             })
-            for (const game of playerGames) {
-                if (game.winner?.id === playerId || game.winner?.guest_id === playerId) {
-                    score = score + (score + 1)
-                }
-                else if (game.win_style === "draw") {
-                    score = score + (score + .5)
-                }
-                else {
-                    score = score + score
+            for (const result of playerMatchupResults) {
+                const opponentId = playerId === result.white ? result.black : result.white
+                if (opponentId) {
+                    count += parseFloat(document.getElementById(`${opponentId}-- score`)?.innerHTML)
                 }
             }
-            tieBreakArr.push(score)
+            solkoffTieBreakerArr.push([playerId, count])
         }
-        return tieBreakArr
+        return solkoffTieBreakerArr
+    }
+    const cumulativeTieBreaker = (playerIdArr) => {
+        const cumulativeArr = []
+        for (const playerId of playerIdArr) {
+            let count = 0
+            const playerMatchupResults = resultsForTieBreak.filter(result => {
+                return result.white === playerId || result.black === playerId
+            })
+            for (const result of playerMatchupResults) {
+                const opponentId = result.white === playerId ? result.black : result.white
+                result.winner === playerId && opponentId !== undefined ? count += (count + 1)
+                    : result.win_style === 'draw' ? count += (count + .5)
+                        : count = count + count
+            }
+            cumulativeArr.push([playerId, count])
+        }
+        return cumulativeArr
+    }
+    const tieBreakDisplay = (arrForTie) => {
+        const solkoffResultsArr = solkoffTieBreaker(arrForTie).sort((a, b) => { return b[1] - a[1] })
+        const cumulativeResultsArr = cumulativeTieBreaker(arrForTie).sort((a, b) => { return b[1] - a[1] })
+        return (
+            <div id="tieBreakResults">
+                <div id="solkoffResults">
+                    {
+                        solkoffResultsArr.map(playerResult => {
+                            const player = typeof playerResult[0] === 'string' ? activeTournamentPlayers.find(player => player.guest_id === playerResult[0])
+                                : activeTournamentPlayers.find(player => player.id === playerResult[0])
+                            return (
+                                <div key={playerResult[0] + '--' + playerResult[1]} className="resultsModalListItem">
+                                    <div>{player.guest_id ? player?.full_name : player?.username}: </div>
+                                    <div>{playerResult[1]}</div>
+                                </div>
+                            )
+                        })
+                    }
+                </div>
+                <div id="cumulativeResults">
+                    {
+                        cumulativeResultsArr.map(playerResult => {
+                            const player = typeof playerResult[0] === 'string' ? activeTournamentPlayers.find(player => player.guest_id === playerResult[0])
+                                : activeTournamentPlayers.find(player => player.id === playerResult[0])
+                            return (
+                                <div key={playerResult[0] + '--' + playerResult[1]} className="resultsModalListItem">
+                                    <div>{player.guest_id ? player?.full_name : player?.username}: </div>
+                                    <div>{playerResult[1]}</div>
+                                </div>
+                            )
+                        })
+                    }
+                </div>
+            </div>
+
+        )
     }
     const handleGameForApiUpdate = (targetId, whitePieces, blackPieces, pastGame) => {
         let copy = {}
@@ -500,7 +488,6 @@ export const ActiveTournament = () => {
         if (activeTournament && activeTournamentPlayers) {
             const endTournamentModal = document.getElementById('endTournamentModal')
             const modal = document.getElementById('resultsModal')
-            //current method for displaying results. delete when new useEffect is working
             const resultsDisplay = () => {
                 const results = {}
                 const resultArr = []
@@ -514,6 +501,7 @@ export const ActiveTournament = () => {
                         results[player.username] = [parseFloat(scoreElement?.innerHTML), player.id]
                     }
                 })
+
                 for (let player in results) {
                     resultArr.push([player, results[player]])
                 }
@@ -534,47 +522,7 @@ export const ActiveTournament = () => {
                                 })
                             }
                         </div>
-                        <div id="tieBreakResults">
-                            <div id="solkoffResults">
-                                <div className="resultsHeader">solkoff</div>
-                                {
-                                    arrForTieBreakers.map(r => {
-                                        const player = activeTournamentPlayers.find(p => {
-                                            if (p.guest_id) {
-                                                return p.guest_id === r
-                                            }
-                                            return p.id === r
-                                        })
-                                        // console.log(activeTournamentPlayers)
-                                        return (
-                                            <div key={'playerId' + r} className="resultsModalListItem">
-                                                <div>{player?.guest_id ? player?.full_name : player?.username}: </div>
-                                                <div>{solkoffTieBreaker([r]).toString()}</div>
-                                            </div>
-                                        )
-                                    })
-                                }
-                            </div>
-                            <div id="cumulativeResults">
-                                <div className="resultsHeader">cumulative</div>
-                                {
-                                    arrForTieBreakers.map(r => {
-                                        const player = activeTournamentPlayers.find(p => {
-                                            if (p.guest_id) {
-                                                return p.guest_id === r
-                                            }
-                                            return p.id === r
-                                        })                                        // console.log(activeTournamentPlayers)
-                                        return (
-                                            <div key={'playerId' + r} className="resultsModalListItem">
-                                                <div>{player?.guest_id ? player?.full_name : player?.username}: </div>
-                                                <div>{cumulativeTieBreaker([r]).toString()}</div>
-                                            </div>
-                                        )
-                                    })
-                                }
-                            </div>
-                        </div>
+                        {tieBreakDisplay(arrForTieBreakers)}
                     </section>
                 )
             }
@@ -583,8 +531,6 @@ export const ActiveTournament = () => {
                     <div id="resultsModal">
                         Results
                         {resultsDisplay()}
-                        {/* <div id="modalResults">
-                            </div> */}
                         <div id="modalBtns">
                             <button onClick={() => {
                                 endTournamentModal.style.display = "flex"
@@ -619,7 +565,7 @@ export const ActiveTournament = () => {
                             onClick={() => {
                                 setSelectedTournament(0)
                                 setEditScores(false)
-                                setScoring(false)
+                                // setScoring(false)
                             }}>exit</button>
                     </div>
                     <div id="tournamentProgressionControls">
@@ -643,7 +589,7 @@ export const ActiveTournament = () => {
                             className="progressionControlBtn controlBtnApprove"
                             onClick={() => {
                                 setEditScores(true)
-                                setScoring(false)
+                                // setScoring(false)
                             }}>edit scores</button>
                         {scoringButtonOrNone()}
                         <button
@@ -656,7 +602,6 @@ export const ActiveTournament = () => {
                         Round {currentRound}
                     </div>
                     <section id="matchupsContainer">
-                        {/* {matchupsOrScoring()} */}
                         {submitResultsOrNull()}
                     </section>
                     <section id="tournamentTableContainer">
@@ -683,7 +628,7 @@ export const ActiveTournament = () => {
                                                 return !tg.player_b?.guest_id && tg.player_b?.id === tourneyPlayer.id || !tg.player_w.guest_id && tg.player_w.id === tourneyPlayer.id
                                             }
                                         })
-                                        
+
                                         const guestIdOrId = tourneyPlayer.guest_id ? tourneyPlayer.guest_id : tourneyPlayer.id
                                         const tpTargetId = tourneyPlayer.guest_id ? 'guest_id' : 'id'
                                         const emptyCellCompensation = () => {
@@ -705,7 +650,7 @@ export const ActiveTournament = () => {
                                                                 <td key={tpg.id} value={1} id={guestIdOrId + 'bye'} className="tournamentGameResultBye">bye</td>
                                                             )
                                                         }
-                                                        if ((tpg.winner?.guest_id && tpg.winner?.guest_id === tourneyPlayer.guest_id) || (!tpg.winner?.guest_id && !tourneyPlayer.guest_id && tpg.winner?.id === tourneyPlayer.id)){
+                                                        if ((tpg.winner?.guest_id && tpg.winner?.guest_id === tourneyPlayer.guest_id) || (!tpg.winner?.guest_id && !tourneyPlayer.guest_id && tpg.winner?.id === tourneyPlayer.id)) {
                                                             score++
                                                             return (
                                                                 <td key={tpg.id} value={1} id={guestIdOrId + tpg.id} className="tournamentGameResult">1</td>

@@ -182,6 +182,7 @@ export const getChessClub = (clubId) => {
 
 
 
+
 //POST FETCHES
 export const submitNewPostToAPI = (newPostObj) => {
     const localVillagerObj = getToken()
@@ -282,6 +283,18 @@ export const createNewClub = (clubObj) => {
         },
         body: JSON.stringify(clubObj)
     })
+}
+export const addMemberToClub = (clubId, request) => {
+    const localVillagerObj = getToken()
+    return fetch(`${apiKey}/clubs/${clubId}/join_club`, {
+        method: "POST",
+        headers: {
+            "Authorization": `Token ${localVillagerObj.token}`,
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(request)
+    })
+    // .then(res => res.json())
 }
 //PUT FETCHES
 export const updateProfile = (userId, profileObj) => {
@@ -399,6 +412,18 @@ export const deleteGuest = (guestIdObj) => {
         body: JSON.stringify(guestIdObj)
     })
 }
+export const leaveClub = (clubId) => {
+    const localVillagerObj = getToken()
+    return fetch(`${apiKey}/clubs/${clubId}/leave_club`, {
+        method: "DELETE",
+        headers: {
+            "Authorization": `Token ${localVillagerObj.token}`,
+            "Content-Type": "application/json"
+        }
+    })
+}
+
+
 //auth
 export const loginUser = (user) => {
     return fetch(`${apiKey}/login`, {

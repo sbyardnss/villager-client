@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom"
 import "../ChessClubs/ChessClubs.css"
 import { useEffect, useRef, useState } from "react"
-import { createNewClub, getAllChessClubs, getMyChessClubs } from "../ServerManager"
+import { addMemberToClub, checkForPassword, createNewClub, getAllChessClubs, getMyChessClubs, leaveClub } from "../ServerManager"
 import { EditClub } from "./EditClub"
 
 export const ChessClubs = () => {
@@ -15,6 +15,7 @@ export const ChessClubs = () => {
     const [selectedClubObj, setSelectedClubObj] = useState({})
     const [joinClub, setJoinClub] = useState(0)
     const [clubToJoin, setClubToJoin] = useState({})
+    const joinRequestPassword = useRef()
     const [createClub, setCreateClub] = useState(false)
     const [newClub, updateNewClub] = useState({
         name: "",
@@ -74,7 +75,10 @@ export const ChessClubs = () => {
     }
     const initPassword = useRef()
     const confirmPassword = useRef()
-
+    const resetChessClubs = () => {
+        getAllChessClubs()
+            .then(data => setChessClubs(data))
+    }
     const createClubForm = () => {
         if (createClub) {
             const setPasswordModal = document.getElementById("newClubPasswordSetModal")
@@ -174,7 +178,20 @@ export const ChessClubs = () => {
                 <section id="joinClubModal" className="setCustomFont">
                     <h4>Enter password for {clubToJoin?.name}</h4>
                     <div id="joinClubInputAndBtn">
-                        <input type="text" />
+                        <input type="text" ref={joinRequestPassword} />
+                        <button className="buttonStyleReject" onClick={() => {
+
+                            addMemberToClub(clubToJoin.id, { submittedPassword: joinRequestPassword.current.value })
+                                // .then(res => window.alert(res['message']))
+                                .then(res => {
+                                    if (res.status === 400) {
+                                        window.alert('incorrect password')
+                                    }
+                                    else {
+
+                                    }
+                                })
+                        }}>submit</button>
                         <button className="buttonStyleReject" onClick={() => {
                             setJoinClub(0)
                             joinClubModal.style.display = 'none'
@@ -201,7 +218,11 @@ export const ChessClubs = () => {
                                     return (
                                         <div key={club.id} className="managedClubsListItem setCustomFont">
                                             <li>{club.name}</li>
-                                            <button className="buttonStyleApprove">join</button>
+                                            <button className="buttonStyleApprove" onClick={() => {
+                                                if (window.confirm(`leave ${club.name}?`)){
+                                                    leaveClub(club.id)
+                                                }
+                                                }}>leave</button>
                                         </div>
                                     )
                                 }
@@ -224,8 +245,14 @@ export const ChessClubs = () => {
                                     <div key={club.id} className="joinableClubListItem setCustomFont">
                                         <li>{club.name}</li>
                                         <button className="buttonStyleApprove" onClick={() => {
-                                            setJoinClub(club.id)
-                                            joinClubModal.style.display = "flex"
+                                            if (club.has_password) {
+                                                setJoinClub(club.id)
+                                                joinClubModal.style.display = "flex"
+                                            }
+                                            else {
+                                                joinClub(club.id)
+                                            }
+
                                         }}>join</button>
                                     </div>
                                 )

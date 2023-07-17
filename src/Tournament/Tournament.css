@@ -613,8 +613,9 @@
         border: 2px solid rgb(40, 40, 40);
         border-radius: 8px;
         background-image: url("../images/closup_dark_board.jpeg");
-        background-size: 100%;
-        background-position: 20%;
+        /* background-size: 100%; */
+        background-size: cover;
+        background-position: 50%;
         width: 80%;
         /* margin-bottom: 1em; */
         padding: 1em;

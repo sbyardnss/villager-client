@@ -111,8 +111,15 @@
         border: 1px solid #694873;
         border-radius: 4px;
         padding: 0;
-        overflow: scroll;
+        /* overflow: scroll; */
         margin: .25em 0;
+        overflow-x: scroll;
+        overflow-y: hidden;
+        white-space: nowrap;
+        
+    }
+    ::-webkit-scrollbar {
+        display: none;
     }
     #forumFilterHeader {
         margin: 0;
@@ -125,9 +132,11 @@
         margin: 0 .5em;
         height: 2em;
         background-color: #694873;
-        padding: .25em;
+        padding: .25em .5em;
         border-radius: 4px 4px 0 0;
         cursor: pointer;
+        display: flex;
+        align-items: center;
     }
 
     .communityForumFilterTab:hover {
@@ -594,14 +603,23 @@
     #communityForumClubFilter {
         list-style: none;
         display: flex;
-        align-items: center;
+        align-items: flex-end;
+        justify-content: flex-start;
         width: 18em;
-        height: 2em;
+        height: 3em;
         border: 1px solid #694873;
         border-radius: 4px;
         padding: 0;
-        overflow: scroll;
+        /* overflow: scroll; */
+        /* direction: ltr; */
         margin: .25em 0;
+        overflow-x: auto;
+        overflow-y: hidden;
+        white-space: nowrap;
+        
+    }
+    ::-webkit-scrollbar {
+        display: none;
     }
     #forumFilterHeader {
         margin: 0;
@@ -610,12 +628,17 @@
         width: 100%;
         text-align: center;
     }
+    
     .communityForumFilterTab {
         margin: 0 .5em;
         background-color: #694873;
-        padding: .25em;
+        padding: .5em;
         border-radius: 4px 4px 0 0;
         cursor: pointer;
+        width: 20em;
+        height: 1.5em;
+        display: flex;
+        align-items: center;
     }
 
     .communityForumFilterTab:hover {

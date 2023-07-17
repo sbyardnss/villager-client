@@ -48,12 +48,14 @@ export const ActiveTournament = () => {
         winner_model_type: "",
         bye: true
     })
+    //setting active tournament here from tournaments
     useEffect(
         () => {
             const selectedTournamentObj = tournaments?.find(t => t.id === selectedTournament)
             setActiveTournament(selectedTournamentObj)
         }, [selectedTournament, tournaments]
     )
+    //setting active tournament players from players and guests and active tournament
     useEffect(
         () => {
             const playersForSelectedTournament = playersAndGuests.filter(p => {
@@ -67,7 +69,7 @@ export const ActiveTournament = () => {
             setActiveTournamentPlayers(playersForSelectedTournament)
         }, [activeTournament]
     )
-
+    //setting round from active tournament
     useEffect(
         () => {
             if (activeTournament) {
@@ -75,6 +77,7 @@ export const ActiveTournament = () => {
             }
         }, [activeTournament]
     )
+    //getting current round pairings updating bye game if necessary
     useEffect(
         () => {
             if (activeTournament) {
@@ -122,6 +125,7 @@ export const ActiveTournament = () => {
             }
         }, [currentRound]
     )
+    //updating game for api through active tournament
     useEffect(
         () => {
             if (activeTournament) {
@@ -133,6 +137,7 @@ export const ActiveTournament = () => {
             }
         }, [activeTournament]
     )
+    //getting data for tie breaker from tournament games
     useEffect(
         () => {
             const resultsForTieBreak = []
@@ -154,6 +159,7 @@ export const ActiveTournament = () => {
         getAllTournaments()
             .then(data => setTournaments(data))
     }
+    //number population for table
     const roundPopulation = () => {
         let roundNumber = activeTournament?.rounds;
         let tableHtml = [];
@@ -164,6 +170,7 @@ export const ActiveTournament = () => {
         return tableHtml.reverse()
     }
     const roundHtml = roundPopulation()
+    //creating solkoff tie break data
     const solkoffTieBreaker = (playerIdArr) => {
         const solkoffTieBreakerArr = []
         for (const playerId of playerIdArr) {
@@ -181,6 +188,7 @@ export const ActiveTournament = () => {
         }
         return solkoffTieBreakerArr
     }
+    //creating cumulative tie break data
     const cumulativeTieBreaker = (playerIdArr) => {
         const cumulativeArr = []
         for (const playerId of playerIdArr) {
@@ -198,6 +206,7 @@ export const ActiveTournament = () => {
         }
         return cumulativeArr
     }
+    //compiling tie break data
     const tieBreakDisplay = (arrForTie) => {
         const solkoffResultsArr = solkoffTieBreaker(arrForTie).sort((a, b) => { return b[1] - a[1] })
         const cumulativeResultsArr = cumulativeTieBreaker(arrForTie).sort((a, b) => { return b[1] - a[1] })
@@ -241,6 +250,7 @@ export const ActiveTournament = () => {
 
         )
     }
+    //update game for api either initial or updating
     const handleGameForApiUpdate = (targetId, whitePieces, blackPieces, pastGame) => {
         let copy = {}
         //set up game info based on activeTournament or pastGame
@@ -293,6 +303,7 @@ export const ActiveTournament = () => {
         }
         updateGameForApi(copy)
     }
+    //iterating current round matchups to allow for initial score selection
     const submitResultsOrNull = () => {
         if (activeTournament?.complete === false) {
             if (activeTournament?.in_person === true) {
@@ -390,10 +401,11 @@ export const ActiveTournament = () => {
             }
         }
     }
+    //iterating tournament games to edit if necessary
     const tableOrEdit = () => {
         if (editScores) {
             const editPairings = [...activeTournament?.pairings]
-            const filteredPairings = editPairings.filter(pairing => pairing.round < activeTournament?.rounds)
+            // const filteredPairings = editPairings.filter(pairing => pairing.round < activeTournament?.rounds)
             return (
                 <section id="tournamentEditSection">
                     <button className="buttonStyleReject" id="cancelEditBtn" onClick={() => setEditScores(false)}>cancel edit</button>
@@ -457,7 +469,7 @@ export const ActiveTournament = () => {
         }
     }
 
-
+    //populate create games button for digital tournaments
     const scoringButtonOrNone = () => {
         if (activeTournament.in_person === false) {
             return (
@@ -519,6 +531,7 @@ export const ActiveTournament = () => {
         if (activeTournament && activeTournamentPlayers) {
             const endTournamentModal = document.getElementById('endTournamentModal')
             const modal = document.getElementById('resultsModal')
+            //results modal display
             const resultsDisplay = () => {
                 const results = {}
                 const resultArr = []
@@ -532,7 +545,6 @@ export const ActiveTournament = () => {
                         results[player.username] = [parseFloat(scoreElement?.innerHTML), player.id]
                     }
                 })
-
                 for (let player in results) {
                     resultArr.push([player, results[player]])
                 }
@@ -659,7 +671,6 @@ export const ActiveTournament = () => {
                                                 return !tg.player_b?.guest_id && tg.player_b?.id === tourneyPlayer.id || !tg.player_w.guest_id && tg.player_w.id === tourneyPlayer.id
                                             }
                                         })
-
                                         const guestIdOrId = tourneyPlayer.guest_id ? tourneyPlayer.guest_id : tourneyPlayer.id
                                         const tpTargetId = tourneyPlayer.guest_id ? 'guest_id' : 'id'
                                         const emptyCellCompensation = () => {

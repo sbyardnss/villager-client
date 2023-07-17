@@ -185,6 +185,7 @@ export const Tournament = () => {
                                                             tournamentCopy.competitors.push(p)
                                                         }
                                                         updateNewTournament(tournamentCopy)
+                                                        setSearch("")
                                                     }}>
                                                     {p.full_name}
                                                 </li>
@@ -209,6 +210,8 @@ export const Tournament = () => {
                                                         const copy = [...potentialCompetitors]
                                                         copy.push(competitor)
                                                         setPotentialCompetitors(copy)
+                                                        
+
                                                     }}>
                                                     {player.full_name}
                                                 </li>

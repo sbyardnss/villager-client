@@ -117,6 +117,10 @@
     #forumFilterHeader {
         margin: 0;
     }
+    #noClubsNotificationTab {
+        width: 100%;
+        text-align: center;
+    }
     .communityForumFilterTab {
         margin: 0 .5em;
         height: 2em;
@@ -601,6 +605,10 @@
     }
     #forumFilterHeader {
         margin: 0;
+    }
+    #noClubsNotificationTab {
+        width: 100%;
+        text-align: center;
     }
     .communityForumFilterTab {
         margin: 0 .5em;

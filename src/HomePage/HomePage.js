@@ -207,6 +207,7 @@ export const HomePage = () => {
                             <div id="forumFilterWithHeader">
                                 <h5 id="forumFilterHeader" className="setCustomFont">select club</h5>
                                 <ul id="communityForumClubFilter">
+                                    {!myChessClubs.length ? <div id="noClubsNotificationTab">join or create a club</div> : ""}
                                     {
                                         myChessClubs.map(club => {
                                             return (

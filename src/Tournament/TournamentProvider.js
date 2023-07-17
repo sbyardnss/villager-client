@@ -20,16 +20,34 @@ export const TournamentProvider = (props) => {
 
     useEffect(
         () => {
-            Promise.all([getAllPlayers(), getMyTournaments(), getAllTimeSettings(), getAllGames(), getAllGuestPlayers()]).then(([playerData, tournamentData, timeSettingData, gameData, guestData]) => {
-                setPlayers(playerData)
+            Promise.all([/*getAllPlayers(), */getMyTournaments(), getAllTimeSettings(), getAllGames()/*, getAllGuestPlayers()*/]).then(([/*playerData, */tournamentData, timeSettingData, gameData/*, guestData*/]) => {
+                // setPlayers(playerData)
                 setTournaments(tournamentData)
                 setTimeSettings(timeSettingData)
                 setGames(gameData)
-                setGuests(guestData)
+                // setGuests(guestData)
             })
         }, []
     )
-    console.log(selectedClubObj)
+    useEffect(
+        () => {
+            getAllPlayers()
+                .then(data => setPlayers(data))
+            getAllGuestPlayers()
+                .then(data => setGuests(data))
+        },[selectedClub]
+    )
+    //only show guests and players that are in selected club
+    useEffect(
+        () => {
+            const clubPlayers = players.filter(p => selectedClubObj?.members?.find(m => m.id === p.id))
+            setPlayers(clubPlayers)
+            const clubGuests = guests.filter(g => selectedClubObj?.guest_members?.find(gm => gm.id === g.id))
+            setGuests(clubGuests)
+            const allPlayersAndGuests = clubPlayers.concat(clubGuests)
+            setPlayersAndGuests(allPlayersAndGuests)
+        },[selectedClubObj]
+    )
     useEffect(
         () => {
             if (selectedTournament) {
@@ -38,16 +56,18 @@ export const TournamentProvider = (props) => {
             }
         }, [selectedTournament]
     )
-    useEffect(
-        () => {
-            const allPlayersAndGuests = players.concat(guests)
 
-            const playersInSelectedClub = players.filter(p => selectedClubObj?.members.find(m => m.id === p.id))
-            const guestPlayersInSelectedClub = guests.filter(g => selectedClubObj?.guest_members.find(gm => gm.id === g.id))
-            const allPlayersAndGuestsInSelectedClub = playersInSelectedClub.concat(guestPlayersInSelectedClub)
-            setPlayersAndGuests(allPlayersAndGuestsInSelectedClub)
-        },[players, guests, selectedClubObj]
-    )
+    //THIS USEEFFECT MIGHT BE UNNECESSARY
+    // useEffect(
+    //     () => {
+    //         // const allPlayersAndGuests = players.concat(guests)
+
+    //         const playersInSelectedClub = players.filter(p => selectedClubObj?.members?.find(m => m.id === p.id))
+    //         const guestPlayersInSelectedClub = guests.filter(g => selectedClubObj?.guest_members?.find(gm => gm.id === g.id))
+    //         const allPlayersAndGuestsInSelectedClub = playersInSelectedClub.concat(guestPlayersInSelectedClub)
+    //         setPlayersAndGuests(allPlayersAndGuestsInSelectedClub)
+    //     },[players, guests, selectedClubObj]
+    // )
     useEffect(
         () => {
             const previousPairings = []

@@ -32,7 +32,6 @@ export const Tournament = () => {
         pairings: [],
         club: 0
     })
-    console.log(playersAndGuests)
     useEffect(
         () => {
             getMyChessClubs()
@@ -351,7 +350,12 @@ export const Tournament = () => {
                                     }}>
                                     Start Tournament
                                 </button>
-                                <button className="buttonStyleReject" onClick={() => setCreateTournament(false)}>cancel</button>
+                                <button className="buttonStyleReject" onClick={() => {
+                                    setCreateTournament(false)
+                                    resetNewTournament()
+                                    setSelectedClub(0)
+                                    setSelectedClubObj({})
+                                    }}>cancel</button>
                             </div>
                         </section>
                     </section>

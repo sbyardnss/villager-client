@@ -109,7 +109,12 @@ export const ChessClubs = () => {
                                     copy.details === "" ? copy.details = null : copy.details = copy.details
                                     copy.city === "" ? copy.city = null : copy.city = copy.city
                                     // console.log(copy)
+                                    setPasswordModal.style.display = 'none'
                                     createNewClub(copy)
+                                        .then(() => resetChessClubs())
+                                    setPasswordModal.style.display = 'none'
+                                    setCreateClub(false)
+
                                 }
                             }}>create new club</button>
                             <button className="buttonStyleReject" onClick={() => {

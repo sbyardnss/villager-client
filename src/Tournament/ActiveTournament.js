@@ -162,6 +162,7 @@ export const ActiveTournament = () => {
     //number population for table
     const roundPopulation = () => {
         let roundNumber = activeTournament?.rounds;
+        
         let tableHtml = [];
         while (roundNumber > 0) {
             tableHtml.push(<th key={roundNumber} className="roundHeader">{roundNumber}</th>)
@@ -429,7 +430,6 @@ export const ActiveTournament = () => {
                                     }
                                 })
                                 if (game.bye === false) {
-
                                     return (
                                         <div key={`${game.tournament_round} + ${game.id} + editing`} className="editScoreListItem">
                                             <div>

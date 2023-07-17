@@ -17,6 +17,26 @@ export const getAllPlayers = () => {
     })
         .then(res => res.json())
 }
+export const getAllChessClubs = () => {
+    const localVillagerObj = getToken()
+    return fetch(`${apiKey}/clubs`, {
+        headers: {
+            "Authorization": `Token ${localVillagerObj.token}`,
+            "Content-Type": "application/json"
+        }
+    })
+        .then(res => res.json())
+}
+export const getMyChessClubs = () => {
+    const localVillagerObj = getToken()
+    return fetch(`${apiKey}/clubs/my_clubs`, {
+        headers: {
+            "Authorization": `Token ${localVillagerObj.token}`,
+            "Content-Type": "application/json"
+        }
+    })
+        .then(res => res.json())
+}
 export const getAllGames = () => {
     const localVillagerObj = getToken()
     return fetch(`${apiKey}/games`, {
@@ -149,6 +169,17 @@ export const getGuest = (guestId) => {
     })
         .then(res => res.json())
 }
+export const getChessClub = (clubId) => {
+    const localVillagerObj = getToken()
+    return fetch(`${apiKey}/clubs/${clubId}`, {
+        headers: {
+            "Authorization": `Token ${localVillagerObj.token}`,
+            "Content-Type": "application/json"
+        }
+    })
+        .then(res => res.json())
+}
+
 
 
 
@@ -231,7 +262,7 @@ export const getAIMove = (objForAi) => {
     })
         .then(res => res.json())
 }
-export const createGuest = (guestObj) => {
+export const createNewGuest = (guestObj) => {
     const localVillagerObj = getToken()
     return fetch(`${apiKey}/guests`, {
         method: "POST",
@@ -242,7 +273,29 @@ export const createGuest = (guestObj) => {
         body: JSON.stringify(guestObj)
     })
 }
-
+export const createNewClub = (clubObj) => {
+    const localVillagerObj = getToken()
+    return fetch(`${apiKey}/clubs`, {
+        method: "POST",
+        headers: {
+            "Authorization": `Token ${localVillagerObj.token}`,
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(clubObj)
+    })
+}
+export const addMemberToClub = (clubId, request) => {
+    const localVillagerObj = getToken()
+    return fetch(`${apiKey}/clubs/${clubId}/join_club`, {
+        method: "POST",
+        headers: {
+            "Authorization": `Token ${localVillagerObj.token}`,
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(request)
+    })
+    // .then(res => res.json())
+}
 //PUT FETCHES
 export const updateProfile = (userId, profileObj) => {
     const localVillagerObj = getToken()
@@ -310,6 +363,22 @@ export const endTournament = (tournamentId) => {
         }
     })
 }
+export const updateClub = (clubId, clubObj) => {
+    const localVillagerObj = getToken()
+    return fetch(`${apiKey}/clubs/${clubId}`, {
+        method: "PUT",
+        headers: {
+            "Authorization": `Token ${localVillagerObj.token}`,
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(clubObj)
+    })
+    // .then(res => {
+    //     if (res) {
+    //         res = res.json()
+    //     }
+    // })
+}
 
 //DELETE FETCHES
 export const deleteCommunityPost = (postId) => {
@@ -343,6 +412,18 @@ export const deleteGuest = (guestIdObj) => {
         body: JSON.stringify(guestIdObj)
     })
 }
+export const leaveClub = (clubId) => {
+    const localVillagerObj = getToken()
+    return fetch(`${apiKey}/clubs/${clubId}/leave_club`, {
+        method: "DELETE",
+        headers: {
+            "Authorization": `Token ${localVillagerObj.token}`,
+            "Content-Type": "application/json"
+        }
+    })
+}
+
+
 //auth
 export const loginUser = (user) => {
     return fetch(`${apiKey}/login`, {

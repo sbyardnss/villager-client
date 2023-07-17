@@ -7,6 +7,7 @@ import { Messages } from "./Messages/Messages"
 import { Tournament } from "./Tournament/Tournament"
 import { TournamentProvider } from "./Tournament/TournamentProvider"
 import { PlayProvider } from "./Play/PlayProvider"
+import { ChessClubs } from "./ChessClubs/ChessClubs"
 
 
 export const ApplicationViews = () => {
@@ -40,6 +41,7 @@ export const ApplicationViews = () => {
                         <Tournament />
                     </TournamentProvider>
                 } />
+                <Route path="clubs" element={<ChessClubs />} />
             </Route>
         </Routes>
     )

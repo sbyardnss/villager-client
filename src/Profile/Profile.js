@@ -192,7 +192,7 @@ export const Profile = () => {
                         <div>Lost: {performanceData.losses}  ({performanceData.losses === 0 ? 0 : performanceData.lossPercent}%)</div>
                         <div>Draw: {performanceData.draws}  ({performanceData.draws === 0 ? 0 : performanceData.drawPercent}%)</div>
                     </section>
-                    <section id="profileFriendContainer">
+                    {/* <section id="profileFriendContainer">
                         <h4>friends</h4>
                         {
                             profileInfo.friends?.map(f => {
@@ -203,7 +203,7 @@ export const Profile = () => {
                                 )
                             })
                         }
-                    </section>
+                    </section> */}
                 </div>
                 <section id="'profilePastGames">
                     <h2 className="setCustomFont profileHeader">Past Games</h2>

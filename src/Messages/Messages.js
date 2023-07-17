@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"
-import { getAllMessages, getAllPlayers, sendDirectMessage } from "../ServerManager"
+import { getAllMessages, getAllPlayers, getMyChessClubs, sendDirectMessage } from "../ServerManager"
 import "./Messages.css"
 
 export const Messages = () => {
@@ -11,6 +11,9 @@ export const Messages = () => {
     const [recipient, setRecipient] = useState({})
     const [selectedChat, setSelectedChat] = useState(0)
     const [selectedChatMsgs, setSelectedChatMsgs] = useState([])
+    const [myChessClubs, setMyChessClubs] = useState([])
+    const [clubSelect, setClubSelect] = useState(false)
+    const [selectedClub, setSelectedClub] = useState(0)
     const [newMsg, updateNewMsg] = useState({
         message: "",
         recipient: selectedChat
@@ -18,19 +21,34 @@ export const Messages = () => {
     useEffect(
         () => {
             // getAllCommunityPosts().then(data => setCommunityPosts(data))
-            Promise.all([getAllMessages(), getAllPlayers()]).then(([messageData, playerData]) => {
+            Promise.all([getAllMessages(), getAllPlayers(), getMyChessClubs()]).then(([messageData, playerData, myClubsData]) => {
                 setMessages(messageData)
                 setPlayers(playerData)
+                setMyChessClubs(myClubsData)
             })
         }, []
     )
-
     useEffect(
         () => {
-            const activeUser = players.find(p => p.id === localVillagerObj.userId)
-            const activeUserFriends = activeUser?.friends
-            setFriends(activeUserFriends)
-        }, [players]
+            // const activeUser = players.find(p => p.id === localVillagerObj.userId)
+            // const activeUserFriends = activeUser?.friends
+
+            // CHANGED FRIENDS TO BE ALL PLAYERS IN MY CLUBS
+            let myClubs = [...myChessClubs]
+            if (selectedClub) {
+                myClubs = myClubs.filter(c => c.id === selectedClub)
+            }
+            const playersInMyClubs = []
+            myClubs.map(club => {
+                club.members.map(member => {
+                    if (member.id !== localVillagerObj.userId && !playersInMyClubs.find(p => p.id === member.id)) {
+                        playersInMyClubs.push(member)
+                    }
+                })
+            })
+            
+            setFriends(playersInMyClubs)
+        }, [myChessClubs, selectedClub]
     )
     useEffect(
         () => {
@@ -50,7 +68,7 @@ export const Messages = () => {
         () => {
             const chatRecipient = friends.find(f => f.id === selectedChat)
             setRecipient(chatRecipient)
-        },[selectedChat]
+        }, [selectedChat]
     )
     const resetMessages = () => {
         getAllMessages()
@@ -64,6 +82,58 @@ export const Messages = () => {
                 updateNewMsg(copy)
                 resetMessages()
             })
+        }
+    }
+    const selectClubOrSelectRecipient = () => {
+        if (clubSelect) {
+            return (
+                <section id="messagesFriends">
+                    <div className="selectChatClubFilter">
+                        {selectedChat === 0 ? <div className="setCustomFont setSize">select club</div> : ""}
+                        <button className="buttonStyleReject" onClick={() => setClubSelect(false)}>cancel</button>
+                    </div>
+                    <ul id="messagingFriendList">
+                        {
+                            myChessClubs.map(club => {
+                                return (
+                                    <li key={club.id}
+                                        className="messagingFriendListItem"
+                                        onClick={() => {
+                                            setSelectedClub(club.id)
+                                            setClubSelect(false)
+                                            }}>
+                                        {club.name}
+                                    </li>
+                                )
+                            })
+                        }
+                    </ul>
+                </section>
+            )
+        }
+        else {
+            return (
+                <section id="messagesFriends">
+                    <div className="selectChatClubFilter">
+                        {selectedChat === 0 ? <div className="setCustomFont setSize">select chat</div> : ""}
+                        {selectedChat === 0 ? <button className="buttonStyleReject" onClick={() => setSelectedClub(0)}>remove filter</button> : ""}
+                        {selectedChat === 0 ? <button className="buttonStyleApprove" onClick={() => setClubSelect(true)}>filter by club</button>: "" }
+                    </div>
+                    <ul id={selectedChat === 0 ? "messagingFriendList" : "activeChatMessagingFriendList"}>
+                        {
+                            friends?.map(f => {
+                                return (
+                                    <li key={f.id + '--' + f.username}
+                                        className={f.id === selectedChat ? "selectedFriendListItem" : "messagingFriendListItem"}
+                                        onClick={() => setSelectedChat(f.id)}>
+                                        {f.full_name}
+                                    </li>
+                                )
+                            })
+                        }
+                    </ul>
+                </section>
+            )
         }
     }
     const selectChatOrActiveChat = () => {
@@ -85,7 +155,7 @@ export const Messages = () => {
                                 const time = new Date(msg.date_time).toLocaleTimeString('en-us', { hour: 'numeric', minute: '2-digit' })
                                 if (msg.recipient === localVillagerObj.userId) {
                                     return (
-                                        <li key={msg.id +'--' +msg.sender} className="receivedMsg">
+                                        <li key={msg.id + '--' + msg.sender} className="receivedMsg">
                                             <div>{msg.message}</div>
                                             <div className="msgDateTimeFormat">{date}</div>
                                             <div className="msgDateTimeFormat">{time}</div>
@@ -94,7 +164,7 @@ export const Messages = () => {
                                 }
                                 else {
                                     return (
-                                        <li key={msg.id +'--' +msg.recipient} className="sentMsg">
+                                        <li key={msg.id + '--' + msg.recipient} className="sentMsg">
                                             <div>{msg.message}</div>
                                             <div className="msgDateTimeFormat">{date}</div>
                                             <div className="msgDateTimeFormat">{time}</div>
@@ -145,8 +215,11 @@ export const Messages = () => {
     })
     return <>
         <main id="messagingContainer">
-            <section id="messagesFriends">
-                {selectedChat === 0 ? <div className="setCustomFont setSize">select chat</div> : ""}
+            {/* <section id="messagesFriends">
+                <div className="selectChatClubFilter">
+                    {selectedChat === 0 ? <div className="setCustomFont setSize">select chat</div> : ""}
+                    <button className="buttonStyleApprove" onClick={() => setClubSelect(true)}>filter by club</button>
+                </div>
                 <ul id={selectedChat === 0 ? "messagingFriendList" : "activeChatMessagingFriendList"}>
                     {
                         friends?.map(f => {
@@ -160,7 +233,8 @@ export const Messages = () => {
                         })
                     }
                 </ul>
-            </section>
+            </section> */}
+            {selectClubOrSelectRecipient()}
             <article id="chatAndInterface">
                 {selectChatOrActiveChat()}
             </article>

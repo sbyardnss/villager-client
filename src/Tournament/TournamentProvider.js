@@ -1,5 +1,5 @@
 import { useState, useEffect, createContext } from "react";
-import { getAllGames, getAllGuestPlayers, getAllPlayers, getAllTimeSettings, getAllTournaments, getTournamentGames } from "../ServerManager";
+import { getAllGames, getAllGuestPlayers, getAllPlayers, getAllTimeSettings, getAllTournaments, getMyTournaments, getTournamentGames } from "../ServerManager";
 
 export const TournamentContext = createContext()
 
@@ -15,28 +15,47 @@ export const TournamentProvider = (props) => {
     const [pastPairings, setPastPairings] = useState([])
     const [guests, setGuests] = useState([])
     const [playersAndGuests, setPlayersAndGuests] = useState([])
+    const [selectedClub, setSelectedClub] = useState(0)
+    const [selectedClubObj, setSelectedClubObj] = useState({})
 
     useEffect(
         () => {
-            Promise.all([getAllPlayers(), getAllTournaments(), getAllTimeSettings(), getAllGames(), getAllGuestPlayers()]).then(([playerData, tournamentData, timeSettingData, gameData, guestData]) => {
-                setPlayers(playerData)
+            Promise.all([/*getAllPlayers(), */getMyTournaments(), getAllTimeSettings(), getAllGames()/*, getAllGuestPlayers()*/]).then(([/*playerData, */tournamentData, timeSettingData, gameData/*, guestData*/]) => {
+                // setPlayers(playerData)
                 setTournaments(tournamentData)
                 setTimeSettings(timeSettingData)
                 setGames(gameData)
-                setGuests(guestData)
+                // setGuests(guestData)
             })
         }, []
     )
-    // useEffect(
-    //     () => {
-    //         if (selectedTournament) {
-    //             const selectedTournamentObj = tournaments.find(t => t.id === selectedTournament)
-    //             // const tourneyGamesOnly = games.filter(g => g.tournament === selectedTournament)
-    //             console.log(selectedTournamentObj)
-    //             setTournamentGames(selectedTournamentObj.games)
-    //         }
-    //     }, [games, selectedTournament]
-    // )
+    useEffect(
+        () => {
+            getAllPlayers()
+                .then(data => setPlayers(data))
+            getAllGuestPlayers()
+                .then(data => setGuests(data))
+            
+        },[]
+    )
+    useEffect(
+        () => {
+            const allCompetitors = players.concat(guests)
+            setPlayersAndGuests(allCompetitors)
+        },[players, guests, selectedClub, selectedTournament]
+    )
+    //only show guests and players that are in selected club
+    useEffect(
+        () => {
+            const clubPlayers = players.filter(p => selectedClubObj?.members?.find(m => m.id === p.id))
+            setPlayers(clubPlayers)
+            const clubGuests = guests.filter(g => selectedClubObj?.guest_members?.find(gm => gm.id === g.id))
+            setGuests(clubGuests)
+            const allPlayersAndGuests = clubPlayers.concat(clubGuests)
+            setPlayersAndGuests(allPlayersAndGuests)
+        },[selectedClubObj]
+    )
+    console.log(playersAndGuests)
     useEffect(
         () => {
             if (selectedTournament) {
@@ -45,14 +64,18 @@ export const TournamentProvider = (props) => {
             }
         }, [selectedTournament]
     )
-    useEffect(
-        () => {
-            // const guestsCopy = [...guests]
-            // guestsCopy.map(g => g.id = g.guest_id)
-            const allPlayersAndGuests = players.concat(guests)
-            setPlayersAndGuests(allPlayersAndGuests)
-        },[players, guests]
-    )
+
+    //THIS USEEFFECT MIGHT BE UNNECESSARY
+    // useEffect(
+    //     () => {
+    //         // const allPlayersAndGuests = players.concat(guests)
+
+    //         const playersInSelectedClub = players.filter(p => selectedClubObj?.members?.find(m => m.id === p.id))
+    //         const guestPlayersInSelectedClub = guests.filter(g => selectedClubObj?.guest_members?.find(gm => gm.id === g.id))
+    //         const allPlayersAndGuestsInSelectedClub = playersInSelectedClub.concat(guestPlayersInSelectedClub)
+    //         setPlayersAndGuests(allPlayersAndGuestsInSelectedClub)
+    //     },[players, guests, selectedClubObj]
+    // )
     useEffect(
         () => {
             const previousPairings = []
@@ -71,15 +94,16 @@ export const TournamentProvider = (props) => {
         getTournamentGames(selectedTournament)
             .then(data => setTournamentGames(data))
     }
-    const resetGuests = () => {
-        getAllGuestPlayers()
-            .then(data => setGuests(data))
-    }
+    // const resetGuests = () => {
+    //     getAllGuestPlayers()
+    //         .then(data => setGuests(data))
+    // }
     return (
         <TournamentContext.Provider value={{
-            localVillagerObj, players, timeSettings, tournaments, setTournaments, tournamentGames, setGames,
+            localVillagerObj, players, setPlayers, timeSettings, tournaments, setTournaments, tournamentGames, setGames,
             selectedTournament, setSelectedTournament, pastPairings, resetGames, resetTournamentGames,
-            guests, playersAndGuests, setPlayersAndGuests
+            setGuests, guests, playersAndGuests, setPlayersAndGuests, selectedClub, setSelectedClub,
+            selectedClubObj, setSelectedClubObj
         }}>
             {props.children}
         </TournamentContext.Provider>

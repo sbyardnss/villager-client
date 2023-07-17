@@ -362,8 +362,8 @@ export const ActiveTournament = () => {
                         <tbody>
                             {
                                 currentRoundMatchups?.map(matchup => {
-                                    const white = activeTournamentPlayers.find(player => player.id === matchup.player1)
-                                    const black = activeTournamentPlayers.find(player => player.id === matchup.player2)
+                                    const white = activeTournamentPlayers?.find(player => player.id === matchup.player1 || player.guest_id === matchup.player1)
+                                    const black = activeTournamentPlayers?.find(player => player.id === matchup.player2 || player.guest_id === matchup.player2)
                                     if (white?.id && black?.id) {
                                         return (
                                             <tr key={matchup.round + matchup.match}>
@@ -375,10 +375,10 @@ export const ActiveTournament = () => {
                                     }
                                     if (white?.id && black === undefined) {
                                         return (
-                                            <tr key={matchup.round + matchup.match}>
-                                                <td className="whitePiecesMatchup">{white.full_name}</td>
-                                                <td className="matchupTableVS"></td>
-                                                <td className="blackPiecesMatchup">BYE</td>
+                                            <tr key={`${matchup.round} -- ${matchup.match} -- bye`} className="setColor setCustomFont">
+                                                <td>{white?.username || white?.full_name}</td>
+                                                <td></td>
+                                                <td>bye</td>
                                             </tr>
                                         )
                                     }
@@ -458,8 +458,6 @@ export const ActiveTournament = () => {
     }
 
 
-
-
     const scoringButtonOrNone = () => {
         if (activeTournament.in_person === false) {
             return (
@@ -468,19 +466,47 @@ export const ActiveTournament = () => {
                         currentRoundMatchups.map(matchup => {
                             if (matchup.player2 !== null) {
                                 const copy = { ...gameForApi }
+                                const [w, b] = [matchup.player1, matchup.player2]
+                                if (typeof w === 'string') {
+                                    copy.player_w_model_type = 'guestplayer'
+                                }
+                                else {
+                                    copy.player_w_model_type = 'player'
+                                }
+                                if (typeof b === 'string') {
+                                    copy.player_b_model_type = 'guestplayer'
+                                }
+                                else {
+                                    copy.player_b_model_type = 'player'
+                                }
                                 copy.winner = null
-                                copy.player_w = matchup.player1
-                                copy.player_b = matchup.player2
+                                copy.winner_model_type = null
+                                copy.player_w = w
+                                copy.player_b = b
                                 sendNewGame(copy)
+                                    // THIS WORKS HERE BUT THERE MUST BE A BETTER WAY
+                                    // .then(() => resetTournamentGames())
                             }
                             else {
-                                const copy = { ...gameForApi }
-                                copy.winner = null
-                                copy.player_w = matchup.player1
-                                copy.player_b = null
-                                sendNewGame(copy)
+                                //create bye game if necessary
+                                // const copy = { ...gameForApi }
+                                // copy.winner = matchup.player1
+                                // copy.player_w = matchup.player1
+                                // if (typeof matchup.player1 === 'string') {
+                                //     copy.player_w_model_type = 'guestplayer'
+                                //     copy.winner_model_type = 'guestplayer'
+                                // }
+                                // else {
+                                //     copy.player_w_model_type = 'player'
+                                //     copy.winner_model_type = 'player'
+                                // }
+                                // copy.player_b_model_type = null
+                                // copy.player_b = null
+                                sendNewGame(byeGame)
+                                    // .then(() => resetTournamentGames())
                             }
                         })
+
                     }
                 }}>create round games</button>
             )

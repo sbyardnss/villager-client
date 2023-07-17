@@ -35,14 +35,14 @@ export const TournamentProvider = (props) => {
                 .then(data => setPlayers(data))
             getAllGuestPlayers()
                 .then(data => setGuests(data))
-            
-        },[]
+
+        }, []
     )
     useEffect(
         () => {
             const allCompetitors = players.concat(guests)
             setPlayersAndGuests(allCompetitors)
-        },[players, guests, selectedClub, selectedTournament]
+        }, [players, guests, selectedClub, selectedTournament]
     )
     //only show guests and players that are in selected club
     useEffect(
@@ -53,9 +53,8 @@ export const TournamentProvider = (props) => {
             setGuests(clubGuests)
             const allPlayersAndGuests = clubPlayers.concat(clubGuests)
             setPlayersAndGuests(allPlayersAndGuests)
-        },[selectedClubObj]
+        }, [selectedClubObj]
     )
-    console.log(playersAndGuests)
     useEffect(
         () => {
             if (selectedTournament) {
@@ -63,6 +62,15 @@ export const TournamentProvider = (props) => {
                     .then((data) => setTournamentGames(data))
             }
         }, [selectedTournament]
+    )
+    //REPLACEMENT USEEFFECT FOR ABOVE
+    useEffect(
+        () => {
+            if (selectedTournament) {
+                const selectedTournamentGames = games.filter(g => g.tournament === selectedTournament)
+                setTournamentGames(selectedTournamentGames)
+            }
+        }, [games]
     )
 
     //THIS USEEFFECT MIGHT BE UNNECESSARY
@@ -91,8 +99,13 @@ export const TournamentProvider = (props) => {
             .then(data => setGames(data))
     }
     const resetTournamentGames = () => {
-        getTournamentGames(selectedTournament)
-            .then(data => setTournamentGames(data))
+        // getTournamentGames(selectedTournament)
+        //     .then(data => setTournamentGames(data))
+        getAllGames()
+            .then(data => {
+                const selectedTournamentGames = data.filter(game => game.tournament === selectedTournament)
+                setTournamentGames(selectedTournamentGames)
+            })
     }
     // const resetGuests = () => {
     //     getAllGuestPlayers()

@@ -396,7 +396,6 @@ export const Tournament = () => {
                     <section id="activeTournamentsList" className="setCustomFont">
                         {
                             tournaments?.map(t => {
-                                console.log(t)
                                 if (t.complete === false) {
                                     if (t.competitors.includes(localVillagerObj.userId) || t.creator.id === localVillagerObj.userId) {
                                         return (

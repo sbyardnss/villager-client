@@ -203,33 +203,39 @@ export const ActiveTournament = () => {
         const cumulativeResultsArr = cumulativeTieBreaker(arrForTie).sort((a, b) => { return b[1] - a[1] })
         return (
             <div id="tieBreakResults">
-                <div id="solkoffResults">
-                    {
-                        solkoffResultsArr.map(playerResult => {
-                            const player = typeof playerResult[0] === 'string' ? activeTournamentPlayers.find(player => player.guest_id === playerResult[0])
-                                : activeTournamentPlayers.find(player => player.id === playerResult[0])
-                            return (
-                                <div key={playerResult[0] + '--' + playerResult[1]} className="resultsModalListItem">
-                                    <div>{player.guest_id ? player?.full_name : player?.username}: </div>
-                                    <div>{playerResult[1]}</div>
-                                </div>
-                            )
-                        })
-                    }
+                <div id="fullResults">
+                    <div className="resultsHeader">solkoff</div>
+                    <div id="solkoffResults">
+                        {
+                            solkoffResultsArr.map(playerResult => {
+                                const player = typeof playerResult[0] === 'string' ? activeTournamentPlayers.find(player => player.guest_id === playerResult[0])
+                                    : activeTournamentPlayers.find(player => player.id === playerResult[0])
+                                return (
+                                    <div key={playerResult[0] + '--' + playerResult[1]} className="resultsModalListItem">
+                                        <div>{player.guest_id ? player?.full_name : player?.username}: </div>
+                                        <div>{playerResult[1]}</div>
+                                    </div>
+                                )
+                            })
+                        }
+                    </div>
                 </div>
-                <div id="cumulativeResults">
-                    {
-                        cumulativeResultsArr.map(playerResult => {
-                            const player = typeof playerResult[0] === 'string' ? activeTournamentPlayers.find(player => player.guest_id === playerResult[0])
-                                : activeTournamentPlayers.find(player => player.id === playerResult[0])
-                            return (
-                                <div key={playerResult[0] + '--' + playerResult[1]} className="resultsModalListItem">
-                                    <div>{player.guest_id ? player?.full_name : player?.username}: </div>
-                                    <div>{playerResult[1]}</div>
-                                </div>
-                            )
-                        })
-                    }
+                <div id="fullResults">
+                    <div className="resultsHeader">cumulative</div>
+                    <div id="cumulativeResults">
+                        {
+                            cumulativeResultsArr.map(playerResult => {
+                                const player = typeof playerResult[0] === 'string' ? activeTournamentPlayers.find(player => player.guest_id === playerResult[0])
+                                    : activeTournamentPlayers.find(player => player.id === playerResult[0])
+                                return (
+                                    <div key={playerResult[0] + '--' + playerResult[1]} className="resultsModalListItem">
+                                        <div>{player.guest_id ? player?.full_name : player?.username}: </div>
+                                        <div>{playerResult[1]}</div>
+                                    </div>
+                                )
+                            })
+                        }
+                    </div>
                 </div>
             </div>
 

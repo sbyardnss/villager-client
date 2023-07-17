@@ -6,7 +6,7 @@ import { alterGame, createNewGuest, getAllGames, getAllGuestPlayers, getAllPlaye
 import { ActiveTournament } from "./ActiveTournament"
 
 export const Tournament = () => {
-    const { localVillagerObj, tournamentGames, tournaments, setTournaments, players, timeSettings, setGames, selectedTournament, setSelectedTournament, resetTournamentGames, setGuests, guests, playersAndGuests, selectedClub, setSelectedClub, selectedClubObj, setSelectedClubObj } = useContext(TournamentContext)
+    const { localVillagerObj, tournamentGames, tournaments, setTournaments, players, setPlayers, timeSettings, setGames, selectedTournament, setSelectedTournament, resetTournamentGames, setGuests, guests, playersAndGuests, selectedClub, setSelectedClub, selectedClubObj, setSelectedClubObj } = useContext(TournamentContext)
     const [potentialCompetitors, setPotentialCompetitors] = useState([])
     const [pastTournaments, setPastTournaments] = useState(false)
     const [search, setSearch] = useState("")
@@ -88,6 +88,10 @@ export const Tournament = () => {
     const resetGuests = () => {
         getAllGuestPlayers()
             .then(data => setGuests(data))
+    }
+    const resetPlayers = () => {
+        getAllPlayers()
+        .then(data => setPlayers(data))
     }
     const handleChange = (evt) => {
         if (evt.target.checked) {
@@ -346,6 +350,8 @@ export const Tournament = () => {
                                                     sendNewTournament(copy)
                                                         .then(() => {
                                                             resetTournaments()
+                                                            setCreateTournament(false)
+                                                            setShowGuests(false)
                                                         })
                                                 }
                                             }
@@ -356,8 +362,11 @@ export const Tournament = () => {
                                 <button className="buttonStyleReject" onClick={() => {
                                     setCreateTournament(false)
                                     resetNewTournament()
+                                    resetPlayers()
+                                    resetGuests()
                                     setSelectedClub(0)
                                     setSelectedClubObj({})
+                                    setShowGuests(false)
                                     }}>cancel</button>
                             </div>
                         </section>
@@ -383,21 +392,24 @@ export const Tournament = () => {
             <main id="tournamentContainer">
                 {newTournamentForm()}
                 <article key="activeTournaments" id="activeTournamentsSection">
-                    <h3 id="activeTournamentsHeader">active tournaments</h3>
+                    <h3 id="activeTournamentsHeader">my active tournaments</h3>
                     <section id="activeTournamentsList" className="setCustomFont">
                         {
                             tournaments?.map(t => {
+                                console.log(t)
                                 if (t.complete === false) {
-                                    return (
-                                        <li key={t.id}
-                                            className="tournamentListItem"
-                                            value={t.id}
-                                            onClick={(e) => {
-                                                setSelectedTournament(e.target.value)
-                                            }}>
-                                            {t.title}
-                                        </li>
-                                    )
+                                    if (t.competitors.includes(localVillagerObj.userId) || t.creator.id === localVillagerObj.userId) {
+                                        return (
+                                            <li key={t.id}
+                                                className="tournamentListItem"
+                                                value={t.id}
+                                                onClick={(e) => {
+                                                    setSelectedTournament(e.target.value)
+                                                }}>
+                                                {t.title}
+                                            </li>
+                                        )
+                                    }
                                 }
                             })
                         }

@@ -100,7 +100,7 @@ export const TournamentProvider = (props) => {
     // }
     return (
         <TournamentContext.Provider value={{
-            localVillagerObj, players, timeSettings, tournaments, setTournaments, tournamentGames, setGames,
+            localVillagerObj, players, setPlayers, timeSettings, tournaments, setTournaments, tournamentGames, setGames,
             selectedTournament, setSelectedTournament, pastPairings, resetGames, resetTournamentGames,
             setGuests, guests, playersAndGuests, setPlayersAndGuests, selectedClub, setSelectedClub,
             selectedClubObj, setSelectedClubObj

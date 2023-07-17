@@ -232,7 +232,7 @@ export const Tournament = () => {
                                                         copy.push(competitor)
                                                         setPotentialCompetitors(copy)
                                                     }}>
-                                                    {player.full_name}
+                                                    {player?.full_name}
                                                 </li>
                                             )
                                         })

@@ -111,7 +111,7 @@ export const Play = () => {
             }
         }, [game, matchReady]
     )
-    console.log(selectedGameObj)
+    // console.log(selectedGameObj)
     //update turn variable for saving turn and controlling ai request
     useEffect(
         () => {
@@ -382,19 +382,19 @@ export const Play = () => {
             if (game.in_draw()) {
                 console.log("draw")
             }
-            if (possibleMoves.length === 0) {
+            if (possibleMoves.length === 0 && game.in_checkmate() === false) {
                 console.log("no more moves. draw")
             }
             return;
         }
-        // Promise.resolve(getAIMove(gameForAi)).then(res => {
-        //     let [, notation] = res.split(" ")
-        //     if (notation) {
-        //         safeGameMutate((game) => {
-        //             game.move(notation)
-        //         })
-        //     }
-        // })
+        Promise.resolve(getAIMove(gameForAi)).then(res => {
+            let [, notation] = res.split(" ")
+            if (notation) {
+                safeGameMutate((game) => {
+                    game.move(notation)
+                })
+            }
+        })
     }
     const onSquareClick = (square) => {
         // setRightClickedSquares({});

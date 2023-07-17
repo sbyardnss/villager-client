@@ -35,7 +35,14 @@ export const TournamentProvider = (props) => {
                 .then(data => setPlayers(data))
             getAllGuestPlayers()
                 .then(data => setGuests(data))
-        },[selectedClub]
+            
+        },[]
+    )
+    useEffect(
+        () => {
+            const allCompetitors = players.concat(guests)
+            setPlayersAndGuests(allCompetitors)
+        },[players, guests, selectedClub, selectedTournament]
     )
     //only show guests and players that are in selected club
     useEffect(
@@ -48,6 +55,7 @@ export const TournamentProvider = (props) => {
             setPlayersAndGuests(allPlayersAndGuests)
         },[selectedClubObj]
     )
+    console.log(playersAndGuests)
     useEffect(
         () => {
             if (selectedTournament) {

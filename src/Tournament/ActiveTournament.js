@@ -105,8 +105,8 @@ export const ActiveTournament = () => {
                         byeCopy.winner_model_type = 'guestplayer'
                         byeCopy.player_w_model_type = 'guestplayer'
                         const guestPlayer = activeTournamentPlayers.find(p => p.guest_id === byePairing.player1)
-                        byeCopy.player_w = guestPlayer.guest_id
-                        byeCopy.winner = guestPlayer.guest_id
+                        byeCopy.player_w = guestPlayer?.guest_id
+                        byeCopy.winner = guestPlayer?.guest_id
                     }
                     else {
                         byeCopy.winner_model_type = 'player'
@@ -163,7 +163,6 @@ export const ActiveTournament = () => {
         }
         return tableHtml.reverse()
     }
-
     const roundHtml = roundPopulation()
     const solkoffTieBreaker = (playerIdArr) => {
         const solkoffTieBreakerArr = []

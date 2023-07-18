@@ -39,7 +39,7 @@ export const Nav = () => {
                 <ul id="navLinks">
                     <div className="navDiv">
                         <li id="navProfileLink" className="tempListItem"><Link id="/profile" className="profileLink" to="/profile" onClick={() => closeMenuOnNavigate()}>Profile</Link></li>
-                        <li className="tempListItem"><Link id="/play" className="navigation_link" to="/play" onClick={() => closeMenuOnNavigate()}>Play</Link></li>
+                        {/* <li className="tempListItem"><Link id="/play" className="navigation_link" to="/play" onClick={() => closeMenuOnNavigate()}>Play</Link></li> */}
                     {/* </div>
 
                     <div className="navDiv"> */}

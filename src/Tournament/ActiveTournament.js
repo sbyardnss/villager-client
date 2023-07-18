@@ -207,6 +207,7 @@ export const ActiveTournament = () => {
     const roundHtml = roundPopulation()
     //creating solkoff tie break data
     const solkoffTieBreaker = (playerIdArr) => {
+        console.log(playerIdArr)
         const solkoffTieBreakerArr = []
         for (const playerId of playerIdArr) {
             let count = 0
@@ -220,22 +221,15 @@ export const ActiveTournament = () => {
                 //REMEMBER THIS
                 // const opponentScore = document.getElementById(`${opponentId}-- score`).innerHTML 
 
-                //opponentScore coming from useRef() on score value
-                // console.log(opponentScoreCell.current)
-                const opponentResultsToRemoveBye = resultsForTieBreak.filter(result => {
-                    return result.white === opponentId || result.black === opponentId
-                })
                 if (opponentId !== undefined && scoreObj[opponentId]) {
                     count += scoreObj[opponentId]
-                }
-                if (opponentResultsToRemoveBye.find(result => result.black === undefined)) {
-                    count--
                 }
             }
             solkoffTieBreakerArr.push([playerId, count])
         }
         return solkoffTieBreakerArr
     }
+    console.log(solkoffTieBreaker([1, 2, 3, 4, 'g1', 'g5']).sort((a, b) => { return b[1] - a[1] }))
     //creating cumulative tie break data
     const cumulativeTieBreaker = (playerIdArr) => {
         const cumulativeArr = []
@@ -257,50 +251,51 @@ export const ActiveTournament = () => {
         return cumulativeArr
     }
     //compiling tie break data
-    // const tieBreakDisplay = (arrForTie) => {
-    //     // const solkoffResultsArr = solkoffTieBreaker(arrForTie).sort((a, b) => { return b[1] - a[1] })
-    //     // const cumulativeResultsArr = cumulativeTieBreaker(arrForTie).sort((a, b) => { return b[1] - a[1] })
-    //     console.log(solkoffResultsArr)
-    //     return (
-    //         <div id="tieBreakResults">
-    //             <div id="fullResults">
-    //                 <div className="resultsHeader">solkoff</div>
-    //                 <div id="solkoffResults">
-    //                     {
-    //                         solkoffResultsArr.map(playerResult => {
-    //                             const player = typeof playerResult[0] === 'string' ? activeTournamentPlayers.find(player => player.guest_id === playerResult[0])
-    //                                 : activeTournamentPlayers.find(player => player.id === playerResult[0])
-    //                             return (
-    //                                 <div key={playerResult[0] + '--' + playerResult[1]} className="resultsModalListItem">
-    //                                     <div>{player.guest_id ? player?.full_name : player?.username}: </div>
-    //                                     <div>{playerResult[1]}</div>
-    //                                 </div>
-    //                             )
-    //                         })
-    //                     }
-    //                 </div>
-    //             </div>
-    //             <div id="fullResults">
-    //                 <div className="resultsHeader">cumulative</div>
-    //                 <div id="cumulativeResults">
-    //                     {
-    //                         cumulativeResultsArr.map(playerResult => {
-    //                             const player = typeof playerResult[0] === 'string' ? activeTournamentPlayers.find(player => player.guest_id === playerResult[0])
-    //                                 : activeTournamentPlayers.find(player => player.id === playerResult[0])
-    //                             return (
-    //                                 <div key={playerResult[0] + '--' + playerResult[1]} className="resultsModalListItem">
-    //                                     <div>{player.guest_id ? player?.full_name : player?.username}: </div>
-    //                                     <div>{playerResult[1]}</div>
-    //                                 </div>
-    //                             )
-    //                         })
-    //                     }
-    //                 </div>
-    //             </div>
-    //         </div>
+    const tieBreakDisplay = (arrForTie) => {
+        const solkoffResultsArr = solkoffTieBreaker(arrForTie).sort((a, b) => { return b[1] - a[1] })
+        const cumulativeResultsArr = cumulativeTieBreaker(arrForTie).sort((a, b) => { return b[1] - a[1] })
+        console.log(solkoffResultsArr)
+        return (
+            <div id="tieBreakResults">
+                <div id="fullResults">
+                    <div className="resultsHeader">solkoff</div>
+                    <div id="solkoffResults">
+                        {
+                            solkoffResultsArr.map(playerResult => {
+                                const player = typeof playerResult[0] === 'string' ? activeTournamentPlayers.find(player => player.guest_id === playerResult[0])
+                                    : activeTournamentPlayers.find(player => player.id === playerResult[0])
+                                return (
+                                    <div key={playerResult[0] + '--' + playerResult[1]} className="resultsModalListItem">
+                                        <div>{player?.guest_id ? player?.full_name : player?.username}: </div>
+                                        <div>{playerResult[1]}</div>
+                                    </div>
+                                )
+                            })
+                        }
+                    </div>
+                </div>
+                <div id="fullResults">
+                    <div className="resultsHeader">cumulative</div>
+                    <div id="cumulativeResults">
+                        {
+                            cumulativeResultsArr.map(playerResult => {
+                                const player = typeof playerResult[0] === 'string' ? activeTournamentPlayers.find(player => player.guest_id === playerResult[0])
+                                    : activeTournamentPlayers.find(player => player.id === playerResult[0])
+                                return (
+                                    <div key={playerResult[0] + '--' + playerResult[1]} className="resultsModalListItem">
+                                        <div>{player?.guest_id ? player?.full_name : player?.username}: </div>
+                                        <div>{playerResult[1]}</div>
+                                    </div>
+                                )
+                            })
+                        }
+                    </div>
+                </div>
+            </div>
 
-    //     )
-    // }
+        )
+    }
+    console.log()
     //update game for api either initial or updating
     const handleGameForApiUpdate = (targetId, whitePieces, blackPieces, pastGame) => {
         let copy = {}
@@ -590,14 +585,16 @@ export const ActiveTournament = () => {
                 activeTournamentPlayers.map(player => {
                     const playerIdentifier = player.guest_id ? player.guest_id : player.id
                     if (player.guest_id) {
-                        resultArr.push([player.full_name, parseFloat(scoreObj[playerIdentifier])])
+                        resultArr.push([player.full_name, parseFloat(scoreObj[playerIdentifier]), player.guest_id])
+                        arrForTieBreakers.push(player.guest_id)
                     }
                     else {
-                        resultArr.push([player.username, parseFloat(scoreObj[playerIdentifier])])
+                        resultArr.push([player.username, parseFloat(scoreObj[playerIdentifier]), player.id])
+                        arrForTieBreakers.push(player.id)
                     }
                 })
                 resultArr.sort((a, b) => { return b[1] - a[1] })
-                console.log(resultArr)
+                console.log(arrForTieBreakers)
                 return (
                     <section id="fullResults" className="setCustomFont">
                         <div id="standardResults" >
@@ -614,7 +611,7 @@ export const ActiveTournament = () => {
                                 })
                             }
                         </div>
-                        {/* {tieBreakDisplay(arrForTieBreakers)} */}
+                        {tieBreakDisplay(arrForTieBreakers)}
                     </section>
                 )
             }

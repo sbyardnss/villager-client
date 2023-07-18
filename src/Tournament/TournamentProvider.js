@@ -48,12 +48,13 @@ export const TournamentProvider = (props) => {
             }
         }, [selectedTournament]
     )
-    // useEffect(
-    //     () => {
-    //         const allCompetitors = players.concat(guests)
-    //         setPlayersAndGuests(allCompetitors)
-    //     }, [players, guests, selectedClub, selectedTournament]
-    // )
+    //this one is needed currently. find a way to get rid of it
+    useEffect(
+        () => {
+            const allCompetitors = players.concat(guests)
+            setPlayersAndGuests(allCompetitors)
+        }, [players, guests, selectedClub, selectedTournament]
+    )
 
     //only show guests and players that are in selected club
     //REPLACE STATE VARIABLES FOR GUESTS AND PLAYERS WITH CLUBPLAYERS AND CLUBGUESTS
@@ -65,9 +66,8 @@ export const TournamentProvider = (props) => {
             setClubGuests(clubsGuests)
             const allPlayersAndGuests = clubsPlayers.concat(clubsGuests)
             setPlayersAndGuests(allPlayersAndGuests)
-        }, [selectedClubObj, selectedClub, players, guests]
+        }, [selectedClubObj, selectedClub, players, guests]//adding selectedClub to this dependency array causes players to entirely disappear
     )
-
     //REPLACEMENT USEEFFECT FOR ABOVE
     // useEffect(
     //     () => {

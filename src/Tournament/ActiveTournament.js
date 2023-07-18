@@ -78,7 +78,6 @@ export const ActiveTournament = () => {
         }, [activeTournament]
     )
 
-    console.log(activeTournament)
 
     //getting current round pairings updating bye game if necessary
     useEffect(

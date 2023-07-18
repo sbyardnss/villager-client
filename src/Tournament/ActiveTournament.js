@@ -468,7 +468,7 @@ export const ActiveTournament = () => {
                     </section>
                 </section>
             )
-        }
+        } 
     }
 
     //populate create games button for digital tournaments
@@ -499,7 +499,7 @@ export const ActiveTournament = () => {
                                 copy.player_b = b
                                 sendNewGame(copy)
                                 // THIS WORKS HERE BUT THERE MUST BE A BETTER WAY
-                                // .then(() => resetTournamentGames())
+                                .then(() => resetTournamentGames())
                             }
                             else {
                                 //create bye game if necessary
@@ -517,7 +517,7 @@ export const ActiveTournament = () => {
                                 // copy.player_b_model_type = null
                                 // copy.player_b = null
                                 sendNewGame(byeGame)
-                                // .then(() => resetTournamentGames())
+                                .then(() => resetTournamentGames())
                             }
                         })
 
@@ -525,6 +525,7 @@ export const ActiveTournament = () => {
                 }}>create round games</button>
             )
         }
+        // resetTournamentGames()
         // else {
         //     return null
         // }

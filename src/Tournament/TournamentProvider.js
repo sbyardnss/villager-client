@@ -38,16 +38,17 @@ export const TournamentProvider = (props) => {
                 setTournaments(tournamentData)
                 setTimeSettings(timeSettingData)
             })
-        }, []
+        }, [] 
     )
+    //tournament games disappearing if i move within here at all. should be stable within app though
     useEffect(
-        () => {
+        () => { 
             if (selectedTournament) {
                 getTournamentGames(selectedTournament)
                     .then((data) => setTournamentGames(data))
             }
         }, [selectedTournament]
-    )
+    ) 
     //this one is needed currently. find a way to get rid of it
     useEffect(
         () => {

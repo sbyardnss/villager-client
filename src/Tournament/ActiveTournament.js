@@ -185,6 +185,11 @@ export const ActiveTournament = () => {
             })
             for (const result of playerMatchupResults) {
                 const opponentId = playerId === result.white ? result.black : result.white
+
+                //THIS LINE BELOW WAS CAUSING A NaN ERROR WHERN REFERENCING OPPONENTSCORE
+                //REMEMBER THIS
+                // const opponentScore = document.getElementById(`${opponentId}-- score`).innerHTML 
+                
                 //opponentScore coming from useRef() on score value
                 if (opponentId !== undefined && opponentScore?.current?.innerHTML) {
                     count += parseInt(opponentScore.current.innerHTML)

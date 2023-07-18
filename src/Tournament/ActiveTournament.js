@@ -13,15 +13,14 @@ export const ActiveTournament = () => {
 
     //managing tournament state variables
     const [currentRound, setCurrentRound] = useState(0)
-    // const [scoring, setScoring] = useState(true)
     const [editScores, setEditScores] = useState(false)
 
     //tournament process state variables
     const [resultsForTieBreak, updateResultsForTieBreak] = useState([])
     const [byePlayer, setByePlayer] = useState(0)
+    const [scoreObj, setScoreObj] = useState({})
 
-
-    const opponentScore = useRef()
+    const opponentScoreCell = useRef()
     //prepping data for api state variables
     const [gameForApi, updateGameForApi] = useState({
         player_w: 0,
@@ -159,6 +158,37 @@ export const ActiveTournament = () => {
             updateResultsForTieBreak(resultsForTieBreak)
         }, [tournamentGames, selectedTournament]
     )
+    useEffect(
+        () => {
+            const scoreBoardObj = {}
+            if (resultsForTieBreak && activeTournamentPlayers) {
+                for (const player of activeTournamentPlayers) {
+                    const playerIdentifier = player.guest_id ? player.guest_id : player.id
+                    let playerResults = []
+                    let count = 0
+                    if (typeof playerIdentifier === 'string') {
+                        playerResults = resultsForTieBreak.filter(result => result.white === playerIdentifier || result?.black === playerIdentifier)
+                    }
+                    else {
+                        playerResults = resultsForTieBreak.filter(result => result.white === playerIdentifier && typeof result.white !== 'string' || result?.black === playerIdentifier && typeof result?.black !== 'string')
+                    }
+                    for (const result of playerResults) {
+                        if (result?.winner === playerIdentifier) {
+                            count++
+                        }
+                        if (result?.win_style === 'draw') {
+                            count = count + .5
+                        }
+                    }
+                    scoreBoardObj[playerIdentifier] = count
+                    // console.log(playerResults)
+                    // console.log(playerIdentifier)
+                    // console.log(count)
+                }
+            }
+            setScoreObj(scoreBoardObj)
+        }, [resultsForTieBreak]
+    )
     const resetTournaments = () => {
         getAllTournaments()
             .then(data => setTournaments(data))
@@ -189,10 +219,17 @@ export const ActiveTournament = () => {
                 //THIS LINE BELOW WAS CAUSING A NaN ERROR WHERN REFERENCING OPPONENTSCORE
                 //REMEMBER THIS
                 // const opponentScore = document.getElementById(`${opponentId}-- score`).innerHTML 
-                
+
                 //opponentScore coming from useRef() on score value
-                if (opponentId !== undefined && opponentScore?.current?.innerHTML) {
-                    count += parseInt(opponentScore.current.innerHTML)
+                // console.log(opponentScoreCell.current)
+                const opponentResultsToRemoveBye = resultsForTieBreak.filter(result => {
+                    return result.white === opponentId || result.black === opponentId
+                })
+                if (opponentId !== undefined && scoreObj[opponentId]) {
+                    count += scoreObj[opponentId]
+                }
+                if (opponentResultsToRemoveBye.find(result => result.black === undefined)) {
+                    count--
                 }
             }
             solkoffTieBreakerArr.push([playerId, count])
@@ -247,7 +284,6 @@ export const ActiveTournament = () => {
                     <div id="cumulativeResults">
                         {
                             cumulativeResultsArr.map(playerResult => {
-
                                 const player = typeof playerResult[0] === 'string' ? activeTournamentPlayers.find(player => player.guest_id === playerResult[0])
                                     : activeTournamentPlayers.find(player => player.id === playerResult[0])
                                 return (
@@ -479,7 +515,7 @@ export const ActiveTournament = () => {
                     </section>
                 </section>
             )
-        } 
+        }
     }
 
     //populate create games button for digital tournaments
@@ -509,8 +545,8 @@ export const ActiveTournament = () => {
                                 copy.player_w = w
                                 copy.player_b = b
                                 sendNewGame(copy)
-                                // THIS WORKS HERE BUT THERE MUST BE A BETTER WAY
-                                .then(() => resetTournamentGames())
+                                    // THIS WORKS HERE BUT THERE MUST BE A BETTER WAY
+                                    .then(() => resetTournamentGames())
                             }
                             else {
                                 //create bye game if necessary
@@ -528,7 +564,7 @@ export const ActiveTournament = () => {
                                 // copy.player_b_model_type = null
                                 // copy.player_b = null
                                 sendNewGame(byeGame)
-                                .then(() => resetTournamentGames())
+                                    .then(() => resetTournamentGames())
                             }
                         })
 
@@ -558,6 +594,8 @@ export const ActiveTournament = () => {
                     else {
                         results[player.username] = [parseFloat(scoreElement?.innerHTML), player.id]
                     }
+                    // const playerIdentifier = player.guest_id ? player.guest_id : player.id
+                    // results[player.username] = parseFloat(scoreObj[playerIdentifier])
                 })
                 for (let player in results) {
                     resultArr.push([player, results[player]])
@@ -686,7 +724,6 @@ export const ActiveTournament = () => {
                                             }
                                         })
                                         const guestIdOrId = tourneyPlayer.guest_id ? tourneyPlayer.guest_id : tourneyPlayer.id
-                                        const tpTargetId = tourneyPlayer.guest_id ? 'guest_id' : 'id'
                                         const emptyCellCompensation = () => {
                                             if (tourneyPlayerGames.length < currentRound) {
                                                 return (
@@ -733,8 +770,11 @@ export const ActiveTournament = () => {
                                                     })
                                                 }
                                                 {emptyCellCompensation()}
-                                                <td key={tourneyPlayer.guest_id ? tourneyPlayer.guest_id + "-- score" : tourneyPlayer.id + "-- score"} ref={opponentScore} id={tourneyPlayer.guest_id ? tourneyPlayer.guest_id + "-- score" : tourneyPlayer.id + "-- score"} value={parseFloat(score) || 0}>
-                                                    {parseFloat(score)}
+                                                {/* <td key={tourneyPlayer.guest_id ? tourneyPlayer.guest_id + "-- score" : tourneyPlayer.id + "-- score"} id={tourneyPlayer.guest_id ? tourneyPlayer.guest_id + "-- score" : tourneyPlayer.id + "-- score"} value={score || 0}>
+                                                        {score}
+                                                */}
+                                                <td key={guestIdOrId + "-- score"} id={guestIdOrId + "-- score"} value={scoreObj[guestIdOrId]}>
+                                                    {scoreObj[guestIdOrId]}
                                                 </td>
                                             </tr>
                                         )

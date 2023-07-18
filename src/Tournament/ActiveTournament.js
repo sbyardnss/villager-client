@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from "react"
+import { useState, useEffect, useContext, useRef } from "react"
 import { TournamentContext } from "./TournamentProvider"
 import { alterGame, endTournament, getAllTournaments, sendNewGame, updateTournament } from "../ServerManager"
 import "./Tournament.css"
@@ -20,6 +20,8 @@ export const ActiveTournament = () => {
     const [resultsForTieBreak, updateResultsForTieBreak] = useState([])
     const [byePlayer, setByePlayer] = useState(0)
 
+
+    const opponentScore = useRef()
     //prepping data for api state variables
     const [gameForApi, updateGameForApi] = useState({
         player_w: 0,
@@ -183,8 +185,9 @@ export const ActiveTournament = () => {
             })
             for (const result of playerMatchupResults) {
                 const opponentId = playerId === result.white ? result.black : result.white
-                if (opponentId) {
-                    count += parseFloat(document.getElementById(`${opponentId}-- score`)?.innerHTML)
+                //opponentScore coming from useRef() on score value
+                if (opponentId !== undefined && opponentScore?.current?.innerHTML) {
+                    count += parseInt(opponentScore.current.innerHTML)
                 }
             }
             solkoffTieBreakerArr.push([playerId, count])
@@ -201,6 +204,8 @@ export const ActiveTournament = () => {
             })
             for (const result of playerMatchupResults) {
                 const opponentId = result.white === playerId ? result.black : result.white
+                // console.log(opponentId)
+                // console.log(typeof playerId)
                 result.winner === playerId && opponentId !== undefined ? count += (count + 1)
                     : result.win_style === 'draw' ? count += (count + .5)
                         : count = count + count
@@ -237,6 +242,7 @@ export const ActiveTournament = () => {
                     <div id="cumulativeResults">
                         {
                             cumulativeResultsArr.map(playerResult => {
+
                                 const player = typeof playerResult[0] === 'string' ? activeTournamentPlayers.find(player => player.guest_id === playerResult[0])
                                     : activeTournamentPlayers.find(player => player.id === playerResult[0])
                                 return (
@@ -722,8 +728,8 @@ export const ActiveTournament = () => {
                                                     })
                                                 }
                                                 {emptyCellCompensation()}
-                                                <td key={tourneyPlayer.guest_id ? tourneyPlayer.guest_id + "-- score" : tourneyPlayer.id + "-- score"} id={tourneyPlayer.guest_id ? tourneyPlayer.guest_id + "-- score" : tourneyPlayer.id + "-- score"} value={score || "0"}>
-                                                    {score}
+                                                <td key={tourneyPlayer.guest_id ? tourneyPlayer.guest_id + "-- score" : tourneyPlayer.id + "-- score"} ref={opponentScore} id={tourneyPlayer.guest_id ? tourneyPlayer.guest_id + "-- score" : tourneyPlayer.id + "-- score"} value={parseFloat(score) || 0}>
+                                                    {parseFloat(score)}
                                                 </td>
                                             </tr>
                                         )

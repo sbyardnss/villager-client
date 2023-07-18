@@ -1,5 +1,5 @@
 import { useState, useEffect, createContext } from "react";
-import { getAllGames, getAllGuestPlayers, getAllPlayers, getAllTimeSettings, getAllTournaments, getMyTournaments, getTournamentGames } from "../ServerManager";
+import { getAllGuestPlayers, getAllPlayers, getAllTimeSettings, getMyTournaments, getTournamentGames } from "../ServerManager";
 
 export const TournamentContext = createContext()
 
@@ -27,6 +27,7 @@ export const TournamentProvider = (props) => {
     //remove this asap
     const [games, setGames] = useState([])
 
+    
     //KEEP THIS FOR FUTURE ADDITION AND REMOVAL OF PLAYERS MID TOURNAMENT
     // const [pastPairings, setPastPairings] = useState([])
 
@@ -61,9 +62,9 @@ export const TournamentProvider = (props) => {
     //REPLACE STATE VARIABLES FOR GUESTS AND PLAYERS WITH CLUBPLAYERS AND CLUBGUESTS
     useEffect(
         () => {
-            const clubsPlayers = players.filter(p => selectedClubObj?.members?.find(m => m.id === p.id))
+            const clubsPlayers = players.filter(p => selectedClubObj?.members.find(m => m.id === p.id))
             setClubPlayers(clubsPlayers)
-            const clubsGuests = guests.filter(g => selectedClubObj?.guest_members?.find(gm => gm.id === g.id))
+            const clubsGuests = guests.filter(g => selectedClubObj?.guest_members.find(gm => gm.id === g.id))
             setClubGuests(clubsGuests)
             const allPlayersAndGuests = clubsPlayers.concat(clubsGuests)
             setPlayersAndGuests(allPlayersAndGuests)
@@ -96,6 +97,21 @@ export const TournamentProvider = (props) => {
             .then(data => setTournamentGames(data))
     }
 
+    // useEffect(
+    //     () => {
+    //         console.log(players)
+    //         console.log(guests)
+    //         console.log(timeSettings)
+    //         console.log(tournamentGames)
+    //         console.log(tournaments)
+    //         console.log(playersAndGuests)
+    //         console.log(clubPlayers)
+    //         console.log(clubGuests)
+    //         console.log(selectedClubObj)
+    //         console.log(selectedTournament)
+    //         console.log(selectedClub)
+    //     },[selectedTournament]
+    // )
     return (
         <TournamentContext.Provider value={{
             localVillagerObj, players, setPlayers, timeSettings, tournaments, setTournaments, tournamentGames, setGames,

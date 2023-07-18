@@ -111,7 +111,7 @@ export const Play = () => {
             }
         }, [game, matchReady]
     )
-    console.log(gameForApi)
+    // console.log(selectedGameObj)
     //update turn variable for saving turn and controlling ai request
     useEffect(
         () => {
@@ -149,9 +149,11 @@ export const Play = () => {
                         copy.pgn = game.pgn()
                         if (game.turn() === "b") {
                             copy.winner = selectedGameObj.player_w.id
+                            copy.winner_model_type = 'player'
                         }
                         else {
                             copy.winner = selectedGameObj.player_b.id
+                            copy.winner_model_type = 'player'
                         }
                         if (game.in_checkmate()) {
                             copy.win_style = "checkmate"
@@ -380,19 +382,19 @@ export const Play = () => {
             if (game.in_draw()) {
                 console.log("draw")
             }
-            if (possibleMoves.length === 0) {
+            if (possibleMoves.length === 0 && game.in_checkmate() === false) {
                 console.log("no more moves. draw")
             }
             return;
         }
-        // Promise.resolve(getAIMove(gameForAi)).then(res => {
-        //     let [, notation] = res.split(" ")
-        //     if (notation) {
-        //         safeGameMutate((game) => {
-        //             game.move(notation)
-        //         })
-        //     }
-        // })
+        Promise.resolve(getAIMove(gameForAi)).then(res => {
+            let [, notation] = res.split(" ")
+            if (notation) {
+                safeGameMutate((game) => {
+                    game.move(notation)
+                })
+            }
+        })
     }
     const onSquareClick = (square) => {
         // setRightClickedSquares({});
@@ -479,7 +481,7 @@ export const Play = () => {
                         className="buttonStyleReject playBtns"
                         onClick={() => {
                             setSelectedGame(0)
-                            navigate("/")
+                            navigate(-1)
                         }}>
                         exit game
                     </button>

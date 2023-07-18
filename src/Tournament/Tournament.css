@@ -104,9 +104,68 @@
         background-image: url("../images/closup_dark_board.jpeg");
         background-size: 100%;
         background-position: 20%;
+        background-repeat: no-repeat;
         width: 80%;
         margin-bottom: 1em;
         padding: 1em;
+    }
+
+    #newTournamentClubNameHeader {
+        display: flex;
+        justify-content: center;
+        margin: .5em 0;
+        background-color: #694873;
+        border: 1px solid rgb(143, 121, 0);
+        border-radius: 4px;
+        padding: .25em;
+        font-size: large;
+    }
+
+    #clubSelectionSection {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    #clubSelectionList {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 90%;
+        padding: .25em;
+        height: 20em;
+        overflow: scroll;
+        border: 1px solid #694873;
+        border-radius: 4px;
+    }
+
+    .selectedClubSelectionTabItem {
+        display: flex;
+        align-items: center;
+        background-color: #5a7c9e;
+        margin: .5em;
+        border-radius: 4px;
+        height: 1.5em;
+        padding: .25em;
+        width: 90%;
+        cursor: pointer;
+    }
+
+    .clubSelectionTabItem {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #694873;
+        margin: .5em;
+        border-radius: 4px;
+        height: 1.5em;
+        padding: .25em;
+        width: 90%;
+        cursor: pointer;
+    }
+    .clubSelectionTabItem:hover {
+        background-color: rgb(180, 100, 160);
+
     }
 
     #competitorSelectionSplit {
@@ -160,19 +219,47 @@
     .newTournamentPlayerListItem {
         color: rgb(231, 231, 231);
         cursor: pointer;
+        padding:.2em;
+        border-radius: 2px;
     }
 
     .newTournamentPlayerListItem:hover {
-        background-color: aqua;
+        background-color: rgb(0, 100, 100);
     }
 
     #playerSearch {
         margin: 0 0 1em 2em;
-
     }
+
     #playerSearchInput {
-        width: 15.5em;
+        width: 11em;
         margin-right: 1em;
+    }
+    #resetPlayerSearchBtn {
+        width: 7.5em;
+    }
+    #createGuestDiv {
+        margin: 1em 0 1em 2em;
+        /* width: 15.5em; */
+        display: flex;
+        /* justify-content: space-between; */
+    }
+
+    #newGuestInput {
+        width: 11em;
+        margin-right: 1em;
+    }
+
+    #newGuestSubmitBtn {
+        background-color: #0e4a78;
+        border: none;
+        border-radius: 2px;
+        width: 7.5em;
+    }
+
+    #newGuestSubmitBtn:hover {
+        background-color: #3280bc;
+
     }
 
     #tournamentParameters {
@@ -201,6 +288,7 @@
         width: fit-content;
         color: rgb(231, 231, 231);
         margin: 0;
+
     }
 
 
@@ -240,7 +328,7 @@
     }
 
     .pastTournamentsBtn {
-        align-self: start;
+        align-self: flex-start;
         margin-bottom: 1em;
         margin-top: 2em;
         width: fit-content;
@@ -274,7 +362,7 @@
     #tournamentProgressionControls {
         display: flex;
         justify-content: space-between;
-        width: 20em;
+        width: 30em;
         margin: 1em 0;
     }
 
@@ -286,7 +374,13 @@
 
 
     .progressionControlBtn {
-        width: 5em;
+        width: 8em;
+        /* font-size: medium; */
+
+    }
+    .progressionControlBtn:hover {
+        background-color: rgb(180, 100, 160);
+
     }
 
     /* scoring */
@@ -308,7 +402,7 @@
     #tournamentEditSection {
         display: flex;
         flex-direction: column;
-        align-items: start;
+        align-items: flex-start;
         margin-top: 1em;
 
     }
@@ -519,11 +613,67 @@
         border: 2px solid rgb(40, 40, 40);
         border-radius: 8px;
         background-image: url("../images/closup_dark_board.jpeg");
-        background-size: 100%;
-        background-position: 20%;
+        /* background-size: 100%; */
+        background-size: cover;
+        background-position: 50%;
         width: 80%;
         /* margin-bottom: 1em; */
         padding: 1em;
+    }
+
+    #newTournamentClubNameHeader {
+        display: flex;
+        justify-content: center;
+        margin: .5em 0;
+        background-color: #694873;
+        border: 1px solid rgb(143, 121, 0);
+        border-radius: 4px;
+        padding: .25em;
+        font-size: large;
+    }
+
+    #clubSelectionSection {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    #clubSelectionList {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 90%;
+        padding: .25em;
+        height: 20em;
+        overflow: scroll;
+        border: 1px solid #694873;
+        border-radius: 4px;
+    }
+
+    .selectedClubSelectionTabItem {
+        display: flex;
+        align-items: center;
+        background-color: #5a7c9e;
+        margin: .5em;
+        border-radius: 4px;
+        height: 1.5em;
+        padding: .25em;
+        width: 90%;
+        cursor: pointer;
+    }
+
+    .clubSelectionTabItem {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #694873;
+        margin: .5em;
+        border-radius: 4px;
+        height: 1.5em;
+        padding: .25em;
+        width: 90%;
+        cursor: pointer;
+
     }
 
     #competitorSelectionSplit {
@@ -578,11 +728,13 @@
     .newTournamentPlayerListItem {
         color: rgb(231, 231, 231);
         margin-bottom: .25em;
+        padding:.2em;
+        border-radius: 2px;
         cursor: pointer;
     }
 
     .newTournamentPlayerListItem:hover {
-        background-color: aqua;
+        background-color: rgb(0, 100, 100);
     }
 
     #tournamentParameters {
@@ -591,12 +743,35 @@
         align-items: center;
         /* padding: 0 2em; */
     }
+
     #playerSearch {
-        margin: 1em .5em;
+        margin: 1em 0;
         display: flex;
         justify-content: space-between;
+    }
+
+    #createGuestDiv {
+        margin: 1em 0;
+        display: flex;
+        justify-content: space-between;
+    }
+
+    #newGuestInput {
+        width: 11em;
+    }
+
+    #newGuestSubmitBtn {
+        background-color: #0e4a78;
+        border: none;
+        border-radius: 2px;
+        width: 8.5em;
+    }
+
+    #newGuestSubmitBtn:hover {
+        background-color: #3280bc;
 
     }
+
     #playerSearchInput {
         width: 16em;
     }
@@ -664,7 +839,7 @@
     }
 
     .pastTournamentsBtn {
-        align-self: start;
+        align-self: flex-start;
         margin-bottom: 1em;
         margin-top: 2em;
         width: fit-content;
@@ -731,7 +906,7 @@
         width: 92%;
         display: flex;
         flex-direction: column;
-        align-items: start;
+        align-items: flex-start;
         margin-top: 1em;
 
     }

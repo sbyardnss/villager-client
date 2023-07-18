@@ -1,18 +1,18 @@
-import { useState, useEffect, useContext, useRef } from "react"
+import { useState, useEffect, useContext } from "react"
 import { RoundRobin } from "tournament-pairings"
 import { TournamentContext } from "./TournamentProvider"
 import "./Tournament.css"
-import { alterGame, createNewGuest, getAllGames, getAllGuestPlayers, getAllPlayers, getAllTournaments, getMyChessClubs, sendNewGame, sendNewTournament, sendTournamentRoundOutcomes, sendUpdatedGames, updateTournament } from "../ServerManager"
+import { alterGame, createNewGuest, getAllGuestPlayers, getAllPlayers, getAllTournaments, getMyChessClubs, sendNewTournament } from "../ServerManager"
 import { ActiveTournament } from "./ActiveTournament"
 
 export const Tournament = () => {
-    const { localVillagerObj, tournamentGames, tournaments, setTournaments, players, setPlayers, timeSettings, setGames, selectedTournament, setSelectedTournament, resetTournamentGames, setGuests, guests, playersAndGuests, selectedClub, setSelectedClub, selectedClubObj, setSelectedClubObj } = useContext(TournamentContext)
+    const { localVillagerObj, tournaments, setTournaments, players, setPlayers, timeSettings, selectedTournament, setSelectedTournament, setGuests, guests, playersAndGuests, selectedClub, setSelectedClub, selectedClubObj, setSelectedClubObj, clubPlayers, clubGuests } = useContext(TournamentContext)
     const [potentialCompetitors, setPotentialCompetitors] = useState([])
     const [pastTournaments, setPastTournaments] = useState(false)
     const [search, setSearch] = useState("")
     const [createTournament, setCreateTournament] = useState(false)
     const [showGuests, setShowGuests] = useState(false)
-    const [createGuest, setCreateGuest] = useState(false)
+    // const [createGuest, setCreateGuest] = useState(false)
     // const [selectedClub, setSelectedClub] = useState(0)
     // const [selectedClubObj, setSelectedClubObj] = useState({})
     const [myChessClubs, setMyChessClubs] = useState([])
@@ -58,10 +58,10 @@ export const Tournament = () => {
                 setPotentialCompetitors(filteredUsers)
             }
             else {
-                const unselectedPlayers = players.filter(p => !newTournament.competitors.find(c => c.id === p.id))
+                const unselectedPlayers = clubPlayers.filter(p => !newTournament.competitors.find(c => c.id === p.id))
                 let unselectedGuests = []
                 if (showGuests) {
-                    unselectedGuests = guests.filter(g => !newTournament.guest_competitors.find(gc => gc.id === g.id))
+                    unselectedGuests = clubGuests.filter(g => !newTournament.guest_competitors.find(gc => gc.id === g.id))
                 }
                 setPotentialCompetitors(unselectedPlayers.concat(unselectedGuests))
             }

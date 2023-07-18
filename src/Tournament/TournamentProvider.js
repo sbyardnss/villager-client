@@ -19,7 +19,7 @@ export const TournamentProvider = (props) => {
     const [clubPlayers, setClubPlayers] = useState([])
     const [clubGuests, setClubGuests] = useState([])
     const [selectedClubObj, setSelectedClubObj] = useState({})
-
+    
     //reference variables
     const [selectedTournament, setSelectedTournament] = useState(0)
     const [selectedClub, setSelectedClub] = useState(0)
@@ -54,17 +54,18 @@ export const TournamentProvider = (props) => {
             setPlayersAndGuests(allCompetitors)
         }, [players, guests, selectedClub, selectedTournament]
     )
+
     //only show guests and players that are in selected club
     //REPLACE STATE VARIABLES FOR GUESTS AND PLAYERS WITH CLUBPLAYERS AND CLUBGUESTS
     useEffect(
         () => {
-            const clubPlayers = players.filter(p => selectedClubObj?.members?.find(m => m.id === p.id))
-            setPlayers(clubPlayers)
-            const clubGuests = guests.filter(g => selectedClubObj?.guest_members?.find(gm => gm.id === g.id))
-            setGuests(clubGuests)
-            const allPlayersAndGuests = clubPlayers.concat(clubGuests)
+            const clubsPlayers = players.filter(p => selectedClubObj?.members?.find(m => m.id === p.id))
+            setClubPlayers(clubsPlayers)
+            const clubsGuests = guests.filter(g => selectedClubObj?.guest_members?.find(gm => gm.id === g.id))
+            setClubGuests(clubsGuests)
+            const allPlayersAndGuests = clubsPlayers.concat(clubsGuests)
             setPlayersAndGuests(allPlayersAndGuests)
-        }, [selectedClubObj]
+        }, [selectedClubObj, selectedClub]
     )
 
     //REPLACEMENT USEEFFECT FOR ABOVE
@@ -99,7 +100,7 @@ export const TournamentProvider = (props) => {
             localVillagerObj, players, setPlayers, timeSettings, tournaments, setTournaments, tournamentGames, setGames,
             selectedTournament, setSelectedTournament, resetTournamentGames,
             setGuests, guests, playersAndGuests, setPlayersAndGuests, selectedClub, setSelectedClub,
-            selectedClubObj, setSelectedClubObj
+            selectedClubObj, setSelectedClubObj, clubPlayers, clubGuests
         }}>
             {props.children}
         </TournamentContext.Provider>

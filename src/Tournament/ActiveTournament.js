@@ -1,11 +1,11 @@
-import { useState, useEffect, useContext, useRef } from "react"
+import { useState, useEffect, useContext } from "react"
 import { TournamentContext } from "./TournamentProvider"
-import { alterGame, endTournament, getAllGames, getAllPlayers, getAllTournaments, sendNewGame, sendNewTournament, sendTournamentRoundOutcomes, sendUpdatedGames, updateTournament } from "../ServerManager"
+import { alterGame, endTournament, getAllTournaments, sendNewGame, updateTournament } from "../ServerManager"
 import "./Tournament.css"
 
 
 export const ActiveTournament = () => {
-    const { tournaments, setTournaments, players, guests, playersAndGuests, timeSettings, tournamentGames, selectedTournament, setSelectedTournament, resetTournamentGames } = useContext(TournamentContext)
+    const { tournaments, setTournaments, playersAndGuests, tournamentGames, selectedTournament, setSelectedTournament, resetTournamentGames } = useContext(TournamentContext)
     //initial setup state variables
     const [activeTournament, setActiveTournament] = useState({})
     const [activeTournamentPlayers, setActiveTournamentPlayers] = useState([])
@@ -13,7 +13,7 @@ export const ActiveTournament = () => {
 
     //managing tournament state variables
     const [currentRound, setCurrentRound] = useState(0)
-    const [scoring, setScoring] = useState(true)
+    // const [scoring, setScoring] = useState(true)
     const [editScores, setEditScores] = useState(false)
 
     //tournament process state variables
@@ -77,6 +77,9 @@ export const ActiveTournament = () => {
             }
         }, [activeTournament]
     )
+
+    console.log(activeTournament)
+
     //getting current round pairings updating bye game if necessary
     useEffect(
         () => {
@@ -162,7 +165,7 @@ export const ActiveTournament = () => {
     //number population for table
     const roundPopulation = () => {
         let roundNumber = activeTournament?.rounds;
-        
+
         let tableHtml = [];
         while (roundNumber > 0) {
             tableHtml.push(<th key={roundNumber} className="roundHeader">{roundNumber}</th>)
@@ -364,33 +367,33 @@ export const ActiveTournament = () => {
             else {
                 return (
                     <table id="digitalTournamentTable">
-                        <thead>
+                        {/* <thead>
                             <tr className="tableHeaderRow">
                                 <th>white player</th>
                                 <th></th>
                                 <th>black player</th>
                             </tr>
-                        </thead>
+                        </thead> */}
                         <tbody>
                             {
                                 currentRoundMatchups?.map(matchup => {
                                     const white = activeTournamentPlayers?.find(player => player.id === matchup.player1 || player.guest_id === matchup.player1)
                                     const black = activeTournamentPlayers?.find(player => player.id === matchup.player2 || player.guest_id === matchup.player2)
+                                    if (black === undefined) {
+                                        return (
+                                            <tr key={`${matchup.round} -- ${matchup.match} -- bye`} className="setColor setCustomFont">
+                                                <td>{white?.username || white?.full_name}</td>
+                                                <td></td>
+                                                <td>bye</td>
+                                            </tr>
+                                        )
+                                    }
                                     if (white?.id && black?.id) {
                                         return (
                                             <tr key={matchup.round + matchup.match}>
                                                 <td className="whitePiecesMatchup">{white.full_name}</td>
                                                 <td className="matchupTableVS setColor">vs</td>
                                                 <td className="blackPiecesMatchup">{black.full_name}</td>
-                                            </tr>
-                                        )
-                                    }
-                                    if (white?.id && black === undefined) {
-                                        return (
-                                            <tr key={`${matchup.round} -- ${matchup.match} -- bye`} className="setColor setCustomFont">
-                                                <td>{white?.username || white?.full_name}</td>
-                                                <td></td>
-                                                <td>bye</td>
                                             </tr>
                                         )
                                     }
@@ -496,8 +499,8 @@ export const ActiveTournament = () => {
                                 copy.player_w = w
                                 copy.player_b = b
                                 sendNewGame(copy)
-                                    // THIS WORKS HERE BUT THERE MUST BE A BETTER WAY
-                                    // .then(() => resetTournamentGames())
+                                // THIS WORKS HERE BUT THERE MUST BE A BETTER WAY
+                                // .then(() => resetTournamentGames())
                             }
                             else {
                                 //create bye game if necessary
@@ -515,7 +518,7 @@ export const ActiveTournament = () => {
                                 // copy.player_b_model_type = null
                                 // copy.player_b = null
                                 sendNewGame(byeGame)
-                                    // .then(() => resetTournamentGames())
+                                // .then(() => resetTournamentGames())
                             }
                         })
 
@@ -523,9 +526,9 @@ export const ActiveTournament = () => {
                 }}>create round games</button>
             )
         }
-        else {
-            return null
-        }
+        // else {
+        //     return null
+        // }
     }
     if (selectedTournament) {
         if (activeTournament && activeTournamentPlayers) {

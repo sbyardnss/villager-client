@@ -107,16 +107,18 @@ export const TournamentProvider = (props) => {
                 setTournamentGames(selectedTournamentGames)
             })
     }
-    // const resetGuests = () => {
-    //     getAllGuestPlayers()
-    //         .then(data => setGuests(data))
-    // }
+    const resetTournaments = () => {
+        // getAllTournaments()
+        //     .then(data => setTournaments(data))
+        getMyTournaments()
+            .then(data => setTournaments(data))
+    }
     return (
         <TournamentContext.Provider value={{
             localVillagerObj, players, setPlayers, timeSettings, tournaments, setTournaments, tournamentGames, setGames,
             selectedTournament, setSelectedTournament, pastPairings, resetGames, resetTournamentGames,
             setGuests, guests, playersAndGuests, setPlayersAndGuests, selectedClub, setSelectedClub,
-            selectedClubObj, setSelectedClubObj
+            selectedClubObj, setSelectedClubObj, resetTournaments
         }}>
             {props.children}
         </TournamentContext.Provider>

@@ -2,11 +2,11 @@ import { useState, useEffect, useContext, useRef } from "react"
 import { RoundRobin } from "tournament-pairings"
 import { TournamentContext } from "./TournamentProvider"
 import "./Tournament.css"
-import { alterGame, createNewGuest, getAllGames, getAllGuestPlayers, getAllPlayers, getAllTournaments, getMyChessClubs, sendNewGame, sendNewTournament, sendTournamentRoundOutcomes, sendUpdatedGames, updateTournament } from "../ServerManager"
+import { alterGame, createNewGuest, getAllGames, getAllGuestPlayers, getAllPlayers, getAllTournaments, getMyChessClubs, getMyTournaments, sendNewGame, sendNewTournament, sendTournamentRoundOutcomes, sendUpdatedGames, updateTournament } from "../ServerManager"
 import { ActiveTournament } from "./ActiveTournament"
 
 export const Tournament = () => {
-    const { localVillagerObj, tournamentGames, tournaments, setTournaments, players, setPlayers, timeSettings, setGames, selectedTournament, setSelectedTournament, resetTournamentGames, setGuests, guests, playersAndGuests, selectedClub, setSelectedClub, selectedClubObj, setSelectedClubObj } = useContext(TournamentContext)
+    const { localVillagerObj, tournamentGames, tournaments, setTournaments, players, setPlayers, timeSettings, setGames, selectedTournament, setSelectedTournament, resetTournamentGames, setGuests, guests, playersAndGuests, selectedClub, setSelectedClub, selectedClubObj, setSelectedClubObj, resetTournaments } = useContext(TournamentContext)
     const [potentialCompetitors, setPotentialCompetitors] = useState([])
     const [pastTournaments, setPastTournaments] = useState(false)
     const [search, setSearch] = useState("")
@@ -38,7 +38,7 @@ export const Tournament = () => {
                 .then(data => setMyChessClubs(data))
         }, []
     )
-    
+
     useEffect(
         () => {
             const club = myChessClubs.find(club => club.id === selectedClub)
@@ -81,17 +81,19 @@ export const Tournament = () => {
         })
     }
     //getter/setter for tournaments
-    const resetTournaments = () => {
-        getAllTournaments()
-            .then(data => setTournaments(data))
-    }
+    // const resetTournaments = () => {
+    //     // getAllTournaments()
+    //     //     .then(data => setTournaments(data))
+    //     getMyTournaments()
+    //         .then(data => setTournaments(data))
+    // }
     const resetGuests = () => {
         getAllGuestPlayers()
             .then(data => setGuests(data))
     }
     const resetPlayers = () => {
         getAllPlayers()
-        .then(data => setPlayers(data))
+            .then(data => setPlayers(data))
     }
     const handleChange = (evt) => {
         if (evt.target.checked) {
@@ -214,7 +216,7 @@ export const Tournament = () => {
                                                         const copy = [...potentialCompetitors]
                                                         copy.push(competitor)
                                                         setPotentialCompetitors(copy)
-                                                        
+
 
                                                     }}>
                                                     {player.full_name}
@@ -367,7 +369,7 @@ export const Tournament = () => {
                                     setSelectedClub(0)
                                     setSelectedClubObj({})
                                     setShowGuests(false)
-                                    }}>cancel</button>
+                                }}>cancel</button>
                             </div>
                         </section>
                     </section>

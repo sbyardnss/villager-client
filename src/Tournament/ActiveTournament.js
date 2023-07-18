@@ -5,7 +5,7 @@ import "./Tournament.css"
 
 
 export const ActiveTournament = () => {
-    const { tournaments, setTournaments, players, guests, playersAndGuests, timeSettings, tournamentGames, selectedTournament, setSelectedTournament, resetTournamentGames } = useContext(TournamentContext)
+    const { tournaments, setTournaments, players, guests, playersAndGuests, timeSettings, tournamentGames, selectedTournament, setSelectedTournament, resetTournamentGames, resetTournaments } = useContext(TournamentContext)
     //initial setup state variables
     const [activeTournament, setActiveTournament] = useState({})
     const [activeTournamentPlayers, setActiveTournamentPlayers] = useState([])
@@ -150,10 +150,10 @@ export const ActiveTournament = () => {
             updateResultsForTieBreak(resultsForTieBreak)
         }, [tournamentGames, selectedTournament]
     )
-    const resetTournaments = () => {
-        getAllTournaments()
-            .then(data => setTournaments(data))
-    }
+    // const resetTournaments = () => {
+    //     getAllTournaments()
+    //         .then(data => setTournaments(data))
+    // }
     const roundPopulation = () => {
         let roundNumber = activeTournament?.rounds;
         let tableHtml = [];

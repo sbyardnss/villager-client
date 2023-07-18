@@ -207,7 +207,6 @@ export const ActiveTournament = () => {
     const roundHtml = roundPopulation()
     //creating solkoff tie break data
     const solkoffTieBreaker = (playerIdArr) => {
-        console.log(playerIdArr)
         const solkoffTieBreakerArr = []
         for (const playerId of playerIdArr) {
             let count = 0
@@ -229,7 +228,6 @@ export const ActiveTournament = () => {
         }
         return solkoffTieBreakerArr
     }
-    console.log(solkoffTieBreaker([1, 2, 3, 4, 'g1', 'g5']).sort((a, b) => { return b[1] - a[1] }))
     //creating cumulative tie break data
     const cumulativeTieBreaker = (playerIdArr) => {
         const cumulativeArr = []
@@ -254,7 +252,6 @@ export const ActiveTournament = () => {
     const tieBreakDisplay = (arrForTie) => {
         const solkoffResultsArr = solkoffTieBreaker(arrForTie).sort((a, b) => { return b[1] - a[1] })
         const cumulativeResultsArr = cumulativeTieBreaker(arrForTie).sort((a, b) => { return b[1] - a[1] })
-        console.log(solkoffResultsArr)
         return (
             <div id="tieBreakResults">
                 <div id="fullResults">
@@ -295,7 +292,6 @@ export const ActiveTournament = () => {
 
         )
     }
-    console.log()
     //update game for api either initial or updating
     const handleGameForApiUpdate = (targetId, whitePieces, blackPieces, pastGame) => {
         let copy = {}
@@ -594,14 +590,12 @@ export const ActiveTournament = () => {
                     }
                 })
                 resultArr.sort((a, b) => { return b[1] - a[1] })
-                console.log(arrForTieBreakers)
                 return (
                     <section id="fullResults" className="setCustomFont">
                         <div id="standardResults" >
                             <div className="resultsHeader">standard</div>
                             {
                                 resultArr.map(r => {
-                                    arrForTieBreakers.push(r[1][1])
                                     return (
                                         <div key={r[0]} className="resultsModalListItem">
                                             <div>{r[0]}: </div>

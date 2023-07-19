@@ -434,6 +434,16 @@ export const leaveClub = (clubId) => {
         }
     })
 }
+export const deleteChallengeGame = (gameId) => {
+    const localVillagerObj = getToken()
+    return fetch(`${apiKey}/games/${gameId}`, {
+        method: "DELETE",
+        headers: {
+            "Authorization": `Token ${localVillagerObj.token}`,
+            "Content-Type": "application/json"
+        }
+    })
+}
 
 
 //auth

@@ -40,12 +40,14 @@ export const Login = () => {
             <section id="loginBox">
                 <form className="form--login" onSubmit={handleLogin}>
             <img id="skellyHand" src={skellyHand}></img>
+                <h4>currently down for maintenance</h4>
+                    <h4>will be back up Wednesday 7/19</h4>
                     {/* <div id="loginLogo">
                         <h1>Villager Chess</h1>
                     </div> */}
                     {/* <img id="graffiti_logo" src={graffiti}></img> */}
                     {/* <img id="skellyHand" src={skellyHand}></img> */}
-                    <fieldset id="centerItems">
+                    {/* <fieldset id="centerItems">
                         <label className="loginLabels" htmlFor="inputUsername">Username</label>
                         <input type="username"
                             ref={username}
@@ -62,7 +64,7 @@ export const Login = () => {
                             Sign in
                         </button>
                     </fieldset>
-                            <Link className="link--register" to="/register">Not a member yet?</Link>
+                            <Link className="link--register" to="/register">Not a member yet?</Link> */}
                 </form>
             </section>
         </main>

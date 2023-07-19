@@ -373,7 +373,9 @@ export const HomePage = () => {
                                 onClick={() => {
                                     if (window.confirm("create open challenge?")) {
                                         sendNewGame(challengeForApi)
+                                            .then(() => resetGames())
                                         setChallengeAlertVisible(true)
+
                                         setTimeout(() => {
                                             setChallengeAlertVisible(false)
                                         }, 2000)
@@ -398,6 +400,7 @@ export const HomePage = () => {
                                                     <button className="challengeBtn buttonStyleReject"
                                                         onClick={() => {
                                                             deleteChallengeGame(c.id)
+                                                                .then(() => resetGames())
                                                         }}>abort</button>
                                                 </div>
                                             </div>

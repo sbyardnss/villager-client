@@ -264,7 +264,7 @@ export const getAIMove = (objForAi) => {
 }
 export const createNewGuest = (guestObj) => {
     const localVillagerObj = getToken()
-    return fetch(`${apiKey}/guests`, {
+    return fetch(`${apiKey}/guests/create_guest`, {
         method: "POST",
         headers: {
             "Authorization": `Token ${localVillagerObj.token}`,
@@ -273,6 +273,18 @@ export const createNewGuest = (guestObj) => {
         body: JSON.stringify(guestObj)
     })
 }
+//OLD CREATE GUEST
+// export const createNewGuest = (guestObj) => {
+//     const localVillagerObj = getToken()
+//     return fetch(`${apiKey}/guests`, {
+//         method: "POST",
+//         headers: {
+//             "Authorization": `Token ${localVillagerObj.token}`,
+//             "Content-Type": "application/json"
+//         },
+//         body: JSON.stringify(guestObj)
+//     })
+// }
 export const createNewClub = (clubObj) => {
     const localVillagerObj = getToken()
     return fetch(`${apiKey}/clubs`, {

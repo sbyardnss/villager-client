@@ -21,7 +21,7 @@ export const HomePage = () => {
     const [displayedPuzzle, setDisplayedPuzzle] = useState({})
     const [myChessClubs, setMyChessClubs] = useState([])
     const [selectedClub, setSelectedClub] = useState(0)
-
+    const [challengeAlertVisible, setChallengeAlertVisible] = useState(false)
     const [newPost, updateNewPost] = useState({
         poster: localVillagerObj.userId,
         message: ""
@@ -95,13 +95,14 @@ export const HomePage = () => {
         }, [games]
     )
 
-    useEffect(
-        () => {
-            if (selectedPuzzle.fen !== "") {
-                navigate("/play")
-            }
-        }, [selectedPuzzle]
-    )
+    // useEffect(
+    //     () => {
+    //         if (selectedPuzzle.fen !== "") {
+    //             navigate("/play")
+    //         }
+    //     }, [selectedPuzzle]
+    // )
+
     //update displayed puzzle
     // useEffect(
     //     () => {
@@ -199,6 +200,11 @@ export const HomePage = () => {
     }
     return <>
         <main id="homepageContainer">
+            {challengeAlertVisible === true ?
+                <div id="challengeCreatedModal">
+                    <h2 className="setCustomFont">Challenge Created!</h2>
+                </div>
+                : ""}
             <div id="homepageLayoutDiv">
                 <div id="forumAndActiveGames">
                     <article id="communityForum">
@@ -366,6 +372,10 @@ export const HomePage = () => {
                                 onClick={() => {
                                     if (window.confirm("create open challenge?")) {
                                         sendNewGame(challengeForApi)
+                                        setChallengeAlertVisible(true)
+                                        setTimeout(() => {
+                                            setChallengeAlertVisible(false)
+                                        }, 2000)
                                     }
                                 }}>create</button>
                         </section>

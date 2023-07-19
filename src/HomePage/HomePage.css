@@ -14,8 +14,25 @@
         justify-content: space-between;
         flex-wrap: wrap;
     }
+    @keyframes fadeIn {
+        0% {opacity: 0;}
+        10% {opacity: 1;}
+        90% {opacity: 1;}
+        100% {opacity: 0;}
+    }
     #challengeCreatedModal {
         display: flex;
+        position: fixed;
+        justify-content: center;
+        align-items: center;
+        z-index: 20;
+        top: 40%;
+        background-color: #2a2e34;
+        width: 20em;
+        height: 6em;
+        border: 2px solid #694873;
+        border-radius: 6px;
+        animation: fadeIn 2s ease-in-out;
     }
 
     #forumAndActiveGames {
@@ -372,8 +389,8 @@
 
     }
 
-    /* open challenges section */
-    #openChallengesList {
+    /* challenges list sections */
+    #challengesList {
         display: flex;
         flex-direction: column;
         width: 100%;
@@ -390,12 +407,15 @@
         display: flex;
         flex-direction: column;
         font-size: small;
+        backdrop-filter: blur(30px);
+        /* background-color: gray; */
     }
 
-    .openChallengerInfo {
+    .challengerInfo {
         height: 2em;
         display: flex;
         align-items: center;
+        font-weight: 400;
         border: 1px solid #f4d35e;
         padding: .5em;
         border-radius: 4px;
@@ -421,7 +441,7 @@
         color: whitesmoke;
         font-style: oblique;
         font-weight: 500;
-        background-color: rgb(52, 52, 52);
+        background-color: rgb(24, 24, 24);
         width: 3em;
         padding: .25em;
         border: 1px solid rgb(52, 52, 52);
@@ -903,8 +923,8 @@
 
     }
 
-    /* open challenges section */
-    #openChallengesList {
+    /* challenges list sections */
+    #challengesList {
         display: flex;
         flex-direction: column;
         width: 80%;
@@ -927,15 +947,19 @@
         width: 100%;
         flex-direction: column;
         font-size: medium;
+        backdrop-filter: blur(30px);
+        /* background-color: gray; */
+
     }
 
-    .openChallengerInfo {
+    .challengerInfo {
         height: 2em;
         display: flex;
         align-items: center;
         justify-content: space-between;
         border: 1px solid #f4d35e;
         padding: .5em;
+        font-weight: 500;
         border-radius: 4px;
     }
 
@@ -959,7 +983,7 @@
         color: whitesmoke;
         font-style: oblique;
         font-weight: 500;
-        background-color: rgb(52, 52, 52);
+        background-color: rgb(24, 24, 24);
         width: 3em;
         padding: .25em;
         border: 1px solid rgb(52, 52, 52);

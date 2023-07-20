@@ -162,34 +162,35 @@ export const ActiveTournament = () => {
         }, [tournamentGames, selectedTournament]
     )
     //this might not be necessary after new scoring method
-    useEffect(
-        () => {
-            const scoreBoardObj = {}
-            if (resultsForTieBreak && activeTournamentPlayers) {
-                for (const player of activeTournamentPlayers) {
-                    const playerIdentifier = player.guest_id ? player.guest_id : player.id
-                    let playerResults = []
-                    let count = 0
-                    if (typeof playerIdentifier === 'string') {
-                        playerResults = resultsForTieBreak.filter(result => result.white === playerIdentifier || result?.black === playerIdentifier)
-                    }
-                    else {
-                        playerResults = resultsForTieBreak.filter(result => result.white === playerIdentifier && typeof result.white !== 'string' || result?.black === playerIdentifier && typeof result?.black !== 'string')
-                    }
-                    for (const result of playerResults) {
-                        if (result?.winner === playerIdentifier) {
-                            count++
-                        }
-                        if (result?.win_style === 'draw') {
-                            count = count + .5
-                        }
-                    }
-                    scoreBoardObj[playerIdentifier] = count
-                }
-            }
-            setScoreObj(scoreBoardObj)
-        }, [resultsForTieBreak]
-    )
+    // useEffect(
+    //     () => {
+    //         const scoreBoardObj = {}
+    //         if (resultsForTieBreak && activeTournamentPlayers) {
+    //             for (const player of activeTournamentPlayers) {
+    //                 const playerIdentifier = player.guest_id ? player.guest_id : player.id
+    //                 let playerResults = []
+    //                 let count = 0
+    //                 if (typeof playerIdentifier === 'string') {
+    //                     playerResults = resultsForTieBreak.filter(result => result.white === playerIdentifier || result?.black === playerIdentifier)
+    //                 }
+    //                 else {
+    //                     playerResults = resultsForTieBreak.filter(result => result.white === playerIdentifier && typeof result.white !== 'string' || result?.black === playerIdentifier && typeof result?.black !== 'string')
+    //                 }
+    //                 for (const result of playerResults) {
+    //                     if (result?.winner === playerIdentifier) {
+    //                         count++
+    //                     }
+    //                     if (result?.win_style === 'draw') {
+    //                         count = count + .5
+    //                     }
+    //                 }
+    //                 scoreBoardObj[playerIdentifier] = count
+    //             }
+    //         }
+    //         setScoreObj(scoreBoardObj)
+    //     }, [resultsForTieBreak]
+    // )
+    
     useEffect(
         () => {
             if (selectedTournament) {
@@ -198,7 +199,26 @@ export const ActiveTournament = () => {
             }
         }, [selectedTournament, tournamentGames]
     )
-
+    useEffect(
+        () => {
+            if (scoreCard) {
+                const scoreBoardObj = {}
+                for (const playerId in scoreCard) {
+                    scoreBoardObj[playerId] = 0
+                    for (const score of scoreCard[playerId]) {
+                        if (typeof score === 'number') {
+                            scoreBoardObj[playerId] += parseFloat(score)
+                        }
+                        if (score === 'bye') {
+                            scoreBoardObj[playerId] += 1
+                        }
+                    }
+                }
+                setScoreObj(scoreBoardObj)
+            }
+        },[scoreCard]
+    )
+    console.log(scoreObj)
     const resetTournaments = () => {
         getAllTournaments()
             .then(data => setTournaments(data))
@@ -792,7 +812,6 @@ export const ActiveTournament = () => {
                                         const guestIdOrId = tourneyPlayer.guest_id ? tourneyPlayer.guest_id : tourneyPlayer.id
                                         const tourneyPlayerScores = scoreCard[guestIdOrId]
                                         let score = 0
-
                                         return (
                                             <tr key={tourneyPlayer.guest_id ? tourneyPlayer.guest_id : tourneyPlayer.id} id={tourneyPlayer.id + "--tourneyRow"}>
                                                 <td key={tourneyPlayer.id} className="tablePlayerCell">{tourneyPlayer.full_name}</td>
@@ -814,7 +833,6 @@ export const ActiveTournament = () => {
                                                                 <td key={guestIdOrId + '--' + index}></td>
                                                             )
                                                         }
-
                                                     })
                                                 }
                                                 <td key={guestIdOrId + "-- score"} id={guestIdOrId + "-- score"} value={scoreObj[guestIdOrId]}>

@@ -797,7 +797,7 @@ export const ActiveTournament = () => {
                                             <tr key={tourneyPlayer.guest_id ? tourneyPlayer.guest_id : tourneyPlayer.id} id={tourneyPlayer.id + "--tourneyRow"}>
                                                 <td key={tourneyPlayer.id} className="tablePlayerCell">{tourneyPlayer.full_name}</td>
                                                 {
-                                                    tourneyPlayerScores?.map(s => {
+                                                    tourneyPlayerScores?.map((s, index) => {
                                                         if (typeof s === 'number') {
                                                             score += s
                                                         }
@@ -806,12 +806,12 @@ export const ActiveTournament = () => {
                                                         }
                                                         if (s !== 'none') {
                                                             return (
-                                                                <td>{s}</td>
+                                                                <td key={guestIdOrId + '--' + index}>{s}</td>
                                                             )
                                                         }
                                                         else{
                                                             return (
-                                                                <td></td>
+                                                                <td key={guestIdOrId + '--' + index}></td>
                                                             )
                                                         }
 

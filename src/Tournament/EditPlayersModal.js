@@ -5,7 +5,7 @@ import { createNewGuest, getChessClub } from "../ServerManager"
 
 
 export const EditPlayersModal = ({ activeTournamentObj, setEdit }) => {
-    const { localVillagerObj, players, guests, playersAndGuests, selectedClubObj, selectedClub, resetGuests } = useContext(TournamentContext)
+    const { localVillagerObj, players, guests, playersAndGuests, setPlayersAndGuests, selectedClubObj, selectedClub, resetGuests } = useContext(TournamentContext)
     const [potentialCompetitors, setPotentialCompetitors] = useState([])
     const [search, setSearch] = useState("")
     const [showGuests, setShowGuests] = useState(false)
@@ -43,14 +43,17 @@ export const EditPlayersModal = ({ activeTournamentObj, setEdit }) => {
     )
     useEffect(
         () => {
-            const clubsPlayers = players?.filter(p => tournamentClub.members?.find(m => m.id === p.id))
-            setClubPlayers(clubsPlayers)
-            const clubsGuests = guests?.filter(g => tournamentClub.guest_members?.find(gm => gm.id === g.id))
-            setClubGuests(clubsGuests)
-            // const allPlayersAndGuests = clubsPlayers.concat(clubsGuests)
-            // setPlayersAndGuests(allPlayersAndGuests)
-        }, [players, guests]//adding selectedClub to this dependency array causes players to entirely disappear
+            if (tournamentClub) {
+                const clubsPlayers = players?.filter(p => tournamentClub.members?.find(m => m.id === p.id))
+                setClubPlayers(clubsPlayers)
+                const clubsGuests = guests?.filter(g => tournamentClub.guest_members?.find(gm => gm.id === g.id))
+                setClubGuests(clubsGuests)
+                const allPlayersAndGuests = clubsPlayers.concat(clubsGuests)
+                setPlayersAndGuests(allPlayersAndGuests)
+            }
+        }, [players, guests, tournamentClub]//adding selectedClub to this dependency array causes players to entirely disappear
     )
+
     useEffect(
         () => {
             if (search !== "") {
@@ -60,16 +63,16 @@ export const EditPlayersModal = ({ activeTournamentObj, setEdit }) => {
                 setPotentialCompetitors(filteredUsers)
             }
             else {
-                const unselectedPlayers = clubPlayers.filter(p => !tournamentObj.competitors.find(c => c.id === p.id))
+                const unselectedPlayers = clubPlayers?.filter(p => !tournamentObj.competitors.find(c => c.id === p.id))
                 let unselectedGuests = []
                 if (showGuests) {
-                    unselectedGuests = clubGuests.filter(g => !tournamentObj.guest_competitors.find(gc => gc.id === g.id))
+                    unselectedGuests = clubGuests?.filter(g => !tournamentObj.guest_competitors.find(gc => gc.id === g.id))
                 }
                 setPotentialCompetitors(unselectedPlayers.concat(unselectedGuests))
             }
-        }, [search, showGuests, playersAndGuests]
+        }, [search, showGuests, playersAndGuests, players, guests, clubGuests, clubPlayers]
     )
-    console.log(potentialCompetitors)
+    console.log(players)
 
     return (
         <article id="editPlayersContainer">
@@ -82,7 +85,7 @@ export const EditPlayersModal = ({ activeTournamentObj, setEdit }) => {
                     <div id="potentialLabel" className="setColor setCustomFont">Potential:</div>
                     <div id="tournamentPotentialCompetitorSelection">
                         {
-                            potentialCompetitors.map((p, index) => {
+                            potentialCompetitors?.map((p, index) => {
                                 console.log(p)
                                 return (
                                     <li key={p.guest_id ? p.guest_id + '-- potentialCompetitor' : p.id + '-- potentialCompetitor'}

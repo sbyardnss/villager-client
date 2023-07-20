@@ -878,7 +878,7 @@
     #tournamentProgressionControls {
         display: flex;
         justify-content: space-between;
-        width: 80%;
+        width: 96%;
         margin: 1em 0;
     }
 

@@ -6,7 +6,7 @@ import { alterGame, createNewGuest, getAllGuestPlayers, getAllPlayers, getAllTou
 import { ActiveTournament } from "./ActiveTournament"
 
 export const Tournament = () => {
-    const { localVillagerObj, tournaments, setTournaments, players, setPlayers, timeSettings, selectedTournament, setSelectedTournament, setGuests, guests, playersAndGuests, selectedClub, setSelectedClub, selectedClubObj, setSelectedClubObj, clubPlayers, clubGuests } = useContext(TournamentContext)
+    const { localVillagerObj, tournaments, setTournaments, players, setPlayers, timeSettings, selectedTournament, setSelectedTournament, setGuests, guests, playersAndGuests, selectedClub, setSelectedClub, selectedClubObj, setSelectedClubObj, clubPlayers, clubGuests, resetGuests } = useContext(TournamentContext)
     const [potentialCompetitors, setPotentialCompetitors] = useState([])
     const [pastTournaments, setPastTournaments] = useState(false)
     const [search, setSearch] = useState("")
@@ -53,7 +53,7 @@ export const Tournament = () => {
         () => {
             if (search !== "") {
                 const filteredUsers = playersAndGuests.filter(pc => {
-                    return pc.full_name.toLowerCase().includes(search.toLowerCase())
+                    return pc.full_name.toLowerCase().includes(search.toLowerCase()) && !newTournament.competitors?.find(member => member.id === pc.id) && !newTournament.guest_competitors?.find(member => member.id === pc.id)
                 })
                 setPotentialCompetitors(filteredUsers)
             }
@@ -85,10 +85,7 @@ export const Tournament = () => {
         getAllTournaments()
             .then(data => setTournaments(data))
     }
-    const resetGuests = () => {
-        getAllGuestPlayers()
-            .then(data => setGuests(data))
-    }
+    
     const resetPlayers = () => {
         getAllPlayers()
         .then(data => setPlayers(data))

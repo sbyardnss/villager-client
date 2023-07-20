@@ -23,6 +23,7 @@ export const TournamentProvider = (props) => {
     //reference variables
     const [selectedTournament, setSelectedTournament] = useState(0)
     const [selectedClub, setSelectedClub] = useState(0)
+    const [editPlayers, setEditPlayers] = useState(false)
 
     //remove this asap
     const [games, setGames] = useState([])
@@ -55,69 +56,40 @@ export const TournamentProvider = (props) => {
         () => {
             const allCompetitors = players.concat(guests)
             setPlayersAndGuests(allCompetitors)
-        }, [players, guests, selectedClub, selectedTournament]
+        }, [players, guests, selectedClub, selectedTournament, editPlayers]
     )
+    
 
     //only show guests and players that are in selected club
     //REPLACE STATE VARIABLES FOR GUESTS AND PLAYERS WITH CLUBPLAYERS AND CLUBGUESTS
     useEffect(
         () => {
-            const clubsPlayers = players.filter(p => selectedClubObj?.members.find(m => m.id === p.id))
+            const clubsPlayers = players.filter(p => selectedClubObj?.members?.find(m => m.id === p.id))
             setClubPlayers(clubsPlayers)
-            const clubsGuests = guests.filter(g => selectedClubObj?.guest_members.find(gm => gm.id === g.id))
+            const clubsGuests = guests.filter(g => selectedClubObj?.guest_members?.find(gm => gm.id === g.id))
             setClubGuests(clubsGuests)
             const allPlayersAndGuests = clubsPlayers.concat(clubsGuests)
             setPlayersAndGuests(allPlayersAndGuests)
         }, [selectedClubObj, selectedClub, players, guests]//adding selectedClub to this dependency array causes players to entirely disappear
     )
-    //REPLACEMENT USEEFFECT FOR ABOVE
-    // useEffect(
-    //     () => {
-    //         if (selectedTournament) {
-    //             const selectedTournamentGames = games.filter(g => g.tournament === selectedTournament)
-    //             setTournamentGames(selectedTournamentGames)
-    //         }
-    //     }, [games]
-    // )
 
-    //KEEP THIS FOR FUTURE ADDITION AND REMOVAL OF PLAYERS MID TOURNAMENT
-    // useEffect(
-    //     () => {
-    //         const previousPairings = []
-    //         tournamentGames.map(tg => {
-    //             const pairing = [tg.player_w?.id, tg.player_b?.id]
-    //             previousPairings.push(pairing)
-    //         })
-    //         setPastPairings(previousPairings)
-    //     }, [tournamentGames]
-    // )
 
     const resetTournamentGames = () => {
         getTournamentGames(selectedTournament)
             .then(data => setTournamentGames(data))
     }
+    const resetGuests = () => {
+        getAllGuestPlayers()
+            .then(data => setGuests(data))
+    }
 
-    // useEffect(
-    //     () => {
-    //         console.log(players)
-    //         console.log(guests)
-    //         console.log(timeSettings)
-    //         console.log(tournamentGames)
-    //         console.log(tournaments)
-    //         console.log(playersAndGuests)
-    //         console.log(clubPlayers)
-    //         console.log(clubGuests)
-    //         console.log(selectedClubObj)
-    //         console.log(selectedTournament)
-    //         console.log(selectedClub)
-    //     },[selectedTournament]
-    // )
+
     return (
         <TournamentContext.Provider value={{
             localVillagerObj, players, setPlayers, timeSettings, tournaments, setTournaments, tournamentGames, setGames,
-            selectedTournament, setSelectedTournament, resetTournamentGames,
+            selectedTournament, setSelectedTournament, resetTournamentGames, resetGuests,
             setGuests, guests, playersAndGuests, setPlayersAndGuests, selectedClub, setSelectedClub,
-            selectedClubObj, setSelectedClubObj, clubPlayers, clubGuests
+            selectedClubObj, setSelectedClubObj,setClubPlayers, clubPlayers, setClubGuests, clubGuests, editPlayers, setEditPlayers
         }}>
             {props.children}
         </TournamentContext.Provider>

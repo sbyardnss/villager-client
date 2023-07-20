@@ -2,10 +2,11 @@ import { useState, useEffect, useContext, useRef } from "react"
 import { TournamentContext } from "./TournamentProvider"
 import { alterGame, endTournament, getAllTournaments, getScoreCard, sendNewGame, updateTournament } from "../ServerManager"
 import "./Tournament.css"
+import { EditPlayersModal } from "./EditPlayersModal"
 
 
 export const ActiveTournament = () => {
-    const { tournaments, setTournaments, playersAndGuests, tournamentGames, selectedTournament, setSelectedTournament, resetTournamentGames } = useContext(TournamentContext)
+    const { tournaments, setTournaments, playersAndGuests, tournamentGames, selectedTournament, setSelectedTournament, resetTournamentGames, editPlayers, setEditPlayers } = useContext(TournamentContext)
     //initial setup state variables
     const [activeTournament, setActiveTournament] = useState({})
     const [activeTournamentPlayers, setActiveTournamentPlayers] = useState([])
@@ -14,7 +15,7 @@ export const ActiveTournament = () => {
     //managing tournament state variables
     const [currentRound, setCurrentRound] = useState(0)
     const [editScores, setEditScores] = useState(false)
-    const [editPlayers, setEditPlayers] = useState(false)
+    // const [editPlayers, setEditPlayers] = useState(false)
 
     //tournament process state variables
     const [resultsForTieBreak, updateResultsForTieBreak] = useState([])
@@ -52,6 +53,7 @@ export const ActiveTournament = () => {
         winner_model_type: "",
         bye: true
     })
+
     //setting active tournament here from tournaments
     useEffect(
         () => {
@@ -67,7 +69,7 @@ export const ActiveTournament = () => {
                     return activeTournament?.guest_competitors?.find(gc => p.guest_id === gc.guest_id)
                 }
                 else {
-                    return activeTournament?.competitors?.find(c => c === p.id)
+                    return activeTournament?.competitors?.find(c => c.id === p.id)
                 }
             })
             setActiveTournamentPlayers(playersForSelectedTournament)
@@ -190,7 +192,7 @@ export const ActiveTournament = () => {
     //         setScoreObj(scoreBoardObj)
     //     }, [resultsForTieBreak]
     // )
-    
+
     useEffect(
         () => {
             if (selectedTournament) {
@@ -216,9 +218,8 @@ export const ActiveTournament = () => {
                 }
                 setScoreObj(scoreBoardObj)
             }
-        },[scoreCard]
+        }, [scoreCard]
     )
-    console.log(scoreObj)
     const resetTournaments = () => {
         getAllTournaments()
             .then(data => setTournaments(data))
@@ -672,10 +673,11 @@ export const ActiveTournament = () => {
                         </div>
                     </div>
                     {editPlayers ? <div id="editPlayersModal" className="setCustomFont">
-                        <div id="editPlayersHeader">
-                            <h3>Edit Players</h3>
-                            <button className="buttonStyleReject" onClick={() => setEditPlayers(false)}>cancel</button>
-                        </div>
+                        <EditPlayersModal
+                            activeTournamentObj={activeTournament}
+                            // tournamentId={selectedTournament}
+                            setEdit={setEditPlayers}
+                        />
                     </div> : ""}
                     <div id="activeTournamentHeader">
                         <div className="setColor setTournamentFontSize">{activeTournament.title}</div>
@@ -828,7 +830,7 @@ export const ActiveTournament = () => {
                                                                 <td key={guestIdOrId + '--' + index}>{s}</td>
                                                             )
                                                         }
-                                                        else{
+                                                        else {
                                                             return (
                                                                 <td key={guestIdOrId + '--' + index}></td>
                                                             )

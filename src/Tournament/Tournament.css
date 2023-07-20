@@ -1016,6 +1016,9 @@
         background-color: #20202099;
 
     }
+    #editPlayersContainer {
+        width: 100%;
+    }
     #editPlayersHeader {
         display: flex;
         justify-content: space-between;

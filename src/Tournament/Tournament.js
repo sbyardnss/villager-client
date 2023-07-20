@@ -262,7 +262,7 @@ export const Tournament = () => {
                                 className="text-input"
                                 id="newGuestInput"
                                 type="text"
-                                placeholder="guest name"
+                                placeholder="new guest name"
                                 onChange={(e) => {
                                     const copy = { ...newGuest }
                                     copy.full_name = e.target.value

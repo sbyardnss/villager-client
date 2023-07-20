@@ -14,13 +14,13 @@ export const ActiveTournament = () => {
     //managing tournament state variables
     const [currentRound, setCurrentRound] = useState(0)
     const [editScores, setEditScores] = useState(false)
+    const [editPlayers, setEditPlayers] = useState(false)
 
     //tournament process state variables
     const [resultsForTieBreak, updateResultsForTieBreak] = useState([])
     const [byePlayer, setByePlayer] = useState(0)
     const [scoreObj, setScoreObj] = useState({})
 
-    const opponentScoreCell = useRef()
     //prepping data for api state variables
     const [gameForApi, updateGameForApi] = useState({
         player_w: 0,
@@ -181,9 +181,6 @@ export const ActiveTournament = () => {
                         }
                     }
                     scoreBoardObj[playerIdentifier] = count
-                    // console.log(playerResults)
-                    // console.log(playerIdentifier)
-                    // console.log(count)
                 }
             }
             setScoreObj(scoreBoardObj)
@@ -417,15 +414,15 @@ export const ActiveTournament = () => {
                                 currentRoundMatchups?.map(matchup => {
                                     const white = activeTournamentPlayers?.find(player => player.id === matchup.player1 || player.guest_id === matchup.player1)
                                     const black = activeTournamentPlayers?.find(player => player.id === matchup.player2 || player.guest_id === matchup.player2)
-                                    if (black === undefined) {
-                                        return (
-                                            <tr key={`${matchup.round} -- ${matchup.match} -- bye`} className="setColor setCustomFont">
-                                                <td>{white?.username || white?.full_name}</td>
-                                                <td></td>
-                                                <td>bye</td>
-                                            </tr>
-                                        )
-                                    }
+                                    // if (black === undefined) {
+                                    //     return (
+                                    //         <tr key={`${matchup.round} -- ${matchup.match} -- bye`} className="setColor setCustomFont">
+                                    //             <td>{white?.username || white?.full_name}</td>
+                                    //             <td></td>
+                                    //             <td>bye</td>
+                                    //         </tr>
+                                    //     )
+                                    // }
                                     if (white?.id && black?.id) {
                                         return (
                                             <tr key={matchup.round + matchup.match}>
@@ -641,6 +638,12 @@ export const ActiveTournament = () => {
                             }}>cancel</button>
                         </div>
                     </div>
+                    {editPlayers ? <div id="editPlayersModal" className="setCustomFont">
+                        <div id="editPlayersHeader">
+                            <h3>Edit Players</h3>
+                            <button className="buttonStyleReject" onClick={() => setEditPlayers(false)}>cancel</button>
+                        </div>
+                    </div> : ""}
                     <div id="activeTournamentHeader">
                         <div className="setColor setTournamentFontSize">{activeTournament.title}</div>
                         <button
@@ -675,6 +678,9 @@ export const ActiveTournament = () => {
                                 // setScoring(false)
                             }}>edit scores</button>
                         {scoringButtonOrNone()}
+                        <button className="progressionControlBtn controlBtnApprove" onClick={() => {
+                            setEditPlayers(true)
+                        }}>edit players</button>
                         <button
                             className="progressionControlBtn controlBtnApprove"
                             onClick={() => {
@@ -703,6 +709,7 @@ export const ActiveTournament = () => {
                             <tbody>
                                 {
                                     activeTournamentPlayers.map(tourneyPlayer => {
+                                        console.log(tourneyPlayer)
                                         const tourneyPlayerGames = tournamentGames.filter(tg => {
                                             if (tourneyPlayer.guest_id) {
                                                 return tg.player_b?.guest_id === tourneyPlayer.guest_id || tg.player_w.guest_id === tourneyPlayer.guest_id

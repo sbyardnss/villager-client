@@ -999,4 +999,27 @@
         display: flex;
         justify-content: center;
     }
+
+    /* edit players */
+    #editPlayersModal {
+        position: fixed;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        top: 20%;
+        width: 20em;
+        height: 30em;
+        padding: .5em;
+        border: 1px solid #694873;
+        border-radius: 6px;
+        backdrop-filter: blur(30px);
+        background-color: #20202099;
+
+    }
+    #editPlayersHeader {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 90%;
+    }
 }

@@ -194,11 +194,11 @@ export const ActiveTournament = () => {
         () => {
             if (selectedTournament) {
                 getScoreCard(selectedTournament)
-                .then(data => setScoreCard(data))
+                    .then(data => setScoreCard(data))
             }
-        },[selectedTournament]
+        }, [selectedTournament, tournamentGames]
     )
-    
+
     const resetTournaments = () => {
         getAllTournaments()
             .then(data => setTournaments(data))
@@ -720,7 +720,9 @@ export const ActiveTournament = () => {
                                 </tr>
                             </thead>
                             <tbody>
-                                {
+
+
+                                {/* {
                                     activeTournamentPlayers.map(tourneyPlayer => {
                                         const tourneyPlayerGames = tournamentGames.filter(tg => {
                                             if (tourneyPlayer.guest_id) {
@@ -777,11 +779,46 @@ export const ActiveTournament = () => {
                                                     })
                                                 }
                                                 {emptyCellCompensation()}
-                                                {/* <td key={tourneyPlayer.guest_id ? tourneyPlayer.guest_id + "-- score" : tourneyPlayer.id + "-- score"} id={tourneyPlayer.guest_id ? tourneyPlayer.guest_id + "-- score" : tourneyPlayer.id + "-- score"} value={score || 0}>
-                                                        {score}
-                                                */}
                                                 <td key={guestIdOrId + "-- score"} id={guestIdOrId + "-- score"} value={scoreObj[guestIdOrId]}>
                                                     {scoreObj[guestIdOrId]}
+                                                </td>
+                                            </tr>
+                                        )
+                                    })
+                                } */}
+
+                                {
+                                    activeTournamentPlayers.map(tourneyPlayer => {
+                                        const guestIdOrId = tourneyPlayer.guest_id ? tourneyPlayer.guest_id : tourneyPlayer.id
+                                        const tourneyPlayerScores = scoreCard[guestIdOrId]
+                                        let score = 0
+
+                                        return (
+                                            <tr key={tourneyPlayer.guest_id ? tourneyPlayer.guest_id : tourneyPlayer.id} id={tourneyPlayer.id + "--tourneyRow"}>
+                                                <td key={tourneyPlayer.id} className="tablePlayerCell">{tourneyPlayer.full_name}</td>
+                                                {
+                                                    tourneyPlayerScores?.map(s => {
+                                                        if (typeof s === 'number') {
+                                                            score += s
+                                                        }
+                                                        if (s === 'bye') {
+                                                            score += 1
+                                                        }
+                                                        if (s !== 'none') {
+                                                            return (
+                                                                <td>{s}</td>
+                                                            )
+                                                        }
+                                                        else{
+                                                            return (
+                                                                <td></td>
+                                                            )
+                                                        }
+
+                                                    })
+                                                }
+                                                <td key={guestIdOrId + "-- score"} id={guestIdOrId + "-- score"} value={scoreObj[guestIdOrId]}>
+                                                    {score}
                                                 </td>
                                             </tr>
                                         )

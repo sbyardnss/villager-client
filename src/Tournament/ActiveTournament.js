@@ -1,6 +1,6 @@
 import { useState, useEffect, useContext, useRef } from "react"
 import { TournamentContext } from "./TournamentProvider"
-import { alterGame, endTournament, getAllTournaments, sendNewGame, updateTournament } from "../ServerManager"
+import { alterGame, endTournament, getAllTournaments, getScoreCard, sendNewGame, updateTournament } from "../ServerManager"
 import "./Tournament.css"
 
 
@@ -20,6 +20,9 @@ export const ActiveTournament = () => {
     const [resultsForTieBreak, updateResultsForTieBreak] = useState([])
     const [byePlayer, setByePlayer] = useState(0)
     const [scoreObj, setScoreObj] = useState({})
+
+    // new scorecard state variable
+    const [scoreCard, setScoreCard] = useState({})
 
     //prepping data for api state variables
     const [gameForApi, updateGameForApi] = useState({
@@ -158,6 +161,7 @@ export const ActiveTournament = () => {
             updateResultsForTieBreak(resultsForTieBreak)
         }, [tournamentGames, selectedTournament]
     )
+    //this might not be necessary after new scoring method
     useEffect(
         () => {
             const scoreBoardObj = {}
@@ -186,6 +190,15 @@ export const ActiveTournament = () => {
             setScoreObj(scoreBoardObj)
         }, [resultsForTieBreak]
     )
+    useEffect(
+        () => {
+            if (selectedTournament) {
+                getScoreCard(selectedTournament)
+                .then(data => setScoreCard(data))
+            }
+        },[selectedTournament]
+    )
+    
     const resetTournaments = () => {
         getAllTournaments()
             .then(data => setTournaments(data))
@@ -709,7 +722,6 @@ export const ActiveTournament = () => {
                             <tbody>
                                 {
                                     activeTournamentPlayers.map(tourneyPlayer => {
-                                        console.log(tourneyPlayer)
                                         const tourneyPlayerGames = tournamentGames.filter(tg => {
                                             if (tourneyPlayer.guest_id) {
                                                 return tg.player_b?.guest_id === tourneyPlayer.guest_id || tg.player_w.guest_id === tourneyPlayer.guest_id

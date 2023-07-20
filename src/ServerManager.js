@@ -179,6 +179,16 @@ export const getChessClub = (clubId) => {
     })
         .then(res => res.json())
 }
+export const getScoreCard = (tournamentId) => {
+    const localVillagerObj = getToken()
+    return fetch(`${apiKey}/tournaments/${tournamentId}/score_card`, {
+        headers: {
+            "Authorization": `Token ${localVillagerObj.token}`,
+            "Content-Type": "application/json"
+        }
+    })
+        .then(res => res.json())
+}
 
 
 

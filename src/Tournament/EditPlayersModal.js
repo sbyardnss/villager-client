@@ -81,23 +81,63 @@ export const EditPlayersModal = ({ activeTournamentObj, setEdit, playedRounds })
     // console.log(tournamentObj.pairings)
     const createNewPairings = () => {
         //get old pairings
-        const oldPairings = activeTournamentObj.pairings
-        const oldPairingsSimplified = oldPairings.map(op => {
-            return [op.player1, op.player2]
+        const oldPairings = tournamentObj.pairings.filter(p => {
+            if (p.round <= playedRounds) {
+                return p
+            }
         })
+        console.log(oldPairings)
+        // const oldPairingsSimplified = oldPairings.map(op => {
+        //     return [op.player1, op.player2]
+        // })
         
+
         //create full player arr for new player list
         const registeredPlayerIdArr = tournamentObj.competitors.map(c => { return c.id })
         const guestPlayerIdArr = tournamentObj.guest_competitors.map(gc => { return gc.guest_id })
         const allPlayers = registeredPlayerIdArr.concat(guestPlayerIdArr)
         //create new pairings
         const newPairings = RoundRobin(registeredPlayerIdArr.concat(guestPlayerIdArr))
-        const newPairingsSimplified = newPairings.map(op => {
-            return [op.player1, op.player2]
+        //this line removes duplicates from new pairings
+        const removeDupPairings = newPairings.filter(np => {
+            const pair = [np.player1, np.player2]
+            return !oldPairings.find(op => op?.player1 === pair[0] && op.player2 === pair[1]) && !oldPairings.find(op => op?.player1 === pair[1] && op.player2 === pair[0])
         })
-        //NEED TO FIGURE OUT HOW TO REMOVE DUPLICATES HERE OR TRY NEW METHOD
+        const newPairingsSansDuplicatesSimplified = removeDupPairings.map(rdp => {
+            return [rdp.player1, rdp.player2]
+        })
+        const nextRound = oldPairings[oldPairings.length - 1]?.round + 1 //add to round numbers on new objects after creation
+        // let gamesPerRound = 0
+        // if (allPlayers.length %2 === 0) {
+        //     gamesPerRound = allPlayers.length /2
+        // }
+        // else {
+        //     gamesPerRound =( allPlayers.length +1) / 2
+        // }
+        const gamesPerRound = allPlayers.length %2 === 0 ? allPlayers.length /2 : ( allPlayers.length +1) / 2
+        // console.log(gamesPerRound)
+        let gamesPerRoundStart = 1
+        let assignedRound = nextRound
+        const outputPairings = []
+        for (let i=0; i< newPairingsSansDuplicatesSimplified.length; i++){
+            // format for output matchups {round: 1, match: 1, player1: 1, player2: 2}
+            //these five lines below plus the gamesPerRoundStart ++ at end makes a loop of rounds and matches per round. 
+            // console.log added for reference
+            if (gamesPerRoundStart === gamesPerRound + 1) {
+                gamesPerRoundStart = 1
+                assignedRound ++
+            }
+            // console.log(`round ${assignedRound} -- match ${gamesPerRoundStart}`)
+
+            //building new output objects and pushing into finalOutput array
+            const newOutputPairing = {round: assignedRound, match: gamesPerRoundStart, player1: newPairingsSansDuplicatesSimplified[i][0], player2: newPairingsSansDuplicatesSimplified[i][1]}
+            outputPairings.push(newOutputPairing)
+            
+            gamesPerRoundStart ++
+        }
+        console.log(oldPairings.concat(outputPairings))
     }
-    
+    createNewPairings()
     return (
         <article id="editPlayersContainer">
             <div id="editPlayersHeader">

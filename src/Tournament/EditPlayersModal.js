@@ -86,7 +86,6 @@ export const EditPlayersModal = ({ activeTournamentObj, setEdit, playedRounds })
                 return p
             }
         })
-        console.log(oldPairings)
         // const oldPairingsSimplified = oldPairings.map(op => {
         //     return [op.player1, op.player2]
         // })
@@ -102,6 +101,12 @@ export const EditPlayersModal = ({ activeTournamentObj, setEdit, playedRounds })
         const removeDupPairings = newPairings.filter(np => {
             const pair = [np.player1, np.player2]
             return !oldPairings.find(op => op?.player1 === pair[0] && op.player2 === pair[1]) && !oldPairings.find(op => op?.player1 === pair[1] && op.player2 === pair[0])
+        })
+        removeDupPairings?.map(pairing => {
+            if (pairing.player1 === null) {
+                pairing.player1 = pairing.player2
+                pairing.player2 = null
+            }
         })
         const newPairingsSansDuplicatesSimplified = removeDupPairings.map(rdp => {
             return [rdp.player1, rdp.player2]

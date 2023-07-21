@@ -79,6 +79,7 @@ export const EditPlayersModal = ({ activeTournamentObj, setEdit, playedRounds })
         }, [search, showGuests, playersAndGuests, players, guests, clubGuests, clubPlayers]
     )
     // console.log(tournamentObj.pairings)
+    const outputMatchups = []
     const createNewPairings = () => {
         //get old pairings
         const oldPairings = tournamentObj.pairings.filter(p => {
@@ -89,8 +90,6 @@ export const EditPlayersModal = ({ activeTournamentObj, setEdit, playedRounds })
         // const oldPairingsSimplified = oldPairings.map(op => {
         //     return [op.player1, op.player2]
         // })
-        
-
         //create full player arr for new player list
         const registeredPlayerIdArr = tournamentObj.competitors.map(c => { return c.id })
         const guestPlayerIdArr = tournamentObj.guest_competitors.map(gc => { return gc.guest_id })
@@ -102,15 +101,92 @@ export const EditPlayersModal = ({ activeTournamentObj, setEdit, playedRounds })
             const pair = [np.player1, np.player2]
             return !oldPairings.find(op => op?.player1 === pair[0] && op.player2 === pair[1]) && !oldPairings.find(op => op?.player1 === pair[1] && op.player2 === pair[0])
         })
-        removeDupPairings?.map(pairing => {
-            if (pairing.player1 === null) {
-                pairing.player1 = pairing.player2
-                pairing.player2 = null
+        const gamesPerRound = allPlayers.length % 2 === 0 ? allPlayers.length / 2 : (allPlayers.length + 1) / 2
+        let numberOfPotentialCartesianMatchups = removeDupPairings.length
+        let playerReference = [...allPlayers]
+        
+        const playerOpponentsReferenceObj = {}
+        for (const playerId of allPlayers) {
+            playerOpponentsReferenceObj[playerId] = []
+        }
+        //reference max possibility of game matchups
+        while (numberOfPotentialCartesianMatchups > gamesPerRound){
+            let count = 0
+            //matchup arr for round matchups
+            const roundMatchups = []
+            //random number generator for length
+            const randomNumberFromArrLength = () => {
+                return Math.floor(Math.random()*playerReference.length)
             }
-        })
+            //create random pairing
+            const createRandomMatchup = () => {
+                //splicing players from player reference arr
+                const targetPlayer1Id = playerReference.splice(randomNumberFromArrLength(),1)[0]
+                const targetPlayer2Id = playerReference.splice(randomNumberFromArrLength(),1)[0]
+                return [targetPlayer1Id, targetPlayer2Id]
+            }
+            const runCreateMatchUpsAndAddToRoundArr = () => {
+                const newMatchup = createRandomMatchup()
+                const matchupPlayer1 = newMatchup[0]
+                const matchupPlayer2 = newMatchup[1]
+                if (oldPairings.find(op => (op.player1 === matchupPlayer1 && op.player2 === matchupPlayer2) ||(op.player1 === matchupPlayer2 && op.player2 === matchupPlayer1))){
+                    if (count < 11) {
+                        count++
+                        return runCreateMatchUpsAndAddToRoundArr()
+                    }
+                }
+                else {
+                    roundMatchups.concat(newMatchup)
+                    //check for one player left and add to round matchups if so
+                    if (playerReference.length === 1) {
+                        const byePlayerId = playerReference.splice(0,1)[0]
+                        roundMatchups.concat([byePlayerId, null])
+                        outputMatchups.concat(roundMatchups)
+                        console.log(outputMatchups)
+                        if (numberOfPotentialCartesianMatchups > gamesPerRound && count < 11){
+                            playerReference = [...allPlayers]
+                            count++
+                            runCreateMatchUpsAndAddToRoundArr()
+                        }
+                    }
+                    //remove number of matchups created via games per round on each iteration and reset playersReference
+                    if(playerReference.length === 0){
+                        outputMatchups.concat(roundMatchups)
+                        if (numberOfPotentialCartesianMatchups > gamesPerRound  && count < 11){
+                            playerReference = [...allPlayers]
+                            count++
+                            runCreateMatchUpsAndAddToRoundArr()
+                        }
+                    }
+                    numberOfPotentialCartesianMatchups=numberOfPotentialCartesianMatchups-gamesPerRound
+                }
+            }
+            if (playerReference.length >=2 && count < 11){
+                runCreateMatchUpsAndAddToRoundArr()
+            }
+            console.log(outputMatchups)
+        }
         const newPairingsSansDuplicatesSimplified = removeDupPairings.map(rdp => {
+            if (rdp.player1 === null) {
+                return [rdp.player2, rdp.player1]
+            }
             return [rdp.player1, rdp.player2]
         })
+        //ripped code from online. FIGURE OUT WHY THIS WORKS
+        // const gamesPerRound = allPlayers.length % 2 === 0 ? allPlayers.length / 2 : (allPlayers.length + 1) / 2
+        //CARTESIAN ATTEMPT CODE FOR INITIAL MATCHUPS
+        // const f = (a, b) => [].concat(...a.map(d => b.map(e => [].concat(d, e))));
+        // const cartesian = (a, b, ...c) => (b ? cartesian(f(a, b), ...c) : a);
+        // const cartesianMatchups = cartesian(newPairingsSansDuplicatesSimplified)
+        // const orderedMatchupOutput = []
+        // let cartesianReference = [...cartesianMatchups]
+        // console.log(cartesianReference)
+        
+   
+
+
+        //code from her to below for recreating matchup object format
+        //DONT TOUCH FROM HER TO END OF FUNCTION YET
         const nextRound = oldPairings[oldPairings.length - 1]?.round + 1 //add to round numbers on new objects after creation
         // let gamesPerRound = 0
         // if (allPlayers.length %2 === 0) {
@@ -119,30 +195,32 @@ export const EditPlayersModal = ({ activeTournamentObj, setEdit, playedRounds })
         // else {
         //     gamesPerRound =( allPlayers.length +1) / 2
         // }
-        const gamesPerRound = allPlayers.length %2 === 0 ? allPlayers.length /2 : ( allPlayers.length +1) / 2
-        // console.log(gamesPerRound)
-        let gamesPerRoundStart = 1
-        let assignedRound = nextRound
-        const outputPairings = []
-        for (let i=0; i< newPairingsSansDuplicatesSimplified.length; i++){
-            // format for output matchups {round: 1, match: 1, player1: 1, player2: 2}
-            //these five lines below plus the gamesPerRoundStart ++ at end makes a loop of rounds and matches per round. 
-            // console.log added for reference
-            if (gamesPerRoundStart === gamesPerRound + 1) {
-                gamesPerRoundStart = 1
-                assignedRound ++
-            }
-            // console.log(`round ${assignedRound} -- match ${gamesPerRoundStart}`)
+        // // console.log(gamesPerRound)
+        // let gamesPerRoundStart = 1
+        // let assignedRound = nextRound
+        // const outputPairings = []
+        // // 
+        // for (let i=0; i< newPairingsSansDuplicatesSimplified.length; i++){
+        //     // format for output matchups {round: 1, match: 1, player1: 1, player2: 2}
+        //     //these five lines below plus the gamesPerRoundStart ++ at end makes a loop of rounds and matches per round. 
+        //     // console.log added for reference
+        //     if (gamesPerRoundStart === gamesPerRound + 1) {
+        //         gamesPerRoundStart = 1
+        //         assignedRound ++
+        //     }
+        //     // console.log(`round ${assignedRound} -- match ${gamesPerRoundStart}`)
 
-            //building new output objects and pushing into finalOutput array
-            const newOutputPairing = {round: assignedRound, match: gamesPerRoundStart, player1: newPairingsSansDuplicatesSimplified[i][0], player2: newPairingsSansDuplicatesSimplified[i][1]}
-            outputPairings.push(newOutputPairing)
-            
-            gamesPerRoundStart ++
-        }
-        console.log(oldPairings.concat(outputPairings))
+        //     //building new output objects and pushing into finalOutput array
+        //     const newOutputPairing = {round: assignedRound, match: gamesPerRoundStart, player1: newPairingsSansDuplicatesSimplified[i][0], player2: newPairingsSansDuplicatesSimplified[i][1]}
+        //     outputPairings.push(newOutputPairing)
+
+        //     gamesPerRoundStart ++
+        // }
+        // console.log(oldPairings)
+        // console.log(newPairings)
     }
-    createNewPairings()
+    console.log(outputMatchups)
+    // createNewPairings()
     return (
         <article id="editPlayersContainer">
             <div id="editPlayersHeader">

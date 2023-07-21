@@ -2,16 +2,17 @@ import { useContext, useEffect, useState } from "react"
 import { TournamentContext } from "./TournamentProvider"
 import "./Tournament.css"
 import { createNewGuest, getChessClub } from "../ServerManager"
-import { RoundRobin } from "tournament-pairings"
+import { RoundRobin, Swiss } from "tournament-pairings"
 
 
-export const EditPlayersModal = ({ activeTournamentObj, setEdit }) => {
+export const EditPlayersModal = ({ activeTournamentObj, setEdit, playedRounds }) => {
     const { localVillagerObj, players, guests, playersAndGuests, setPlayersAndGuests, selectedClubObj, selectedClub, resetGuests } = useContext(TournamentContext)
     const [potentialCompetitors, setPotentialCompetitors] = useState([])
     const [search, setSearch] = useState("")
     const [showGuests, setShowGuests] = useState(false)
     const [clubPlayers, setClubPlayers] = useState([])
     const [clubGuests, setClubGuests] = useState([])
+    const [initialPlayersAndGuests, setInitialPlayersAndGuests] = useState([])
     const [newGuest, updateNewGuest] = useState({
         full_name: "",
         club: 0
@@ -30,7 +31,11 @@ export const EditPlayersModal = ({ activeTournamentObj, setEdit }) => {
     })
     useEffect(
         () => {
-            updatedTournamentObj(activeTournamentObj)
+            const tourneyCopy = { ...activeTournamentObj }
+            updatedTournamentObj(tourneyCopy)
+            const initPlayers = [...activeTournamentObj.competitors]
+            const initGuests = [...activeTournamentObj.guest_competitors]
+            setInitialPlayersAndGuests(initPlayers.concat(initGuests))
         }, [activeTournamentObj]
     )
     useEffect(
@@ -64,33 +69,43 @@ export const EditPlayersModal = ({ activeTournamentObj, setEdit }) => {
                 setPotentialCompetitors(filteredUsers)
             }
             else {
-                const unselectedPlayers = clubPlayers?.filter(p => !tournamentObj.competitors.find(c => c.id === p.id))
+                const unselectedPlayers = [...clubPlayers]?.filter(p => !tournamentObj.competitors.find(c => c.id === p.id))
                 let unselectedGuests = []
                 if (showGuests) {
-                    unselectedGuests = clubGuests?.filter(g => !tournamentObj.guest_competitors.find(gc => gc.id === g.id))
+                    unselectedGuests = [...clubGuests]?.filter(g => !tournamentObj.guest_competitors.find(gc => gc.id === g.id))
                 }
                 setPotentialCompetitors(unselectedPlayers.concat(unselectedGuests))
             }
         }, [search, showGuests, playersAndGuests, players, guests, clubGuests, clubPlayers]
     )
-    console.log(tournamentObj.pairings)
+    // console.log(tournamentObj.pairings)
     const createNewPairings = () => {
-        const oldPairings = [...tournamentObj.pairings]
+        //get old pairings
+        const oldPairings = activeTournamentObj.pairings
+        const oldPairingsSimplified = oldPairings.map(op => {
+            return [op.player1, op.player2]
+        })
+        
+        //create full player arr for new player list
         const registeredPlayerIdArr = tournamentObj.competitors.map(c => { return c.id })
         const guestPlayerIdArr = tournamentObj.guest_competitors.map(gc => { return gc.guest_id })
+        const allPlayers = registeredPlayerIdArr.concat(guestPlayerIdArr)
+        //create new pairings
         const newPairings = RoundRobin(registeredPlayerIdArr.concat(guestPlayerIdArr))
-        const removeDupPairings = newPairings.filter(np => {
-            const pair = [np.player1, np.player2]
-            return !oldPairings.find(op => op.player1 === pair[0] && op.player2 === pair[1]) && !oldPairings.find(op => op.player1 === pair[1] && op.player2 === pair[0])
+        const newPairingsSimplified = newPairings.map(op => {
+            return [op.player1, op.player2]
         })
-        return oldPairings.concat(removeDupPairings)
+        //NEED TO FIGURE OUT HOW TO REMOVE DUPLICATES HERE OR TRY NEW METHOD
     }
-    console.log(createNewPairings())
+    
     return (
         <article id="editPlayersContainer">
             <div id="editPlayersHeader">
                 <h3>Edit Players</h3>
-                <button className="buttonStyleReject" onClick={() => setEdit(false)}>cancel</button>
+                <button className="buttonStyleReject" onClick={() => {
+                    setEdit(false)
+                    updatedTournamentObj(activeTournamentObj)
+                }}>cancel</button>
             </div>
             <div id="tournamentPlayerSelectionSection">
                 <div id="competitorSelectionSplit">

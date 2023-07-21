@@ -677,6 +677,7 @@ export const ActiveTournament = () => {
                             activeTournamentObj={activeTournament}
                             // tournamentId={selectedTournament}
                             setEdit={setEditPlayers}
+                            playedRounds = {currentRound}
                         />
                     </div> : ""}
                     <div id="activeTournamentHeader">

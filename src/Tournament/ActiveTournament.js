@@ -3,6 +3,7 @@ import { TournamentContext } from "./TournamentProvider"
 import { alterGame, endTournament, getAllTournaments, getScoreCard, sendNewGame, updateTournament } from "../ServerManager"
 import "./Tournament.css"
 import { EditPlayersModal } from "./EditPlayersModal"
+import { Swiss } from "tournament-pairings"
 
 
 export const ActiveTournament = () => {
@@ -106,7 +107,6 @@ export const ActiveTournament = () => {
             }
         }, [activeTournamentPlayers, tournamentGames]
     )
-    console.log(playerOpponentsReferenceObj)
 
     //setting round from active tournament
     useEffect(
@@ -734,7 +734,22 @@ export const ActiveTournament = () => {
                                         sendNewGame(byeGame)
                                     }
                                     const tournamentCopy = { ...activeTournament }
+                                    const playersArg = []
+                                    for (const opponentRef in playerOpponentsReferenceObj){
+                                        const playerRefObj = {
+                                            id: parseInt(opponentRef) || opponentRef,
+                                            avoid: playerOpponentsReferenceObj[opponentRef].filter(ref=> ref !== 'bye')
+                                        }
+                                        
+                                        if (playerOpponentsReferenceObj[opponentRef].includes('bye')){
+                                            playerRefObj.receivedBye = true
+                                        }
+                                        playersArg.push(playerRefObj)
+                                    }
+                                    // console.log(playersArg)
+                                    tournamentCopy.pairings = tournamentCopy.pairings.concat(Swiss(playersArg, currentRound + 1))
                                     tournamentCopy.rounds++
+                                    // console.log(tournamentCopy)
                                     updateTournament(tournamentCopy)
                                         .then(() => {
                                             resetTournaments()

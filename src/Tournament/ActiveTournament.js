@@ -685,8 +685,10 @@ export const ActiveTournament = () => {
                         <button
                             className="progressionControlBtn buttonStyleReject"
                             onClick={() => {
+                                setEditPlayers(false)
                                 setSelectedTournament(0)
                                 setEditScores(false)
+                                
                                 // setScoring(false)
                             }}>exit</button>
                     </div>

@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext } from "react"
-import { RoundRobin } from "tournament-pairings"
+import { RoundRobin, Swiss } from "tournament-pairings"
 import { TournamentContext } from "./TournamentProvider"
 import "./Tournament.css"
 import { alterGame, createNewGuest, getAllGuestPlayers, getAllPlayers, getAllTournaments, getMyChessClubs, sendNewTournament } from "../ServerManager"
@@ -67,6 +67,7 @@ export const Tournament = () => {
             }
         }, [search, showGuests, playersAndGuests, newTournament, createTournament]
     )
+    console.log()
     const resetNewTournament = () => {
         updateNewTournament({
             title: "",

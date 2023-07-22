@@ -6,7 +6,7 @@ import { alterGame, createNewGuest, getAllGuestPlayers, getAllPlayers, getAllTou
 import { ActiveTournament } from "./ActiveTournament"
 
 export const Tournament = () => {
-    const { localVillagerObj, tournaments, setTournaments, players, setPlayers, timeSettings, selectedTournament, setSelectedTournament, setGuests, guests, playersAndGuests, selectedClub, setSelectedClub, selectedClubObj, setSelectedClubObj, clubPlayers, clubGuests, resetGuests } = useContext(TournamentContext)
+    const { localVillagerObj, tournaments, setTournaments, players, setPlayers, timeSettings, selectedTournament, setSelectedTournament, setGuests, guests, playersAndGuests, selectedClub, setSelectedClub, selectedClubObj, setSelectedClubObj, clubPlayers, clubGuests, resetGuests, myChessClubs, setMyChessClubs } = useContext(TournamentContext)
     const [potentialCompetitors, setPotentialCompetitors] = useState([])
     const [pastTournaments, setPastTournaments] = useState(false)
     const [search, setSearch] = useState("")
@@ -15,7 +15,7 @@ export const Tournament = () => {
     // const [createGuest, setCreateGuest] = useState(false)
     // const [selectedClub, setSelectedClub] = useState(0)
     // const [selectedClubObj, setSelectedClubObj] = useState({})
-    const [myChessClubs, setMyChessClubs] = useState([])
+    // const [myChessClubs, setMyChessClubs] = useState([])
     const [newGuest, updateNewGuest] = useState({
         full_name: "",
         club: 0
@@ -32,21 +32,28 @@ export const Tournament = () => {
         pairings: [],
         club: 0
     })
-    useEffect(
-        () => {
-            getMyChessClubs()
-                .then(data => setMyChessClubs(data))
-        }, []
-    )
+    // useEffect(
+    //     () => {
+    //         getMyChessClubs()
+    //             .then(data => setMyChessClubs(data))
+    //     }, []
+    // )
+    
     
     useEffect(
         () => {
-            const club = myChessClubs.find(club => club.id === selectedClub)
-            setSelectedClubObj(club)
+            // const club = myChessClubs.find(club => club.id === selectedClub)
+            // setSelectedClubObj(club)
             const guestCopy = { ...newGuest }
             guestCopy.club = selectedClub
             updateNewGuest(guestCopy)
-        }, [selectedClub]
+        }, [selectedClubObj]
+    )
+    useEffect(
+        () => {
+            console.log(clubGuests)//not updating
+            console.log(guests)//updating
+        },[guests]
     )
     //search player useEffect
     useEffect(
@@ -67,7 +74,6 @@ export const Tournament = () => {
             }
         }, [search, showGuests, playersAndGuests, newTournament, createTournament]
     )
-    console.log()
     const resetNewTournament = () => {
         updateNewTournament({
             title: "",
@@ -335,22 +341,22 @@ export const Tournament = () => {
                                                     const copy = { ...newTournament }
                                                     const registeredPairingArr = newTournament.competitors.map(c => { return c.id })
                                                     const guestPairingArr = newTournament.guest_competitors.map(gc => { return gc.guest_id })
-                                                    if (guestPairingArr) {
-                                                        copy.pairings = RoundRobin(registeredPairingArr.concat(guestPairingArr))
-                                                        copy.competitors = registeredPairingArr
-                                                        copy.guest_competitors = newTournament.guest_competitors.map(gc => { return gc.id })
-                                                    }
-                                                    else {
-                                                        copy.pairings = RoundRobin(registeredPairingArr)
-                                                        copy.competitors = registeredPairingArr
-                                                    }
-                                                    // copy.pairings = RoundRobin(newTournament.competitors)
-                                                    sendNewTournament(copy)
-                                                        .then(() => {
-                                                            resetTournaments()
-                                                            setCreateTournament(false)
-                                                            setShowGuests(false)
-                                                        })
+                                                    // if (guestPairingArr) {
+                                                    //     copy.pairings = RoundRobin(registeredPairingArr.concat(guestPairingArr))
+                                                    //     copy.competitors = registeredPairingArr
+                                                    //     copy.guest_competitors = newTournament.guest_competitors.map(gc => { return gc.id })
+                                                    // }
+                                                    // else {
+                                                    //     copy.pairings = RoundRobin(registeredPairingArr)
+                                                    //     copy.competitors = registeredPairingArr
+                                                    // }
+                                                    // // copy.pairings = RoundRobin(newTournament.competitors)
+                                                    // sendNewTournament(copy)
+                                                    //     .then(() => {
+                                                    //         resetTournaments()
+                                                    //         setCreateTournament(false)
+                                                    //         setShowGuests(false)
+                                                    //     })
                                                 }
                                             }
                                         }

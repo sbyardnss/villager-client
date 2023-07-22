@@ -1,5 +1,5 @@
 import { useState, useEffect, createContext } from "react";
-import { getAllGuestPlayers, getAllPlayers, getAllTimeSettings, getMyTournaments, getTournamentGames } from "../ServerManager";
+import { getAllGuestPlayers, getAllPlayers, getAllTimeSettings, getMyChessClubs, getMyTournaments, getTournamentGames } from "../ServerManager";
 
 export const TournamentContext = createContext()
 
@@ -12,6 +12,7 @@ export const TournamentProvider = (props) => {
     const [guests, setGuests] = useState([])
     const [timeSettings, setTimeSettings] = useState([])
     const [tournaments, setTournaments] = useState([])
+    const [myChessClubs, setMyChessClubs] = useState([])
 
     //contingent data
     const [tournamentGames, setTournamentGames] = useState([])
@@ -19,7 +20,7 @@ export const TournamentProvider = (props) => {
     const [clubPlayers, setClubPlayers] = useState([])
     const [clubGuests, setClubGuests] = useState([])
     const [selectedClubObj, setSelectedClubObj] = useState({})
-    
+
     //reference variables
     const [selectedTournament, setSelectedTournament] = useState(0)
     const [selectedClub, setSelectedClub] = useState(0)
@@ -28,7 +29,7 @@ export const TournamentProvider = (props) => {
     //remove this asap
     const [games, setGames] = useState([])
 
-    
+
     //KEEP THIS FOR FUTURE ADDITION AND REMOVAL OF PLAYERS MID TOURNAMENT
     // const [pastPairings, setPastPairings] = useState([])
 
@@ -40,17 +41,25 @@ export const TournamentProvider = (props) => {
                 setTournaments(tournamentData)
                 setTimeSettings(timeSettingData)
             })
-        }, [] 
+        }, []
     )
+    useEffect(
+        () => {
+            getMyChessClubs()
+                .then(data => setMyChessClubs(data))
+        }, [players, guests]
+    )
+
     //tournament games disappearing if i move within here at all. should be stable within app though
     useEffect(
-        () => { 
+        () => {
             if (selectedTournament) {
                 getTournamentGames(selectedTournament)
                     .then((data) => setTournamentGames(data))
             }
         }, [selectedTournament]
-    ) 
+    )
+
     //this one is needed currently. find a way to get rid of it
     useEffect(
         () => {
@@ -58,19 +67,29 @@ export const TournamentProvider = (props) => {
             setPlayersAndGuests(allCompetitors)
         }, [players, guests, selectedClub, selectedTournament, editPlayers]
     )
-    
+
+    useEffect(
+        () => {
+            const club = myChessClubs.find(club => club.id === selectedClub)
+            setSelectedClubObj(club)
+        }, [selectedClub, myChessClubs]
+    )
+
 
     //only show guests and players that are in selected club
     //REPLACE STATE VARIABLES FOR GUESTS AND PLAYERS WITH CLUBPLAYERS AND CLUBGUESTS
     useEffect(
         () => {
-            const clubsPlayers = players.filter(p => selectedClubObj?.members?.find(m => m.id === p.id))
-            setClubPlayers(clubsPlayers)
-            const clubsGuests = guests.filter(g => selectedClubObj?.guest_members?.find(gm => gm.id === g.id))
-            setClubGuests(clubsGuests)
-            const allPlayersAndGuests = clubsPlayers.concat(clubsGuests)
-            setPlayersAndGuests(allPlayersAndGuests)
-        }, [selectedClubObj, selectedClub, players, guests]//adding selectedClub to this dependency array causes players to entirely disappear
+            if (selectedClubObj) {
+                const clubsPlayers = players.filter(p => selectedClubObj?.members.find(m => m.id === p.id))
+                setClubPlayers(clubsPlayers)
+                const clubsGuests = guests.filter(g => selectedClubObj?.guest_members.find(gm => gm.id === g.id))
+                console.log(selectedClubObj.guest_members)
+                setClubGuests(clubsGuests)
+                const allPlayersAndGuests = clubsPlayers.concat(clubsGuests)
+                setPlayersAndGuests(allPlayersAndGuests)
+            }
+        }, [selectedClubObj]//adding selectedClub to this dependency array causes players to entirely disappear
     )
 
 
@@ -89,7 +108,8 @@ export const TournamentProvider = (props) => {
             localVillagerObj, players, setPlayers, timeSettings, tournaments, setTournaments, tournamentGames, setGames,
             selectedTournament, setSelectedTournament, resetTournamentGames, resetGuests,
             setGuests, guests, playersAndGuests, setPlayersAndGuests, selectedClub, setSelectedClub,
-            selectedClubObj, setSelectedClubObj,setClubPlayers, clubPlayers, setClubGuests, clubGuests, editPlayers, setEditPlayers
+            selectedClubObj, setSelectedClubObj, setClubPlayers, clubPlayers, setClubGuests, clubGuests, editPlayers, setEditPlayers,
+            myChessClubs, setMyChessClubs
         }}>
             {props.children}
         </TournamentContext.Provider>

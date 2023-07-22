@@ -79,31 +79,34 @@ export const ActiveTournament = () => {
     useEffect(
         //creates reference object for previous opponents for avoid on swiss round creation
         () => {
-            if (tournamentGames && activeTournamentPlayers){
+            if (tournamentGames && activeTournamentPlayers) {
                 let opponentObj = {}
                 activeTournamentPlayers?.map(player => {
-                    if(player.guest_id){
-                        opponentObj[player.guest_id]=[]
+                    if (player.guest_id) {
+                        opponentObj[player.guest_id] = []
                     }
                     else {
                         opponentObj[player.id] = []
                     }
                 })
                 tournamentGames?.map(tg => {
-                    const playerWIdentifier = tg.player_w.guest_id? tg.player_w.guest_id: tg.player_w.id
-                    const playerBIdentifier = tg.player_b?.guest_id? tg.player_b?.guest_id: tg.player_b?.id
-                    if (playerBIdentifier !== undefined) {
+                    const playerWIdentifier = tg.player_w.guest_id ? tg.player_w.guest_id : tg.player_w.id
+                    const playerBIdentifier = tg.player_b?.guest_id ? tg.player_b?.guest_id : tg.player_b?.id
+                    console.log(playerBIdentifier)
+                    console.log(playerWIdentifier)
+                    if (playerBIdentifier === undefined && typeof opponentObj[playerWIdentifier] === 'object') {
+                        opponentObj[playerWIdentifier].push('bye')
+                    }
+                    if (typeof opponentObj[playerWIdentifier] === 'object' && typeof opponentObj[playerBIdentifier] === 'object') {
                         opponentObj[playerWIdentifier].push(playerBIdentifier)
                         opponentObj[playerBIdentifier].push(playerWIdentifier)
-                    }
-                    else {
-                        opponentObj[playerWIdentifier].push('bye')
                     }
                 })
                 updatePlayerOpponentsReferenceObj(opponentObj)
             }
-        },[activeTournamentPlayers, tournamentGames]
+        }, [activeTournamentPlayers, tournamentGames]
     )
+    console.log(playerOpponentsReferenceObj)
 
     //setting round from active tournament
     useEffect(
@@ -707,7 +710,7 @@ export const ActiveTournament = () => {
                             activeTournamentObj={activeTournament}
                             // tournamentId={selectedTournament}
                             setEdit={setEditPlayers}
-                            playedRounds = {currentRound}
+                            playedRounds={currentRound}
                         />
                     </div> : ""}
                     <div id="activeTournamentHeader">

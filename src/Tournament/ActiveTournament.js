@@ -413,8 +413,16 @@ export const ActiveTournament = () => {
     const submitResultsOrNull = () => {
         if (activeTournament?.complete === false) {
             if (activeTournament?.in_person === true) {
+                const byeMatchup = currentRoundMatchups?.find(matchup => matchup.player1 === null || matchup.player2 === null)
+                const whiteBye = activeTournamentPlayers?.find(player => player.id === byeMatchup?.player1 || player.guest_id === byeMatchup?.player1)
+                // const blackBye = activeTournamentPlayers?.find(player => player.id === byeMatchup.player2 || player.guest_id === byeMatchup.player2)
                 return (
                     <section id="tournamentScoringSection">
+                        {byeMatchup ?
+                            <div key={`${byeMatchup.round} -- ${byeMatchup.match} -- bye`} className="setColor setCustomFont">
+                                {whiteBye?.username || whiteBye?.full_name} has bye
+                            </div>
+                            : ""}
                         {
                             currentRoundMatchups?.map(matchup => {
                                 const white = activeTournamentPlayers?.find(player => player.id === matchup.player1 || player.guest_id === matchup.player1)
@@ -422,45 +430,47 @@ export const ActiveTournament = () => {
                                 const copy = { ...gameForApi }
                                 copy.player_w = white?.id
                                 copy.player_b = black?.id
-                                if (black === undefined) {
+                                // if (black === undefined) {
+                                //     return (
+                                //         <div key={`${matchup.round} -- ${matchup.match} -- bye`} className="setColor setCustomFont">
+                                //             {white?.username || white?.full_name} has bye
+                                //         </div>
+                                //     )
+                                // }
+                                if (black !== undefined) {
                                     return (
-                                        <div key={`${matchup.round} -- ${matchup.match} -- bye`} className="setColor setCustomFont">
-                                            {white?.username || white?.full_name} has bye
+                                        <div key={`${matchup.round} -- ${matchup.match}`}
+                                            className="tournamentScoringMatchup">
+                                            <div
+                                                className="whitePiecesMatchup"
+                                                id="whitePieces"
+                                                onClick={(evt) => {
+                                                    handleGameForApiUpdate(evt.target.id, white, black)
+                                                }}>{white?.guest_id ? white.full_name : white?.username}
+                                            </div>
+                                            <div
+                                                className="drawMatchupButton"
+                                                id="drawUpdate"
+                                                onClick={(evt) => {
+                                                    handleGameForApiUpdate(evt.target.id, white, black)
+                                                }}>Draw
+                                            </div>
+                                            <div
+                                                className="blackPiecesMatchup"
+                                                id="blackPieces"
+                                                onClick={(evt) => {
+                                                    handleGameForApiUpdate(evt.target.id, white, black)
+                                                }}>{black?.guest_id ? black.full_name : black?.username}
+                                            </div>
+                                            <button onClick={() => {
+                                                sendNewGame(gameForApi)
+                                                    .then(() => resetTournamentGames())
+                                            }}>
+                                                submit
+                                            </button>
                                         </div>
                                     )
                                 }
-                                return (
-                                    <div key={`${matchup.round} -- ${matchup.match}`}
-                                        className="tournamentScoringMatchup">
-                                        <div
-                                            className="whitePiecesMatchup"
-                                            id="whitePieces"
-                                            onClick={(evt) => {
-                                                handleGameForApiUpdate(evt.target.id, white, black)
-                                            }}>{white?.guest_id ? white.full_name : white?.username}
-                                        </div>
-                                        <div
-                                            className="drawMatchupButton"
-                                            id="drawUpdate"
-                                            onClick={(evt) => {
-                                                handleGameForApiUpdate(evt.target.id, white, black)
-                                            }}>Draw
-                                        </div>
-                                        <div
-                                            className="blackPiecesMatchup"
-                                            id="blackPieces"
-                                            onClick={(evt) => {
-                                                handleGameForApiUpdate(evt.target.id, white, black)
-                                            }}>{black?.guest_id ? black.full_name : black?.username}
-                                        </div>
-                                        <button onClick={() => {
-                                            sendNewGame(gameForApi)
-                                                .then(() => resetTournamentGames())
-                                        }}>
-                                            submit
-                                        </button>
-                                    </div>
-                                )
                             })
                         }
                     </section>
@@ -735,13 +745,13 @@ export const ActiveTournament = () => {
                                     }
                                     const tournamentCopy = { ...activeTournament }
                                     const playersArg = []
-                                    for (const opponentRef in playerOpponentsReferenceObj){
+                                    for (const opponentRef in playerOpponentsReferenceObj) {
                                         const playerRefObj = {
                                             id: parseInt(opponentRef) || opponentRef,
-                                            avoid: playerOpponentsReferenceObj[opponentRef].filter(ref=> ref !== 'bye')
+                                            avoid: playerOpponentsReferenceObj[opponentRef].filter(ref => ref !== 'bye')
                                         }
-                                        
-                                        if (playerOpponentsReferenceObj[opponentRef].includes('bye')){
+
+                                        if (playerOpponentsReferenceObj[opponentRef].includes('bye')) {
                                             playerRefObj.receivedBye = true
                                         }
                                         playersArg.push(playerRefObj)

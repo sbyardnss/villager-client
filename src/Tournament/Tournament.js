@@ -12,15 +12,10 @@ export const Tournament = () => {
     const [search, setSearch] = useState("")
     const [createTournament, setCreateTournament] = useState(false)
     const [showGuests, setShowGuests] = useState(false)
-    // const [createGuest, setCreateGuest] = useState(false)
-    // const [selectedClub, setSelectedClub] = useState(0)
-    // const [selectedClubObj, setSelectedClubObj] = useState({})
-    // const [myChessClubs, setMyChessClubs] = useState([])
     const [newGuest, updateNewGuest] = useState({
         full_name: "",
         club: 0
     })
-    // const [playersAndGuests, setPlayersAndGuests] = useState([])
     const [newTournament, updateNewTournament] = useState({
         title: "",
         creator: localVillagerObj.userId,
@@ -32,29 +27,15 @@ export const Tournament = () => {
         pairings: [],
         club: 0
     })
-    // useEffect(
-    //     () => {
-    //         getMyChessClubs()
-    //             .then(data => setMyChessClubs(data))
-    //     }, []
-    // )
-    
-    
+
     useEffect(
         () => {
-            // const club = myChessClubs.find(club => club.id === selectedClub)
-            // setSelectedClubObj(club)
             const guestCopy = { ...newGuest }
             guestCopy.club = selectedClub
             updateNewGuest(guestCopy)
         }, [selectedClubObj]
     )
-    useEffect(
-        () => {
-            console.log(clubGuests)//not updating
-            console.log(guests)//updating
-        },[guests]
-    )
+
     //search player useEffect
     useEffect(
         () => {
@@ -92,10 +73,10 @@ export const Tournament = () => {
         getAllTournaments()
             .then(data => setTournaments(data))
     }
-    
+
     const resetPlayers = () => {
         getAllPlayers()
-        .then(data => setPlayers(data))
+            .then(data => setPlayers(data))
     }
     const handleChange = (evt) => {
         if (evt.target.checked) {
@@ -218,7 +199,7 @@ export const Tournament = () => {
                                                         const copy = [...potentialCompetitors]
                                                         copy.push(competitor)
                                                         setPotentialCompetitors(copy)
-                                                        
+
 
                                                     }}>
                                                     {player.full_name}
@@ -339,24 +320,30 @@ export const Tournament = () => {
                                             if (newTournament.competitors && newTournament.timeSetting && newTournament.title) {
                                                 if (window.confirm("Everybody ready?")) {
                                                     const copy = { ...newTournament }
-                                                    const registeredPairingArr = newTournament.competitors.map(c => { return c.id })
-                                                    const guestPairingArr = newTournament.guest_competitors.map(gc => { return gc.guest_id })
-                                                    // if (guestPairingArr) {
-                                                    //     copy.pairings = RoundRobin(registeredPairingArr.concat(guestPairingArr))
-                                                    //     copy.competitors = registeredPairingArr
-                                                    //     copy.guest_competitors = newTournament.guest_competitors.map(gc => { return gc.id })
-                                                    // }
-                                                    // else {
-                                                    //     copy.pairings = RoundRobin(registeredPairingArr)
-                                                    //     copy.competitors = registeredPairingArr
-                                                    // }
-                                                    // // copy.pairings = RoundRobin(newTournament.competitors)
-                                                    // sendNewTournament(copy)
-                                                    //     .then(() => {
-                                                    //         resetTournaments()
-                                                    //         setCreateTournament(false)
-                                                    //         setShowGuests(false)
-                                                    //     })
+                                                    const allCompetitors = newTournament.competitors.concat(newTournament.guest_competitors)
+                                                    const competitorPairing = []
+                                                    const guestCompetitorPairing = []
+                                                    const allCompetitorsPairing = allCompetitors.map(ac => {
+                                                        if (ac.guest_id) {
+                                                            guestCompetitorPairing.push(ac.id)
+                                                            return { id: ac.guest_id }
+                                                        }
+                                                        else {
+                                                            competitorPairing.push(ac.id)
+                                                            return { id: ac.id }
+                                                        }
+                                                    })
+                                                    const firstRoundPairings = Swiss(allCompetitorsPairing, 1)
+                                                    copy.pairings = firstRoundPairings
+                                                    copy.competitors = competitorPairing
+                                                    copy.guest_competitors = guestCompetitorPairing
+                                                    copy.club = selectedClub
+                                                    sendNewTournament(copy)
+                                                        .then(() => {
+                                                            resetTournaments()
+                                                            setCreateTournament(false)
+                                                            setShowGuests(false)
+                                                        })
                                                 }
                                             }
                                         }
@@ -371,7 +358,7 @@ export const Tournament = () => {
                                     setSelectedClub(0)
                                     setSelectedClubObj({})
                                     setShowGuests(false)
-                                    }}>cancel</button>
+                                }}>cancel</button>
                             </div>
                         </section>
                     </section>

@@ -84,7 +84,6 @@ export const TournamentProvider = (props) => {
                 const clubsPlayers = players.filter(p => selectedClubObj?.members.find(m => m.id === p.id))
                 setClubPlayers(clubsPlayers)
                 const clubsGuests = guests.filter(g => selectedClubObj?.guest_members.find(gm => gm.id === g.id))
-                console.log(selectedClubObj.guest_members)
                 setClubGuests(clubsGuests)
                 const allPlayersAndGuests = clubsPlayers.concat(clubsGuests)
                 setPlayersAndGuests(allPlayersAndGuests)

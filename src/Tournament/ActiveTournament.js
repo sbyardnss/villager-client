@@ -21,6 +21,7 @@ export const ActiveTournament = () => {
     const [resultsForTieBreak, updateResultsForTieBreak] = useState([])
     const [byePlayer, setByePlayer] = useState(0)
     const [scoreObj, setScoreObj] = useState({})
+    const [playerOpponentsReferenceObj, updatePlayerOpponentsReferenceObj] = useState({})
 
     // new scorecard state variable
     const [scoreCard, setScoreCard] = useState({})
@@ -75,6 +76,35 @@ export const ActiveTournament = () => {
             setActiveTournamentPlayers(playersForSelectedTournament)
         }, [activeTournament]
     )
+    useEffect(
+        //creates reference object for previous opponents for avoid on swiss round creation
+        () => {
+            if (tournamentGames && activeTournamentPlayers){
+                let opponentObj = {}
+                activeTournamentPlayers?.map(player => {
+                    if(player.guest_id){
+                        opponentObj[player.guest_id]=[]
+                    }
+                    else {
+                        opponentObj[player.id] = []
+                    }
+                })
+                tournamentGames?.map(tg => {
+                    const playerWIdentifier = tg.player_w.guest_id? tg.player_w.guest_id: tg.player_w.id
+                    const playerBIdentifier = tg.player_b?.guest_id? tg.player_b?.guest_id: tg.player_b?.id
+                    if (playerBIdentifier !== undefined) {
+                        opponentObj[playerWIdentifier].push(playerBIdentifier)
+                        opponentObj[playerBIdentifier].push(playerWIdentifier)
+                    }
+                    else {
+                        opponentObj[playerWIdentifier].push('bye')
+                    }
+                })
+                updatePlayerOpponentsReferenceObj(opponentObj)
+            }
+        },[activeTournamentPlayers, tournamentGames]
+    )
+
     //setting round from active tournament
     useEffect(
         () => {
@@ -688,7 +718,7 @@ export const ActiveTournament = () => {
                                 setEditPlayers(false)
                                 setSelectedTournament(0)
                                 setEditScores(false)
-                                
+                                updatePlayerOpponentsReferenceObj({})
                                 // setScoring(false)
                             }}>exit</button>
                     </div>

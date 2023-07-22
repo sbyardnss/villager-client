@@ -12,7 +12,7 @@ export const EditPlayersModal = ({ activeTournamentObj, setEdit, playedRounds, g
     const [showGuests, setShowGuests] = useState(false)
     const [clubPlayers, setClubPlayers] = useState([])
     const [clubGuests, setClubGuests] = useState([])
-    const [currentPairings, setCurrentPairings] = useState([])
+    const [pastPairings, setPastPairings] = useState([])
     const [initialPlayersAndGuests, setInitialPlayersAndGuests] = useState([])
     const [newGuest, updateNewGuest] = useState({
         full_name: "",
@@ -37,10 +37,11 @@ export const EditPlayersModal = ({ activeTournamentObj, setEdit, playedRounds, g
             const initPlayers = [...activeTournamentObj.competitors]
             const initGuests = [...activeTournamentObj.guest_competitors]
             setInitialPlayersAndGuests(initPlayers.concat(initGuests))
-            const pairingsForThisRound = activeTournamentObj.pairings.filter(p => p.round === playedRounds)
-            setCurrentPairings(pairingsForThisRound)
+            const pairingsBeforeThisRound = activeTournamentObj.pairings.filter(p => p.round < playedRounds)
+            setPastPairings(pairingsBeforeThisRound)
         }, [activeTournamentObj]
     )
+    console.log(pastPairings)
     useEffect(
         () => {
             if (tournamentObj.club) {

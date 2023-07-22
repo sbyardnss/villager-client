@@ -93,8 +93,6 @@ export const ActiveTournament = () => {
                 tournamentGames?.map(tg => {
                     const playerWIdentifier = tg.player_w.guest_id ? tg.player_w.guest_id : tg.player_w.id
                     const playerBIdentifier = tg.player_b?.guest_id ? tg.player_b?.guest_id : tg.player_b?.id
-                    console.log(playerBIdentifier)
-                    console.log(playerWIdentifier)
                     if (playerBIdentifier === undefined && typeof opponentObj[playerWIdentifier] === 'object') {
                         opponentObj[playerWIdentifier].push('bye')
                     }

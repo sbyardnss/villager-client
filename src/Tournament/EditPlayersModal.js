@@ -5,13 +5,14 @@ import { createNewGuest, getChessClub } from "../ServerManager"
 import { RoundRobin, Swiss } from "tournament-pairings"
 
 
-export const EditPlayersModal = ({ activeTournamentObj, setEdit, playedRounds }) => {
+export const EditPlayersModal = ({ activeTournamentObj, setEdit, playedRounds, gamesFromThisRound }) => {
     const { localVillagerObj, players, guests, playersAndGuests, setPlayersAndGuests, selectedClubObj, selectedClub, resetGuests } = useContext(TournamentContext)
     const [potentialCompetitors, setPotentialCompetitors] = useState([])
     const [search, setSearch] = useState("")
     const [showGuests, setShowGuests] = useState(false)
     const [clubPlayers, setClubPlayers] = useState([])
     const [clubGuests, setClubGuests] = useState([])
+    const [currentPairings, setCurrentPairings] = useState([])
     const [initialPlayersAndGuests, setInitialPlayersAndGuests] = useState([])
     const [newGuest, updateNewGuest] = useState({
         full_name: "",
@@ -24,7 +25,7 @@ export const EditPlayersModal = ({ activeTournamentObj, setEdit, playedRounds })
         competitors: [],
         guest_competitors: [],
         timeSetting: 0,
-        rounds: 1,
+        rounds: 0,
         in_person: true,
         pairings: [],
         club: 0
@@ -36,6 +37,8 @@ export const EditPlayersModal = ({ activeTournamentObj, setEdit, playedRounds })
             const initPlayers = [...activeTournamentObj.competitors]
             const initGuests = [...activeTournamentObj.guest_competitors]
             setInitialPlayersAndGuests(initPlayers.concat(initGuests))
+            const pairingsForThisRound = activeTournamentObj.pairings.filter(p => p.round === playedRounds)
+            setCurrentPairings(pairingsForThisRound)
         }, [activeTournamentObj]
     )
     useEffect(
@@ -78,7 +81,7 @@ export const EditPlayersModal = ({ activeTournamentObj, setEdit, playedRounds })
             }
         }, [search, showGuests, playersAndGuests, players, guests, clubGuests, clubPlayers]
     )
-    
+    console.log(gamesFromThisRound)
     return (
         <article id="editPlayersContainer">
             <div id="editPlayersHeader">

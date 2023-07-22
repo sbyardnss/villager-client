@@ -721,6 +721,7 @@ export const ActiveTournament = () => {
                             // tournamentId={selectedTournament}
                             setEdit={setEditPlayers}
                             playedRounds={currentRound}
+                            gamesFromThisRound = {tournamentGames.filter(g => g.tournament_round === currentRound)}
                         />
                     </div> : ""}
                     <div id="activeTournamentHeader">

@@ -1,11 +1,11 @@
 import { useContext, useEffect, useState } from "react"
 import { TournamentContext } from "./TournamentProvider"
 import "./Tournament.css"
-import { createNewGuest, getChessClub } from "../ServerManager"
+import { createNewGuest, getChessClub, updateTournament } from "../ServerManager"
 import { RoundRobin, Swiss } from "tournament-pairings"
 
 
-export const EditPlayersModal = ({ activeTournamentObj, setEdit, playedRounds, gamesFromThisRound }) => {
+export const EditPlayersModal = ({ activeTournamentObj, setEdit, playedRounds, gamesFromThisRound, previousOpponents }) => {
     const { localVillagerObj, players, guests, playersAndGuests, setPlayersAndGuests, selectedClubObj, selectedClub, resetGuests } = useContext(TournamentContext)
     const [potentialCompetitors, setPotentialCompetitors] = useState([])
     const [search, setSearch] = useState("")
@@ -14,6 +14,7 @@ export const EditPlayersModal = ({ activeTournamentObj, setEdit, playedRounds, g
     const [clubGuests, setClubGuests] = useState([])
     const [pastPairings, setPastPairings] = useState([])
     const [initialPlayersAndGuests, setInitialPlayersAndGuests] = useState([])
+    const [editedPlayerOpponentsRef, updateEditedPlayerOpponentsRef] = useState({})
     const [newGuest, updateNewGuest] = useState({
         full_name: "",
         club: 0
@@ -30,6 +31,7 @@ export const EditPlayersModal = ({ activeTournamentObj, setEdit, playedRounds, g
         pairings: [],
         club: 0
     })
+    //setting past pairings based on current round so that new pairings can be appended after editing players
     useEffect(
         () => {
             const tourneyCopy = { ...activeTournamentObj }
@@ -41,7 +43,6 @@ export const EditPlayersModal = ({ activeTournamentObj, setEdit, playedRounds, g
             setPastPairings(pairingsBeforeThisRound)
         }, [activeTournamentObj]
     )
-    console.log(pastPairings)
     useEffect(
         () => {
             if (tournamentObj.club) {
@@ -49,7 +50,7 @@ export const EditPlayersModal = ({ activeTournamentObj, setEdit, playedRounds, g
                 getChessClub(clubId)
                     .then(data => setTournamentClub(data))
             }
-        }, [tournamentObj]
+        }, [tournamentObj.club]
     )
     useEffect(
         () => {
@@ -82,7 +83,33 @@ export const EditPlayersModal = ({ activeTournamentObj, setEdit, playedRounds, g
             }
         }, [search, showGuests, playersAndGuests, players, guests, clubGuests, clubPlayers]
     )
-    console.log(gamesFromThisRound)
+    useEffect(
+        () => {
+            const refObj = {}
+            const copy = {...tournamentObj}
+            const allCompetitors = copy.competitors.concat(copy.guest_competitors)
+            const competitorIds = allCompetitors.map(c => {
+                if (c.guest_id){
+                    return c.guest_id
+                }
+                else {
+                    return c.id
+                }
+            })
+            for (const id of competitorIds){
+                refObj[id] = []
+            }
+            for (const playerId in previousOpponents){
+                refObj[playerId] = previousOpponents[playerId]
+            }
+            updateEditedPlayerOpponentsRef(refObj)
+        },[previousOpponents, tournamentObj]
+    )
+    useEffect(
+        () =>{
+            console.log(editedPlayerOpponentsRef)
+        },[editedPlayerOpponentsRef]
+    )
     return (
         <article id="editPlayersContainer">
             <div id="editPlayersHeader">
@@ -207,7 +234,34 @@ export const EditPlayersModal = ({ activeTournamentObj, setEdit, playedRounds, g
             </div>
             <div id="editPlayersToggleAndSubmitBtnBlock">
                 <button className="buttonStyleApprove" onClick={() => setShowGuests(!showGuests)}>toggle guests</button>
-                <button id="submitNewPlayersBtn" className="buttonStyleApprove">Submit</button>
+                <button id="submitNewPlayersBtn" className="buttonStyleApprove" onClick={() => {
+                    const copy = { ...tournamentObj }
+                    const competitorIds = tournamentObj.competitors.map(tc => {
+                        return tc.id
+                    })
+                    const guestIds = tournamentObj.guest_competitors.map(tgc => {
+                        return tgc.id
+                    })
+                    //need to add new competitors to playerArgs
+                    copy.competitors = competitorIds
+                    copy.guest_competitors = guestIds
+                    const playersArg = []
+                    // for (const opponentRef in previousOpponents) {
+                    //     const playerRefObj = {
+                    //         id: parseInt(opponentRef) || opponentRef,
+                    //         avoid: previousOpponents[opponentRef].filter(ref => ref !== 'bye')
+                    //     }
+
+                    //     if (previousOpponents[opponentRef].includes('bye')) {
+                    //         playerRefObj.receivedBye = true
+                    //     }
+                    //     playersArg.push(playerRefObj)
+                    // }
+                    copy.pairings = pastPairings.concat(Swiss(playersArg, playedRounds))
+                    
+                    // updateTournament(copy)
+                    console.log(copy)
+                }}>Submit</button>
             </div>
         </article>
     )

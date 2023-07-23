@@ -720,6 +720,7 @@ export const ActiveTournament = () => {
                             setEdit={setEditPlayers}
                             playedRounds={currentRound}
                             gamesFromThisRound = {tournamentGames.filter(g => g.tournament_round === currentRound)}
+                            previousOpponents = {playerOpponentsReferenceObj}
                         />
                     </div> : ""}
                     <div id="activeTournamentHeader">

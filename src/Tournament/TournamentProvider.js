@@ -81,9 +81,9 @@ export const TournamentProvider = (props) => {
     useEffect(
         () => {
             if (selectedClubObj) {
-                const clubsPlayers = players.filter(p => selectedClubObj?.members.find(m => m.id === p.id))
+                const clubsPlayers = players.filter(p => selectedClubObj?.members?.find(m => m.id === p.id))
                 setClubPlayers(clubsPlayers)
-                const clubsGuests = guests.filter(g => selectedClubObj?.guest_members.find(gm => gm.id === g.id))
+                const clubsGuests = guests.filter(g => selectedClubObj?.guest_members?.find(gm => gm.id === g.id))
                 setClubGuests(clubsGuests)
                 const allPlayersAndGuests = clubsPlayers.concat(clubsGuests)
                 setPlayersAndGuests(allPlayersAndGuests)

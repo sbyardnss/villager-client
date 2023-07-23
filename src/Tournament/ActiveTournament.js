@@ -7,7 +7,7 @@ import { Swiss } from "tournament-pairings"
 
 
 export const ActiveTournament = () => {
-    const { tournaments, setTournaments, playersAndGuests, tournamentGames, selectedTournament, setSelectedTournament, resetTournamentGames, editPlayers, setEditPlayers } = useContext(TournamentContext)
+    const { tournaments, setTournaments, playersAndGuests, tournamentGames, selectedTournament, setSelectedTournament, resetTournamentGames, editPlayers, setEditPlayers, resetTournaments } = useContext(TournamentContext)
     //initial setup state variables
     const [activeTournament, setActiveTournament] = useState({})
     const [activeTournamentPlayers, setActiveTournamentPlayers] = useState([])
@@ -251,10 +251,10 @@ export const ActiveTournament = () => {
             }
         }, [scoreCard]
     )
-    const resetTournaments = () => {
-        getAllTournaments()
-            .then(data => setTournaments(data))
-    }
+    // const resetTournaments = () => {
+    //     getAllTournaments()
+    //         .then(data => setTournaments(data))
+    // }
     //number population for table
     const roundPopulation = () => {
         let roundNumber = activeTournament?.rounds;

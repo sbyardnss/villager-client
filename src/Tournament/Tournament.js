@@ -6,7 +6,7 @@ import { alterGame, createNewGuest, getAllGuestPlayers, getAllPlayers, getAllTou
 import { ActiveTournament } from "./ActiveTournament"
 
 export const Tournament = () => {
-    const { localVillagerObj, tournaments, setTournaments, players, setPlayers, timeSettings, selectedTournament, setSelectedTournament, setGuests, guests, playersAndGuests, selectedClub, setSelectedClub, selectedClubObj, setSelectedClubObj, clubPlayers, clubGuests, resetGuests, myChessClubs, setMyChessClubs } = useContext(TournamentContext)
+    const { localVillagerObj, tournaments, setTournaments, players, setPlayers, timeSettings, selectedTournament, setSelectedTournament, setGuests, guests, playersAndGuests, selectedClub, setSelectedClub, selectedClubObj, setSelectedClubObj, clubPlayers, clubGuests, resetGuests, myChessClubs, setMyChessClubs, resetTournaments } = useContext(TournamentContext)
     const [potentialCompetitors, setPotentialCompetitors] = useState([])
     const [pastTournaments, setPastTournaments] = useState(false)
     const [search, setSearch] = useState("")
@@ -69,10 +69,10 @@ export const Tournament = () => {
         })
     }
     //getter/setter for tournaments
-    const resetTournaments = () => {
-        getAllTournaments()
-            .then(data => setTournaments(data))
-    }
+    // const resetTournaments = () => {
+    //     getAllTournaments()
+    //         .then(data => setTournaments(data))
+    // }
 
     const resetPlayers = () => {
         getAllPlayers()

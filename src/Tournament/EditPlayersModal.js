@@ -6,7 +6,7 @@ import { RoundRobin, Swiss } from "tournament-pairings"
 
 
 export const EditPlayersModal = ({ activeTournamentObj, setEdit, playedRounds, gamesFromThisRound, previousOpponents }) => {
-    const { localVillagerObj, players, guests, playersAndGuests, setPlayersAndGuests, selectedClubObj, selectedClub, resetGuests } = useContext(TournamentContext)
+    const { localVillagerObj, players, guests, playersAndGuests, setPlayersAndGuests, selectedClubObj, selectedClub, resetGuests, resetTournaments } = useContext(TournamentContext)
     const [potentialCompetitors, setPotentialCompetitors] = useState([])
     const [search, setSearch] = useState("")
     const [showGuests, setShowGuests] = useState(false)
@@ -86,29 +86,29 @@ export const EditPlayersModal = ({ activeTournamentObj, setEdit, playedRounds, g
     useEffect(
         () => {
             const refObj = {}
-            const copy = {...tournamentObj}
+            const copy = { ...tournamentObj }
             const allCompetitors = copy.competitors.concat(copy.guest_competitors)
             const competitorIds = allCompetitors.map(c => {
-                if (c.guest_id){
+                if (c.guest_id) {
                     return c.guest_id
                 }
                 else {
                     return c.id
                 }
             })
-            for (const id of competitorIds){
+            for (const id of competitorIds) {
                 refObj[id] = []
             }
-            for (const playerId in previousOpponents){
+            for (const playerId in previousOpponents) {
                 refObj[playerId] = previousOpponents[playerId]
             }
             updateEditedPlayerOpponentsRef(refObj)
-        },[previousOpponents, tournamentObj]
+        }, [previousOpponents, tournamentObj]
     )
     useEffect(
-        () =>{
+        () => {
             console.log(editedPlayerOpponentsRef)
-        },[editedPlayerOpponentsRef]
+        }, [editedPlayerOpponentsRef]
     )
     return (
         <article id="editPlayersContainer">
@@ -258,8 +258,8 @@ export const EditPlayersModal = ({ activeTournamentObj, setEdit, playedRounds, g
                         playersArg.push(playerRefObj)
                     }
                     copy.pairings = pastPairings.concat(Swiss(playersArg, playedRounds))
-                    
-                    // updateTournament(copy)
+                    updateTournament(copy)
+                        .then(() => resetTournaments())
                     // console.log(copy)
                 }}>Submit</button>
             </div>

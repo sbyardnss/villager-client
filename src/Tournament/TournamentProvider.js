@@ -1,5 +1,5 @@
 import { useState, useEffect, createContext } from "react";
-import { getAllGuestPlayers, getAllPlayers, getAllTimeSettings, getMyChessClubs, getMyTournaments, getTournamentGames } from "../ServerManager";
+import { getAllGuestPlayers, getAllPlayers, getAllTimeSettings, getAllTournaments, getMyChessClubs, getMyTournaments, getTournamentGames } from "../ServerManager";
 
 export const TournamentContext = createContext()
 
@@ -57,7 +57,7 @@ export const TournamentProvider = (props) => {
                 getTournamentGames(selectedTournament)
                     .then((data) => setTournamentGames(data))
             }
-        }, [selectedTournament]
+        }, [selectedTournament, tournaments]
     )
 
     //this one is needed currently. find a way to get rid of it
@@ -90,7 +90,10 @@ export const TournamentProvider = (props) => {
             }
         }, [selectedClubObj]//adding selectedClub to this dependency array causes players to entirely disappear
     )
-
+    const resetTournaments = () => {
+        getAllTournaments()
+            .then(data => setTournaments(data))
+    }
 
     const resetTournamentGames = () => {
         getTournamentGames(selectedTournament)
@@ -108,7 +111,7 @@ export const TournamentProvider = (props) => {
             selectedTournament, setSelectedTournament, resetTournamentGames, resetGuests,
             setGuests, guests, playersAndGuests, setPlayersAndGuests, selectedClub, setSelectedClub,
             selectedClubObj, setSelectedClubObj, setClubPlayers, clubPlayers, setClubGuests, clubGuests, editPlayers, setEditPlayers,
-            myChessClubs, setMyChessClubs
+            myChessClubs, setMyChessClubs, resetTournaments
         }}>
             {props.children}
         </TournamentContext.Provider>

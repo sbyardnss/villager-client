@@ -388,7 +388,8 @@ export const Tournament = () => {
                         {
                             tournaments?.map(t => {
                                 if (t.complete === false) {
-                                    if (t.competitors.includes(localVillagerObj.userId) || t.creator.id === localVillagerObj.userId) {
+                                    console.log(t)
+                                    if (t.competitors.find(c => c.id === localVillagerObj.userId) || t.creator.id === localVillagerObj.userId) {
                                         return (
                                             <li key={t.id}
                                                 className="tournamentListItem"

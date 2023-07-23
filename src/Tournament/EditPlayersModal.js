@@ -246,21 +246,21 @@ export const EditPlayersModal = ({ activeTournamentObj, setEdit, playedRounds, g
                     copy.competitors = competitorIds
                     copy.guest_competitors = guestIds
                     const playersArg = []
-                    // for (const opponentRef in previousOpponents) {
-                    //     const playerRefObj = {
-                    //         id: parseInt(opponentRef) || opponentRef,
-                    //         avoid: previousOpponents[opponentRef].filter(ref => ref !== 'bye')
-                    //     }
+                    for (const opponentRef in editedPlayerOpponentsRef) {
+                        const playerRefObj = {
+                            id: parseInt(opponentRef) || opponentRef,
+                            avoid: editedPlayerOpponentsRef[opponentRef].filter(ref => ref !== 'bye')
+                        }
 
-                    //     if (previousOpponents[opponentRef].includes('bye')) {
-                    //         playerRefObj.receivedBye = true
-                    //     }
-                    //     playersArg.push(playerRefObj)
-                    // }
+                        if (editedPlayerOpponentsRef[opponentRef].includes('bye')) {
+                            playerRefObj.receivedBye = true
+                        }
+                        playersArg.push(playerRefObj)
+                    }
                     copy.pairings = pastPairings.concat(Swiss(playersArg, playedRounds))
                     
                     // updateTournament(copy)
-                    console.log(copy)
+                    // console.log(copy)
                 }}>Submit</button>
             </div>
         </article>

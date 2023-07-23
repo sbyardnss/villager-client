@@ -481,6 +481,10 @@
         background-color: gray;
         width: 2em;
     }
+    .currentRoundHeader {
+        background-color: #934a67;
+        width: 2em;
+    }
 
     /* .tournamentGameResult {
         display: flex;
@@ -975,17 +979,29 @@
     }
 
     /* tournament table */
+    #tournamentTableContainer {
+        border: 1px solid #f4d35e;
+        border-radius: 6px;
+        padding: .5em;
 
+    }
     #tournamentTable {
         /* background-color: blanchedalmond; */
         color: rgb(231, 231, 231);
-        border: 1px solid #f4d35e;
-        border-radius: 6px;
-        padding: 1em;
-    }
+        /* border: 1px solid #f4d35e;
+        border-radius: 6px; */
+        border-collapse: collapse;
 
+    }
+    .tablePlayerCell {
+        padding: .25em;
+    }
     .roundHeader {
         background-color: gray;
+        width: 2em;
+    }
+    .currentRoundHeader {
+        background-color: #934a67;
         width: 2em;
     }
 
@@ -993,7 +1009,22 @@
         display: flex;
         justify-content: center;
     } */
-
+    .tablePlayerRow {
+        border-collapse: collapse;
+    }
+    .scoreCell {
+        text-align: center;
+        border: 1px solid #694873;
+        border-top: none;
+        border-bottom: none;
+        
+    }
+    .totalScoreCell {
+        border: 1px solid #694873;
+        border-left: none;
+        border-right: none;
+        text-align: center;
+    }
     .tournamentGameResultBye {
         display: flex;
         justify-content: center;

@@ -230,7 +230,7 @@ export const ActiveTournament = () => {
                 getScoreCard(selectedTournament)
                     .then(data => setScoreCard(data))
             }
-        }, [selectedTournament, tournamentGames]
+        }, [tournamentGames]
     )
     useEffect(
         () => {
@@ -261,7 +261,13 @@ export const ActiveTournament = () => {
 
         let tableHtml = [];
         while (roundNumber > 0) {
-            tableHtml.push(<th key={roundNumber} className="roundHeader">{roundNumber}</th>)
+            if (roundNumber === currentRound){
+                tableHtml.push(<th key={roundNumber} className="currentRoundHeader">{roundNumber}</th>)
+
+            }
+            else {
+                tableHtml.push(<th key={roundNumber} className="roundHeader">{roundNumber}</th>)
+            }
             roundNumber--;
         }
         return tableHtml.reverse()
@@ -876,7 +882,7 @@ export const ActiveTournament = () => {
                                         const tourneyPlayerScores = scoreCard[guestIdOrId]
                                         let score = 0
                                         return (
-                                            <tr key={tourneyPlayer.guest_id ? tourneyPlayer.guest_id : tourneyPlayer.id} id={tourneyPlayer.id + "--tourneyRow"}>
+                                            <tr key={tourneyPlayer.guest_id ? tourneyPlayer.guest_id : tourneyPlayer.id} id={tourneyPlayer.id + "--tourneyRow"} className="tablePlayerRow">
                                                 <td key={tourneyPlayer.id} className="tablePlayerCell">{tourneyPlayer.full_name}</td>
                                                 {
                                                     tourneyPlayerScores?.map((s, index) => {
@@ -888,17 +894,17 @@ export const ActiveTournament = () => {
                                                         }
                                                         if (s !== 'none') {
                                                             return (
-                                                                <td key={guestIdOrId + '--' + index}>{s}</td>
+                                                                <td key={guestIdOrId + '--' + index} className="scoreCell">{s}</td>
                                                             )
                                                         }
                                                         else {
                                                             return (
-                                                                <td key={guestIdOrId + '--' + index}></td>
+                                                                <td key={guestIdOrId + '--' + index} className="scoreCell">0</td>
                                                             )
                                                         }
                                                     })
                                                 }
-                                                <td key={guestIdOrId + "-- score"} id={guestIdOrId + "-- score"} value={scoreObj[guestIdOrId]}>
+                                                <td key={guestIdOrId + "-- score"} id={guestIdOrId + "-- score"} className="totalScoreCell" value={scoreObj[guestIdOrId]}>
                                                     {score}
                                                 </td>
                                             </tr>

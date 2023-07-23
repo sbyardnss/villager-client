@@ -261,7 +261,7 @@ export const ActiveTournament = () => {
 
         let tableHtml = [];
         while (roundNumber > 0) {
-            if (roundNumber === currentRound){
+            if (roundNumber === currentRound) {
                 tableHtml.push(<th key={roundNumber} className="currentRoundHeader">{roundNumber}</th>)
 
             }
@@ -693,13 +693,17 @@ export const ActiveTournament = () => {
                         Results
                         {resultsDisplay()}
                         <div id="modalBtns">
-                            <button onClick={() => {
-                                endTournamentModal.style.display = "flex"
-                                modal.style.display = "none"
-                            }}>End Tournament</button>
-                            <button onClick={() => {
-                                modal.style.display = "none"
-                            }}>cancel</button>
+                            <button
+                                className="buttonStyleApprove"
+                                onClick={() => {
+                                    endTournamentModal.style.display = "flex"
+                                    modal.style.display = "none"
+                                }}>End Tournament</button>
+                            <button
+                                className="buttonStyleReject"
+                                onClick={() => {
+                                    modal.style.display = "none"
+                                }}>cancel</button>
                         </div>
                     </div>
                     <div id="endTournamentModal" className="setCustomFont">
@@ -725,8 +729,8 @@ export const ActiveTournament = () => {
                             // tournamentId={selectedTournament}
                             setEdit={setEditPlayers}
                             playedRounds={currentRound}
-                            gamesFromThisRound = {tournamentGames.filter(g => g.tournament_round === currentRound)}
-                            previousOpponents = {playerOpponentsReferenceObj}
+                            gamesFromThisRound={tournamentGames.filter(g => g.tournament_round === currentRound)}
+                            previousOpponents={playerOpponentsReferenceObj}
                         />
                     </div> : ""}
                     <div id="activeTournamentHeader">
@@ -766,6 +770,8 @@ export const ActiveTournament = () => {
                                     tournamentCopy.pairings = tournamentCopy.pairings.concat(Swiss(playersArg, currentRound + 1))
                                     tournamentCopy.rounds++
                                     // console.log(tournamentCopy)
+                                    tournamentCopy.competitors = tournamentCopy.competitors.map(c => {return c.id})
+                                    tournamentCopy.guest_competitors = tournamentCopy.guest_competitors.map(gc => {return gc.id})
                                     updateTournament(tournamentCopy)
                                         .then(() => {
                                             resetTournaments()
@@ -809,73 +815,6 @@ export const ActiveTournament = () => {
                                 </tr>
                             </thead>
                             <tbody>
-
-
-                                {/* {
-                                    activeTournamentPlayers.map(tourneyPlayer => {
-                                        const tourneyPlayerGames = tournamentGames.filter(tg => {
-                                            if (tourneyPlayer.guest_id) {
-                                                return tg.player_b?.guest_id === tourneyPlayer.guest_id || tg.player_w.guest_id === tourneyPlayer.guest_id
-                                            }
-                                            else {
-                                                return !tg.player_b?.guest_id && tg.player_b?.id === tourneyPlayer.id || !tg.player_w.guest_id && tg.player_w.id === tourneyPlayer.id
-                                            }
-                                        })
-                                        const guestIdOrId = tourneyPlayer.guest_id ? tourneyPlayer.guest_id : tourneyPlayer.id
-                                        const emptyCellCompensation = () => {
-                                            if (tourneyPlayerGames.length < currentRound) {
-                                                return (
-                                                    <td></td>
-                                                )
-                                            }
-                                        }
-                                        let score = 0
-                                        return (
-                                            <tr key={tourneyPlayer.guest_id ? tourneyPlayer.guest_id : tourneyPlayer.id} id={tourneyPlayer.id + "--tourneyRow"}>
-                                                <td key={tourneyPlayer.id} className="tablePlayerCell">{tourneyPlayer.full_name}</td>
-                                                {
-                                                    tourneyPlayerGames.map(tpg => {
-                                                        if (tpg.bye === true) {
-                                                            score++
-                                                            return (
-                                                                <td key={tpg.id} value={1} id={guestIdOrId + 'bye'} className="tournamentGameResultBye">bye</td>
-                                                            )
-                                                        }
-                                                        if ((tpg.winner?.guest_id && tpg.winner?.guest_id === tourneyPlayer.guest_id) || (!tpg.winner?.guest_id && !tourneyPlayer.guest_id && tpg.winner?.id === tourneyPlayer.id)) {
-                                                            score++
-                                                            return (
-                                                                <td key={tpg.id} value={1} id={guestIdOrId + tpg.id} className="tournamentGameResult">1</td>
-                                                            )
-                                                        }
-                                                        else if (tpg.winner === null && tpg.win_style === "draw") {
-                                                            score += .5
-                                                            return (
-                                                                <td key={tpg.id} value={.5} id={guestIdOrId + tpg.id} className="tournamentGameResult">1/2</td>
-                                                            )
-                                                        }
-                                                        else if (tpg.winner === null && !tpg.win_style) {
-                                                            score = score
-                                                            return (
-                                                                <td key={tpg.id} id={guestIdOrId + tpg.id} className="tournamentGameResult"></td>
-                                                            )
-                                                        }
-                                                        else {
-                                                            score = score
-                                                            return (
-                                                                <td key={tpg.id} value={0} id={guestIdOrId + tpg.id} className="tournamentGameResult">0</td>
-                                                            )
-                                                        }
-                                                    })
-                                                }
-                                                {emptyCellCompensation()}
-                                                <td key={guestIdOrId + "-- score"} id={guestIdOrId + "-- score"} value={scoreObj[guestIdOrId]}>
-                                                    {scoreObj[guestIdOrId]}
-                                                </td>
-                                            </tr>
-                                        )
-                                    })
-                                } */}
-
                                 {
                                     activeTournamentPlayers.map(tourneyPlayer => {
                                         const guestIdOrId = tourneyPlayer.guest_id ? tourneyPlayer.guest_id : tourneyPlayer.id

@@ -1036,8 +1036,8 @@
 
     /* tournament table */
     #tournamentTableContainer {
-        /* display: flex; */
-        /* justify-content: center; */
+        display: flex;
+        justify-content: center;
         /* border: 1px solid #f4d35e; */
         /* border-radius: 6px; */
         /* padding: .5em; */
@@ -1068,13 +1068,13 @@
     }
 
     .first-col {
-        width: 5rem;
+        /* width: 5rem; */
         left: 0px;
         background-color: black;
     }
     .scoreCell {
         text-align: center;
-        width: 3rem;
+        width: 20px;
         border: 1px solid #694873;
         border-top: none;
 
@@ -1097,6 +1097,7 @@
         position: -webkit-sticky;
         position: sticky;
         left: 0;
+        width: 80px;
         z-index: 5;
     }
 
@@ -1104,7 +1105,7 @@
         position: -webkit-sticky;
         position: sticky;
         right: 0%;
-        width: 3rem;
+        width: 50px;
         /* background-color: black; */
         text-align: center;
         /* border: 1px solid #694873; */

@@ -389,7 +389,7 @@ export const Tournament = () => {
                             tournaments?.map(t => {
                                 if (t.complete === false) {
                                     console.log(t)
-                                    if (t.competitors.find(c => c.id === localVillagerObj.userId) || t.creator.id === localVillagerObj.userId) {
+                                    // if (t.competitors.find(c => c.id === localVillagerObj.userId) || t.creator.id === localVillagerObj.userId) {
                                         return (
                                             <li key={t.id}
                                                 className="tournamentListItem"
@@ -400,7 +400,7 @@ export const Tournament = () => {
                                                 {t.title}
                                             </li>
                                         )
-                                    }
+                                    // }
                                 }
                             })
                         }

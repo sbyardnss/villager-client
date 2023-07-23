@@ -23,7 +23,7 @@ export const ApplicationViews = () => {
                         <HomePage />
                     </PlayProvider>
                 } />
-                <Route path="userList" element={<UserList />} />
+                {/* <Route path="userList" element={<UserList />} /> */}
                 <Route path="play" element={
                     <PlayProvider>
                         <Play />

@@ -73,6 +73,7 @@
         flex-direction: column;
         font-size: x-large;
         /* padding: .5em; */
+
     }
 
     #endTournamentBtnBlock {
@@ -547,6 +548,7 @@
         flex-direction: column;
         font-size: larger;
         padding: .5em;
+        z-index: 10;
     }
 
     .resultsModalListItem {
@@ -905,6 +907,7 @@
     .tournamentScoringMatchup {
         display: flex;
         justify-content: space-evenly;
+        align-items: center;
         padding: .25em;
         width: 100%;
     }
@@ -946,49 +949,99 @@
         display: flex;
         justify-content: center;
     }
+    #scoringSubmit {
+        height: 3em;
+        margin: 0;
+    }
 
     .whitePiecesMatchup {
+        display: flex;
+        justify-content: center;
+        align-items: center;
         background-color: whitesmoke;
         color: black;
         font-weight: 500;
         padding: .5em;
         border-radius: 5px 0 5px 0;
-        /* border: 1px solid rgb(40, 40, 40); */
         border: 1px solid #694873;
-
-        text-align: center;
+        height: 2em;
+        width: 5em;
+    }
+    .selectedWhitePiecesMatchup {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: rgb(115, 242, 176);
+        color: black;
+        font-weight: 500;
+        padding: .5em;
+        border-radius: 5px 0 5px 0;
+        border: 1px solid #694873;
+        height: 2em;
         width: 5em;
     }
 
     .blackPiecesMatchup {
-        /* background-color: rgb(40, 40, 40); */
+        display: flex;
+        justify-content: center;
+        align-items: center;
         border: 1px solid #694873;
-
         color: whitesmoke;
         font-weight: 500;
         padding: .5em;
         border-radius: 5px 0 5px 0;
-        text-align: center;
         width: 5em;
+        text-align: center;
+        height: 2em;
+    }
+    .selectedBlackPiecesMatchup {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: rgb(103, 40, 117);
+        border: 1px solid #694873;
+        color: whitesmoke;
+        font-weight: 500;
+        padding: .5em;
+        border-radius: 5px 0 5px 0;
+        width: 5em;
+        text-align: center;
+        height: 2em;
     }
 
     .drawMatchupButton {
+        display: flex;
+        justify-content: center;
+        align-items: center;
         background-color: rgb(96, 219, 250);
         font-weight: 500;
         padding: .5em;
         border-radius: 5px 0 5px 0;
-        text-align: center;
         border: 1px solid rgb(40, 40, 40);
         width: 3em;
-
+        height: 2em;
+    }
+    .selectedDrawMatchupButton {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: rgb(229, 96, 250);
+        font-weight: 500;
+        padding: .5em;
+        border-radius: 5px 0 5px 0;
+        border: 1px solid rgb(40, 40, 40);
+        width: 3em;
+        height: 2em;
     }
 
     /* tournament table */
     #tournamentTableContainer {
-        border: 1px solid #f4d35e;
-        border-radius: 6px;
+        /* display: flex; */
+        /* justify-content: center; */
+        /* border: 1px solid #f4d35e; */
+        /* border-radius: 6px; */
         /* padding: .5em; */
-        overflow: auto;
+        overflow: scroll;
         width: 90%;
         margin-bottom: 1em;
     }
@@ -1015,45 +1068,50 @@
     }
 
     .first-col {
-        width: 100px;
-        min-width: 100px;
-        max-width: 100px;
+        width: 5rem;
         left: 0px;
         background-color: black;
     }
     .scoreCell {
         text-align: center;
+        width: 3rem;
         border: 1px solid #694873;
         border-top: none;
-        border-bottom: none;
 
     }
 
 
     tr {
-        height: 2em;
+        height: 3rem;
         /* overflow: hidden; */
+    }
+    thead th {
+        width: 3rem;
+    }
+    tr td {
+        width: 3rem;
+
     }
 
     tr>:first-child {
         position: -webkit-sticky;
         position: sticky;
         left: 0;
-
+        z-index: 5;
     }
 
     tr>:last-child {
         position: -webkit-sticky;
         position: sticky;
         right: 0%;
-        width: 3em;
+        width: 3rem;
         /* background-color: black; */
         text-align: center;
         /* border: 1px solid #694873; */
         border-top: none;
         border-bottom: none;
         padding: 0 .25em;
-
+        z-index: 5;
     }
 
     /* tbody {

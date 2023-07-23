@@ -432,6 +432,11 @@ export const ActiveTournament = () => {
                                 const white = activeTournamentPlayers?.find(player => player.id === matchup.player1 || player.guest_id === matchup.player1)
                                 const black = activeTournamentPlayers?.find(player => player.id === matchup.player2 || player.guest_id === matchup.player2)
                                 const copy = { ...gameForApi }
+                                const whiteTargetForIndicator = white.guest_id ? white.guest_id : white.id
+                                const blackTargetForIndicator = black?.guest_id ? black?.guest_id : black?.id
+
+                                // let correspondingGame = tournamentGames.find(tg => tg.player_w.guest_id ? tg.player_w.guest_id : tg.player_w.id === matchup.player1 && tg.player_b?.guest_id ? tg.player_b?.guest_id: tg.player_b?.id === matchup.player2)
+                                // console.log(correspondingGame)
                                 copy.player_w = white?.id
                                 copy.player_b = black?.id
                                 // if (black === undefined) {
@@ -441,35 +446,38 @@ export const ActiveTournament = () => {
                                 //         </div>
                                 //     )
                                 // }
-                                if (black !== undefined) {
+                                if (black !== undefined && !playerOpponentsReferenceObj[whiteTargetForIndicator].includes(blackTargetForIndicator)) {
                                     return (
                                         <div key={`${matchup.round} -- ${matchup.match}`}
                                             className="tournamentScoringMatchup">
                                             <div
-                                                className="whitePiecesMatchup"
+                                                className={gameForApi.winner === whiteTargetForIndicator ? "selectedWhitePiecesMatchup" : "whitePiecesMatchup"}
                                                 id="whitePieces"
                                                 onClick={(evt) => {
                                                     handleGameForApiUpdate(evt.target.id, white, black)
                                                 }}>{white?.guest_id ? white.full_name : white?.username}
                                             </div>
                                             <div
-                                                className="drawMatchupButton"
+                                                className={gameForApi.player_w === whiteTargetForIndicator && gameForApi.player_b === blackTargetForIndicator && gameForApi.win_style === "draw" ? "selectedDrawMatchupButton" : "drawMatchupButton"}
                                                 id="drawUpdate"
                                                 onClick={(evt) => {
                                                     handleGameForApiUpdate(evt.target.id, white, black)
                                                 }}>Draw
                                             </div>
                                             <div
-                                                className="blackPiecesMatchup"
+                                                className={gameForApi.winner === blackTargetForIndicator ? "selectedBlackPiecesMatchup" : "blackPiecesMatchup"}
                                                 id="blackPieces"
                                                 onClick={(evt) => {
                                                     handleGameForApiUpdate(evt.target.id, white, black)
                                                 }}>{black?.guest_id ? black.full_name : black?.username}
                                             </div>
-                                            <button onClick={() => {
-                                                sendNewGame(gameForApi)
-                                                    .then(() => resetTournamentGames())
-                                            }}>
+                                            <button
+                                                id="scoringSubmit"
+                                                className="buttonStyleReject"
+                                                onClick={() => {
+                                                    sendNewGame(gameForApi)
+                                                        .then(() => resetTournamentGames())
+                                                }}>
                                                 submit
                                             </button>
                                         </div>
@@ -709,18 +717,22 @@ export const ActiveTournament = () => {
                     <div id="endTournamentModal" className="setCustomFont">
                         End Tournament?
                         <div id="endTournamentBtnBlock">
-                            <button onClick={() => {
-                                endTournament(selectedTournament)
-                                    .then(() => {
-                                        resetTournaments()
-                                        setSelectedTournament(0)
-                                    })
-                            }
-                            }>confirm</button>
-                            <button onClick={() => {
-                                endTournamentModal.style.display = "none"
-                                modal.style.display = "flex"
-                            }}>cancel</button>
+                            <button
+                                className="buttonStyleApprove"
+                                onClick={() => {
+                                    endTournament(selectedTournament)
+                                        .then(() => {
+                                            resetTournaments()
+                                            setSelectedTournament(0)
+                                        })
+                                }
+                                }>confirm</button>
+                            <button
+                                className="buttonStyleReject"
+                                onClick={() => {
+                                    endTournamentModal.style.display = "none"
+                                    modal.style.display = "flex"
+                                }}>cancel</button>
                         </div>
                     </div>
                     {editPlayers ? <div id="editPlayersModal" className="setCustomFont">
@@ -770,8 +782,8 @@ export const ActiveTournament = () => {
                                     tournamentCopy.pairings = tournamentCopy.pairings.concat(Swiss(playersArg, currentRound + 1))
                                     tournamentCopy.rounds++
                                     // console.log(tournamentCopy)
-                                    tournamentCopy.competitors = tournamentCopy.competitors.map(c => {return c.id})
-                                    tournamentCopy.guest_competitors = tournamentCopy.guest_competitors.map(gc => {return gc.id})
+                                    tournamentCopy.competitors = tournamentCopy.competitors.map(c => { return c.id })
+                                    tournamentCopy.guest_competitors = tournamentCopy.guest_competitors.map(gc => { return gc.id })
                                     updateTournament(tournamentCopy)
                                         .then(() => {
                                             resetTournaments()

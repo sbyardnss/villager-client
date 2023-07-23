@@ -163,6 +163,7 @@
         width: 90%;
         cursor: pointer;
     }
+
     .clubSelectionTabItem:hover {
         background-color: rgb(180, 100, 160);
 
@@ -219,7 +220,7 @@
     .newTournamentPlayerListItem {
         color: rgb(231, 231, 231);
         cursor: pointer;
-        padding:.2em;
+        padding: .2em;
         border-radius: 2px;
     }
 
@@ -235,9 +236,11 @@
         width: 11em;
         margin-right: 1em;
     }
+
     #resetPlayerSearchBtn {
         width: 7.5em;
     }
+
     #createGuestDiv {
         margin: 1em 0 1em 2em;
         /* width: 15.5em; */
@@ -378,6 +381,7 @@
         /* font-size: medium; */
 
     }
+
     .progressionControlBtn:hover {
         background-color: rgb(180, 100, 160);
 
@@ -481,6 +485,7 @@
         background-color: gray;
         width: 2em;
     }
+
     .currentRoundHeader {
         background-color: #934a67;
         width: 2em;
@@ -732,7 +737,7 @@
     .newTournamentPlayerListItem {
         color: rgb(231, 231, 231);
         margin-bottom: .25em;
-        padding:.2em;
+        padding: .2em;
         border-radius: 2px;
         cursor: pointer;
     }
@@ -982,24 +987,89 @@
     #tournamentTableContainer {
         border: 1px solid #f4d35e;
         border-radius: 6px;
-        padding: .5em;
-
+        /* padding: .5em; */
+        overflow: auto;
+        width: 90%;
+        margin-bottom: 1em;
     }
+
     #tournamentTable {
-        /* background-color: blanchedalmond; */
+        width: 20em;
         color: rgb(231, 231, 231);
-        /* border: 1px solid #f4d35e;
-        border-radius: 6px; */
+        /* overflow: hidden; */
         border-collapse: collapse;
+        table-layout: fixed;
+    }
+
+    thead th {
+        /* position: -webkit-sticky;
+        position: sticky; */
+        top: 0;
+        z-index: 2;
+        /* background: hsl(20, 50%, 70%); */
+    }
+
+    .sticky-col {
+        position: -webkit-sticky;
+        position: sticky;
+    }
+
+    .first-col {
+        width: 100px;
+        min-width: 100px;
+        max-width: 100px;
+        left: 0px;
+        background-color: black;
+    }
+    .scoreCell {
+        text-align: center;
+        border: 1px solid #694873;
+        border-top: none;
+        border-bottom: none;
 
     }
+
+
+    tr {
+        height: 2em;
+        /* overflow: hidden; */
+    }
+
+    tr>:first-child {
+        position: -webkit-sticky;
+        position: sticky;
+        left: 0;
+
+    }
+
+    tr>:last-child {
+        position: -webkit-sticky;
+        position: sticky;
+        right: 0%;
+        width: 3em;
+        /* background-color: black; */
+        text-align: center;
+        /* border: 1px solid #694873; */
+        border-top: none;
+        border-bottom: none;
+        padding: 0 .25em;
+
+    }
+
+    /* tbody {
+        overflow: scroll;
+    } */
+
     .tablePlayerCell {
         padding: .25em;
+        background: rgb(48, 48, 48);
     }
+
     .roundHeader {
         background-color: gray;
         width: 2em;
     }
+
     .currentRoundHeader {
         background-color: #934a67;
         width: 2em;
@@ -1012,18 +1082,20 @@
     .tablePlayerRow {
         border-collapse: collapse;
     }
-    .scoreCell {
-        text-align: center;
-        border: 1px solid #694873;
-        border-top: none;
-        border-bottom: none;
-        
-    }
+
     .totalScoreCell {
         border: 1px solid #694873;
         border-left: none;
         border-right: none;
         text-align: center;
+        background: rgb(48, 48, 48);
+
+    }
+    thead th:first-child{
+        background-color: #694873;
+    }
+    thead th:last-child{
+        background-color: #694873;
     }
     .tournamentGameResultBye {
         display: flex;
@@ -1046,19 +1118,23 @@
         background-color: #20202099;
 
     }
+
     #editPlayersContainer {
         width: 100%;
     }
+
     #editPlayersHeader {
         display: flex;
         justify-content: space-between;
         align-items: center;
         width: 90%;
     }
+
     #editPlayersToggleAndSubmitBtnBlock {
         display: flex;
         justify-content: space-between;
     }
+
     #submitNewPlayersBtn {
         width: 8.5em;
     }

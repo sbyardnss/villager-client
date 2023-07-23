@@ -805,7 +805,7 @@ export const ActiveTournament = () => {
                         <table id="tournamentTable">
                             <thead>
                                 <tr key={0} className="tableHeaderRow">
-                                    <th>player</th>
+                                    <th className="sticky-col first-col">player</th>
                                     {
                                         roundHtml.map(round => {
                                             return round
@@ -822,7 +822,7 @@ export const ActiveTournament = () => {
                                         let score = 0
                                         return (
                                             <tr key={tourneyPlayer.guest_id ? tourneyPlayer.guest_id : tourneyPlayer.id} id={tourneyPlayer.id + "--tourneyRow"} className="tablePlayerRow">
-                                                <td key={tourneyPlayer.id} className="tablePlayerCell">{tourneyPlayer.full_name}</td>
+                                                <td key={tourneyPlayer.id} className="tablePlayerCell sticky-col first-col">{tourneyPlayer.full_name}</td>
                                                 {
                                                     tourneyPlayerScores?.map((s, index) => {
                                                         if (typeof s === 'number') {

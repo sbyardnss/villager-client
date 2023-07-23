@@ -219,7 +219,10 @@ export const ChessClubs = () => {
                                     return (
                                         <div key={club.id} className="managedClubsListItem setCustomFont">
                                             <li>{club.name}</li>
-                                            <button className="buttonStyleReject" onClick={() => setSelectedClubToEdit(club.id)}>edit</button>
+                                            {/* <div >
+                                                <button className="buttonStyleApprove">Manage</button> */}
+                                                <button className="buttonStyleReject" onClick={() => setSelectedClubToEdit(club.id)}>edit</button>
+                                            {/* </div> */}
                                         </div>
                                     )
                                 }

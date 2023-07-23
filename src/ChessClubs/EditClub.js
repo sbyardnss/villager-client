@@ -64,27 +64,27 @@ export const EditClub = ({ clubId, clubObj, setClub }) => {
             <section id="clubForm">
                 <div className="formInput">
                     <label className="setCustomFont ClubFormLabel">Club Name</label>
-                    <input id="name" type="text" placeholder="club name" onChange={(evt) => handleFormChange(evt)} />
+                    <input id="name" type="text" placeholder="club name" value={editedClub?.name} onChange={(evt) => handleFormChange(evt)} />
                 </div>
                 <div className="formInput">
                     <label className="setCustomFont ClubFormLabel">Address</label>
-                    <input id="address" type="text" placeholder="street address (optional)" onChange={(evt) => handleFormChange(evt)} />
+                    <input id="address" type="text" placeholder="street address (optional)" value={editedClub?.address} onChange={(evt) => handleFormChange(evt)} />
                 </div>
                 <div className="formInput">
                     <label className="setCustomFont ClubFormLabel">City</label>
-                    <input id="city" type="text" placeholder="city (optional)" onChange={(evt) => handleFormChange(evt)} />
+                    <input id="city" type="text" placeholder="city (optional)" value={editedClub?.city} onChange={(evt) => handleFormChange(evt)} />
                 </div>
                 <div className="formInput">
-                    <label className="setCustomFont ClubFormLabel">State</label>
-                    <input id="state" type="text" placeholder="abbreviation (optional)" onChange={(evt) => handleFormChange(evt)} />
+                    <label className="setCustomFont ClubFormLabel">State (Abbreviation)</label>
+                    <input id="state" type="text" placeholder="abbreviation (optional)" value={editedClub?.state} onChange={(evt) => handleFormChange(evt)} />
                 </div>
                 <div className="formInput">
                     <label className="setCustomFont ClubFormLabel">ZipCode</label>
-                    <input id="zipcode" type="number" placeholder="zipcode (optional)" onChange={(evt) => handleFormChange(evt)} />
+                    <input id="zipcode" type="number" placeholder="zipcode (optional)" value={editedClub?.zipcode} onChange={(evt) => handleFormChange(evt)} />
                 </div>
                 <div className="formInput">
                     <label className="setCustomFont ClubFormLabel">Details</label>
-                    <textarea id="details" type="text" placeholder="Where do you meet? What time? etc (optional)" onChange={(evt) => handleFormChange(evt)}></textarea>
+                    <textarea id="details" type="text" placeholder="Where do you meet? What time? etc (optional)" value={editedClub?.details} onChange={(evt) => handleFormChange(evt)}></textarea>
                 </div>
                 <div className="formInput">
                     <label className="setCustomFont newClubFormLabel" >Old password</label>

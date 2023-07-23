@@ -1,11 +1,13 @@
 import { useState, useEffect, useContext, useRef } from "react"
 import { TournamentContext } from "./TournamentProvider"
-import { alterGame, endTournament, getAllTournaments, sendNewGame, updateTournament } from "../ServerManager"
+import { alterGame, endTournament, getAllTournaments, getScoreCard, sendNewGame, updateTournament } from "../ServerManager"
 import "./Tournament.css"
+import { EditPlayersModal } from "./EditPlayersModal"
+import { Swiss } from "tournament-pairings"
 
 
 export const ActiveTournament = () => {
-    const { tournaments, setTournaments, playersAndGuests, tournamentGames, selectedTournament, setSelectedTournament, resetTournamentGames } = useContext(TournamentContext)
+    const { tournaments, setTournaments, playersAndGuests, tournamentGames, selectedTournament, setSelectedTournament, resetTournamentGames, editPlayers, setEditPlayers, resetTournaments } = useContext(TournamentContext)
     //initial setup state variables
     const [activeTournament, setActiveTournament] = useState({})
     const [activeTournamentPlayers, setActiveTournamentPlayers] = useState([])
@@ -14,13 +16,17 @@ export const ActiveTournament = () => {
     //managing tournament state variables
     const [currentRound, setCurrentRound] = useState(0)
     const [editScores, setEditScores] = useState(false)
+    // const [editPlayers, setEditPlayers] = useState(false)
 
     //tournament process state variables
     const [resultsForTieBreak, updateResultsForTieBreak] = useState([])
     const [byePlayer, setByePlayer] = useState(0)
     const [scoreObj, setScoreObj] = useState({})
+    const [playerOpponentsReferenceObj, updatePlayerOpponentsReferenceObj] = useState({})
 
-    const opponentScoreCell = useRef()
+    // new scorecard state variable
+    const [scoreCard, setScoreCard] = useState({})
+
     //prepping data for api state variables
     const [gameForApi, updateGameForApi] = useState({
         player_w: 0,
@@ -49,6 +55,7 @@ export const ActiveTournament = () => {
         winner_model_type: "",
         bye: true
     })
+
     //setting active tournament here from tournaments
     useEffect(
         () => {
@@ -64,12 +71,41 @@ export const ActiveTournament = () => {
                     return activeTournament?.guest_competitors?.find(gc => p.guest_id === gc.guest_id)
                 }
                 else {
-                    return activeTournament?.competitors?.find(c => c === p.id)
+                    return activeTournament?.competitors?.find(c => c.id === p.id)
                 }
             })
             setActiveTournamentPlayers(playersForSelectedTournament)
         }, [activeTournament]
     )
+    useEffect(
+        //creates reference object for previous opponents for avoid on swiss round creation
+        () => {
+            if (tournamentGames && activeTournamentPlayers) {
+                let opponentObj = {}
+                activeTournamentPlayers?.map(player => {
+                    if (player.guest_id) {
+                        opponentObj[player.guest_id] = []
+                    }
+                    else {
+                        opponentObj[player.id] = []
+                    }
+                })
+                tournamentGames?.map(tg => {
+                    const playerWIdentifier = tg.player_w.guest_id ? tg.player_w.guest_id : tg.player_w.id
+                    const playerBIdentifier = tg.player_b?.guest_id ? tg.player_b?.guest_id : tg.player_b?.id
+                    if (playerBIdentifier === undefined && typeof opponentObj[playerWIdentifier] === 'object') {
+                        opponentObj[playerWIdentifier].push('bye')
+                    }
+                    if (typeof opponentObj[playerWIdentifier] === 'object' && typeof opponentObj[playerBIdentifier] === 'object') {
+                        opponentObj[playerWIdentifier].push(playerBIdentifier)
+                        opponentObj[playerBIdentifier].push(playerWIdentifier)
+                    }
+                })
+                updatePlayerOpponentsReferenceObj(opponentObj)
+            }
+        }, [activeTournamentPlayers, tournamentGames]
+    )
+
     //setting round from active tournament
     useEffect(
         () => {
@@ -126,7 +162,7 @@ export const ActiveTournament = () => {
                     setByePlayer(byePairing.player1)
                 }
             }
-        }, [currentRound]
+        }, [currentRound, activeTournament]
     )
     //updating game for api through active tournament
     useEffect(
@@ -158,48 +194,80 @@ export const ActiveTournament = () => {
             updateResultsForTieBreak(resultsForTieBreak)
         }, [tournamentGames, selectedTournament]
     )
+    //this might not be necessary after new scoring method
+    // useEffect(
+    //     () => {
+    //         const scoreBoardObj = {}
+    //         if (resultsForTieBreak && activeTournamentPlayers) {
+    //             for (const player of activeTournamentPlayers) {
+    //                 const playerIdentifier = player.guest_id ? player.guest_id : player.id
+    //                 let playerResults = []
+    //                 let count = 0
+    //                 if (typeof playerIdentifier === 'string') {
+    //                     playerResults = resultsForTieBreak.filter(result => result.white === playerIdentifier || result?.black === playerIdentifier)
+    //                 }
+    //                 else {
+    //                     playerResults = resultsForTieBreak.filter(result => result.white === playerIdentifier && typeof result.white !== 'string' || result?.black === playerIdentifier && typeof result?.black !== 'string')
+    //                 }
+    //                 for (const result of playerResults) {
+    //                     if (result?.winner === playerIdentifier) {
+    //                         count++
+    //                     }
+    //                     if (result?.win_style === 'draw') {
+    //                         count = count + .5
+    //                     }
+    //                 }
+    //                 scoreBoardObj[playerIdentifier] = count
+    //             }
+    //         }
+    //         setScoreObj(scoreBoardObj)
+    //     }, [resultsForTieBreak]
+    // )
+
     useEffect(
         () => {
-            const scoreBoardObj = {}
-            if (resultsForTieBreak && activeTournamentPlayers) {
-                for (const player of activeTournamentPlayers) {
-                    const playerIdentifier = player.guest_id ? player.guest_id : player.id
-                    let playerResults = []
-                    let count = 0
-                    if (typeof playerIdentifier === 'string') {
-                        playerResults = resultsForTieBreak.filter(result => result.white === playerIdentifier || result?.black === playerIdentifier)
-                    }
-                    else {
-                        playerResults = resultsForTieBreak.filter(result => result.white === playerIdentifier && typeof result.white !== 'string' || result?.black === playerIdentifier && typeof result?.black !== 'string')
-                    }
-                    for (const result of playerResults) {
-                        if (result?.winner === playerIdentifier) {
-                            count++
-                        }
-                        if (result?.win_style === 'draw') {
-                            count = count + .5
-                        }
-                    }
-                    scoreBoardObj[playerIdentifier] = count
-                    // console.log(playerResults)
-                    // console.log(playerIdentifier)
-                    // console.log(count)
-                }
+            if (selectedTournament) {
+                getScoreCard(selectedTournament)
+                    .then(data => setScoreCard(data))
             }
-            setScoreObj(scoreBoardObj)
-        }, [resultsForTieBreak]
+        }, [tournamentGames]
     )
-    const resetTournaments = () => {
-        getAllTournaments()
-            .then(data => setTournaments(data))
-    }
+    useEffect(
+        () => {
+            if (scoreCard) {
+                const scoreBoardObj = {}
+                for (const playerId in scoreCard) {
+                    scoreBoardObj[playerId] = 0
+                    for (const score of scoreCard[playerId]) {
+                        if (typeof score === 'number') {
+                            scoreBoardObj[playerId] += parseFloat(score)
+                        }
+                        if (score === 'bye') {
+                            scoreBoardObj[playerId] += 1
+                        }
+                    }
+                }
+                setScoreObj(scoreBoardObj)
+            }
+        }, [scoreCard]
+    )
+    // const resetTournaments = () => {
+    //     getAllTournaments()
+    //         .then(data => setTournaments(data))
+    // }
     //number population for table
     const roundPopulation = () => {
         let roundNumber = activeTournament?.rounds;
 
         let tableHtml = [];
         while (roundNumber > 0) {
-            tableHtml.push(<th key={roundNumber} className="roundHeader">{roundNumber}</th>)
+            if (roundNumber === currentRound) {
+                tableHtml.push(<th key={roundNumber} className="currentRoundHeader">{roundNumber}</th>)
+
+            }
+            else {
+                tableHtml.push(<th key={roundNumber} className="roundHeader">{roundNumber}</th>)
+            }
             roundNumber--;
         }
         return tableHtml.reverse()
@@ -349,54 +417,72 @@ export const ActiveTournament = () => {
     const submitResultsOrNull = () => {
         if (activeTournament?.complete === false) {
             if (activeTournament?.in_person === true) {
+                const byeMatchup = currentRoundMatchups?.find(matchup => matchup.player1 === null || matchup.player2 === null)
+                const whiteBye = activeTournamentPlayers?.find(player => player.id === byeMatchup?.player1 || player.guest_id === byeMatchup?.player1)
+                // const blackBye = activeTournamentPlayers?.find(player => player.id === byeMatchup.player2 || player.guest_id === byeMatchup.player2)
                 return (
                     <section id="tournamentScoringSection">
+                        {byeMatchup ?
+                            <div key={`${byeMatchup.round} -- ${byeMatchup.match} -- bye`} className="setColor setCustomFont">
+                                {whiteBye?.username || whiteBye?.full_name} has bye
+                            </div>
+                            : ""}
                         {
                             currentRoundMatchups?.map(matchup => {
                                 const white = activeTournamentPlayers?.find(player => player.id === matchup.player1 || player.guest_id === matchup.player1)
                                 const black = activeTournamentPlayers?.find(player => player.id === matchup.player2 || player.guest_id === matchup.player2)
                                 const copy = { ...gameForApi }
+                                const whiteTargetForIndicator = white.guest_id ? white.guest_id : white.id
+                                const blackTargetForIndicator = black?.guest_id ? black?.guest_id : black?.id
+
+                                // let correspondingGame = tournamentGames.find(tg => tg.player_w.guest_id ? tg.player_w.guest_id : tg.player_w.id === matchup.player1 && tg.player_b?.guest_id ? tg.player_b?.guest_id: tg.player_b?.id === matchup.player2)
+                                // console.log(correspondingGame)
                                 copy.player_w = white?.id
                                 copy.player_b = black?.id
-                                if (black === undefined) {
+                                // if (black === undefined) {
+                                //     return (
+                                //         <div key={`${matchup.round} -- ${matchup.match} -- bye`} className="setColor setCustomFont">
+                                //             {white?.username || white?.full_name} has bye
+                                //         </div>
+                                //     )
+                                // }
+                                if (black !== undefined && !playerOpponentsReferenceObj[whiteTargetForIndicator].includes(blackTargetForIndicator)) {
                                     return (
-                                        <div key={`${matchup.round} -- ${matchup.match} -- bye`} className="setColor setCustomFont">
-                                            {white?.username || white?.full_name} has bye
+                                        <div key={`${matchup.round} -- ${matchup.match}`}
+                                            className="tournamentScoringMatchup">
+                                            <div
+                                                className={gameForApi.winner === whiteTargetForIndicator ? "selectedWhitePiecesMatchup" : "whitePiecesMatchup"}
+                                                id="whitePieces"
+                                                onClick={(evt) => {
+                                                    handleGameForApiUpdate(evt.target.id, white, black)
+                                                }}>{white?.guest_id ? white.full_name : white?.username}
+                                            </div>
+                                            <div
+                                                className={gameForApi.player_w === whiteTargetForIndicator && gameForApi.player_b === blackTargetForIndicator && gameForApi.win_style === "draw" ? "selectedDrawMatchupButton" : "drawMatchupButton"}
+                                                id="drawUpdate"
+                                                onClick={(evt) => {
+                                                    handleGameForApiUpdate(evt.target.id, white, black)
+                                                }}>Draw
+                                            </div>
+                                            <div
+                                                className={gameForApi.winner === blackTargetForIndicator ? "selectedBlackPiecesMatchup" : "blackPiecesMatchup"}
+                                                id="blackPieces"
+                                                onClick={(evt) => {
+                                                    handleGameForApiUpdate(evt.target.id, white, black)
+                                                }}>{black?.guest_id ? black.full_name : black?.username}
+                                            </div>
+                                            <button
+                                                id="scoringSubmit"
+                                                className="buttonStyleReject"
+                                                onClick={() => {
+                                                    sendNewGame(gameForApi)
+                                                        .then(() => resetTournamentGames())
+                                                }}>
+                                                submit
+                                            </button>
                                         </div>
                                     )
                                 }
-                                return (
-                                    <div key={`${matchup.round} -- ${matchup.match}`}
-                                        className="tournamentScoringMatchup">
-                                        <div
-                                            className="whitePiecesMatchup"
-                                            id="whitePieces"
-                                            onClick={(evt) => {
-                                                handleGameForApiUpdate(evt.target.id, white, black)
-                                            }}>{white?.guest_id ? white.full_name : white?.username}
-                                        </div>
-                                        <div
-                                            className="drawMatchupButton"
-                                            id="drawUpdate"
-                                            onClick={(evt) => {
-                                                handleGameForApiUpdate(evt.target.id, white, black)
-                                            }}>Draw
-                                        </div>
-                                        <div
-                                            className="blackPiecesMatchup"
-                                            id="blackPieces"
-                                            onClick={(evt) => {
-                                                handleGameForApiUpdate(evt.target.id, white, black)
-                                            }}>{black?.guest_id ? black.full_name : black?.username}
-                                        </div>
-                                        <button onClick={() => {
-                                            sendNewGame(gameForApi)
-                                                .then(() => resetTournamentGames())
-                                        }}>
-                                            submit
-                                        </button>
-                                    </div>
-                                )
                             })
                         }
                     </section>
@@ -417,15 +503,15 @@ export const ActiveTournament = () => {
                                 currentRoundMatchups?.map(matchup => {
                                     const white = activeTournamentPlayers?.find(player => player.id === matchup.player1 || player.guest_id === matchup.player1)
                                     const black = activeTournamentPlayers?.find(player => player.id === matchup.player2 || player.guest_id === matchup.player2)
-                                    if (black === undefined) {
-                                        return (
-                                            <tr key={`${matchup.round} -- ${matchup.match} -- bye`} className="setColor setCustomFont">
-                                                <td>{white?.username || white?.full_name}</td>
-                                                <td></td>
-                                                <td>bye</td>
-                                            </tr>
-                                        )
-                                    }
+                                    // if (black === undefined) {
+                                    //     return (
+                                    //         <tr key={`${matchup.round} -- ${matchup.match} -- bye`} className="setColor setCustomFont">
+                                    //             <td>{white?.username || white?.full_name}</td>
+                                    //             <td></td>
+                                    //             <td>bye</td>
+                                    //         </tr>
+                                    //     )
+                                    // }
                                     if (white?.id && black?.id) {
                                         return (
                                             <tr key={matchup.round + matchup.match}>
@@ -615,39 +701,59 @@ export const ActiveTournament = () => {
                         Results
                         {resultsDisplay()}
                         <div id="modalBtns">
-                            <button onClick={() => {
-                                endTournamentModal.style.display = "flex"
-                                modal.style.display = "none"
-                            }}>End Tournament</button>
-                            <button onClick={() => {
-                                modal.style.display = "none"
-                            }}>cancel</button>
+                            <button
+                                className="buttonStyleApprove"
+                                onClick={() => {
+                                    endTournamentModal.style.display = "flex"
+                                    modal.style.display = "none"
+                                }}>End Tournament</button>
+                            <button
+                                className="buttonStyleReject"
+                                onClick={() => {
+                                    modal.style.display = "none"
+                                }}>cancel</button>
                         </div>
                     </div>
                     <div id="endTournamentModal" className="setCustomFont">
                         End Tournament?
                         <div id="endTournamentBtnBlock">
-                            <button onClick={() => {
-                                endTournament(selectedTournament)
-                                    .then(() => {
-                                        resetTournaments()
-                                        setSelectedTournament(0)
-                                    })
-                            }
-                            }>confirm</button>
-                            <button onClick={() => {
-                                endTournamentModal.style.display = "none"
-                                modal.style.display = "flex"
-                            }}>cancel</button>
+                            <button
+                                className="buttonStyleApprove"
+                                onClick={() => {
+                                    endTournament(selectedTournament)
+                                        .then(() => {
+                                            resetTournaments()
+                                            setSelectedTournament(0)
+                                        })
+                                }
+                                }>confirm</button>
+                            <button
+                                className="buttonStyleReject"
+                                onClick={() => {
+                                    endTournamentModal.style.display = "none"
+                                    modal.style.display = "flex"
+                                }}>cancel</button>
                         </div>
                     </div>
+                    {editPlayers ? <div id="editPlayersModal" className="setCustomFont">
+                        <EditPlayersModal
+                            activeTournamentObj={activeTournament}
+                            // tournamentId={selectedTournament}
+                            setEdit={setEditPlayers}
+                            playedRounds={currentRound}
+                            gamesFromThisRound={tournamentGames.filter(g => g.tournament_round === currentRound)}
+                            previousOpponents={playerOpponentsReferenceObj}
+                        />
+                    </div> : ""}
                     <div id="activeTournamentHeader">
                         <div className="setColor setTournamentFontSize">{activeTournament.title}</div>
                         <button
                             className="progressionControlBtn buttonStyleReject"
                             onClick={() => {
+                                setEditPlayers(false)
                                 setSelectedTournament(0)
                                 setEditScores(false)
+                                updatePlayerOpponentsReferenceObj({})
                                 // setScoring(false)
                             }}>exit</button>
                     </div>
@@ -660,7 +766,24 @@ export const ActiveTournament = () => {
                                         sendNewGame(byeGame)
                                     }
                                     const tournamentCopy = { ...activeTournament }
+                                    const playersArg = []
+                                    for (const opponentRef in playerOpponentsReferenceObj) {
+                                        const playerRefObj = {
+                                            id: parseInt(opponentRef) || opponentRef,
+                                            avoid: playerOpponentsReferenceObj[opponentRef].filter(ref => ref !== 'bye')
+                                        }
+
+                                        if (playerOpponentsReferenceObj[opponentRef].includes('bye')) {
+                                            playerRefObj.receivedBye = true
+                                        }
+                                        playersArg.push(playerRefObj)
+                                    }
+                                    // console.log(playersArg)
+                                    tournamentCopy.pairings = tournamentCopy.pairings.concat(Swiss(playersArg, currentRound + 1))
                                     tournamentCopy.rounds++
+                                    // console.log(tournamentCopy)
+                                    tournamentCopy.competitors = tournamentCopy.competitors.map(c => { return c.id })
+                                    tournamentCopy.guest_competitors = tournamentCopy.guest_competitors.map(gc => { return gc.id })
                                     updateTournament(tournamentCopy)
                                         .then(() => {
                                             resetTournaments()
@@ -675,6 +798,9 @@ export const ActiveTournament = () => {
                                 // setScoring(false)
                             }}>edit scores</button>
                         {scoringButtonOrNone()}
+                        <button className="progressionControlBtn controlBtnApprove" onClick={() => {
+                            setEditPlayers(true)
+                        }}>edit players</button>
                         <button
                             className="progressionControlBtn controlBtnApprove"
                             onClick={() => {
@@ -691,7 +817,7 @@ export const ActiveTournament = () => {
                         <table id="tournamentTable">
                             <thead>
                                 <tr key={0} className="tableHeaderRow">
-                                    <th>player</th>
+                                    <th className="sticky-col first-col">player</th>
                                     {
                                         roundHtml.map(round => {
                                             return round
@@ -703,66 +829,34 @@ export const ActiveTournament = () => {
                             <tbody>
                                 {
                                     activeTournamentPlayers.map(tourneyPlayer => {
-                                        const tourneyPlayerGames = tournamentGames.filter(tg => {
-                                            if (tourneyPlayer.guest_id) {
-                                                return tg.player_b?.guest_id === tourneyPlayer.guest_id || tg.player_w.guest_id === tourneyPlayer.guest_id
-                                            }
-                                            else {
-                                                return !tg.player_b?.guest_id && tg.player_b?.id === tourneyPlayer.id || !tg.player_w.guest_id && tg.player_w.id === tourneyPlayer.id
-                                            }
-                                        })
                                         const guestIdOrId = tourneyPlayer.guest_id ? tourneyPlayer.guest_id : tourneyPlayer.id
-                                        const emptyCellCompensation = () => {
-                                            if (tourneyPlayerGames.length < currentRound) {
-                                                return (
-                                                    <td></td>
-                                                )
-                                            }
-                                        }
+                                        const tourneyPlayerScores = scoreCard[guestIdOrId]
                                         let score = 0
                                         return (
-                                            <tr key={tourneyPlayer.guest_id ? tourneyPlayer.guest_id : tourneyPlayer.id} id={tourneyPlayer.id + "--tourneyRow"}>
-                                                <td key={tourneyPlayer.id} className="tablePlayerCell">{tourneyPlayer.full_name}</td>
+                                            <tr key={tourneyPlayer.guest_id ? tourneyPlayer.guest_id : tourneyPlayer.id} id={tourneyPlayer.id + "--tourneyRow"} className="tablePlayerRow">
+                                                <td key={tourneyPlayer.id} className="tablePlayerCell sticky-col first-col">{tourneyPlayer.full_name}</td>
                                                 {
-                                                    tourneyPlayerGames.map(tpg => {
-                                                        if (tpg.bye === true) {
-                                                            score++
-                                                            return (
-                                                                <td key={tpg.id} value={1} id={guestIdOrId + 'bye'} className="tournamentGameResultBye">bye</td>
-                                                            )
+                                                    tourneyPlayerScores?.map((s, index) => {
+                                                        if (typeof s === 'number') {
+                                                            score += s
                                                         }
-                                                        if ((tpg.winner?.guest_id && tpg.winner?.guest_id === tourneyPlayer.guest_id) || (!tpg.winner?.guest_id && !tourneyPlayer.guest_id && tpg.winner?.id === tourneyPlayer.id)) {
-                                                            score++
-                                                            return (
-                                                                <td key={tpg.id} value={1} id={guestIdOrId + tpg.id} className="tournamentGameResult">1</td>
-                                                            )
+                                                        if (s === 'bye') {
+                                                            score += 1
                                                         }
-                                                        else if (tpg.winner === null && tpg.win_style === "draw") {
-                                                            score += .5
+                                                        if (s !== 'none') {
                                                             return (
-                                                                <td key={tpg.id} value={.5} id={guestIdOrId + tpg.id} className="tournamentGameResult">1/2</td>
-                                                            )
-                                                        }
-                                                        else if (tpg.winner === null && !tpg.win_style) {
-                                                            score = score
-                                                            return (
-                                                                <td key={tpg.id} id={guestIdOrId + tpg.id} className="tournamentGameResult"></td>
+                                                                <td key={guestIdOrId + '--' + index} className="scoreCell">{s}</td>
                                                             )
                                                         }
                                                         else {
-                                                            score = score
                                                             return (
-                                                                <td key={tpg.id} value={0} id={guestIdOrId + tpg.id} className="tournamentGameResult">0</td>
+                                                                <td key={guestIdOrId + '--' + index} className="scoreCell">0</td>
                                                             )
                                                         }
                                                     })
                                                 }
-                                                {emptyCellCompensation()}
-                                                {/* <td key={tourneyPlayer.guest_id ? tourneyPlayer.guest_id + "-- score" : tourneyPlayer.id + "-- score"} id={tourneyPlayer.guest_id ? tourneyPlayer.guest_id + "-- score" : tourneyPlayer.id + "-- score"} value={score || 0}>
-                                                        {score}
-                                                */}
-                                                <td key={guestIdOrId + "-- score"} id={guestIdOrId + "-- score"} value={scoreObj[guestIdOrId]}>
-                                                    {scoreObj[guestIdOrId]}
+                                                <td key={guestIdOrId + "-- score"} id={guestIdOrId + "-- score"} className="totalScoreCell" value={scoreObj[guestIdOrId]}>
+                                                    {score}
                                                 </td>
                                             </tr>
                                         )

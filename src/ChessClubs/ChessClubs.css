@@ -20,12 +20,14 @@
     background-color: #694873;
     cursor: pointer;
 }
+
 #clubForm {
     width: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
 }
+
 .formInput {
     display: flex;
     flex-direction: column;
@@ -38,11 +40,13 @@ textarea {
     height: 5em;
     margin-bottom: .5em;
 }
+
 #newClubButtonBlock {
     width: 60%;
     display: flex;
     justify-content: space-around;
 }
+
 #newClubPasswordSetModal {
     display: none;
     flex-direction: column;
@@ -60,23 +64,28 @@ textarea {
     display: none;
     width: 20em;
     position: absolute;
+    background-color: #202020;
     top: 20%;
 }
+
 #editClubContainer {
     backdrop-filter: blur(10px);
     border: 1px solid #694873;
     border-radius: 4px;
     padding: .5em;
 }
+
 #editClubHeader {
     display: flex;
     justify-content: space-between;
 }
+
 #editClubBtnBlock {
     display: flex;
     width: 7em;
     justify-content: space-between;
 }
+
 #errorModal {
     display: none;
     flex-direction: column;
@@ -96,6 +105,7 @@ textarea {
     margin: 1em 0 0 0;
     padding: .5em;
 }
+
 #myClubsList {
     list-style: none;
     display: flex;
@@ -108,6 +118,7 @@ textarea {
     margin-bottom: 0;
     overflow: scroll;
 }
+
 .managedClubsListItem {
     width: 14em;
     display: flex;
@@ -126,6 +137,7 @@ textarea {
     margin: 1em 0 0 0;
     padding: .5em;
 }
+
 #joinableClubList {
     list-style: none;
     display: flex;
@@ -138,6 +150,7 @@ textarea {
     margin-bottom: 0;
     overflow: scroll;
 }
+
 .joinableClubListItem {
     width: 14em;
     display: flex;
@@ -148,12 +161,14 @@ textarea {
     margin-bottom: .25em;
     padding: .25em;
 }
+
 .joinableClubNameAndBtn {
     display: flex;
     justify-content: space-between;
     align-items: center;
     width: 100%;
 }
+
 #joinClubModal {
     display: none;
     position: absolute;
@@ -167,6 +182,7 @@ textarea {
     border-radius: 4px;
     padding: .25em;
 }
+
 #joinClubInputAndBtn {
     display: flex;
     justify-content: space-around;

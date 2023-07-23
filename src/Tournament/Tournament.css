@@ -1047,7 +1047,8 @@
     }
 
     #tournamentTable {
-        width: 20em;
+        width:fit-content;
+        max-width: 20em;
         color: rgb(231, 231, 231);
         /* overflow: hidden; */
         border-collapse: collapse;
@@ -1069,6 +1070,7 @@
 
     .first-col {
         /* width: 5rem; */
+        max-width: 80px;
         left: 0px;
         background-color: black;
     }
@@ -1083,20 +1085,17 @@
 
     tr {
         height: 3rem;
-        /* overflow: hidden; */
     }
-    thead th {
+    /* thead th {
         width: 3rem;
-    }
-    tr td {
-        width: 3rem;
-
-    }
+    } */
+    
 
     tr>:first-child {
         position: -webkit-sticky;
         position: sticky;
         left: 0;
+        max-width: 80px;
         width: 80px;
         z-index: 5;
     }

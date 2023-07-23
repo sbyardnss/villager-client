@@ -162,7 +162,7 @@ export const ActiveTournament = () => {
                     setByePlayer(byePairing.player1)
                 }
             }
-        }, [currentRound]
+        }, [currentRound, activeTournament]
     )
     //updating game for api through active tournament
     useEffect(

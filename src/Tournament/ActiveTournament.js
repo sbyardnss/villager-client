@@ -248,7 +248,8 @@ export const ActiveTournament = () => {
                                 }
                             }
                             else {
-                                if (targetGame.winner?.id === identifier) {
+                                
+                                if (targetGame.winner?.id === identifier && !targetGame.winner?.guest_id) {
                                     playerScoreArr.push(1)
                                 }
                                 else {
@@ -563,7 +564,6 @@ export const ActiveTournament = () => {
     //iterating tournament games to edit if necessary
     const tableOrEdit = () => {
         const sortedTournamentGames = tournamentGames.sort((a, b) => { return a.id - b.id  })
-        console.log(sortedTournamentGames)
         if (editScores) {
             const editPairings = [...activeTournament?.pairings]
             // const filteredPairings = editPairings.filter(pairing => pairing.round < activeTournament?.rounds)

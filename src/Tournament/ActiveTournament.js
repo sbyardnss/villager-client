@@ -238,24 +238,14 @@ export const ActiveTournament = () => {
                         else if (targetGame.win_style === 'draw') {
                             playerScoreArr.push(.5)
                         }
+                        else if (typeof identifier === 'string' && targetGame.winner?.guest_id === identifier) {
+                            playerScoreArr.push(1)
+                        }
+                        else if (typeof identifier === 'number' && targetGame.winner?.id === identifier){
+                            playerScoreArr.push(1)
+                        }
                         else {
-                            if (typeof identifier === 'string') {
-                                if (targetGame.winner?.guest_id === identifier) {
-                                    playerScoreArr.push(1)
-                                }
-                                else {
-                                    playerScoreArr.push(0)
-                                }
-                            }
-                            else {
-                                
-                                if (targetGame.winner?.id === identifier && !targetGame.winner?.guest_id) {
-                                    playerScoreArr.push(1)
-                                }
-                                else {
-                                    playerScoreArr.push(0)
-                                }
-                            }
+                            playerScoreArr.push(0)
                         }
                         numOfRounds++
                     }
@@ -265,6 +255,7 @@ export const ActiveTournament = () => {
             }
         }, [tournamentGames, activeTournamentPlayers]
     )
+    console.log(byeGame)
     useEffect(
         () => {
             if (scoreCard) {
@@ -886,7 +877,7 @@ export const ActiveTournament = () => {
                                                         <td key={tourneyPlayer.id} className="tablePlayerCell sticky-col first-col">{tourneyPlayer.full_name}</td>
                                                         {
                                                             tourneyPlayerScores?.map((s, index) => {
-
+                                                                
                                                                 if (typeof s === 'number') {
                                                                     score += s
                                                                 }

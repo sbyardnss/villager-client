@@ -709,12 +709,14 @@ export const ActiveTournament = () => {
                         Results
                         {resultsDisplay()}
                         <div id="modalBtns">
-                            <button
-                                className="buttonStyleApprove"
-                                onClick={() => {
-                                    endTournamentModal.style.display = "flex"
-                                    modal.style.display = "none"
-                                }}>End Tournament</button>
+                            {activeTournament.complete === false ?
+                                <button
+                                    className="buttonStyleApprove"
+                                    onClick={() => {
+                                        endTournamentModal.style.display = "flex"
+                                        modal.style.display = "none"
+                                    }}>End Tournament</button>
+                                : ""}
                             <button
                                 className="buttonStyleReject"
                                 onClick={() => {
@@ -766,49 +768,55 @@ export const ActiveTournament = () => {
                             }}>exit</button>
                     </div>
                     <div id="tournamentProgressionControls">
-                        <button
-                            className="progressionControlBtn controlBtnApprove"
-                            onClick={() => {
-                                if (window.confirm("create round?")) {
-                                    if (byePlayer) {
-                                        sendNewGame(byeGame)
-                                    }
-                                    const tournamentCopy = { ...activeTournament }
-                                    const playersArg = []
-                                    for (const opponentRef in playerOpponentsReferenceObj) {
-                                        const playerRefObj = {
-                                            id: parseInt(opponentRef) || opponentRef,
-                                            avoid: playerOpponentsReferenceObj[opponentRef].filter(ref => ref !== 'bye')
+                        {activeTournament.complete === false ?
+                            <button
+                                className="progressionControlBtn controlBtnApprove"
+                                onClick={() => {
+                                    if (window.confirm("create round?")) {
+                                        if (byePlayer) {
+                                            sendNewGame(byeGame)
                                         }
+                                        const tournamentCopy = { ...activeTournament }
+                                        const playersArg = []
+                                        for (const opponentRef in playerOpponentsReferenceObj) {
+                                            const playerRefObj = {
+                                                id: parseInt(opponentRef) || opponentRef,
+                                                avoid: playerOpponentsReferenceObj[opponentRef].filter(ref => ref !== 'bye')
+                                            }
 
-                                        if (playerOpponentsReferenceObj[opponentRef].includes('bye')) {
-                                            playerRefObj.receivedBye = true
+                                            if (playerOpponentsReferenceObj[opponentRef].includes('bye')) {
+                                                playerRefObj.receivedBye = true
+                                            }
+                                            playersArg.push(playerRefObj)
                                         }
-                                        playersArg.push(playerRefObj)
+                                        // console.log(playersArg)
+                                        tournamentCopy.pairings = tournamentCopy.pairings.concat(Swiss(playersArg, currentRound + 1))
+                                        tournamentCopy.rounds++
+                                        // console.log(tournamentCopy)
+                                        tournamentCopy.competitors = tournamentCopy.competitors.map(c => { return c.id })
+                                        tournamentCopy.guest_competitors = tournamentCopy.guest_competitors.map(gc => { return gc.id })
+                                        updateTournament(tournamentCopy)
+                                            .then(() => {
+                                                resetTournaments()
+                                                resetTournamentGames()
+                                            })
                                     }
-                                    // console.log(playersArg)
-                                    tournamentCopy.pairings = tournamentCopy.pairings.concat(Swiss(playersArg, currentRound + 1))
-                                    tournamentCopy.rounds++
-                                    // console.log(tournamentCopy)
-                                    tournamentCopy.competitors = tournamentCopy.competitors.map(c => { return c.id })
-                                    tournamentCopy.guest_competitors = tournamentCopy.guest_competitors.map(gc => { return gc.id })
-                                    updateTournament(tournamentCopy)
-                                        .then(() => {
-                                            resetTournaments()
-                                            resetTournamentGames()
-                                        })
-                                }
-                            }}>Finish Round</button>
-                        <button
-                            className="progressionControlBtn controlBtnApprove"
-                            onClick={() => {
-                                setEditScores(true)
-                                // setScoring(false)
-                            }}>edit scores</button>
+                                }}>Finish Round</button>
+                            : ""}
+                        {activeTournament.complete === false ?
+                            <button
+                                className="progressionControlBtn controlBtnApprove"
+                                onClick={() => {
+                                    setEditScores(true)
+                                    // setScoring(false)
+                                }}>edit scores</button>
+                            : ""}
                         {scoringButtonOrNone()}
-                        <button className="progressionControlBtn controlBtnApprove" onClick={() => {
-                            setEditPlayers(true)
-                        }}>edit players</button>
+                        {activeTournament.complete === false ?
+                            <button className="progressionControlBtn controlBtnApprove" onClick={() => {
+                                setEditPlayers(true)
+                            }}>edit players</button>
+                            : ""}
                         <button
                             className="progressionControlBtn controlBtnApprove"
                             onClick={() => {
@@ -831,7 +839,7 @@ export const ActiveTournament = () => {
                                             return round
                                         })
                                     }
-                                    {currentRound<6?<th ></th>:""}
+                                    {currentRound < 6 ? <th ></th> : ""}
                                     <th>count</th>
                                 </tr>
                             </thead>
@@ -866,11 +874,11 @@ export const ActiveTournament = () => {
                                                         }
                                                     })
                                                 }
-                                                {currentRound<6?<td className="scoreCell"></td>:""}
+                                                {currentRound < 6 ? <td className="scoreCell"></td> : ""}
                                                 <td key={guestIdOrId + "-- score"} id={guestIdOrId + "-- score"} className="totalScoreCell" value={scoreObj[guestIdOrId]}>
                                                     {score}
                                                 </td>
-                                                
+
                                             </tr>
                                         )
                                     })

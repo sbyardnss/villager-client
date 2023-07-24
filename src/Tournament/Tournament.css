@@ -590,7 +590,7 @@
         border-radius: 8px;
         color: rgb(231, 231, 231);
         position: absolute;
-        top: 20%;
+        top: 40%;
         backdrop-filter: blur(30px);
         background-color: #20202099;
         width: 12.8em;
@@ -599,6 +599,7 @@
         align-items: center;
         flex-direction: column;
         font-size: x-large;
+        z-index: 6;
         /* padding: .5em; */
     }
 
@@ -894,6 +895,7 @@
 
     .progressionControlBtn {
         width: 5em;
+        min-height: 3em;
     }
 
     /* scoring */

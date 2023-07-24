@@ -255,7 +255,6 @@ export const ActiveTournament = () => {
             }
         }, [tournamentGames, activeTournamentPlayers]
     )
-    console.log(byeGame)
     useEffect(
         () => {
             if (scoreCard) {
@@ -390,6 +389,9 @@ export const ActiveTournament = () => {
         if (!pastGame) {
             //new score
             copy = { ...gameForApi }
+            if (copy.id) {
+                delete copy.id
+            }
             copy.tournament = activeTournament?.id
             copy.tournament_round = currentRound
             copy.time_setting = activeTournament?.time_setting
@@ -474,21 +476,21 @@ export const ActiveTournament = () => {
                                         <div key={`${matchup.round} -- ${matchup.match}`}
                                             className="tournamentScoringMatchup">
                                             <div
-                                                className={gameForApi.winner === whiteTargetForIndicator ? "selectedWhitePiecesMatchup" : "whitePiecesMatchup"}
+                                                className={gameForApi.id === undefined && gameForApi.winner === whiteTargetForIndicator ? "selectedWhitePiecesMatchup" : "whitePiecesMatchup"}
                                                 id="whitePieces"
                                                 onClick={(evt) => {
                                                     handleGameForApiUpdate(evt.target.id, white, black)
                                                 }}>{white?.guest_id ? white.full_name : white?.username}
                                             </div>
                                             <div
-                                                className={gameForApi.player_w === whiteTargetForIndicator && gameForApi.player_b === blackTargetForIndicator && gameForApi.win_style === "draw" ? "selectedDrawMatchupButton" : "drawMatchupButton"}
+                                                className={gameForApi.id === undefined && gameForApi.player_w === whiteTargetForIndicator && gameForApi.player_b === blackTargetForIndicator && gameForApi.win_style === "draw" ? "selectedDrawMatchupButton" : "drawMatchupButton"}
                                                 id="drawUpdate"
                                                 onClick={(evt) => {
                                                     handleGameForApiUpdate(evt.target.id, white, black)
                                                 }}>Draw
                                             </div>
                                             <div
-                                                className={gameForApi.winner === blackTargetForIndicator ? "selectedBlackPiecesMatchup" : "blackPiecesMatchup"}
+                                                className={gameForApi.id === undefined && gameForApi.winner === blackTargetForIndicator ? "selectedBlackPiecesMatchup" : "blackPiecesMatchup"}
                                                 id="blackPieces"
                                                 onClick={(evt) => {
                                                     handleGameForApiUpdate(evt.target.id, white, black)
@@ -580,6 +582,8 @@ export const ActiveTournament = () => {
                                         return player.id === game.player_b?.id
                                     }
                                 })
+                                const whiteTargetForIndicator = white.guest_id ? white.guest_id : white.id
+                                const blackTargetForIndicator = black?.guest_id ? black?.guest_id : black?.id
                                 if (game.bye === false) {
                                     return (
                                         <div key={`${game.tournament_round} + ${game.id} + editing`} className="editScoreListItem">
@@ -587,17 +591,17 @@ export const ActiveTournament = () => {
                                                 <div className="setCustomFont">Round {game.tournament_round}</div>
                                             </div>
                                             <div className="editMatchup">
-                                                <div className="whitePiecesMatchup"
+                                                <div className={gameForApi.id ===game.id && gameForApi.winner === whiteTargetForIndicator ? "selectedWhitePiecesMatchup" : "whitePiecesMatchup"}
                                                     id="whitePieces"
                                                     onClick={(evt) => {
                                                         handleGameForApiUpdate(evt.target.id, white, black, game)
                                                     }}>{white.username || white.full_name}</div>
-                                                <div className="drawMatchupButton"
+                                                <div className={gameForApi.id ===game.id && gameForApi.win_style === "draw" ? "selectedDrawMatchupButton" : "drawMatchupButton"}
                                                     id="drawUpdate"
                                                     onClick={(evt) => {
                                                         handleGameForApiUpdate(evt.target.id, white, black, game)
                                                     }}>Draw</div>
-                                                <div className="blackPiecesMatchup"
+                                                <div className={gameForApi.id === game.id && gameForApi.winner === blackTargetForIndicator ? "selectedBlackPiecesMatchup" : "blackPiecesMatchup"}
                                                     id="blackPieces"
                                                     onClick={(evt) => {
                                                         handleGameForApiUpdate(evt.target.id, white, black, game)

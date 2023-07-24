@@ -562,7 +562,8 @@ export const ActiveTournament = () => {
     }
     //iterating tournament games to edit if necessary
     const tableOrEdit = () => {
-        const sortedTournamentGames = tournamentGames.sort((a, b) => { return b.round - a.round })
+        const sortedTournamentGames = tournamentGames.sort((a, b) => { return a.id - b.id  })
+        console.log(sortedTournamentGames)
         if (editScores) {
             const editPairings = [...activeTournament?.pairings]
             // const filteredPairings = editPairings.filter(pairing => pairing.round < activeTournament?.rounds)

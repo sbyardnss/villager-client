@@ -1037,7 +1037,7 @@
     /* tournament table */
     #tournamentTableContainer {
         display: flex;
-        justify-content: center;
+        /* justify-content: center; */
         /* border: 1px solid #f4d35e; */
         /* border-radius: 6px; */
         /* padding: .5em; */
@@ -1047,7 +1047,8 @@
     }
 
     #tournamentTable {
-        width:fit-content;
+        /* width:fit-content; */
+        width: 100%;
         max-width: 20em;
         color: rgb(231, 231, 231);
         /* overflow: hidden; */

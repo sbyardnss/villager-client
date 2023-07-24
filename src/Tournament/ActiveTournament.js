@@ -277,6 +277,9 @@ export const ActiveTournament = () => {
         return tableHtml.reverse()
     }
     const roundHtml = roundPopulation()
+    const cellPopulation = () => {
+
+    }
     //creating solkoff tie break data
     const solkoffTieBreaker = (playerIdArr) => {
         const solkoffTieBreakerArr = []
@@ -417,8 +420,7 @@ export const ActiveTournament = () => {
         }
         updateGameForApi(copy)
     }
-    console.log(currentRoundMatchups)
-    console.log(playerOpponentsReferenceObj)
+
     //iterating current round matchups to allow for initial score selection
     const submitResultsOrNull = () => {
         const byeMatchup = currentRoundMatchups?.find(matchup => matchup.player1 === null || matchup.player2 === null)
@@ -829,6 +831,7 @@ export const ActiveTournament = () => {
                                             return round
                                         })
                                     }
+                                    {/* th populator */}
                                     <th>count</th>
                                 </tr>
                             </thead>
@@ -837,12 +840,14 @@ export const ActiveTournament = () => {
                                     activeTournamentPlayers.map(tourneyPlayer => {
                                         const guestIdOrId = tourneyPlayer.guest_id ? tourneyPlayer.guest_id : tourneyPlayer.id
                                         const tourneyPlayerScores = scoreCard[guestIdOrId]
+                                        console.log(tourneyPlayerScores)
                                         let score = 0
                                         return (
                                             <tr key={tourneyPlayer.guest_id ? tourneyPlayer.guest_id : tourneyPlayer.id} id={tourneyPlayer.id + "--tourneyRow"} className="tablePlayerRow">
                                                 <td key={tourneyPlayer.id} className="tablePlayerCell sticky-col first-col">{tourneyPlayer.full_name}</td>
                                                 {
                                                     tourneyPlayerScores?.map((s, index) => {
+
                                                         if (typeof s === 'number') {
                                                             score += s
                                                         }
@@ -861,9 +866,11 @@ export const ActiveTournament = () => {
                                                         }
                                                     })
                                                 }
+                                                {/* td populator */}
                                                 <td key={guestIdOrId + "-- score"} id={guestIdOrId + "-- score"} className="totalScoreCell" value={scoreObj[guestIdOrId]}>
                                                     {score}
                                                 </td>
+                                                
                                             </tr>
                                         )
                                     })

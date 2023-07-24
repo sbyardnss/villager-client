@@ -1037,6 +1037,10 @@
     }
 
     /* tournament table */
+    #tableCenter {
+        display: flex;
+        justify-content: center;
+    }
     #tournamentTableContainer {
         display: flex;
         /* justify-content: center; */
@@ -1177,7 +1181,7 @@
         border-radius: 6px;
         backdrop-filter: blur(30px);
         background-color: #20202099;
-
+        z-index: 6;
     }
 
     #editPlayersContainer {

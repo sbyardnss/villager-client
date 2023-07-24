@@ -41,7 +41,7 @@ export const EditPlayersModal = ({ activeTournamentObj, setEdit, playedRounds, g
             setInitialPlayersAndGuests(initPlayers.concat(initGuests))
             const pairingsBeforeThisRound = activeTournamentObj.pairings.filter(p => p.round < playedRounds)
             setPastPairings(pairingsBeforeThisRound)
-            const guestCopy = {...newGuest}
+            const guestCopy = { ...newGuest }
             guestCopy.club = activeTournamentObj.club.id
             updateNewGuest(guestCopy)
         }, [activeTournamentObj]
@@ -67,7 +67,7 @@ export const EditPlayersModal = ({ activeTournamentObj, setEdit, playedRounds, g
             }
         }, [players, guests, tournamentClub]//adding selectedClub to this dependency array causes players to entirely disappear
     )
-    
+
     useEffect(
         () => {
             if (search !== "") {
@@ -113,7 +113,7 @@ export const EditPlayersModal = ({ activeTournamentObj, setEdit, playedRounds, g
     //         console.log(editedPlayerOpponentsRef)
     //     }, [editedPlayerOpponentsRef]
     // )
-    
+
     return (
         <article id="editPlayersContainer">
             <div id="editPlayersHeader">
@@ -233,7 +233,7 @@ export const EditPlayersModal = ({ activeTournamentObj, setEdit, playedRounds, g
                         if (newGuest.full_name !== "" && newGuest.club) {
                             createNewGuest(newGuest)
                                 .then(() => resetGuests())
-                                updateNewGuest({full_name: "", club: activeTournamentObj.club.id})
+                            updateNewGuest({ full_name: "", club: activeTournamentObj.club.id })
                         }
                     }}
                 >Create Guest</button>
@@ -266,6 +266,7 @@ export const EditPlayersModal = ({ activeTournamentObj, setEdit, playedRounds, g
                     copy.pairings = pastPairings.concat(Swiss(playersArg, playedRounds))
                     updateTournament(copy)
                         .then(() => resetTournaments())
+                    setEdit(false)
                     // console.log(copy)
                 }}>Submit</button>
             </div>

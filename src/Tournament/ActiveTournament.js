@@ -562,6 +562,8 @@ export const ActiveTournament = () => {
     }
     //iterating tournament games to edit if necessary
     const tableOrEdit = () => {
+        const sortedTournamentGames = tournamentGames.sort((a, b) => { return a.id - b.id  })
+        console.log(sortedTournamentGames)
         if (editScores) {
             const editPairings = [...activeTournament?.pairings]
             // const filteredPairings = editPairings.filter(pairing => pairing.round < activeTournament?.rounds)
@@ -570,7 +572,7 @@ export const ActiveTournament = () => {
                     <button className="buttonStyleReject" id="cancelEditBtn" onClick={() => setEditScores(false)}>cancel edit</button>
                     <section id="previousMatchups">
                         {
-                            tournamentGames.map(game => {
+                            sortedTournamentGames.map(game => {
                                 const white = activeTournamentPlayers.find(player => {
                                     if (game.player_w.guest_id) {
                                         return player.guest_id === game.player_w.guest_id

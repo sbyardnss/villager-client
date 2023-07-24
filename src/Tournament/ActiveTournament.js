@@ -115,11 +115,7 @@ export const ActiveTournament = () => {
         }, [activeTournament]
     )
 
-    useEffect(
-        () => {
-            console.log(playerOpponentsReferenceObj)
-        }, [playerOpponentsReferenceObj]
-    )
+    
     //getting current round pairings updating bye game if necessary
     useEffect(
         () => {
@@ -198,13 +194,67 @@ export const ActiveTournament = () => {
             updateResultsForTieBreak(resultsForTieBreak)
         }, [tournamentGames, selectedTournament]
     )
+    // useEffect(
+    //     () => {
+    //         if (selectedTournament) {
+    //             getScoreCard(selectedTournament)
+    //                 .then(data => setScoreCard(data))
+    //         }
+    //     }, [tournamentGames]
+    // )
+    // potential scorecard replacement
     useEffect(
         () => {
-            if (selectedTournament) {
-                getScoreCard(selectedTournament)
-                    .then(data => setScoreCard(data))
+            if (tournamentGames) {
+                let scoreObj = {}
+                for (const player of activeTournamentPlayers){
+                    const playerScoreArr = []
+                    const identifier = player.guest_id? player.guest_id : player.id
+                    const playerGames = tournamentGames.filter(tg => {
+                        if (typeof identifier === 'string'){
+                            return tg.player_w.guest_id === identifier || tg.player_b?.guest_id === identifier
+                        }
+                        else {
+                            return tg.player_w.id === identifier || tg.player_b?.id === identifier
+                        }
+                    })
+                    let numOfRounds = 1
+                    while(numOfRounds<currentRound+1){
+                        const targetGame = playerGames.find(pg => pg.tournament_round === numOfRounds)
+                        if (!targetGame){
+                            playerScoreArr.push('none')
+                        }
+                        else if (targetGame.bye === true){
+                            playerScoreArr.push('bye')
+                        }
+                        else if (targetGame.win_style === 'draw'){
+                            playerScoreArr.push(.5)
+                        }
+                        else {
+                            if (typeof identifier === 'string'){
+                                if (targetGame.winner.guest_id === identifier){
+                                    playerScoreArr.push(1)
+                                }
+                                else {
+                                    playerScoreArr.push(0)
+                                }
+                            }
+                            else {
+                                if (targetGame.winner.id === identifier){
+                                    playerScoreArr.push(1)
+                                }
+                                else {
+                                    playerScoreArr.push(0)
+                                }
+                            }
+                        }
+                        numOfRounds++
+                    }
+                    scoreObj[identifier] = playerScoreArr
+                }
+                setScoreCard(scoreObj)
             }
-        }, [tournamentGames]
+        },[tournamentGames, activeTournamentPlayers]
     )
     useEffect(
         () => {
@@ -417,7 +467,6 @@ export const ActiveTournament = () => {
                                     else {
                                         tg.player_b.guest_id ? gamePlayerBIndicator = tg.player_b.guest_id : gamePlayerBIndicator = tg.player_b.id
                                     }
-                                    console.log(gamePlayerBIndicator)
                                     return tg.tournament_round === currentRound && gamePlayerBIndicator === blackTargetForIndicator && gamePlayerWIndicator === whiteTargetForIndicator
                                 } )
                                 if (black !== undefined && !matchingGame?.winner && matchingGame?.win_style !== 'draw' && playerOpponentsReferenceObj[whiteTargetForIndicator]?.indexOf(blackTargetForIndicator) !== playerOpponentsReferenceObj[whiteTargetForIndicator].length + 1) {

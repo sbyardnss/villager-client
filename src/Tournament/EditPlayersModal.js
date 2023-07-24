@@ -41,6 +41,9 @@ export const EditPlayersModal = ({ activeTournamentObj, setEdit, playedRounds, g
             setInitialPlayersAndGuests(initPlayers.concat(initGuests))
             const pairingsBeforeThisRound = activeTournamentObj.pairings.filter(p => p.round < playedRounds)
             setPastPairings(pairingsBeforeThisRound)
+            const guestCopy = { ...newGuest }
+            guestCopy.club = activeTournamentObj.club.id
+            updateNewGuest(guestCopy)
         }, [activeTournamentObj]
     )
     useEffect(
@@ -50,7 +53,7 @@ export const EditPlayersModal = ({ activeTournamentObj, setEdit, playedRounds, g
                 getChessClub(clubId)
                     .then(data => setTournamentClub(data))
             }
-        }, [tournamentObj.club]
+        }, [tournamentObj.club, guests]
     )
     useEffect(
         () => {
@@ -105,11 +108,12 @@ export const EditPlayersModal = ({ activeTournamentObj, setEdit, playedRounds, g
             updateEditedPlayerOpponentsRef(refObj)
         }, [previousOpponents, tournamentObj]
     )
-    useEffect(
-        () => {
-            console.log(editedPlayerOpponentsRef)
-        }, [editedPlayerOpponentsRef]
-    )
+    // useEffect(
+    //     () => {
+    //         console.log(editedPlayerOpponentsRef)
+    //     }, [editedPlayerOpponentsRef]
+    // )
+
     return (
         <article id="editPlayersContainer">
             <div id="editPlayersHeader">
@@ -215,6 +219,7 @@ export const EditPlayersModal = ({ activeTournamentObj, setEdit, playedRounds, g
                     id="newGuestInput"
                     type="text"
                     placeholder="new guest name"
+                    value={newGuest.full_name}
                     onChange={(e) => {
                         const copy = { ...newGuest }
                         copy.full_name = e.target.value
@@ -225,9 +230,10 @@ export const EditPlayersModal = ({ activeTournamentObj, setEdit, playedRounds, g
                     id="newGuestSubmitBtn"
                     className="setCustomFont"
                     onClick={() => {
-                        if (newGuest.full_name !== "" && selectedClub) {
+                        if (newGuest.full_name !== "" && newGuest.club) {
                             createNewGuest(newGuest)
                                 .then(() => resetGuests())
+                            updateNewGuest({ full_name: "", club: activeTournamentObj.club.id })
                         }
                     }}
                 >Create Guest</button>
@@ -260,6 +266,7 @@ export const EditPlayersModal = ({ activeTournamentObj, setEdit, playedRounds, g
                     copy.pairings = pastPairings.concat(Swiss(playersArg, playedRounds))
                     updateTournament(copy)
                         .then(() => resetTournaments())
+                    setEdit(false)
                     // console.log(copy)
                 }}>Submit</button>
             </div>

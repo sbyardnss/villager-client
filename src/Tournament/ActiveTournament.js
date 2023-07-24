@@ -16,6 +16,7 @@ export const ActiveTournament = () => {
     //managing tournament state variables
     const [currentRound, setCurrentRound] = useState(0)
     const [editScores, setEditScores] = useState(false)
+    const [viewTable, setViewTable] = useState(false)
     // const [editPlayers, setEditPlayers] = useState(false)
 
     //tournament process state variables
@@ -62,6 +63,13 @@ export const ActiveTournament = () => {
             const selectedTournamentObj = tournaments?.find(t => t.id === selectedTournament)
             setActiveTournament(selectedTournamentObj)
         }, [selectedTournament, tournaments]
+    )
+    useEffect(
+        () => {
+            if (activeTournament.complete === true) {
+                setViewTable(true)
+            }
+        }, [activeTournament]
     )
     //setting active tournament players from players and guests and active tournament
     useEffect(
@@ -115,7 +123,7 @@ export const ActiveTournament = () => {
         }, [activeTournament]
     )
 
-    
+
     //getting current round pairings updating bye game if necessary
     useEffect(
         () => {
@@ -207,11 +215,11 @@ export const ActiveTournament = () => {
         () => {
             if (tournamentGames) {
                 let scoreObj = {}
-                for (const player of activeTournamentPlayers){
+                for (const player of activeTournamentPlayers) {
                     const playerScoreArr = []
-                    const identifier = player.guest_id? player.guest_id : player.id
+                    const identifier = player.guest_id ? player.guest_id : player.id
                     const playerGames = tournamentGames.filter(tg => {
-                        if (typeof identifier === 'string'){
+                        if (typeof identifier === 'string') {
                             return tg.player_w.guest_id === identifier || tg.player_b?.guest_id === identifier
                         }
                         else {
@@ -219,20 +227,20 @@ export const ActiveTournament = () => {
                         }
                     })
                     let numOfRounds = 1
-                    while(numOfRounds<currentRound+1){
+                    while (numOfRounds < currentRound + 1) {
                         const targetGame = playerGames.find(pg => pg.tournament_round === numOfRounds)
-                        if (!targetGame){
+                        if (!targetGame) {
                             playerScoreArr.push('none')
                         }
-                        else if (targetGame.bye === true){
+                        else if (targetGame.bye === true) {
                             playerScoreArr.push('bye')
                         }
-                        else if (targetGame.win_style === 'draw'){
+                        else if (targetGame.win_style === 'draw') {
                             playerScoreArr.push(.5)
                         }
                         else {
-                            if (typeof identifier === 'string'){
-                                if (targetGame.winner.guest_id === identifier){
+                            if (typeof identifier === 'string') {
+                                if (targetGame.winner?.guest_id === identifier) {
                                     playerScoreArr.push(1)
                                 }
                                 else {
@@ -240,7 +248,7 @@ export const ActiveTournament = () => {
                                 }
                             }
                             else {
-                                if (targetGame.winner.id === identifier){
+                                if (targetGame.winner?.id === identifier) {
                                     playerScoreArr.push(1)
                                 }
                                 else {
@@ -254,7 +262,7 @@ export const ActiveTournament = () => {
                 }
                 setScoreCard(scoreObj)
             }
-        },[tournamentGames, activeTournamentPlayers]
+        }, [tournamentGames, activeTournamentPlayers]
     )
     useEffect(
         () => {
@@ -459,17 +467,17 @@ export const ActiveTournament = () => {
                                 const whiteTargetForIndicator = white.guest_id ? white.guest_id : white.id
                                 const blackTargetForIndicator = black?.guest_id ? black?.guest_id : black?.id
                                 const matchingGame = tournamentGames.find(tg => {
-                                    const gamePlayerWIndicator = tg.player_w.guest_id? tg.player_w.guest_id : tg.player_w.id
+                                    const gamePlayerWIndicator = tg.player_w.guest_id ? tg.player_w.guest_id : tg.player_w.id
                                     let gamePlayerBIndicator = 0
-                                    if (tg.player_b === null){
+                                    if (tg.player_b === null) {
                                         gamePlayerBIndicator = null
                                     }
                                     else {
                                         tg.player_b.guest_id ? gamePlayerBIndicator = tg.player_b.guest_id : gamePlayerBIndicator = tg.player_b.id
                                     }
                                     return tg.tournament_round === currentRound && gamePlayerBIndicator === blackTargetForIndicator && gamePlayerWIndicator === whiteTargetForIndicator
-                                } )
-                                if (black !== undefined && !matchingGame?.winner && matchingGame?.win_style !== 'draw' && playerOpponentsReferenceObj[whiteTargetForIndicator]?.indexOf(blackTargetForIndicator) !== playerOpponentsReferenceObj[whiteTargetForIndicator].length + 1) {
+                                })
+                                if (black !== undefined && !matchingGame?.winner && matchingGame?.win_style !== 'draw' && playerOpponentsReferenceObj[whiteTargetForIndicator]?.indexOf(blackTargetForIndicator) !== playerOpponentsReferenceObj[whiteTargetForIndicator]?.length + 1) {
                                     return (
                                         <div key={`${matchup.round} -- ${matchup.match}`}
                                             className="tournamentScoringMatchup">
@@ -523,8 +531,8 @@ export const ActiveTournament = () => {
                             currentRoundMatchups?.map(matchup => {
                                 const white = activeTournamentPlayers?.find(player => player.id === matchup.player1 || player.guest_id === matchup.player1)
                                 const black = activeTournamentPlayers?.find(player => player.id === matchup.player2 || player.guest_id === matchup.player2)
-                                const whiteTargetForIndicator = white.guest_id ? white.guest_id : white.id
-                                const blackTargetForIndicator = black?.guest_id ? black?.guest_id : black?.id
+                                // const whiteTargetForIndicator = white.guest_id ? white.guest_id : white.id
+                                // const blackTargetForIndicator = black?.guest_id ? black?.guest_id : black?.id
                                 if (black !== undefined) {
                                     return (
                                         <div key={`${matchup.round} -- ${matchup.match}`}
@@ -832,6 +840,11 @@ export const ActiveTournament = () => {
                                 setEditPlayers(true)
                             }}>edit players</button>
                             : ""}
+                        {activeTournament.complete === false ?
+                            <button className="progressionControlBtn controlBtnApprove" onClick={() => {
+                                setViewTable(!viewTable)
+                            }}>View Table</button>
+                            : ""}
                         <button
                             className="progressionControlBtn controlBtnApprove"
                             onClick={() => {
@@ -844,62 +857,66 @@ export const ActiveTournament = () => {
                     <section id="matchupsContainer">
                         {submitResultsOrNull()}
                     </section>
-                    <section id="tournamentTableContainer">
-                        <table id="tournamentTable">
-                            <thead>
-                                <tr key={0} className="tableHeaderRow">
-                                    <th className="sticky-col first-col">player</th>
-                                    {
-                                        roundHtml.map(round => {
-                                            return round
-                                        })
-                                    }
-                                    {currentRound < 6 ? <th ></th> : ""}
-                                    <th>count</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {
-                                    activeTournamentPlayers.map(tourneyPlayer => {
-                                        const guestIdOrId = tourneyPlayer.guest_id ? tourneyPlayer.guest_id : tourneyPlayer.id
-                                        const tourneyPlayerScores = scoreCard[guestIdOrId]
-                                        let score = 0
-                                        return (
-                                            <tr key={tourneyPlayer.guest_id ? tourneyPlayer.guest_id : tourneyPlayer.id} id={tourneyPlayer.id + "--tourneyRow"} className="tablePlayerRow">
-                                                <td key={tourneyPlayer.id} className="tablePlayerCell sticky-col first-col">{tourneyPlayer.full_name}</td>
-                                                {
-                                                    tourneyPlayerScores?.map((s, index) => {
+                    <article id="tableCenter">
+                        {viewTable ?
+                            <section id="tournamentTableContainer">
+                                <table id="tournamentTable">
+                                    <thead>
+                                        <tr key={0} className="tableHeaderRow">
+                                            <th className="sticky-col first-col">player</th>
+                                            {
+                                                roundHtml.map(round => {
+                                                    return round
+                                                })
+                                            }
+                                            {currentRound < 6 ? <th ></th> : ""}
+                                            <th>count</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {
+                                            activeTournamentPlayers.map(tourneyPlayer => {
+                                                const guestIdOrId = tourneyPlayer.guest_id ? tourneyPlayer.guest_id : tourneyPlayer.id
+                                                const tourneyPlayerScores = scoreCard[guestIdOrId]
+                                                let score = 0
+                                                return (
+                                                    <tr key={tourneyPlayer.guest_id ? tourneyPlayer.guest_id : tourneyPlayer.id} id={tourneyPlayer.id + "--tourneyRow"} className="tablePlayerRow">
+                                                        <td key={tourneyPlayer.id} className="tablePlayerCell sticky-col first-col">{tourneyPlayer.full_name}</td>
+                                                        {
+                                                            tourneyPlayerScores?.map((s, index) => {
 
-                                                        if (typeof s === 'number') {
-                                                            score += s
+                                                                if (typeof s === 'number') {
+                                                                    score += s
+                                                                }
+                                                                if (s === 'bye') {
+                                                                    score += 1
+                                                                }
+                                                                if (s !== 'none') {
+                                                                    return (
+                                                                        <td key={guestIdOrId + '--' + index} className="scoreCell">{s}</td>
+                                                                    )
+                                                                }
+                                                                else {
+                                                                    return (
+                                                                        <td key={guestIdOrId + '--' + index} className="scoreCell">0</td>
+                                                                    )
+                                                                }
+                                                            })
                                                         }
-                                                        if (s === 'bye') {
-                                                            score += 1
-                                                        }
-                                                        if (s !== 'none') {
-                                                            return (
-                                                                <td key={guestIdOrId + '--' + index} className="scoreCell">{s}</td>
-                                                            )
-                                                        }
-                                                        else {
-                                                            return (
-                                                                <td key={guestIdOrId + '--' + index} className="scoreCell">0</td>
-                                                            )
-                                                        }
-                                                    })
-                                                }
-                                                {currentRound < 6 ? <td className="scoreCell"></td> : ""}
-                                                <td key={guestIdOrId + "-- score"} id={guestIdOrId + "-- score"} className="totalScoreCell" value={scoreObj[guestIdOrId]}>
-                                                    {score}
-                                                </td>
+                                                        {currentRound < 6 ? <td className="scoreCell"></td> : ""}
+                                                        <td key={guestIdOrId + "-- score"} id={guestIdOrId + "-- score"} className="totalScoreCell" value={scoreObj[guestIdOrId]}>
+                                                            {score}
+                                                        </td>
 
-                                            </tr>
-                                        )
-                                    })
-                                }
-                            </tbody>
-                        </table>
-                    </section>
+                                                    </tr>
+                                                )
+                                            })
+                                        }
+                                    </tbody>
+                                </table>
+                            </section>
+                            : ""}
+                    </article>
                     {tableOrEdit()}
                 </main>
             </>

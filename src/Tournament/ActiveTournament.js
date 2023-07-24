@@ -198,36 +198,6 @@ export const ActiveTournament = () => {
             updateResultsForTieBreak(resultsForTieBreak)
         }, [tournamentGames, selectedTournament]
     )
-    //this might not be necessary after new scoring method
-    // useEffect(
-    //     () => {
-    //         const scoreBoardObj = {}
-    //         if (resultsForTieBreak && activeTournamentPlayers) {
-    //             for (const player of activeTournamentPlayers) {
-    //                 const playerIdentifier = player.guest_id ? player.guest_id : player.id
-    //                 let playerResults = []
-    //                 let count = 0
-    //                 if (typeof playerIdentifier === 'string') {
-    //                     playerResults = resultsForTieBreak.filter(result => result.white === playerIdentifier || result?.black === playerIdentifier)
-    //                 }
-    //                 else {
-    //                     playerResults = resultsForTieBreak.filter(result => result.white === playerIdentifier && typeof result.white !== 'string' || result?.black === playerIdentifier && typeof result?.black !== 'string')
-    //                 }
-    //                 for (const result of playerResults) {
-    //                     if (result?.winner === playerIdentifier) {
-    //                         count++
-    //                     }
-    //                     if (result?.win_style === 'draw') {
-    //                         count = count + .5
-    //                     }
-    //                 }
-    //                 scoreBoardObj[playerIdentifier] = count
-    //             }
-    //         }
-    //         setScoreObj(scoreBoardObj)
-    //     }, [resultsForTieBreak]
-    // )
-
     useEffect(
         () => {
             if (selectedTournament) {
@@ -255,10 +225,6 @@ export const ActiveTournament = () => {
             }
         }, [scoreCard]
     )
-    // const resetTournaments = () => {
-    //     getAllTournaments()
-    //         .then(data => setTournaments(data))
-    // }
     //number population for table
     const roundPopulation = () => {
         let roundNumber = activeTournament?.rounds;
@@ -454,17 +420,6 @@ export const ActiveTournament = () => {
                                     console.log(gamePlayerBIndicator)
                                     return tg.tournament_round === currentRound && gamePlayerBIndicator === blackTargetForIndicator && gamePlayerWIndicator === whiteTargetForIndicator
                                 } )
-                                // let correspondingGame = tournamentGames.find(tg => tg.player_w.guest_id ? tg.player_w.guest_id : tg.player_w.id === matchup.player1 && tg.player_b?.guest_id ? tg.player_b?.guest_id: tg.player_b?.id === matchup.player2)
-                                // console.log(correspondingGame)
-                                // copy.player_w = white?.id
-                                // copy.player_b = black?.id
-                                // if (black === undefined) {
-                                //     return (
-                                //         <div key={`${matchup.round} -- ${matchup.match} -- bye`} className="setColor setCustomFont">
-                                //             {white?.username || white?.full_name} has bye
-                                //         </div>
-                                //     )
-                                // }
                                 if (black !== undefined && !matchingGame?.winner && matchingGame?.win_style !== 'draw' && playerOpponentsReferenceObj[whiteTargetForIndicator]?.indexOf(blackTargetForIndicator) !== playerOpponentsReferenceObj[whiteTargetForIndicator].length + 1) {
                                     return (
                                         <div key={`${matchup.round} -- ${matchup.match}`}

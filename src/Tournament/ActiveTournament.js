@@ -80,7 +80,9 @@ export const ActiveTournament = () => {
     useEffect(
         //creates reference object for previous opponents for avoid on swiss round creation
         () => {
-            if (tournamentGames && activeTournamentPlayers) {
+            //now mapping activeTournament.pairings to create playerOpponentReferenceObj
+            //was previously mapping tournamentGames but that missed the current rounds pairings
+            if (activeTournament.pairings) {
                 let opponentObj = {}
                 activeTournamentPlayers?.map(player => {
                     if (player.guest_id) {
@@ -90,20 +92,18 @@ export const ActiveTournament = () => {
                         opponentObj[player.id] = []
                     }
                 })
-                tournamentGames?.map(tg => {
-                    const playerWIdentifier = tg.player_w.guest_id ? tg.player_w.guest_id : tg.player_w.id
-                    const playerBIdentifier = tg.player_b?.guest_id ? tg.player_b?.guest_id : tg.player_b?.id
-                    if (playerBIdentifier === undefined && typeof opponentObj[playerWIdentifier] === 'object') {
-                        opponentObj[playerWIdentifier].push('bye')
+                activeTournament.pairings.map(p => {
+                    if (p.player2 === null && typeof opponentObj[p.player1] === 'object') {
+                        opponentObj[p.player1].push('bye')
                     }
-                    if (typeof opponentObj[playerWIdentifier] === 'object' && typeof opponentObj[playerBIdentifier] === 'object') {
-                        opponentObj[playerWIdentifier].push(playerBIdentifier)
-                        opponentObj[playerBIdentifier].push(playerWIdentifier)
+                    if (typeof opponentObj[p.player1] === 'object' && typeof opponentObj[p.player2] === 'object' && p.player2 !== null) {
+                        opponentObj[p.player1].push(p.player2)
+                        opponentObj[p.player2].push(p.player1)
                     }
                 })
                 updatePlayerOpponentsReferenceObj(opponentObj)
             }
-        }, [activeTournamentPlayers, tournamentGames]
+        }, [activeTournamentPlayers, activeTournament.pairings]
     )
 
     //setting round from active tournament
@@ -115,7 +115,11 @@ export const ActiveTournament = () => {
         }, [activeTournament]
     )
 
-
+    useEffect(
+        () => {
+            console.log(playerOpponentsReferenceObj)
+        },[playerOpponentsReferenceObj]
+    )
     //getting current round pairings updating bye game if necessary
     useEffect(
         () => {
@@ -446,7 +450,7 @@ export const ActiveTournament = () => {
                                 //         </div>
                                 //     )
                                 // }
-                                if (black !== undefined && !playerOpponentsReferenceObj[whiteTargetForIndicator].includes(blackTargetForIndicator)) {
+                                if (black !== undefined && !playerOpponentsReferenceObj[whiteTargetForIndicator]?.includes(blackTargetForIndicator)) {
                                     return (
                                         <div key={`${matchup.round} -- ${matchup.match}`}
                                             className="tournamentScoringMatchup">

@@ -590,7 +590,7 @@
         border-radius: 8px;
         color: rgb(231, 231, 231);
         position: absolute;
-        top: 20%;
+        top: 40%;
         backdrop-filter: blur(30px);
         background-color: #20202099;
         width: 12.8em;
@@ -599,6 +599,7 @@
         align-items: center;
         flex-direction: column;
         font-size: x-large;
+        z-index: 6;
         /* padding: .5em; */
     }
 
@@ -894,6 +895,7 @@
 
     .progressionControlBtn {
         width: 5em;
+        min-height: 3em;
     }
 
     /* scoring */
@@ -909,7 +911,7 @@
         justify-content: space-evenly;
         align-items: center;
         padding: .25em;
-        width: 100%;
+        width: 95%;
     }
 
     /* editing scores */
@@ -1036,7 +1038,7 @@
 
     /* tournament table */
     #tournamentTableContainer {
-        /* display: flex; */
+        display: flex;
         /* justify-content: center; */
         /* border: 1px solid #f4d35e; */
         /* border-radius: 6px; */
@@ -1047,7 +1049,9 @@
     }
 
     #tournamentTable {
-        width: 20em;
+        /* width:fit-content; */
+        width: 100%;
+        max-width: 20em;
         color: rgb(231, 231, 231);
         /* overflow: hidden; */
         border-collapse: collapse;
@@ -1068,13 +1072,14 @@
     }
 
     .first-col {
-        width: 5rem;
+        /* width: 5rem; */
+        max-width: 80px;
         left: 0px;
         background-color: black;
     }
     .scoreCell {
         text-align: center;
-        width: 3rem;
+        width: 20px;
         border: 1px solid #694873;
         border-top: none;
 
@@ -1083,20 +1088,18 @@
 
     tr {
         height: 3rem;
-        /* overflow: hidden; */
     }
-    thead th {
+    /* thead th {
         width: 3rem;
-    }
-    tr td {
-        width: 3rem;
-
-    }
+    } */
+    
 
     tr>:first-child {
         position: -webkit-sticky;
         position: sticky;
         left: 0;
+        max-width: 80px;
+        width: 80px;
         z-index: 5;
     }
 
@@ -1104,7 +1107,7 @@
         position: -webkit-sticky;
         position: sticky;
         right: 0%;
-        width: 3rem;
+        width: 50px;
         /* background-color: black; */
         text-align: center;
         /* border: 1px solid #694873; */

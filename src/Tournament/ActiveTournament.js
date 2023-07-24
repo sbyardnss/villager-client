@@ -118,7 +118,7 @@ export const ActiveTournament = () => {
     useEffect(
         () => {
             console.log(playerOpponentsReferenceObj)
-        },[playerOpponentsReferenceObj]
+        }, [playerOpponentsReferenceObj]
     )
     //getting current round pairings updating bye game if necessary
     useEffect(
@@ -417,12 +417,14 @@ export const ActiveTournament = () => {
         }
         updateGameForApi(copy)
     }
+    console.log(currentRoundMatchups)
+    console.log(playerOpponentsReferenceObj)
     //iterating current round matchups to allow for initial score selection
     const submitResultsOrNull = () => {
+        const byeMatchup = currentRoundMatchups?.find(matchup => matchup.player1 === null || matchup.player2 === null)
+        const whiteBye = activeTournamentPlayers?.find(player => player.id === byeMatchup?.player1 || player.guest_id === byeMatchup?.player1)
         if (activeTournament?.complete === false) {
             if (activeTournament?.in_person === true) {
-                const byeMatchup = currentRoundMatchups?.find(matchup => matchup.player1 === null || matchup.player2 === null)
-                const whiteBye = activeTournamentPlayers?.find(player => player.id === byeMatchup?.player1 || player.guest_id === byeMatchup?.player1)
                 // const blackBye = activeTournamentPlayers?.find(player => player.id === byeMatchup.player2 || player.guest_id === byeMatchup.player2)
                 return (
                     <section id="tournamentScoringSection">
@@ -435,14 +437,14 @@ export const ActiveTournament = () => {
                             currentRoundMatchups?.map(matchup => {
                                 const white = activeTournamentPlayers?.find(player => player.id === matchup.player1 || player.guest_id === matchup.player1)
                                 const black = activeTournamentPlayers?.find(player => player.id === matchup.player2 || player.guest_id === matchup.player2)
-                                const copy = { ...gameForApi }
+                                // const copy = { ...gameForApi }
                                 const whiteTargetForIndicator = white.guest_id ? white.guest_id : white.id
                                 const blackTargetForIndicator = black?.guest_id ? black?.guest_id : black?.id
 
                                 // let correspondingGame = tournamentGames.find(tg => tg.player_w.guest_id ? tg.player_w.guest_id : tg.player_w.id === matchup.player1 && tg.player_b?.guest_id ? tg.player_b?.guest_id: tg.player_b?.id === matchup.player2)
                                 // console.log(correspondingGame)
-                                copy.player_w = white?.id
-                                copy.player_b = black?.id
+                                // copy.player_w = white?.id
+                                // copy.player_b = black?.id
                                 // if (black === undefined) {
                                 //     return (
                                 //         <div key={`${matchup.round} -- ${matchup.match} -- bye`} className="setColor setCustomFont">
@@ -450,7 +452,7 @@ export const ActiveTournament = () => {
                                 //         </div>
                                 //     )
                                 // }
-                                if (black !== undefined && !playerOpponentsReferenceObj[whiteTargetForIndicator]?.includes(blackTargetForIndicator)) {
+                                if (black !== undefined && playerOpponentsReferenceObj[whiteTargetForIndicator]?.indexOf(blackTargetForIndicator) !== playerOpponentsReferenceObj[whiteTargetForIndicator].length+1) {
                                     return (
                                         <div key={`${matchup.round} -- ${matchup.match}`}
                                             className="tournamentScoringMatchup">
@@ -494,41 +496,57 @@ export const ActiveTournament = () => {
             }
             else {
                 return (
-                    <table id="digitalTournamentTable">
-                        {/* <thead>
-                            <tr className="tableHeaderRow">
-                                <th>white player</th>
-                                <th></th>
-                                <th>black player</th>
-                            </tr>
-                        </thead> */}
-                        <tbody>
-                            {
-                                currentRoundMatchups?.map(matchup => {
-                                    const white = activeTournamentPlayers?.find(player => player.id === matchup.player1 || player.guest_id === matchup.player1)
-                                    const black = activeTournamentPlayers?.find(player => player.id === matchup.player2 || player.guest_id === matchup.player2)
-                                    // if (black === undefined) {
-                                    //     return (
-                                    //         <tr key={`${matchup.round} -- ${matchup.match} -- bye`} className="setColor setCustomFont">
-                                    //             <td>{white?.username || white?.full_name}</td>
-                                    //             <td></td>
-                                    //             <td>bye</td>
-                                    //         </tr>
-                                    //     )
-                                    // }
-                                    if (white?.id && black?.id) {
-                                        return (
-                                            <tr key={matchup.round + matchup.match}>
-                                                <td className="whitePiecesMatchup">{white.full_name}</td>
-                                                <td className="matchupTableVS setColor">vs</td>
-                                                <td className="blackPiecesMatchup">{black.full_name}</td>
-                                            </tr>
-                                        )
-                                    }
-                                })
-                            }
-                        </tbody>
-                    </table>
+                    <section id="tournamentScoringSection">
+                        {byeMatchup ?
+                            <div key={`${byeMatchup.round} -- ${byeMatchup.match} -- bye`} className="setColor setCustomFont">
+                                {whiteBye?.username || whiteBye?.full_name} has bye
+                            </div>
+                            : ""}
+                        {
+                            currentRoundMatchups?.map(matchup => {
+                                const white = activeTournamentPlayers?.find(player => player.id === matchup.player1 || player.guest_id === matchup.player1)
+                                const black = activeTournamentPlayers?.find(player => player.id === matchup.player2 || player.guest_id === matchup.player2)
+                                const copy = { ...gameForApi }
+                                const whiteTargetForIndicator = white.guest_id ? white.guest_id : white.id
+                                const blackTargetForIndicator = black?.guest_id ? black?.guest_id : black?.id
+                            })
+                        }
+                    </section>
+                    // <table id="digitalTournamentTable">
+                    //     {/* <thead>
+                    //         <tr className="tableHeaderRow">
+                    //             <th>white player</th>
+                    //             <th></th>
+                    //             <th>black player</th>
+                    //         </tr>
+                    //     </thead> */}
+                    //     <tbody>
+                    //         {
+                    //             currentRoundMatchups?.map(matchup => {
+                    //                 const white = activeTournamentPlayers?.find(player => player.id === matchup.player1 || player.guest_id === matchup.player1)
+                    //                 const black = activeTournamentPlayers?.find(player => player.id === matchup.player2 || player.guest_id === matchup.player2)
+                    //                 // if (black === undefined) {
+                    //                 //     return (
+                    //                 //         <tr key={`${matchup.round} -- ${matchup.match} -- bye`} className="setColor setCustomFont">
+                    //                 //             <td>{white?.username || white?.full_name}</td>
+                    //                 //             <td></td>
+                    //                 //             <td>bye</td>
+                    //                 //         </tr>
+                    //                 //     )
+                    //                 // }
+                    //                 if (white?.id && black?.id) {
+                    //                     return (
+                    //                         <tr key={matchup.round + matchup.match}>
+                    //                             <td className="whitePiecesMatchup">{white.full_name}</td>
+                    //                             <td className="matchupTableVS setColor">vs</td>
+                    //                             <td className="blackPiecesMatchup">{black.full_name}</td>
+                    //                         </tr>
+                    //                     )
+                    //                 }
+                    //             })
+                    //         }
+                    //     </tbody>
+                    // </table>
                 )
             }
         }

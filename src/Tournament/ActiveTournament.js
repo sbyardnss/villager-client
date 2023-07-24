@@ -442,7 +442,18 @@ export const ActiveTournament = () => {
                                 // const copy = { ...gameForApi }
                                 const whiteTargetForIndicator = white.guest_id ? white.guest_id : white.id
                                 const blackTargetForIndicator = black?.guest_id ? black?.guest_id : black?.id
-
+                                const matchingGame = tournamentGames.find(tg => {
+                                    const gamePlayerWIndicator = tg.player_w.guest_id? tg.player_w.guest_id : tg.player_w.id
+                                    let gamePlayerBIndicator = 0
+                                    if (tg.player_b === null){
+                                        gamePlayerBIndicator = null
+                                    }
+                                    else {
+                                        tg.player_b.guest_id ? gamePlayerBIndicator = tg.player_b.guest_id : gamePlayerBIndicator = tg.player_b.id
+                                    }
+                                    console.log(gamePlayerBIndicator)
+                                    return tg.tournament_round === currentRound && gamePlayerBIndicator === blackTargetForIndicator && gamePlayerWIndicator === whiteTargetForIndicator
+                                } )
                                 // let correspondingGame = tournamentGames.find(tg => tg.player_w.guest_id ? tg.player_w.guest_id : tg.player_w.id === matchup.player1 && tg.player_b?.guest_id ? tg.player_b?.guest_id: tg.player_b?.id === matchup.player2)
                                 // console.log(correspondingGame)
                                 // copy.player_w = white?.id
@@ -454,7 +465,7 @@ export const ActiveTournament = () => {
                                 //         </div>
                                 //     )
                                 // }
-                                if (black !== undefined && playerOpponentsReferenceObj[whiteTargetForIndicator]?.indexOf(blackTargetForIndicator) !== playerOpponentsReferenceObj[whiteTargetForIndicator].length + 1) {
+                                if (black !== undefined && !matchingGame?.winner && matchingGame?.win_style !== 'draw' && playerOpponentsReferenceObj[whiteTargetForIndicator]?.indexOf(blackTargetForIndicator) !== playerOpponentsReferenceObj[whiteTargetForIndicator].length + 1) {
                                     return (
                                         <div key={`${matchup.round} -- ${matchup.match}`}
                                             className="tournamentScoringMatchup">
@@ -848,7 +859,6 @@ export const ActiveTournament = () => {
                                     activeTournamentPlayers.map(tourneyPlayer => {
                                         const guestIdOrId = tourneyPlayer.guest_id ? tourneyPlayer.guest_id : tourneyPlayer.id
                                         const tourneyPlayerScores = scoreCard[guestIdOrId]
-                                        console.log(tourneyPlayerScores)
                                         let score = 0
                                         return (
                                             <tr key={tourneyPlayer.guest_id ? tourneyPlayer.guest_id : tourneyPlayer.id} id={tourneyPlayer.id + "--tourneyRow"} className="tablePlayerRow">

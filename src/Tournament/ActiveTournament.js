@@ -831,7 +831,7 @@ export const ActiveTournament = () => {
                                             return round
                                         })
                                     }
-                                    {/* th populator */}
+                                    {currentRound<6?<th ></th>:""}
                                     <th>count</th>
                                 </tr>
                             </thead>
@@ -866,7 +866,7 @@ export const ActiveTournament = () => {
                                                         }
                                                     })
                                                 }
-                                                {/* td populator */}
+                                                {currentRound<6?<td className="scoreCell"></td>:""}
                                                 <td key={guestIdOrId + "-- score"} id={guestIdOrId + "-- score"} className="totalScoreCell" value={scoreObj[guestIdOrId]}>
                                                     {score}
                                                 </td>

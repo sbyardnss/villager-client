@@ -40,7 +40,7 @@ export const Tournament = () => {
     useEffect(
         () => {
             if (search !== "") {
-                const filteredUsers = playersAndGuests.filter(pc => {
+                const filteredUsers = playersAndGuests?.filter(pc => {
                     return pc.full_name.toLowerCase().includes(search.toLowerCase()) && !newTournament.competitors?.find(member => member.id === pc.id) && !newTournament.guest_competitors?.find(member => member.id === pc.id)
                 })
                 setPotentialCompetitors(filteredUsers)

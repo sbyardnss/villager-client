@@ -218,12 +218,13 @@ export const ActiveTournament = () => {
                 for (const player of activeTournamentPlayers) {
                     const playerScoreArr = []
                     const identifier = player.guest_id ? player.guest_id : player.id
+                    
                     const playerGames = tournamentGames.filter(tg => {
                         if (typeof identifier === 'string') {
                             return tg.player_w.guest_id === identifier || tg.player_b?.guest_id === identifier
                         }
                         else {
-                            return tg.player_w.id === identifier || tg.player_b?.id === identifier
+                            return tg.player_w.id === identifier && !tg.player_w.guest_id  || tg.player_b?.id === identifier && !tg.player_b.guest_id
                         }
                     })
                     let numOfRounds = 1
@@ -241,7 +242,7 @@ export const ActiveTournament = () => {
                         else if (typeof identifier === 'string' && targetGame.winner?.guest_id === identifier) {
                             playerScoreArr.push(1)
                         }
-                        else if (typeof identifier === 'number' && targetGame.winner?.id === identifier){
+                        else if (typeof identifier === 'number' && targetGame.winner?.id === identifier && !targetGame.winner?.guest_id){
                             playerScoreArr.push(1)
                         }
                         else {

@@ -388,8 +388,8 @@ export const ActiveTournament = () => {
                     <div id="solkoffResults">
                         {
                             solkoffResultsArr.map(playerResult => {
-                                const player = typeof playerResult[0] === 'string' ? activeTournamentPlayers.find(player => player.guest_id === playerResult[0])
-                                    : activeTournamentPlayers.find(player => player.id === playerResult[0])
+                                const player = typeof playerResult[0] === 'string' ? allPlayersArr.find(player => player.guest_id === playerResult[0])
+                                    : allPlayersArr.find(player => player.id === playerResult[0])
                                 return (
                                     <div key={playerResult[0] + '--' + playerResult[1]} className="resultsModalListItem">
                                         <div>{player?.guest_id ? player?.full_name : player?.username}: </div>
@@ -405,8 +405,8 @@ export const ActiveTournament = () => {
                     <div id="cumulativeResults">
                         {
                             cumulativeResultsArr.map(playerResult => {
-                                const player = typeof playerResult[0] === 'string' ? activeTournamentPlayers.find(player => player.guest_id === playerResult[0])
-                                    : activeTournamentPlayers.find(player => player.id === playerResult[0])
+                                const player = typeof playerResult[0] === 'string' ? allPlayersArr.find(player => player.guest_id === playerResult[0])
+                                    : allPlayersArr.find(player => player.id === playerResult[0])
                                 return (
                                     <div key={playerResult[0] + '--' + playerResult[1]} className="resultsModalListItem">
                                         <div>{player?.guest_id ? player?.full_name : player?.username}: </div>
@@ -477,7 +477,6 @@ export const ActiveTournament = () => {
         }
         updateGameForApi(copy)
     }
-
     //iterating current round matchups to allow for initial score selection
     const submitResultsOrNull = () => {
         const byeMatchup = currentRoundMatchups?.find(matchup => matchup.player1 === null || matchup.player2 === null)
@@ -731,7 +730,7 @@ export const ActiveTournament = () => {
                 const results = {}
                 const resultArr = []
                 const arrForTieBreakers = []
-                activeTournamentPlayers.map(player => {
+                allPlayersArr.map(player => {
                     const playerIdentifier = player.guest_id ? player.guest_id : player.id
                     if (player.guest_id) {
                         resultArr.push([player.full_name, parseFloat(scoreObj[playerIdentifier]), player.guest_id])
@@ -873,7 +872,14 @@ export const ActiveTournament = () => {
                         {scoringButtonOrNone()}
                         {activeTournament.complete === false ?
                             <button className="progressionControlBtn controlBtnApprove" onClick={() => {
-                                setEditPlayers(true)
+                                const currentRoundGames = tournamentGames.filter(g => g.tournament_round === currentRound)
+                                if ((currentRoundGames.length === currentRoundMatchups.length && !currentRoundMatchups.find(p => p.player2 === null)) || (currentRoundGames.length === currentRoundMatchups.length - 1 && currentRoundMatchups.find(p => p.player2 === null))) {
+                                    window.alert('This round seems to be over. Start new round before adding players')
+                                    setEditPlayers(false)
+                                }
+                                else {
+                                    setEditPlayers(true)
+                                }
                             }}>edit players</button>
                             : ""}
                         {activeTournament.complete === false ?

@@ -13,7 +13,9 @@ export const EditPlayersModal = ({ activeTournamentObj, setEdit, playedRounds, g
     const [clubPlayers, setClubPlayers] = useState([])
     const [clubGuests, setClubGuests] = useState([])
     const [pastPairings, setPastPairings] = useState([])
+    const [currentPairings, setCurrentPairings] = useState([])
     const [initialPlayersAndGuests, setInitialPlayersAndGuests] = useState([])
+    const [addedPlayersAndGuests, setAddedPlayersAndGuests] = useState([])
     const [editedPlayerOpponentsRef, updateEditedPlayerOpponentsRef] = useState({})
     const [newGuest, updateNewGuest] = useState({
         full_name: "",
@@ -31,6 +33,30 @@ export const EditPlayersModal = ({ activeTournamentObj, setEdit, playedRounds, g
         pairings: [],
         club: 0
     })
+    //grabbing initial players and guests to be able to check on creation of new matchups
+    useEffect(
+        () => {
+            if (activeTournamentObj) {
+                setInitialPlayersAndGuests(activeTournamentObj.competitors.concat(activeTournamentObj.guest_competitors))
+            }
+        }, []
+    )
+    useEffect(
+        () => {
+            const allCurrentCompetitorsOnUpdated = tournamentObj.competitors.concat(tournamentObj.guest_competitors)
+            const allAddedCompetitors = allCurrentCompetitorsOnUpdated.filter(ac => !initialPlayersAndGuests.find(i => {
+                if (ac.guest_id) {
+                    return ac.guest_id === i.guest_id
+                }
+                else {
+                    if (!ac.guest_id &&!i.guest_id){
+                            return ac.id === i.id 
+                    }
+                }
+            }))
+            setAddedPlayersAndGuests(allAddedCompetitors)
+        }, [tournamentObj]
+    )
     //setting past pairings based on current round so that new pairings can be appended after editing players
     useEffect(
         () => {
@@ -41,6 +67,8 @@ export const EditPlayersModal = ({ activeTournamentObj, setEdit, playedRounds, g
             setInitialPlayersAndGuests(initPlayers.concat(initGuests))
             const pairingsBeforeThisRound = activeTournamentObj.pairings.filter(p => p.round < playedRounds)
             setPastPairings(pairingsBeforeThisRound)
+            const currentRoundPairings = activeTournamentObj.pairings.filter(p => p.round === playedRounds)
+            setCurrentPairings(currentRoundPairings)
             const guestCopy = { ...newGuest }
             guestCopy.club = activeTournamentObj.club.id
             updateNewGuest(guestCopy)
@@ -86,6 +114,21 @@ export const EditPlayersModal = ({ activeTournamentObj, setEdit, playedRounds, g
             }
         }, [search, showGuests, playersAndGuests, players, guests, clubGuests, clubPlayers]
     )
+    // useEffect(
+    //     () => {
+    //         const addedPlayers = tournamentObj.competitors.filter(c => !activeTournamentObj.competitors.find(ac => ac.id === c.id))
+    //         const addedGuests = tournamentObj.guest_competitors.filter(c => !activeTournamentObj.guest_competitors.find(ac => ac.guest_id === c.guest_id))
+    //         setAddedPlayersAndGuests(addedPlayers.concat(addedGuests))
+    //     },[tournamentObj]
+    // )
+    // useEffect(
+    //     () => {
+    //         console.log(addedPlayersAndGuests)
+
+    //         console.log(activeTournamentObj.competitors)
+    //     },[addedPlayersAndGuests, tournamentObj]
+    // )
+
     useEffect(
         () => {
             const refObj = {}
@@ -108,12 +151,12 @@ export const EditPlayersModal = ({ activeTournamentObj, setEdit, playedRounds, g
             updateEditedPlayerOpponentsRef(refObj)
         }, [previousOpponents, tournamentObj]
     )
-    // useEffect(
-    //     () => {
-    //         console.log(editedPlayerOpponentsRef)
-    //     }, [editedPlayerOpponentsRef]
-    // )
 
+    useEffect(
+        () => {
+            console.log(addedPlayersAndGuests)
+        }, [addedPlayersAndGuests]
+    )
     return (
         <article id="editPlayersContainer">
             <div id="editPlayersHeader">
@@ -241,33 +284,198 @@ export const EditPlayersModal = ({ activeTournamentObj, setEdit, playedRounds, g
             <div id="editPlayersToggleAndSubmitBtnBlock">
                 <button className="buttonStyleApprove" onClick={() => setShowGuests(!showGuests)}>toggle guests</button>
                 <button id="submitNewPlayersBtn" className="buttonStyleApprove" onClick={() => {
-                    const copy = { ...tournamentObj }
-                    const competitorIds = tournamentObj.competitors.map(tc => {
-                        return tc.id
-                    })
-                    const guestIds = tournamentObj.guest_competitors.map(tgc => {
-                        return tgc.id
-                    })
-                    //need to add new competitors to playerArgs
-                    copy.competitors = competitorIds
-                    copy.guest_competitors = guestIds
-                    const playersArg = []
-                    for (const opponentRef in editedPlayerOpponentsRef) {
-                        const playerRefObj = {
-                            id: parseInt(opponentRef) || opponentRef,
-                            avoid: editedPlayerOpponentsRef[opponentRef].filter(ref => ref !== 'bye')
-                        }
-
-                        if (editedPlayerOpponentsRef[opponentRef].includes('bye')) {
-                            playerRefObj.receivedBye = true
-                        }
-                        playersArg.push(playerRefObj)
+                    if ((gamesFromThisRound.length === currentPairings.length && !currentPairings.find(p => p.player2 === null)) || (gamesFromThisRound.length === currentPairings.length - 1 && currentPairings.find(p => p.player2 === null))) {
+                        window.alert('This round seems to be over. Start new round before adding players')
+                        setEdit(false)
                     }
-                    copy.pairings = pastPairings.concat(Swiss(playersArg, playedRounds))
-                    updateTournament(copy)
-                        .then(() => resetTournaments())
-                    setEdit(false)
-                    // console.log(copy)
+                    else if (!gamesFromThisRound.length) {
+                        //if new add player conditionals dont work, delete them and revert to just this one
+                        //and disallow changes without clean round
+                        const copy = { ...tournamentObj }
+                        const competitorIds = tournamentObj.competitors.map(tc => {
+                            return tc.id
+                        })
+                        const guestIds = tournamentObj.guest_competitors.map(tgc => {
+                            return tgc.id
+                        })
+                        //need to add new competitors to playerArgs
+                        copy.competitors = competitorIds
+                        copy.guest_competitors = guestIds
+                        const playersArg = []
+                        for (const opponentRef in editedPlayerOpponentsRef) {
+                            const playerRefObj = {
+                                id: parseInt(opponentRef) || opponentRef,
+                                avoid: editedPlayerOpponentsRef[opponentRef].filter(ref => ref !== 'bye')
+                            }
+                            if (editedPlayerOpponentsRef[opponentRef].includes('bye')) {
+                                playerRefObj.receivedBye = true
+                            }
+                            playersArg.push(playerRefObj)
+                        }
+                        copy.pairings = pastPairings.concat(Swiss(playersArg, playedRounds))
+                        // updateTournament(copy)
+                        //     .then(() => resetTournaments())
+                        // setEdit(false)
+                        console.log(copy)
+                    }
+                    //adding just one player
+                    // else if(addedPlayersAndGuests.length === 1){
+                    //     //replace current bye
+                    // }
+                    //adding new players but not affecting current created round matchups with bye pairing fill in
+                    else if (addedPlayersAndGuests.length % 2 === 1) { //works as long as new players length not 1
+                        if (addedPlayersAndGuests.length === 1){
+                            if (currentPairings.find(p => p.player2 === null)){
+                                const byePairing = currentPairings.find(p => p.player2 === null)
+                                const indexOfByePairing = currentPairings.indexOf(byePairing)
+                                const randomNewPlayerIndex = Math.floor(Math.random() * addedPlayersAndGuests.length)
+                                const newPlayerForByeGame = addedPlayersAndGuests.splice(randomNewPlayerIndex, 1)
+                                if (newPlayerForByeGame.guest_id) {
+                                    byePairing.player2 = newPlayerForByeGame.guest_id
+                                    currentPairings[indexOfByePairing] = byePairing
+                                }
+                                else {
+                                    byePairing.player2 = newPlayerForByeGame.id
+                                    currentPairings[indexOfByePairing] = byePairing
+                                }
+                                const allPairings = pastPairings.concat(currentPairings)
+                                const competitorIds = tournamentObj.competitors.map(tc => {
+                                    return tc.id
+                                })
+                                const guestIds = tournamentObj.guest_competitors.map(tgc => {
+                                    return tgc.id
+                                })
+                                const copy = { ...tournamentObj }
+                                copy.competitors = competitorIds
+                                copy.guest_competitors = guestIds
+                                copy.pairings = allPairings
+                                console.log(copy)
+                            }
+                            else { //works
+                                //create new bye
+                                const lastMatchNumFromCurrentPairings = currentPairings[currentPairings.length - 1]?.match
+                                const playerIdentifier = addedPlayersAndGuests[0].guest_id || addedPlayersAndGuests[0].id
+                                const newBye = {round: playedRounds, match: lastMatchNumFromCurrentPairings + 1, player1: playerIdentifier, player2: null}
+                                currentPairings.push(newBye)
+                                const competitorIds = tournamentObj.competitors.map(tc => {
+                                    return tc.id
+                                })
+                                const guestIds = tournamentObj.guest_competitors.map(tgc => {
+                                    return tgc.id
+                                })
+                                const copy = { ...tournamentObj }
+                                copy.competitors = competitorIds
+                                copy.guest_competitors = guestIds
+                                copy.pairings = pastPairings.concat(currentPairings)
+                                console.log(copy)
+        
+                            }
+                        }
+                        else if (currentPairings.find(p => p.player2 === null)) {
+                            // console.log('adding odd number more than one player with bye round in current')
+                            const byePairing = currentPairings.find(p => p.player2 === null)
+                            const indexOfByePairing = currentPairings.indexOf(byePairing)
+                            const randomNewPlayerIndex = Math.floor(Math.random() * addedPlayersAndGuests.length)
+                            const newPlayerForByeGame = addedPlayersAndGuests.splice(randomNewPlayerIndex, 1)
+                            if (newPlayerForByeGame.guest_id) {
+                                byePairing.player2 = newPlayerForByeGame.guest_id
+                                currentPairings[indexOfByePairing] = byePairing
+                            }
+                            else {
+                                byePairing.player2 = newPlayerForByeGame.id
+                                currentPairings[indexOfByePairing] = byePairing
+                            }
+                            const lastMatchNumFromCurrentPairings = currentPairings[currentPairings.length - 1]?.match
+                            const newPlayerArr = []
+                            for (const player of addedPlayersAndGuests) {
+                                if (player.guest_id) {
+                                    newPlayerArr.push({ id: player.guest_id })
+                                }
+                                else {
+                                    newPlayerArr.push({ id: player.id })
+                                }
+                            }
+                            const newPairings = Swiss(newPlayerArr, playedRounds)
+                            newPairings.map(np => np.match = np.match + lastMatchNumFromCurrentPairings)
+                            const allPairingsForThisRound = currentPairings.concat(newPairings)
+                            const allPairings = pastPairings.concat(allPairingsForThisRound)
+                            //now create new tournament obj
+                            const copy = { ...tournamentObj }
+                            const competitorIds = tournamentObj.competitors.map(tc => {
+                                return tc.id
+                            })
+                            const guestIds = tournamentObj.guest_competitors.map(tgc => {
+                                return tgc.id
+                            })
+                            //need to add new competitors to playerArgs
+                            copy.competitors = competitorIds
+                            copy.guest_competitors = guestIds
+                            copy.pairings = allPairings
+                            console.log(copy)
+                        }
+                        else {//works
+                            // console.log('adding odd number to round with no bye')
+                            const lastMatchNumFromCurrentPairings = currentPairings[currentPairings.length - 1]?.match
+                            const newPlayerArr = []
+                            for (const player of addedPlayersAndGuests) {
+                                if (player.guest_id) {
+                                    newPlayerArr.push({ id: player.guest_id })
+                                }
+                                else {
+                                    newPlayerArr.push({ id: player.id })
+                                }
+                            }
+                            const newPairings = Swiss(newPlayerArr, playedRounds)
+                            newPairings.map(np => np.match = np.match + lastMatchNumFromCurrentPairings)
+                            const allPairingsForThisRound = currentPairings.concat(newPairings)
+                            const allPairings = pastPairings.concat(allPairingsForThisRound)
+                            //now create new tournament obj
+                            const copy = { ...tournamentObj }
+                            const competitorIds = tournamentObj.competitors.map(tc => {
+                                return tc.id
+                            })
+                            const guestIds = tournamentObj.guest_competitors.map(tgc => {
+                                return tgc.id
+                            })
+                            //need to add new competitors to playerArgs
+                            copy.competitors = competitorIds
+                            copy.guest_competitors = guestIds
+                            copy.pairings = allPairings
+                            console.log(copy)
+                        }
+                    }
+                    else {//works
+                        //simply adding new players to round if current round incomplete
+                        // console.log('adding even number new players to game with no bye')
+                        const newPlayerArr = []
+                        for (const player of addedPlayersAndGuests) {
+                            if (player.guest_id) {
+                                newPlayerArr.push({ id: player.guest_id })
+                            }
+                            else {
+                                newPlayerArr.push({ id: player.id })
+                            }
+                        }
+                        const lastMatchNumFromCurrentPairings = currentPairings[currentPairings.length - 1]?.match
+
+                        const newPairings = Swiss(newPlayerArr, playedRounds)
+                        newPairings.map(np => np.match = np.match + lastMatchNumFromCurrentPairings)
+                        const allPairingsForThisRound = currentPairings.concat(newPairings)
+                        const allPairings = pastPairings.concat(allPairingsForThisRound)
+                        //now create new tournament obj
+                        const copy = { ...tournamentObj }
+                        const competitorIds = tournamentObj.competitors.map(tc => {
+                            return tc.id
+                        })
+                        const guestIds = tournamentObj.guest_competitors.map(tgc => {
+                            return tgc.id
+                        })
+                        //need to add new competitors to playerArgs
+                        copy.competitors = competitorIds
+                        copy.guest_competitors = guestIds
+                        copy.pairings = allPairings
+                        console.log(copy)
+                    }
                 }}>Submit</button>
             </div>
         </article>

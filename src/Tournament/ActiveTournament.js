@@ -94,15 +94,15 @@ export const ActiveTournament = () => {
             if (activeTournament.pairings) {
                 let opponentObj = {}
                 activeTournament.pairings.map(p => {
-                    const player2orBye = p.player2? p.player2 : 'bye'
-                    if (opponentObj[p.player1]){
+                    const player2orBye = p.player2 ? p.player2 : 'bye'
+                    if (opponentObj[p.player1]) {
                         opponentObj[p.player1].push(player2orBye)
                     }
                     else {
                         opponentObj[p.player1] = []
                     }
-                    if (p.player2){
-                        if (opponentObj[p.player2]){
+                    if (p.player2) {
+                        if (opponentObj[p.player2]) {
                             opponentObj[p.player2].push(p.player1)
                         }
                         else {
@@ -137,8 +137,8 @@ export const ActiveTournament = () => {
             if (activeTournament.club) {
                 const allPlayersRef = []
                 const clubForTournament = myChessClubs.find(c => c.id === activeTournament.club.id)
-                for(const playerRef in playerOpponentsReferenceObj){
-                    if (isNaN(parseInt(playerRef))){
+                for (const playerRef in playerOpponentsReferenceObj) {
+                    if (isNaN(parseInt(playerRef))) {
                         const guest = clubForTournament.guest_members.find(g => g.guest_id === playerRef)
                         allPlayersRef.push(guest)
                     }
@@ -149,7 +149,7 @@ export const ActiveTournament = () => {
                 }
                 setAllPlayersArr(allPlayersRef)
             }
-        },[scoreObj, activeTournament.club]
+        }, [scoreObj, activeTournament.club]
     )
     //setting round from active tournament
     useEffect(
@@ -251,17 +251,18 @@ export const ActiveTournament = () => {
     useEffect(
         () => {
             if (tournamentGames) {
-                let scoreObj = {}
-                for (const player of activeTournamentPlayers) {
+                let scoreCardObj = {}
+                // for (const player of activeTournamentPlayers) {
+                for (const player of allPlayersArr) {
                     const playerScoreArr = []
                     const identifier = player.guest_id ? player.guest_id : player.id
-                    
+
                     const playerGames = tournamentGames.filter(tg => {
                         if (typeof identifier === 'string') {
                             return tg.player_w.guest_id === identifier || tg.player_b?.guest_id === identifier
                         }
                         else {
-                            return tg.player_w.id === identifier && !tg.player_w.guest_id  || tg.player_b?.id === identifier && !tg.player_b.guest_id
+                            return tg.player_w.id === identifier && !tg.player_w.guest_id || tg.player_b?.id === identifier && !tg.player_b.guest_id
                         }
                     })
                     let numOfRounds = 1
@@ -279,7 +280,7 @@ export const ActiveTournament = () => {
                         else if (typeof identifier === 'string' && targetGame.winner?.guest_id === identifier) {
                             playerScoreArr.push(1)
                         }
-                        else if (typeof identifier === 'number' && targetGame.winner?.id === identifier && !targetGame.winner?.guest_id){
+                        else if (typeof identifier === 'number' && targetGame.winner?.id === identifier && !targetGame.winner?.guest_id) {
                             playerScoreArr.push(1)
                         }
                         else {
@@ -287,9 +288,9 @@ export const ActiveTournament = () => {
                         }
                         numOfRounds++
                     }
-                    scoreObj[identifier] = playerScoreArr
+                    scoreCardObj[identifier] = playerScoreArr
                 }
-                setScoreCard(scoreObj)
+                setScoreCard(scoreCardObj)
             }
         }, [tournamentGames, activeTournamentPlayers]
     )
@@ -594,7 +595,7 @@ export const ActiveTournament = () => {
     }
     //iterating tournament games to edit if necessary
     const tableOrEdit = () => {
-        const sortedTournamentGames = tournamentGames.sort((a, b) => { return a.id - b.id  })
+        const sortedTournamentGames = tournamentGames.sort((a, b) => { return a.id - b.id })
         if (editScores) {
             const editPairings = [...activeTournament?.pairings]
             // const filteredPairings = editPairings.filter(pairing => pairing.round < activeTournament?.rounds)
@@ -604,7 +605,7 @@ export const ActiveTournament = () => {
                     <section id="previousMatchups">
                         {
                             sortedTournamentGames.map(game => {
-                                const white = activeTournamentPlayers.find(player => {
+                                const white = allPlayersArr.find(player => {
                                     if (game.player_w.guest_id) {
                                         return player.guest_id === game.player_w.guest_id
                                     }
@@ -612,7 +613,7 @@ export const ActiveTournament = () => {
                                         return player.id === game.player_w.id
                                     }
                                 })
-                                const black = activeTournamentPlayers.find(player => {
+                                const black = allPlayersArr.find(player => {
                                     if (game.player_b?.guest_id) {
                                         return player.guest_id === game.player_b?.guest_id
                                     }
@@ -629,12 +630,12 @@ export const ActiveTournament = () => {
                                                 <div className="setCustomFont">Round {game.tournament_round}</div>
                                             </div>
                                             <div className="editMatchup">
-                                                <div className={gameForApi.id ===game.id && gameForApi.winner === whiteTargetForIndicator ? "selectedWhitePiecesMatchup" : "whitePiecesMatchup"}
+                                                <div className={gameForApi.id === game.id && gameForApi.winner === whiteTargetForIndicator ? "selectedWhitePiecesMatchup" : "whitePiecesMatchup"}
                                                     id="whitePieces"
                                                     onClick={(evt) => {
                                                         handleGameForApiUpdate(evt.target.id, white, black, game)
-                                                    }}>{white.username || white.full_name}</div>
-                                                <div className={gameForApi.id ===game.id && gameForApi.win_style === "draw" ? "selectedDrawMatchupButton" : "drawMatchupButton"}
+                                                    }}>{white?.username || white?.full_name}</div>
+                                                <div className={gameForApi.id === game.id && gameForApi.win_style === "draw" ? "selectedDrawMatchupButton" : "drawMatchupButton"}
                                                     id="drawUpdate"
                                                     onClick={(evt) => {
                                                         handleGameForApiUpdate(evt.target.id, white, black, game)
@@ -909,17 +910,16 @@ export const ActiveTournament = () => {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {/* {
-                                            activeTournamentPlayers.map(tourneyPlayer => {
-                                                const guestIdOrId = tourneyPlayer.guest_id ? tourneyPlayer.guest_id : tourneyPlayer.id
-                                                const tourneyPlayerScores = scoreCard[guestIdOrId]
+                                        {
+                                            allPlayersArr.map(p => {
                                                 let score = 0
+                                                const guestIdOrId = p.guest_id ? p.guest_id : p.id
+                                                const tourneyPlayerScores = scoreCard[guestIdOrId]
                                                 return (
-                                                    <tr key={tourneyPlayer.guest_id ? tourneyPlayer.guest_id : tourneyPlayer.id} id={tourneyPlayer.id + "--tourneyRow"} className="tablePlayerRow">
-                                                        <td key={tourneyPlayer.id} className="tablePlayerCell sticky-col first-col">{tourneyPlayer.full_name}</td>
+                                                    <tr key={guestIdOrId} id={guestIdOrId + "--tourneyRow"} className="tablePlayerRow">
+                                                        <td key={p.full_name + '--row'} className="tablePlayerCell sticky-col first-col">{p.full_name}</td>
                                                         {
                                                             tourneyPlayerScores?.map((s, index) => {
-                                                                
                                                                 if (typeof s === 'number') {
                                                                     score += s
                                                                 }
@@ -942,12 +942,10 @@ export const ActiveTournament = () => {
                                                         <td key={guestIdOrId + "-- score"} id={guestIdOrId + "-- score"} className="totalScoreCell" value={scoreObj[guestIdOrId]}>
                                                             {score}
                                                         </td>
-
                                                     </tr>
                                                 )
                                             })
-                                        } */}
-                                        
+                                        }
                                     </tbody>
                                 </table>
                             </section>

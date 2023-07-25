@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from "react"
 import { TournamentContext } from "./TournamentProvider"
 import "./Tournament.css"
-import { createNewGuest, getChessClub, updateTournament } from "../ServerManager"
+import { createNewGuest, getChessClub, getTournament, updateTournament } from "../ServerManager"
 import { RoundRobin, Swiss } from "tournament-pairings"
 
 
@@ -43,6 +43,8 @@ export const EditPlayersModal = ({ activeTournamentObj, setEdit, playedRounds, g
             }
         }, []
     )
+
+
     useEffect(
         () => {
             const allCurrentCompetitorsOnUpdated = tournamentObj.competitors.concat(tournamentObj.guest_competitors)
@@ -114,7 +116,7 @@ export const EditPlayersModal = ({ activeTournamentObj, setEdit, playedRounds, g
                 }
                 setPotentialCompetitors(unselectedPlayers.concat(unselectedGuests))
             }
-        }, [search, showGuests, playersAndGuests, players, guests, clubGuests, clubPlayers]
+        }, [search, showGuests, playersAndGuests, players, guests, clubGuests, clubPlayers, tournamentObj]
     )
     // useEffect(
     //     () => {
@@ -130,7 +132,6 @@ export const EditPlayersModal = ({ activeTournamentObj, setEdit, playedRounds, g
     //         console.log(activeTournamentObj.competitors)
     //     },[addedPlayersAndGuests, tournamentObj]
     // )
-
     useEffect(
         () => {
             const refObj = {}
@@ -154,18 +155,40 @@ export const EditPlayersModal = ({ activeTournamentObj, setEdit, playedRounds, g
         }, [previousOpponents, tournamentObj]
     )
 
-    useEffect(
-        () => {
-            console.log(addedPlayersAndGuests)
-        }, [addedPlayersAndGuests]
-    )
+    // if (!addPlayers && !removePlayers) {
+    //     return (
+    //         <article id="editPlayersContainerInitial" >
+    //             <div id="editPlayersHeader" >
+    //                 <h3 >Edit Players</h3>
+    //                 <button className="buttonStyleReject" onClick={() => {
+    //                     setEdit(false)
+    //                     setAddPlayers(false)
+    //                     setRemovePlayers(false)
+    //                 }}>cancel</button>
+    //             </div>
+    //             <div id="editPlayersInitialBtnBlock">
+    //                 <button className="editPlayersInitialBtn setCustomFont" onClick={() => {
+    //                     setAddPlayers(true)
+    //                     setRemovePlayers(false)
+    //                 }}>add players</button>
+    //                 <button className="editPlayersInitialBtn setCustomFont" onClick={() => {
+    //                     setRemovePlayers(true)
+    //                     setAddPlayers(false)
+    //                 }}>remove players</button>
+    //             </div>
+    //         </article>
+    //     )
+    // }
+    // else {
     return (
         <article id="editPlayersContainer">
             <div id="editPlayersHeader">
                 <h3>Edit Players</h3>
                 <button className="buttonStyleReject" onClick={() => {
+                    getTournament(activeTournamentObj.id)
+                        .then(data => updatedTournamentObj(data))
                     setEdit(false)
-                    updatedTournamentObj(activeTournamentObj)
+                    // updatedTournamentObj(activeTournamentObj)
                 }}>cancel</button>
             </div>
             <div id="tournamentPlayerSelectionSection">
@@ -178,6 +201,7 @@ export const EditPlayersModal = ({ activeTournamentObj, setEdit, playedRounds, g
                                     <li key={p.guest_id ? p.guest_id + '-- potentialCompetitor' : p.id + '-- potentialCompetitor'}
                                         className="newTournamentPlayerListItem"
                                         onClick={() => {
+                                            // if (addPlayers) {
                                             const copy = [...potentialCompetitors]
                                             copy.splice(index, 1)
                                             setPotentialCompetitors(copy)
@@ -190,6 +214,7 @@ export const EditPlayersModal = ({ activeTournamentObj, setEdit, playedRounds, g
                                             }
                                             updatedTournamentObj(tournamentCopy)
                                             setSearch("")
+                                            // }
                                         }}>
                                         {p?.full_name}
                                     </li>
@@ -208,13 +233,14 @@ export const EditPlayersModal = ({ activeTournamentObj, setEdit, playedRounds, g
                                     <li key={competitor.id + '-- competitor'}
                                         className="newTournamentPlayerListItem"
                                         onClick={() => {
+                                            // if (removePlayers) {
                                             const tournamentCopy = { ...tournamentObj }
                                             tournamentCopy.competitors.splice(index, 1)
                                             updatedTournamentObj(tournamentCopy)
                                             const copy = [...potentialCompetitors]
                                             copy.push(competitor)
                                             setPotentialCompetitors(copy)
-
+                                            // }
                                         }}>
                                         {player?.full_name}
                                     </li>
@@ -228,12 +254,14 @@ export const EditPlayersModal = ({ activeTournamentObj, setEdit, playedRounds, g
                                     <li key={competitor.guest_id + '-- competitor'}
                                         className="newTournamentPlayerListItem"
                                         onClick={() => {
+                                            // if (removePlayers) {
                                             const tournamentCopy = { ...tournamentObj }
                                             tournamentCopy.guest_competitors.splice(index, 1)
                                             updatedTournamentObj(tournamentCopy)
                                             const copy = [...potentialCompetitors]
                                             copy.push(competitor)
                                             setPotentialCompetitors(copy)
+                                            // }
                                         }}>
                                         {player?.full_name}
                                     </li>
@@ -287,161 +315,88 @@ export const EditPlayersModal = ({ activeTournamentObj, setEdit, playedRounds, g
                 <button className="buttonStyleApprove" onClick={() => setShowGuests(!showGuests)}>toggle guests</button>
                 <button id="submitNewPlayersBtn" className="buttonStyleApprove" onClick={() => {
                     if (activeTournamentObj.in_person === true) {
-
                         if ((gamesFromThisRound.length === currentPairings.length && !currentPairings.find(p => p.player2 === null)) || (gamesFromThisRound.length === currentPairings.length - 1 && currentPairings.find(p => p.player2 === null))) {
                             window.alert('This round seems to be over. Start new round before adding players')
                             setEdit(false)
                         }
-                        //adding players function
                         else {
-                            const copy = { ...tournamentObj }
-                            if (!gamesFromThisRound.length) {
-                                //if new add player conditionals dont work, delete them and revert to just this one
-                                //and disallow changes without clean round
-                                const playersArg = []
-                                for (const opponentRef in editedPlayerOpponentsRef) {
-                                    const playerRefObj = {
-                                        id: parseInt(opponentRef) || opponentRef,
-                                        avoid: editedPlayerOpponentsRef[opponentRef].filter(ref => ref !== 'bye')
-                                    }
-                                    if (editedPlayerOpponentsRef[opponentRef].includes('bye')) {
-                                        playerRefObj.receivedBye = true
-                                    }
-                                    playersArg.push(playerRefObj)
+                            //filter current round matchups
+                            const filteredPairings = currentPairings.filter(p => {
+                                const playerW = typeof p.player1 === 'string' ? tournamentObj.guest_competitors.find(g => g.guest_id === p.player1) : tournamentObj.competitors.find(pl => pl.id === p.player1)
+                                const playerB = typeof p.player2 === 'string' ? tournamentObj.guest_competitors.find(g => g.guest_id === p.player2) : tournamentObj.competitors.find(pl => pl.id === p.player2)
+                                //if either player missing, remove matchup and add player to unmatchedplayer array
+                                // if (playerW && !playerB) {
+                                //     unMatchedPlayersAndGuests.push(playerW)
+                                // }
+                                // if (!playerW && playerB) {
+                                //     unMatchedPlayersAndGuests.push(playerB)
+                                // }
+                                return playerW && playerB
+                            })
+                            const allAddedCompetitors = tournamentObj.competitors.concat(tournamentObj.guest_competitors)
+                            const unMatchedPlayersAndGuests = allAddedCompetitors.filter(ac => {
+                                const identifier = ac.guest_id ? ac.guest_id : ac.id
+                                if (!filteredPairings.find(p => p.player1 === identifier || p.player2 === identifier)) {
+                                    return true
                                 }
-                                copy.pairings = pastPairings.concat(Swiss(playersArg, playedRounds))
-                            }
-                            //adding new players but not affecting current created round matchups with bye pairing fill in
-                            //add odd number of players
-                            else if (addedPlayersAndGuests.length % 2 === 1) { //works as long as new players length not 1
-                                if (addedPlayersAndGuests.length === 1) {
-                                    if (currentPairings.find(p => p.player2 === null)) { //works with even and odd players
-                                        let byePairing = currentPairings.find(p => p.player2 === null)
-                                        const indexOfByePairing = currentPairings.indexOf(byePairing)
-                                        const randomNewPlayerIndex = Math.floor(Math.random() * addedPlayersAndGuests.length)
-                                        const newPlayerForByeGame = addedPlayersAndGuests.splice(randomNewPlayerIndex, 1)
-                                        if (newPlayerForByeGame[0].guest_id) {
-                                            const newByePairing = { round: byePairing.round, match: byePairing.match, player1: byePairing.player1, player2: newPlayerForByeGame[0].guest_id }
-                                            currentPairings[indexOfByePairing] = newByePairing
-                                        }
-                                        else {
-                                            const newByePairing = { round: byePairing.round, match: byePairing.match, player1: byePairing.player1, player2: newPlayerForByeGame[0].id }
-                                            currentPairings[indexOfByePairing] = newByePairing
-                                        }
-                                        const allPairings = pastPairings.concat(currentPairings)
-                                        copy.pairings = allPairings
-                                    }
-                                    else { //works
-                                        //create new bye
-                                        const lastMatchNumFromCurrentPairings = currentPairings[currentPairings.length - 1]?.match
-                                        const playerIdentifier = addedPlayersAndGuests[0].guest_id || addedPlayersAndGuests[0].id
-                                        const newBye = { round: playedRounds, match: lastMatchNumFromCurrentPairings + 1, player1: playerIdentifier, player2: null }
-                                        currentPairings.push(newBye)
-                                        copy.pairings = pastPairings.concat(currentPairings)
-                                    }
-                                }
-                                else if (currentPairings.find(p => p.player2 === null)) { //works for even and odd
-                                    const byePairing = currentPairings.find(p => p.player2 === null)
-                                    const indexOfByePairing = currentPairings.indexOf(byePairing)
-                                    const randomNewPlayerIndex = Math.floor(Math.random() * addedPlayersAndGuests.length)
-                                    const newPlayerForByeGame = addedPlayersAndGuests.splice(randomNewPlayerIndex, 1)
-                                    if (newPlayerForByeGame[0].guest_id) {
-                                        const newByePairing = { round: byePairing.round, match: byePairing.match, player1: byePairing.player1, player2: newPlayerForByeGame[0].guest_id }
-                                        currentPairings[indexOfByePairing] = newByePairing
-                                    }
-                                    else {
-                                        const newByePairing = { round: byePairing.round, match: byePairing.match, player1: byePairing.player1, player2: newPlayerForByeGame[0].id }
-                                        currentPairings[indexOfByePairing] = newByePairing
-                                    }
-                                    const lastMatchNumFromCurrentPairings = currentPairings[currentPairings.length - 1]?.match
-                                    const newPlayerArr = []
-                                    for (const player of addedPlayersAndGuests) {
-                                        if (player.guest_id) {
-                                            newPlayerArr.push({ id: player.guest_id })
-                                        }
-                                        else {
-                                            newPlayerArr.push({ id: player.id })
-                                        }
-                                    }
-                                    const newPairings = Swiss(newPlayerArr, playedRounds)
-                                    newPairings.map(np => np.match = np.match + lastMatchNumFromCurrentPairings)
-                                    const allPairingsForThisRound = currentPairings.concat(newPairings)
-                                    const allPairings = pastPairings.concat(allPairingsForThisRound)
-                                    copy.pairings = allPairings
-                                }
-                                else {//works
-                                    const lastMatchNumFromCurrentPairings = currentPairings[currentPairings.length - 1]?.match
-                                    const newPlayerArr = []
-                                    for (const player of addedPlayersAndGuests) {
-                                        if (player.guest_id) {
-                                            newPlayerArr.push({ id: player.guest_id })
-                                        }
-                                        else {
-                                            newPlayerArr.push({ id: player.id })
-                                        }
-                                    }
-                                    const newPairings = Swiss(newPlayerArr, playedRounds)
-                                    newPairings.map(np => np.match = np.match + lastMatchNumFromCurrentPairings)
-                                    const allPairingsForThisRound = currentPairings.concat(newPairings)
-                                    const allPairings = pastPairings.concat(allPairingsForThisRound)
-                                    copy.pairings = allPairings
-                                }
-                            }
-                            //add even number of players
-                            else {//works with even number of players
-                                if (currentPairings.find(p => p.player2 === null)) { //works with even and odd players
-                                    let byePairing = currentPairings.find(p => p.player2 === null)
-                                    const indexOfByePairing = currentPairings.indexOf(byePairing)
-                                    const randomNewPlayerIndex = Math.floor(Math.random() * addedPlayersAndGuests.length)
-                                    const newPlayerForByeGame = addedPlayersAndGuests.splice(randomNewPlayerIndex, 1)
-                                    if (newPlayerForByeGame[0].guest_id) {
-                                        const newByePairing = { round: byePairing.round, match: byePairing.match, player1: byePairing.player1, player2: newPlayerForByeGame[0].guest_id }
-                                        currentPairings[indexOfByePairing] = newByePairing
-                                    }
-                                    else {
-                                        const newByePairing = { round: byePairing.round, match: byePairing.match, player1: byePairing.player1, player2: newPlayerForByeGame[0].id }
-                                        currentPairings[indexOfByePairing] = newByePairing
-                                    }
-                                    const newPlayerArr = []
-                                    for (const player of addedPlayersAndGuests) {
-                                        if (player.guest_id) {
-                                            newPlayerArr.push({ id: player.guest_id })
-                                        }
-                                        else {
-                                            newPlayerArr.push({ id: player.id })
-                                        }
-                                    }
-                                    const lastMatchNumFromCurrentPairings = currentPairings[currentPairings.length - 1]?.match
-                                    let newPairings = []
-                                    if (newPlayerArr.length === 1) {
-                                        newPairings.push({ round: playedRounds, match: 1, player1: newPlayerArr[0].id, player2: null })
-                                    }
-                                    else {
-                                        newPairings = Swiss(newPlayerArr, playedRounds)
-                                    }
-                                    newPairings.map(np => np.match = np.match + lastMatchNumFromCurrentPairings)
-                                    const allPairingsForThisRound = currentPairings.concat(newPairings)
-                                    const allPairings = pastPairings.concat(allPairingsForThisRound)
-                                    copy.pairings = allPairings
+                                return false
+                            })
+                            const matchesPerRound = unMatchedPlayersAndGuests.length % 2 === 0 ? unMatchedPlayersAndGuests.length / 2 : (unMatchedPlayersAndGuests.length + 1) / 2
+                            const lastMatchNumFromCurrentPairings = currentPairings[currentPairings.length - 1]?.match
+                            //check length of players to be matched. if one create bye
+                            if (unMatchedPlayersAndGuests.length === 1) {
+                                const unmatchedPlayerOrGuest = unMatchedPlayersAndGuests[0]
+                                let identifier = undefined
+                                if (unmatchedPlayerOrGuest.guest_id) {
+                                    identifier = unmatchedPlayerOrGuest.guest_id
                                 }
                                 else {
-                                    const newPlayerArr = []
-                                    for (const player of addedPlayersAndGuests) {
-                                        if (player.guest_id) {
-                                            newPlayerArr.push({ id: player.guest_id })
-                                        }
-                                        else {
-                                            newPlayerArr.push({ id: player.id })
-                                        }
-                                    }
-                                    const lastMatchNumFromCurrentPairings = currentPairings[currentPairings.length - 1]?.match
-                                    const newPairings = Swiss(newPlayerArr, playedRounds)
-                                    newPairings.map(np => np.match = np.match + lastMatchNumFromCurrentPairings)
-                                    const allPairingsForThisRound = currentPairings.concat(newPairings)
-                                    const allPairings = pastPairings.concat(allPairingsForThisRound)
-                                    copy.pairings = allPairings
+                                    identifier = unmatchedPlayerOrGuest.id
                                 }
+                                const byeMatchup = { round: playedRounds, match: lastMatchNumFromCurrentPairings, player1: identifier, player2: null }
+                                filteredPairings.push(byeMatchup)
                             }
+                            else if (unMatchedPlayersAndGuests.length === 2) {
+                                const randomWhite = Math.floor(Math.random() * 2)
+                                const whitePlayer = unMatchedPlayersAndGuests.splice(randomWhite, 1)[0]
+                                const blackPlayer = unMatchedPlayersAndGuests[0]
+                                const newMatchup = { round: playedRounds, match: lastMatchNumFromCurrentPairings, player1: whitePlayer.guest_id || whitePlayer.id, player2: blackPlayer.guest_id || blackPlayer.id }
+                                filteredPairings.push(newMatchup)
+                            }
+                            else {
+                                //create new array from tournament competitors and guests
+                                const playerAndGuestIdsForPairing = unMatchedPlayersAndGuests.map(pg => {
+                                    if (pg.guest_id) {
+                                        return pg.guest_id
+                                    }
+                                    else {
+                                        return pg.id
+                                    }
+                                })
+                                const playerIdObjectsForPairing = playerAndGuestIdsForPairing.map(pg => {
+                                    let hadBye = false
+                                    if (previousOpponents[pg]?.includes('bye')) {
+                                        hadBye = true
+                                    }
+                                    const previousOppArr = previousOpponents[pg]?.filter(op => op !== 'bye')
+                                    if (previousOpponents[pg]) {
+                                        return { id: pg, avoid: previousOpponents[pg], receivedBye: hadBye }
+                                    }
+                                    else {
+                                        return { id: pg }
+                                    }
+                                })
+                                const newMatchups = Swiss(playerIdObjectsForPairing, playedRounds)
+                                newMatchups.map(nm => {
+                                    filteredPairings.push(nm)
+                                })
+                            }
+                            // console.log(filteredPairings)
+                            for (let i = 0; i < filteredPairings.length; i++) {
+                                filteredPairings[i].match = i + 1
+                            }
+                            const copy = { ...tournamentObj }
+                            copy.pairings = pastPairings.concat(filteredPairings)
                             const competitorIds = tournamentObj.competitors.map(tc => {
                                 return tc.id
                             })
@@ -451,13 +406,193 @@ export const EditPlayersModal = ({ activeTournamentObj, setEdit, playedRounds, g
                             copy.competitors = competitorIds
                             copy.guest_competitors = guestIds
                             console.log(copy)
-                            // updateTournament(copy)
-                            //     .then(() => resetTournaments())
-                            // setEdit(false)
+                            updateTournament(copy)
+                                .then(() => resetTournaments())
+                            setEdit(false)
+
+
+
+                            //add to updated tournament
+
                         }
+
+
+
+
+
+
+                        //FIRST VERSION. WORKS FOR ADDING BUT NOT REMOVING
+                        // if ((gamesFromThisRound.length === currentPairings.length && !currentPairings.find(p => p.player2 === null)) || (gamesFromThisRound.length === currentPairings.length - 1 && currentPairings.find(p => p.player2 === null))) {
+                        //     window.alert('This round seems to be over. Start new round before adding players')
+                        //     setEdit(false)
+                        // }
+                        // //adding players function
+                        // else {
+                        //     const copy = { ...tournamentObj }
+                        //     if (!gamesFromThisRound.length) {
+                        //         //if new add player conditionals dont work, delete them and revert to just this one
+                        //         //and disallow changes without clean round
+                        //         const playersArg = []
+                        //         for (const opponentRef in editedPlayerOpponentsRef) {
+                        //             const playerRefObj = {
+                        //                 id: parseInt(opponentRef) || opponentRef,
+                        //                 avoid: editedPlayerOpponentsRef[opponentRef].filter(ref => ref !== 'bye')
+                        //             }
+                        //             if (editedPlayerOpponentsRef[opponentRef].includes('bye')) {
+                        //                 playerRefObj.receivedBye = true
+                        //             }
+                        //             playersArg.push(playerRefObj)
+                        //         }
+                        //         copy.pairings = pastPairings.concat(Swiss(playersArg, playedRounds))
+                        //     }
+                        //     //adding new players but not affecting current created round matchups with bye pairing fill in
+                        //     //add odd number of players
+                        //     else if (addedPlayersAndGuests.length % 2 === 1) { //works as long as new players length not 1
+                        //         if (addedPlayersAndGuests.length === 1) {
+                        //             if (currentPairings.find(p => p.player2 === null)) { //works with even and odd players
+                        //                 let byePairing = currentPairings.find(p => p.player2 === null)
+                        //                 const indexOfByePairing = currentPairings.indexOf(byePairing)
+                        //                 const randomNewPlayerIndex = Math.floor(Math.random() * addedPlayersAndGuests.length)
+                        //                 const newPlayerForByeGame = addedPlayersAndGuests.splice(randomNewPlayerIndex, 1)
+                        //                 if (newPlayerForByeGame[0].guest_id) {
+                        //                     const newByePairing = { round: byePairing.round, match: byePairing.match, player1: byePairing.player1, player2: newPlayerForByeGame[0].guest_id }
+                        //                     currentPairings[indexOfByePairing] = newByePairing
+                        //                 }
+                        //                 else {
+                        //                     const newByePairing = { round: byePairing.round, match: byePairing.match, player1: byePairing.player1, player2: newPlayerForByeGame[0].id }
+                        //                     currentPairings[indexOfByePairing] = newByePairing
+                        //                 }
+                        //                 const allPairings = pastPairings.concat(currentPairings)
+                        //                 copy.pairings = allPairings
+                        //             }
+                        //             else { //works
+                        //                 //create new bye
+                        //                 const lastMatchNumFromCurrentPairings = currentPairings[currentPairings.length - 1]?.match
+                        //                 const playerIdentifier = addedPlayersAndGuests[0].guest_id || addedPlayersAndGuests[0].id
+                        //                 const newBye = { round: playedRounds, match: lastMatchNumFromCurrentPairings + 1, player1: playerIdentifier, player2: null }
+                        //                 currentPairings.push(newBye)
+                        //                 copy.pairings = pastPairings.concat(currentPairings)
+                        //             }
+                        //         }
+                        //         else if (currentPairings.find(p => p.player2 === null)) { //works for even and odd
+                        //             const byePairing = currentPairings.find(p => p.player2 === null)
+                        //             const indexOfByePairing = currentPairings.indexOf(byePairing)
+                        //             const randomNewPlayerIndex = Math.floor(Math.random() * addedPlayersAndGuests.length)
+                        //             const newPlayerForByeGame = addedPlayersAndGuests.splice(randomNewPlayerIndex, 1)
+                        //             if (newPlayerForByeGame[0].guest_id) {
+                        //                 const newByePairing = { round: byePairing.round, match: byePairing.match, player1: byePairing.player1, player2: newPlayerForByeGame[0].guest_id }
+                        //                 currentPairings[indexOfByePairing] = newByePairing
+                        //             }
+                        //             else {
+                        //                 const newByePairing = { round: byePairing.round, match: byePairing.match, player1: byePairing.player1, player2: newPlayerForByeGame[0].id }
+                        //                 currentPairings[indexOfByePairing] = newByePairing
+                        //             }
+                        //             const lastMatchNumFromCurrentPairings = currentPairings[currentPairings.length - 1]?.match
+                        //             const newPlayerArr = []
+                        //             for (const player of addedPlayersAndGuests) {
+                        //                 if (player.guest_id) {
+                        //                     newPlayerArr.push({ id: player.guest_id })
+                        //                 }
+                        //                 else {
+                        //                     newPlayerArr.push({ id: player.id })
+                        //                 }
+                        //             }
+                        //             const newPairings = Swiss(newPlayerArr, playedRounds)
+                        //             newPairings.map(np => np.match = np.match + lastMatchNumFromCurrentPairings)
+                        //             const allPairingsForThisRound = currentPairings.concat(newPairings)
+                        //             const allPairings = pastPairings.concat(allPairingsForThisRound)
+                        //             copy.pairings = allPairings
+                        //         }
+                        //         else {//works
+                        //             const lastMatchNumFromCurrentPairings = currentPairings[currentPairings.length - 1]?.match
+                        //             const newPlayerArr = []
+                        //             for (const player of addedPlayersAndGuests) {
+                        //                 if (player.guest_id) {
+                        //                     newPlayerArr.push({ id: player.guest_id })
+                        //                 }
+                        //                 else {
+                        //                     newPlayerArr.push({ id: player.id })
+                        //                 }
+                        //             }
+                        //             const newPairings = Swiss(newPlayerArr, playedRounds)
+                        //             newPairings.map(np => np.match = np.match + lastMatchNumFromCurrentPairings)
+                        //             const allPairingsForThisRound = currentPairings.concat(newPairings)
+                        //             const allPairings = pastPairings.concat(allPairingsForThisRound)
+                        //             copy.pairings = allPairings
+                        //         }
+                        //     }
+                        //     //add even number of players
+                        //     else {//works with even number of players
+                        //         if (currentPairings.find(p => p.player2 === null)) { //works with even and odd players
+                        //             let byePairing = currentPairings.find(p => p.player2 === null)
+                        //             const indexOfByePairing = currentPairings.indexOf(byePairing)
+                        //             const randomNewPlayerIndex = Math.floor(Math.random() * addedPlayersAndGuests.length)
+                        //             const newPlayerForByeGame = addedPlayersAndGuests.splice(randomNewPlayerIndex, 1)
+                        //             if (newPlayerForByeGame[0].guest_id) {
+                        //                 const newByePairing = { round: byePairing.round, match: byePairing.match, player1: byePairing.player1, player2: newPlayerForByeGame[0].guest_id }
+                        //                 currentPairings[indexOfByePairing] = newByePairing
+                        //             }
+                        //             else {
+                        //                 const newByePairing = { round: byePairing.round, match: byePairing.match, player1: byePairing.player1, player2: newPlayerForByeGame[0].id }
+                        //                 currentPairings[indexOfByePairing] = newByePairing
+                        //             }
+                        //             const newPlayerArr = []
+                        //             for (const player of addedPlayersAndGuests) {
+                        //                 if (player.guest_id) {
+                        //                     newPlayerArr.push({ id: player.guest_id })
+                        //                 }
+                        //                 else {
+                        //                     newPlayerArr.push({ id: player.id })
+                        //                 }
+                        //             }
+                        //             const lastMatchNumFromCurrentPairings = currentPairings[currentPairings.length - 1]?.match
+                        //             let newPairings = []
+                        //             if (newPlayerArr.length === 1) {
+                        //                 newPairings.push({ round: playedRounds, match: 1, player1: newPlayerArr[0].id, player2: null })
+                        //             }
+                        //             else {
+                        //                 newPairings = Swiss(newPlayerArr, playedRounds)
+                        //             }
+                        //             newPairings.map(np => np.match = np.match + lastMatchNumFromCurrentPairings)
+                        //             const allPairingsForThisRound = currentPairings.concat(newPairings)
+                        //             const allPairings = pastPairings.concat(allPairingsForThisRound)
+                        //             copy.pairings = allPairings
+                        //         }
+                        //         else {
+                        //             const newPlayerArr = []
+                        //             for (const player of addedPlayersAndGuests) {
+                        //                 if (player.guest_id) {
+                        //                     newPlayerArr.push({ id: player.guest_id })
+                        //                 }
+                        //                 else {
+                        //                     newPlayerArr.push({ id: player.id })
+                        //                 }
+                        //             }
+                        //             const lastMatchNumFromCurrentPairings = currentPairings[currentPairings.length - 1]?.match
+                        //             const newPairings = Swiss(newPlayerArr, playedRounds)
+                        //             newPairings.map(np => np.match = np.match + lastMatchNumFromCurrentPairings)
+                        //             const allPairingsForThisRound = currentPairings.concat(newPairings)
+                        //             const allPairings = pastPairings.concat(allPairingsForThisRound)
+                        //             copy.pairings = allPairings
+                        //         }
+                        //     }
+                        //     const competitorIds = tournamentObj.competitors.map(tc => {
+                        //         return tc.id
+                        //     })
+                        //     const guestIds = tournamentObj.guest_competitors.map(tgc => {
+                        //         return tgc.id
+                        //     })
+                        //     copy.competitors = competitorIds
+                        //     copy.guest_competitors = guestIds
+                        //     console.log(copy)
+                        //     // updateTournament(copy)
+                        //     //     .then(() => resetTournaments())
+                        //     // setEdit(false)
+                        // }
                     }
                 }}>Submit</button>
             </div>
         </article>
     )
+    // }
 }

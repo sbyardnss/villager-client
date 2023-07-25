@@ -459,7 +459,7 @@ export const ActiveTournament = () => {
                                 const white = activeTournamentPlayers?.find(player => player.id === matchup.player1 || player.guest_id === matchup.player1)
                                 const black = activeTournamentPlayers?.find(player => player.id === matchup.player2 || player.guest_id === matchup.player2)
                                 // const copy = { ...gameForApi }
-                                const whiteTargetForIndicator = white.guest_id ? white.guest_id : white.id
+                                const whiteTargetForIndicator = white?.guest_id ? white?.guest_id : white?.id
                                 const blackTargetForIndicator = black?.guest_id ? black?.guest_id : black?.id
                                 const matchingGame = tournamentGames.find(tg => {
                                     const gamePlayerWIndicator = tg.player_w.guest_id ? tg.player_w.guest_id : tg.player_w.id

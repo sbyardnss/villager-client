@@ -7,7 +7,7 @@ import { Swiss } from "tournament-pairings"
 
 
 export const ActiveTournament = () => {
-    const { tournaments, setTournaments, playersAndGuests, tournamentGames, selectedTournament, setSelectedTournament, resetTournamentGames, editPlayers, setEditPlayers, resetTournaments } = useContext(TournamentContext)
+    const { tournaments, setTournaments, playersAndGuests, tournamentGames, selectedTournament, setSelectedTournament, resetTournamentGames, editPlayers, setEditPlayers, resetTournaments, myChessClubs } = useContext(TournamentContext)
     //initial setup state variables
     const [activeTournament, setActiveTournament] = useState({})
     const [activeTournamentPlayers, setActiveTournamentPlayers] = useState([])
@@ -23,6 +23,7 @@ export const ActiveTournament = () => {
     const [resultsForTieBreak, updateResultsForTieBreak] = useState([])
     const [byePlayer, setByePlayer] = useState(0)
     const [scoreObj, setScoreObj] = useState({})
+    const [allPlayersArr, setAllPlayersArr] = useState([])
     const [playerOpponentsReferenceObj, updatePlayerOpponentsReferenceObj] = useState({})
 
     // new scorecard state variable
@@ -92,28 +93,64 @@ export const ActiveTournament = () => {
             //was previously mapping tournamentGames but that missed the current rounds pairings
             if (activeTournament.pairings) {
                 let opponentObj = {}
-                activeTournamentPlayers?.map(player => {
-                    if (player.guest_id) {
-                        opponentObj[player.guest_id] = []
+                activeTournament.pairings.map(p => {
+                    const player2orBye = p.player2? p.player2 : 'bye'
+                    if (opponentObj[p.player1]){
+                        opponentObj[p.player1].push(player2orBye)
                     }
                     else {
-                        opponentObj[player.id] = []
+                        opponentObj[p.player1] = []
+                    }
+                    if (p.player2){
+                        if (opponentObj[p.player2]){
+                            opponentObj[p.player2].push(p.player1)
+                        }
+                        else {
+                            opponentObj[p.player2] = []
+                        }
                     }
                 })
-                activeTournament.pairings.map(p => {
-                    if (p.player2 === null && typeof opponentObj[p.player1] === 'object') {
-                        opponentObj[p.player1].push('bye')
-                    }
-                    if (typeof opponentObj[p.player1] === 'object' && typeof opponentObj[p.player2] === 'object' && p.player2 !== null) {
-                        opponentObj[p.player1].push(p.player2)
-                        opponentObj[p.player2].push(p.player1)
-                    }
-                })
+                // let opponentObj = {}
+                // activeTournamentPlayers?.map(player => {
+                //     if (player.guest_id) {
+                //         opponentObj[player.guest_id] = []
+                //     }
+                //     else {
+                //         opponentObj[player.id] = []
+                //     }
+                // })
+                // activeTournament.pairings.map(p => {
+                //     if (p.player2 === null && typeof opponentObj[p.player1] === 'object') {
+                //         opponentObj[p.player1].push('bye')
+                //     }
+                //     if (typeof opponentObj[p.player1] === 'object' && typeof opponentObj[p.player2] === 'object' && p.player2 !== null) {
+                //         opponentObj[p.player1].push(p.player2)
+                //         opponentObj[p.player2].push(p.player1)
+                //     }
+                // })
                 updatePlayerOpponentsReferenceObj(opponentObj)
             }
         }, [activeTournamentPlayers, activeTournament.pairings]
     )
-
+    useEffect(
+        () => {
+            if (activeTournament.club) {
+                const allPlayersRef = []
+                const clubForTournament = myChessClubs.find(c => c.id === activeTournament.club.id)
+                for(const playerRef in playerOpponentsReferenceObj){
+                    if (isNaN(parseInt(playerRef))){
+                        const guest = clubForTournament.guest_members.find(g => g.guest_id === playerRef)
+                        allPlayersRef.push(guest)
+                    }
+                    else {
+                        const player = clubForTournament?.members?.find(p => p.id === parseInt(playerRef))
+                        allPlayersRef.push(player)
+                    }
+                }
+                setAllPlayersArr(allPlayersRef)
+            }
+        },[scoreObj, activeTournament.club]
+    )
     //setting round from active tournament
     useEffect(
         () => {
@@ -583,7 +620,7 @@ export const ActiveTournament = () => {
                                         return player.id === game.player_b?.id
                                     }
                                 })
-                                const whiteTargetForIndicator = white.guest_id ? white.guest_id : white.id
+                                const whiteTargetForIndicator = white?.guest_id ? white?.guest_id : white?.id
                                 const blackTargetForIndicator = black?.guest_id ? black?.guest_id : black?.id
                                 if (game.bye === false) {
                                     return (
@@ -872,7 +909,7 @@ export const ActiveTournament = () => {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {
+                                        {/* {
                                             activeTournamentPlayers.map(tourneyPlayer => {
                                                 const guestIdOrId = tourneyPlayer.guest_id ? tourneyPlayer.guest_id : tourneyPlayer.id
                                                 const tourneyPlayerScores = scoreCard[guestIdOrId]
@@ -909,7 +946,8 @@ export const ActiveTournament = () => {
                                                     </tr>
                                                 )
                                             })
-                                        }
+                                        } */}
+                                        
                                     </tbody>
                                 </table>
                             </section>

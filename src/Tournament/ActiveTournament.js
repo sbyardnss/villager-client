@@ -110,24 +110,6 @@ export const ActiveTournament = () => {
                         }
                     }
                 })
-                // let opponentObj = {}
-                // activeTournamentPlayers?.map(player => {
-                //     if (player.guest_id) {
-                //         opponentObj[player.guest_id] = []
-                //     }
-                //     else {
-                //         opponentObj[player.id] = []
-                //     }
-                // })
-                // activeTournament.pairings.map(p => {
-                //     if (p.player2 === null && typeof opponentObj[p.player1] === 'object') {
-                //         opponentObj[p.player1].push('bye')
-                //     }
-                //     if (typeof opponentObj[p.player1] === 'object' && typeof opponentObj[p.player2] === 'object' && p.player2 !== null) {
-                //         opponentObj[p.player1].push(p.player2)
-                //         opponentObj[p.player2].push(p.player1)
-                //     }
-                // })
                 updatePlayerOpponentsReferenceObj(opponentObj)
             }
         }, [activeTournamentPlayers, activeTournament.pairings]
@@ -215,11 +197,12 @@ export const ActiveTournament = () => {
             if (activeTournament) {
                 const copy = { ...gameForApi }
                 copy.tournament = activeTournament?.id
+                copy.winner = 0
                 copy.time_setting = activeTournament?.time_setting
                 copy.tournament_round = activeTournament?.rounds
                 updateGameForApi(copy)
             }
-        }, [activeTournament]
+        }, [activeTournament, currentRound]
     )
     //getting data for tie breaker from tournament games
     useEffect(
@@ -495,7 +478,6 @@ export const ActiveTournament = () => {
                             currentRoundMatchups?.map(matchup => {
                                 const white = activeTournamentPlayers?.find(player => player.id === matchup.player1 || player.guest_id === matchup.player1)
                                 const black = activeTournamentPlayers?.find(player => player.id === matchup.player2 || player.guest_id === matchup.player2)
-                                // const copy = { ...gameForApi }
                                 const whiteTargetForIndicator = white?.guest_id ? white?.guest_id : white?.id
                                 const blackTargetForIndicator = black?.guest_id ? black?.guest_id : black?.id
                                 const matchingGame = tournamentGames.find(tg => {
@@ -538,8 +520,10 @@ export const ActiveTournament = () => {
                                                 id="scoringSubmit"
                                                 className="buttonStyleReject"
                                                 onClick={() => {
-                                                    sendNewGame(gameForApi)
-                                                        .then(() => resetTournamentGames())
+                                                    if (gameForApi.winner !== 0){
+                                                        sendNewGame(gameForApi)
+                                                            .then(() => resetTournamentGames())
+                                                    }
                                                 }}>
                                                 submit
                                             </button>
@@ -563,8 +547,6 @@ export const ActiveTournament = () => {
                             currentRoundMatchups?.map(matchup => {
                                 const white = activeTournamentPlayers?.find(player => player.id === matchup.player1 || player.guest_id === matchup.player1)
                                 const black = activeTournamentPlayers?.find(player => player.id === matchup.player2 || player.guest_id === matchup.player2)
-                                // const whiteTargetForIndicator = white.guest_id ? white.guest_id : white.id
-                                // const blackTargetForIndicator = black?.guest_id ? black?.guest_id : black?.id
                                 if (black !== undefined) {
                                     return (
                                         <div key={`${matchup.round} -- ${matchup.match}`}
@@ -841,7 +823,6 @@ export const ActiveTournament = () => {
                                                 id: parseInt(opponentRef) || opponentRef,
                                                 avoid: playerOpponentsReferenceObj[opponentRef].filter(ref => ref !== 'bye')
                                             }
-
                                             if (playerOpponentsReferenceObj[opponentRef].includes('bye')) {
                                                 playerRefObj.receivedBye = true
                                             }
@@ -934,12 +915,12 @@ export const ActiveTournament = () => {
                                                                 }
                                                                 if (s !== 'none') {
                                                                     return (
-                                                                        <td key={guestIdOrId + '--' + index} className="scoreCell">{s}</td>
+                                                                        <td key={guestIdOrId + '--' + index + '--' + p.full_name} className="scoreCell">{s}</td>
                                                                     )
                                                                 }
                                                                 else {
                                                                     return (
-                                                                        <td key={guestIdOrId + '--' + index} className="scoreCell">0</td>
+                                                                        <td key={guestIdOrId + '--' + index + '--' + p.full_name} className="scoreCell">0</td>
                                                                     )
                                                                 }
                                                             })

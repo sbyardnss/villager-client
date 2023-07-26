@@ -15,8 +15,6 @@ export const EditPlayersModal = ({ activeTournamentObj, setEdit, playedRounds, g
     const [pastPairings, setPastPairings] = useState([])
     const [currentPairings, setCurrentPairings] = useState([])
     const [initialPlayersAndGuests, setInitialPlayersAndGuests] = useState([])
-    const [addPlayers, setAddPlayers] = useState(false)
-    const [removePlayers, setRemovePlayers] = useState(false)
     const [addedPlayersAndGuests, setAddedPlayersAndGuests] = useState([])
     const [editedPlayerOpponentsRef, updateEditedPlayerOpponentsRef] = useState({})
     const [newGuest, updateNewGuest] = useState({
@@ -132,6 +130,8 @@ export const EditPlayersModal = ({ activeTournamentObj, setEdit, playedRounds, g
     //         console.log(activeTournamentObj.competitors)
     //     },[addedPlayersAndGuests, tournamentObj]
     // )
+
+    //I dont think this hook or the variable editedPlayerOpponentsRef is necessary at all
     useEffect(
         () => {
             const refObj = {}
@@ -155,40 +155,14 @@ export const EditPlayersModal = ({ activeTournamentObj, setEdit, playedRounds, g
         }, [previousOpponents, tournamentObj]
     )
 
-    // if (!addPlayers && !removePlayers) {
-    //     return (
-    //         <article id="editPlayersContainerInitial" >
-    //             <div id="editPlayersHeader" >
-    //                 <h3 >Edit Players</h3>
-    //                 <button className="buttonStyleReject" onClick={() => {
-    //                     setEdit(false)
-    //                     setAddPlayers(false)
-    //                     setRemovePlayers(false)
-    //                 }}>cancel</button>
-    //             </div>
-    //             <div id="editPlayersInitialBtnBlock">
-    //                 <button className="editPlayersInitialBtn setCustomFont" onClick={() => {
-    //                     setAddPlayers(true)
-    //                     setRemovePlayers(false)
-    //                 }}>add players</button>
-    //                 <button className="editPlayersInitialBtn setCustomFont" onClick={() => {
-    //                     setRemovePlayers(true)
-    //                     setAddPlayers(false)
-    //                 }}>remove players</button>
-    //             </div>
-    //         </article>
-    //     )
-    // }
-    // else {
     return (
         <article id="editPlayersContainer">
             <div id="editPlayersHeader">
                 <h3>Edit Players</h3>
                 <button className="buttonStyleReject" onClick={() => {
-                    getTournament(activeTournamentObj.id)
-                        .then(data => updatedTournamentObj(data))
+                    // getTournament(activeTournamentObj.id)
+                    //     .then(data => updatedTournamentObj(data))
                     setEdit(false)
-                    // updatedTournamentObj(activeTournamentObj)
                 }}>cancel</button>
             </div>
             <div id="tournamentPlayerSelectionSection">
@@ -233,14 +207,12 @@ export const EditPlayersModal = ({ activeTournamentObj, setEdit, playedRounds, g
                                     <li key={competitor.id + '-- competitor'}
                                         className="newTournamentPlayerListItem"
                                         onClick={() => {
-                                            // if (removePlayers) {
                                             const tournamentCopy = { ...tournamentObj }
                                             tournamentCopy.competitors.splice(index, 1)
                                             updatedTournamentObj(tournamentCopy)
                                             const copy = [...potentialCompetitors]
                                             copy.push(competitor)
                                             setPotentialCompetitors(copy)
-                                            // }
                                         }}>
                                         {player?.full_name}
                                     </li>
@@ -254,14 +226,12 @@ export const EditPlayersModal = ({ activeTournamentObj, setEdit, playedRounds, g
                                     <li key={competitor.guest_id + '-- competitor'}
                                         className="newTournamentPlayerListItem"
                                         onClick={() => {
-                                            // if (removePlayers) {
                                             const tournamentCopy = { ...tournamentObj }
                                             tournamentCopy.guest_competitors.splice(index, 1)
                                             updatedTournamentObj(tournamentCopy)
                                             const copy = [...potentialCompetitors]
                                             copy.push(competitor)
                                             setPotentialCompetitors(copy)
-                                            // }
                                         }}>
                                         {player?.full_name}
                                     </li>
@@ -315,11 +285,7 @@ export const EditPlayersModal = ({ activeTournamentObj, setEdit, playedRounds, g
                 <button className="buttonStyleApprove" onClick={() => setShowGuests(!showGuests)}>toggle guests</button>
                 <button id="submitNewPlayersBtn" className="buttonStyleApprove" onClick={() => {
                     if (activeTournamentObj.in_person === true) {
-                        // if ((gamesFromThisRound.length === currentPairings.length && !currentPairings.find(p => p.player2 === null)) || (gamesFromThisRound.length === currentPairings.length - 1 && currentPairings.find(p => p.player2 === null))) {
-                        //     window.alert('This round seems to be over. Start new round before adding players')
-                        //     setEdit(false)
-                        // }
-                        // else {
+
                         //filter current round matchups
                         const filteredPairings = currentPairings.filter(p => {
                             const playerW = typeof p.player1 === 'string' ? tournamentObj.guest_competitors.find(g => g.guest_id === p.player1) : tournamentObj.competitors.find(pl => pl.id === p.player1)
@@ -358,8 +324,39 @@ export const EditPlayersModal = ({ activeTournamentObj, setEdit, playedRounds, g
                         }
                         else {
                             //check if only bye player was removed
-                            if (!unMatchedPlayersAndGuests.length) {
-                                //create new array from tournament competitors and guests
+                            if (unMatchedPlayersAndGuests.length) {
+                                let remainingPlayersCheckOpponents = []
+                                for (let i = 0; i < unMatchedPlayersAndGuests.length; i++) {
+                                    const identifier = unMatchedPlayersAndGuests[i].guest_id ? unMatchedPlayersAndGuests[i].guest_id : unMatchedPlayersAndGuests[i].id
+                                    const playersPossibleOpponents = unMatchedPlayersAndGuests.filter(pg => {
+                                        const opponentIdentifier = pg.guest_id ? pg.guest_id : pg.id
+                                        if (previousOpponents[identifier]?.includes(opponentIdentifier) || opponentIdentifier === identifier) {
+                                            return false
+                                        }
+                                        else {
+                                            return opponentIdentifier
+                                        }
+                                    })
+                                    if (playersPossibleOpponents.length) {
+                                        remainingPlayersCheckOpponents.push(unMatchedPlayersAndGuests[i])
+                                    }
+                                    remainingPlayersCheckOpponents.filter(rp => {
+                                        const identifier = rp.guest_id ? rp.guest_id : rp.id
+                                        if (currentPairings.find(p => p.player1 === identifier || p.player2 === identifier)) {
+                                            return false
+                                        }
+                                        else {
+                                            return true
+                                        }
+                                    })
+
+                                    // if (remainingPlayersCheckOpponents.length <= 1) {
+                                    //     window.confirm('this change might leave someone without a matchup this round due to said player being matched with all other players previously. if this is incorrect, please send feedback/bugs message')
+                                    // }
+                                    // else {
+                                    //create new array from tournament competitors and guests
+                                    // }
+                                }
                                 const playerAndGuestIdsForPairing = unMatchedPlayersAndGuests.map(pg => {
                                     if (pg.guest_id) {
                                         return pg.guest_id
@@ -382,6 +379,7 @@ export const EditPlayersModal = ({ activeTournamentObj, setEdit, playedRounds, g
                                     }
                                 })
                                 const newMatchups = Swiss(playerIdObjectsForPairing, playedRounds)
+                                console.log(newMatchups)
                                 newMatchups.map(nm => {
                                     filteredPairings.push(nm)
                                 })

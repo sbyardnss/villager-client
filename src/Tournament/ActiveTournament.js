@@ -474,8 +474,9 @@ export const ActiveTournament = () => {
                                 {whiteBye?.full_name} has bye
                             </div>
                             : ""}
+
                         {
-                            currentRoundMatchups?.map(matchup => {
+                            currentRoundMatchups?.map((matchup, index) => {
                                 const white = activeTournamentPlayers?.find(player => player.id === matchup.player1 || player.guest_id === matchup.player1)
                                 const black = activeTournamentPlayers?.find(player => player.id === matchup.player2 || player.guest_id === matchup.player2)
                                 const whiteTargetForIndicator = white?.guest_id ? white?.guest_id : white?.id
@@ -491,9 +492,16 @@ export const ActiveTournament = () => {
                                     }
                                     return tg.tournament_round === currentRound && gamePlayerBIndicator === blackTargetForIndicator && gamePlayerWIndicator === whiteTargetForIndicator
                                 })
+                                if (!matchup) {
+                                    return (
+                                        <div>
+                                            All match ups played. Start new round.
+                                        </div>
+                                    )
+                                }
                                 if (black !== undefined && !matchingGame?.winner && matchingGame?.win_style !== 'draw' && playerOpponentsReferenceObj[whiteTargetForIndicator]?.indexOf(blackTargetForIndicator) !== playerOpponentsReferenceObj[whiteTargetForIndicator]?.length + 1) {
                                     return (
-                                        <div key={`${matchup.round} -- ${matchup.match}`}
+                                        <div key={`${matchup.round} -- ${matchup.match} -- ${index}`}
                                             className="tournamentScoringMatchup">
                                             <div
                                                 className={gameForApi.id === undefined && gameForApi.winner === whiteTargetForIndicator ? "selectedWhitePiecesMatchup" : "whitePiecesMatchup"}
@@ -816,7 +824,7 @@ export const ActiveTournament = () => {
                                 className="progressionControlBtn controlBtnApprove"
                                 onClick={() => {
                                     if (window.confirm("create round?")) {
-                                        if (byePlayer) {
+                                        if (byePlayer && byeGame.player_w) {
                                             sendNewGame(byeGame)
                                         }
                                         const tournamentCopy = { ...activeTournament }
@@ -843,7 +851,7 @@ export const ActiveTournament = () => {
                                                 resetTournamentGames()
                                             })
                                     }
-                                }}>Finish Round</button>
+                                }}>New Round</button>
                             : ""}
                         {activeTournament.complete === false ?
                             <button

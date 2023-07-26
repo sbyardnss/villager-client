@@ -790,7 +790,7 @@ export const ActiveTournament = () => {
                         arrForTieBreakers.push(player.guest_id)
                     }
                     else {
-                        resultArr.push([player.username, parseFloat(scoreObj[playerIdentifier]), player.id])
+                        resultArr.push([player.full_name, parseFloat(scoreObj[playerIdentifier]), player.id])
                         arrForTieBreakers.push(player.id)
                     }
                 })

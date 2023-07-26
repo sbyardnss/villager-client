@@ -349,13 +349,6 @@ export const EditPlayersModal = ({ activeTournamentObj, setEdit, playedRounds, g
                                             return true
                                         }
                                     })
-
-                                    // if (remainingPlayersCheckOpponents.length <= 1) {
-                                    //     window.confirm('this change might leave someone without a matchup this round due to said player being matched with all other players previously. if this is incorrect, please send feedback/bugs message')
-                                    // }
-                                    // else {
-                                    //create new array from tournament competitors and guests
-                                    // }
                                 }
                                 const playerAndGuestIdsForPairing = unMatchedPlayersAndGuests.map(pg => {
                                     if (pg.guest_id) {
@@ -379,7 +372,6 @@ export const EditPlayersModal = ({ activeTournamentObj, setEdit, playedRounds, g
                                     }
                                 })
                                 const newMatchups = Swiss(playerIdObjectsForPairing, playedRounds)
-                                console.log(newMatchups)
                                 newMatchups.map(nm => {
                                     filteredPairings.push(nm)
                                 })
@@ -403,18 +395,6 @@ export const EditPlayersModal = ({ activeTournamentObj, setEdit, playedRounds, g
                         updateTournament(copy)
                             .then(() => resetTournaments())
                         setEdit(false)
-
-
-
-                        //add to updated tournament
-
-                        // }
-
-
-
-
-
-
                     }
                 }}>Submit</button>
             </div>

@@ -94,26 +94,36 @@ export const ActiveTournament = () => {
             if (activeTournament.pairings) {
                 let opponentObj = {}
                 activeTournament.pairings.map(p => {
+                    // if (p.player1 === 'g7'){
+                    //     console.log(p.player2)
+                    // }
+                    if (!opponentObj[p.player1] && p.player1) {
+                        opponentObj[p.player1] = []
+                    }
+                    if (!opponentObj[p.player2] && p.player2) {
+                        opponentObj[p.player2] = []
+                    }
                     const player2orBye = p.player2 ? p.player2 : 'bye'
                     if (opponentObj[p.player1]) {
                         opponentObj[p.player1].push(player2orBye)
                     }
-                    else {
-                        opponentObj[p.player1] = []
-                    }
+                    // else {
+                    //     opponentObj[p.player1] = []
+                    // }
                     if (p.player2) {
                         if (opponentObj[p.player2]) {
                             opponentObj[p.player2].push(p.player1)
                         }
-                        else {
-                            opponentObj[p.player2] = []
-                        }
+                        // else {
+                        //     opponentObj[p.player2] = []
+                        // }
                     }
                 })
                 updatePlayerOpponentsReferenceObj(opponentObj)
             }
         }, [activeTournamentPlayers, activeTournament.pairings]
     )
+
     useEffect(
         () => {
             if (activeTournament.club) {
@@ -146,8 +156,8 @@ export const ActiveTournament = () => {
     //getting current round pairings updating bye game if necessary
     useEffect(
         () => {
-            if (activeTournament) {
-                const currentRoundPairings = activeTournament.pairings?.filter(p => p.round === currentRound)
+            if (activeTournament.pairings) {
+                const currentRoundPairings = activeTournament.pairings.filter(p => p.round === currentRound)
                 {
                     //ensures that null value on matchup indicating bye player is restricted to player1 variable
                     currentRoundPairings?.map(pairing => {
@@ -162,35 +172,84 @@ export const ActiveTournament = () => {
                 copy.tournament_round = currentRound
                 updateGameForApi(copy)
                 //creates bye game in the event of uneven number of players in tournament. will send bye game to api when moving to next round
-                const byePairing = currentRoundPairings?.find(pairing => pairing.player2 === null)
-                if (byePairing) {
-                    const byeCopy = { ...gameForApi }
-                    byeCopy.player_b = null
-                    // byeCopy.player_w = byePairing.player1
-                    // byeCopy.winner = byePairing.player1
-                    byeCopy.bye = true
-                    byeCopy.win_style = ""
-                    if (typeof byePairing.player1 === 'string') {
-                        byeCopy.winner_model_type = 'guestplayer'
-                        byeCopy.player_w_model_type = 'guestplayer'
-                        const guestPlayer = activeTournamentPlayers.find(p => p.guest_id === byePairing.player1)
-                        byeCopy.player_w = guestPlayer?.guest_id
-                        byeCopy.winner = guestPlayer?.guest_id
-                    }
-                    else {
-                        byeCopy.winner_model_type = 'player'
-                        byeCopy.player_w_model_type = 'player'
-                        const player = activeTournamentPlayers.find(p => p.id === byePairing.player1)
-                        byeCopy.player_w = player?.id
-                        byeCopy.player_w = player?.id
-                        byeCopy.winner = player?.id
-                    }
-                    setByeGame(byeCopy)
-                    setByePlayer(byePairing.player1)
-                }
+                // const byePairing = currentRoundPairings?.find(pairing => pairing.player2 === null)
+                // if (byePairing) {
+                //     const byeCopy = { ...gameForApi }
+                //     byeCopy.player_b = null
+                //     // byeCopy.player_w = byePairing.player1
+                //     // byeCopy.winner = byePairing.player1
+                //     byeCopy.bye = true
+                //     byeCopy.win_style = ""
+                //     if (typeof byePairing.player1 === 'string') {
+                //         byeCopy.winner_model_type = 'guestplayer'
+                //         byeCopy.player_w_model_type = 'guestplayer'
+                //         const guestPlayer = activeTournamentPlayers.find(p => p.guest_id === byePairing.player1)
+                //         byeCopy.player_w = guestPlayer?.guest_id
+                //         byeCopy.winner = guestPlayer?.guest_id
+                //     }
+                //     else {
+                //         byeCopy.winner_model_type = 'player'
+                //         byeCopy.player_w_model_type = 'player'
+                //         const player = activeTournamentPlayers.find(p => p.id === byePairing.player1)
+                //         byeCopy.player_w = player?.id
+                //         byeCopy.player_w = player?.id
+                //         byeCopy.winner = player?.id
+                //     }
+                //     setByeGame(byeCopy)
+                //     setByePlayer(byePairing.player1)
+                // }
             }
-        }, [currentRound, activeTournament]
+
+        }, [currentRound, activeTournament.pairings]
     )
+    useEffect(
+        () => {
+            const byePairing = currentRoundMatchups?.find(pairing => pairing.player2 === null)
+            if (byePairing) {
+                const byeCopy = { ...gameForApi }
+                byeCopy.player_b = null
+                // byeCopy.player_w = byePairing.player1
+                // byeCopy.winner = byePairing.player1
+                byeCopy.bye = true
+                byeCopy.win_style = ""
+                if (typeof byePairing.player1 === 'string') {
+                    byeCopy.winner_model_type = 'guestplayer'
+                    byeCopy.player_w_model_type = 'guestplayer'
+                    const guestPlayer = activeTournamentPlayers.find(p => p.guest_id === byePairing.player1)
+                    byeCopy.player_w = guestPlayer?.guest_id
+                    byeCopy.winner = guestPlayer?.guest_id
+                }
+                else {
+                    byeCopy.winner_model_type = 'player'
+                    byeCopy.player_w_model_type = 'player'
+                    const player = activeTournamentPlayers.find(p => p.id === byePairing.player1)
+                    byeCopy.player_w = player?.id
+                    byeCopy.player_w = player?.id
+                    byeCopy.winner = player?.id
+                }
+                setByeGame(byeCopy)
+                setByePlayer(byePairing.player1)
+            }
+            else {
+                setByeGame({
+                    player_w: 0,
+                    player_w_model_type: "",
+                    player_b: null,
+                    tournament: 0,
+                    time_setting: 0,
+                    win_style: "",
+                    accepted: true,
+                    tournament_round: 0,
+                    winner: 0,
+                    winner_model_type: "",
+                    bye: true
+                })
+                setByePlayer(0)
+            }
+        }, [currentRoundMatchups]
+    )
+    console.log(byeGame)
+
     //updating game for api through active tournament
     useEffect(
         () => {
@@ -277,6 +336,7 @@ export const ActiveTournament = () => {
             }
         }, [tournamentGames, activeTournamentPlayers]
     )
+    console.log(scoreCard)
     useEffect(
         () => {
             if (scoreCard) {
@@ -404,6 +464,7 @@ export const ActiveTournament = () => {
 
         )
     }
+    // console.log(playerOpponentsReferenceObj)
     //update game for api either initial or updating
     const handleGameForApiUpdate = (targetId, whitePieces, blackPieces, pastGame) => {
         let copy = {}
@@ -654,7 +715,6 @@ export const ActiveTournament = () => {
             )
         }
     }
-
     //populate create games button for digital tournaments
     const scoringButtonOrNone = () => {
         if (activeTournament.in_person === false) {
@@ -829,15 +889,34 @@ export const ActiveTournament = () => {
                                         }
                                         const tournamentCopy = { ...activeTournament }
                                         const playersArg = []
+                                        //need to filter by active tournament players. currently creating matchups for players that have left
+
                                         for (const opponentRef in playerOpponentsReferenceObj) {
-                                            const playerRefObj = {
-                                                id: parseInt(opponentRef) || opponentRef,
-                                                avoid: playerOpponentsReferenceObj[opponentRef].filter(ref => ref !== 'bye')
+                                            let identifier = null
+                                            let isActive = true
+                                            if (isNaN(parseInt(opponentRef))) {
+                                                identifier = opponentRef
+                                                if (!activeTournamentPlayers.find(ap => ap.guest_id === identifier)) {
+                                                    isActive = false
+                                                }
                                             }
-                                            if (playerOpponentsReferenceObj[opponentRef].includes('bye')) {
-                                                playerRefObj.receivedBye = true
+                                            else {
+                                                identifier = parseInt(opponentRef)
+                                                if (!activeTournamentPlayers.find(ap => ap.id === identifier)) {
+                                                    isActive = false
+                                                }
                                             }
-                                            playersArg.push(playerRefObj)
+                                            if (isActive) {
+                                                const playerRefObj = {
+                                                    // id: parseInt(opponentRef) || opponentRef,
+                                                    id: identifier,
+                                                    avoid: playerOpponentsReferenceObj[identifier].filter(ref => ref !== 'bye')
+                                                }
+                                                if (playerOpponentsReferenceObj[identifier].includes('bye')) {
+                                                    playerRefObj.receivedBye = true
+                                                }
+                                                playersArg.push(playerRefObj)
+                                            }
                                         }
                                         // console.log(playersArg)
                                         tournamentCopy.pairings = tournamentCopy.pairings.concat(Swiss(playersArg, currentRound + 1))

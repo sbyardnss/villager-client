@@ -320,43 +320,45 @@ export const EditPlayersModal = ({ activeTournamentObj, setEdit, playedRounds, g
                         //     setEdit(false)
                         // }
                         // else {
-                            //filter current round matchups
-                            const filteredPairings = currentPairings.filter(p => {
-                                const playerW = typeof p.player1 === 'string' ? tournamentObj.guest_competitors.find(g => g.guest_id === p.player1) : tournamentObj.competitors.find(pl => pl.id === p.player1)
-                                const playerB = typeof p.player2 === 'string' ? tournamentObj.guest_competitors.find(g => g.guest_id === p.player2) : tournamentObj.competitors.find(pl => pl.id === p.player2)
-                                return playerW && playerB
-                            })
-                            const allAddedCompetitors = tournamentObj.competitors.concat(tournamentObj.guest_competitors)
-                            const unMatchedPlayersAndGuests = allAddedCompetitors.filter(ac => {
-                                const identifier = ac.guest_id ? ac.guest_id : ac.id
-                                if (!filteredPairings.find(p => p.player1 === identifier || p.player2 === identifier)) {
-                                    return true
-                                }
-                                return false
-                            })
-                            const matchesPerRound = unMatchedPlayersAndGuests.length % 2 === 0 ? unMatchedPlayersAndGuests.length / 2 : (unMatchedPlayersAndGuests.length + 1) / 2
-                            const lastMatchNumFromCurrentPairings = currentPairings[currentPairings.length - 1]?.match
-                            //check length of players to be matched. if one create bye
-                            if (unMatchedPlayersAndGuests.length === 1) {
-                                const unmatchedPlayerOrGuest = unMatchedPlayersAndGuests[0]
-                                let identifier = undefined
-                                if (unmatchedPlayerOrGuest.guest_id) {
-                                    identifier = unmatchedPlayerOrGuest.guest_id
-                                }
-                                else {
-                                    identifier = unmatchedPlayerOrGuest.id
-                                }
-                                const byeMatchup = { round: playedRounds, match: lastMatchNumFromCurrentPairings, player1: identifier, player2: null }
-                                filteredPairings.push(byeMatchup)
+                        //filter current round matchups
+                        const filteredPairings = currentPairings.filter(p => {
+                            const playerW = typeof p.player1 === 'string' ? tournamentObj.guest_competitors.find(g => g.guest_id === p.player1) : tournamentObj.competitors.find(pl => pl.id === p.player1)
+                            const playerB = typeof p.player2 === 'string' ? tournamentObj.guest_competitors.find(g => g.guest_id === p.player2) : tournamentObj.competitors.find(pl => pl.id === p.player2)
+                            return playerW && playerB
+                        })
+                        const allAddedCompetitors = tournamentObj.competitors.concat(tournamentObj.guest_competitors)
+                        const unMatchedPlayersAndGuests = allAddedCompetitors.filter(ac => {
+                            const identifier = ac.guest_id ? ac.guest_id : ac.id
+                            if (!filteredPairings.find(p => p.player1 === identifier || p.player2 === identifier)) {
+                                return true
                             }
-                            else if (unMatchedPlayersAndGuests.length === 2) {
-                                const randomWhite = Math.floor(Math.random() * 2)
-                                const whitePlayer = unMatchedPlayersAndGuests.splice(randomWhite, 1)[0]
-                                const blackPlayer = unMatchedPlayersAndGuests[0]
-                                const newMatchup = { round: playedRounds, match: lastMatchNumFromCurrentPairings, player1: whitePlayer.guest_id || whitePlayer.id, player2: blackPlayer.guest_id || blackPlayer.id }
-                                filteredPairings.push(newMatchup)
+                            return false
+                        })
+                        // const matchesPerRound = unMatchedPlayersAndGuests.length % 2 === 0 ? unMatchedPlayersAndGuests.length / 2 : (unMatchedPlayersAndGuests.length + 1) / 2
+                        const lastMatchNumFromCurrentPairings = currentPairings[currentPairings.length - 1]?.match
+                        //check length of players to be matched. if one create bye
+                        if (unMatchedPlayersAndGuests.length === 1) {
+                            const unmatchedPlayerOrGuest = unMatchedPlayersAndGuests[0]
+                            let identifier = undefined
+                            if (unmatchedPlayerOrGuest.guest_id) {
+                                identifier = unmatchedPlayerOrGuest.guest_id
                             }
                             else {
+                                identifier = unmatchedPlayerOrGuest.id
+                            }
+                            const byeMatchup = { round: playedRounds, match: lastMatchNumFromCurrentPairings, player1: identifier, player2: null }
+                            filteredPairings.push(byeMatchup)
+                        }
+                        else if (unMatchedPlayersAndGuests.length === 2) {
+                            const randomWhite = Math.floor(Math.random() * 2)
+                            const whitePlayer = unMatchedPlayersAndGuests.splice(randomWhite, 1)[0]
+                            const blackPlayer = unMatchedPlayersAndGuests[0]
+                            const newMatchup = { round: playedRounds, match: lastMatchNumFromCurrentPairings, player1: whitePlayer.guest_id || whitePlayer.id, player2: blackPlayer.guest_id || blackPlayer.id }
+                            filteredPairings.push(newMatchup)
+                        }
+                        else {
+                            //check if only bye player was removed
+                            if (!unMatchedPlayersAndGuests.length) {
                                 //create new array from tournament competitors and guests
                                 const playerAndGuestIdsForPairing = unMatchedPlayersAndGuests.map(pg => {
                                     if (pg.guest_id) {
@@ -373,7 +375,7 @@ export const EditPlayersModal = ({ activeTournamentObj, setEdit, playedRounds, g
                                     }
                                     const previousOppArr = previousOpponents[pg]?.filter(op => op !== 'bye')
                                     if (previousOpponents[pg]) {
-                                        return { id: pg, avoid: previousOpponents[pg], receivedBye: hadBye }
+                                        return { id: pg, avoid: previousOppArr, receivedBye: hadBye }
                                     }
                                     else {
                                         return { id: pg }
@@ -384,28 +386,29 @@ export const EditPlayersModal = ({ activeTournamentObj, setEdit, playedRounds, g
                                     filteredPairings.push(nm)
                                 })
                             }
-                            // console.log(filteredPairings)
-                            for (let i = 0; i < filteredPairings.length; i++) {
-                                filteredPairings[i].match = i + 1
-                            }
-                            const copy = { ...tournamentObj }
-                            copy.pairings = pastPairings.concat(filteredPairings)
-                            const competitorIds = tournamentObj.competitors.map(tc => {
-                                return tc.id
-                            })
-                            const guestIds = tournamentObj.guest_competitors.map(tgc => {
-                                return tgc.id
-                            })
-                            copy.competitors = competitorIds
-                            copy.guest_competitors = guestIds
-                            console.log(copy)
-                            updateTournament(copy)
-                                .then(() => resetTournaments())
-                            setEdit(false)
+                        }
+                        // console.log(filteredPairings)
+                        for (let i = 0; i < filteredPairings.length; i++) {
+                            filteredPairings[i].match = i + 1
+                        }
+                        const copy = { ...tournamentObj }
+                        copy.pairings = pastPairings.concat(filteredPairings)
+                        const competitorIds = tournamentObj.competitors.map(tc => {
+                            return tc.id
+                        })
+                        const guestIds = tournamentObj.guest_competitors.map(tgc => {
+                            return tgc.id
+                        })
+                        copy.competitors = competitorIds
+                        copy.guest_competitors = guestIds
+                        console.log(copy)
+                        updateTournament(copy)
+                            .then(() => resetTournaments())
+                        setEdit(false)
 
 
 
-                            //add to updated tournament
+                        //add to updated tournament
 
                         // }
 

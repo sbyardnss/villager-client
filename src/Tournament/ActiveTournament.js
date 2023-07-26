@@ -277,7 +277,6 @@ export const ActiveTournament = () => {
             }
         }, [tournamentGames, activeTournamentPlayers]
     )
-    console.log(currentRoundMatchups)
     useEffect(
         () => {
             if (scoreCard) {
@@ -930,7 +929,7 @@ export const ActiveTournament = () => {
                                                             })
                                                         }
                                                         {currentRound < 6 ? <td className="scoreCell"></td> : ""}
-                                                        <td key={guestIdOrId + "-- score"} id={guestIdOrId + "-- score"} className="totalScoreCell" value={scoreObj[guestIdOrId]}>
+                                                        <td key={guestIdOrId + "-- score" + p.full_name} id={guestIdOrId + "-- score"} className="totalScoreCell" value={scoreObj[guestIdOrId]}>
                                                             {score}
                                                         </td>
                                                     </tr>

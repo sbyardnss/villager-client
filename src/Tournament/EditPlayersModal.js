@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from "react"
 import { TournamentContext } from "./TournamentProvider"
 import "./Tournament.css"
-import { createNewGuest, getChessClub, updateTournament } from "../ServerManager"
+import { createNewGuest, getChessClub, getTournament, updateTournament } from "../ServerManager"
 import { RoundRobin, Swiss } from "tournament-pairings"
 
 
@@ -13,7 +13,9 @@ export const EditPlayersModal = ({ activeTournamentObj, setEdit, playedRounds, g
     const [clubPlayers, setClubPlayers] = useState([])
     const [clubGuests, setClubGuests] = useState([])
     const [pastPairings, setPastPairings] = useState([])
+    const [currentPairings, setCurrentPairings] = useState([])
     const [initialPlayersAndGuests, setInitialPlayersAndGuests] = useState([])
+    const [addedPlayersAndGuests, setAddedPlayersAndGuests] = useState([])
     const [editedPlayerOpponentsRef, updateEditedPlayerOpponentsRef] = useState({})
     const [newGuest, updateNewGuest] = useState({
         full_name: "",
@@ -31,6 +33,32 @@ export const EditPlayersModal = ({ activeTournamentObj, setEdit, playedRounds, g
         pairings: [],
         club: 0
     })
+    //grabbing initial players and guests to be able to check on creation of new matchups
+    useEffect(
+        () => {
+            if (activeTournamentObj) {
+                setInitialPlayersAndGuests(activeTournamentObj.competitors.concat(activeTournamentObj.guest_competitors))
+            }
+        }, []
+    )
+
+
+    useEffect(
+        () => {
+            const allCurrentCompetitorsOnUpdated = tournamentObj.competitors.concat(tournamentObj.guest_competitors)
+            const allAddedCompetitors = allCurrentCompetitorsOnUpdated.filter(ac => !initialPlayersAndGuests.find(i => {
+                if (ac.guest_id) {
+                    return ac.guest_id === i.guest_id
+                }
+                else {
+                    if (!ac.guest_id && !i.guest_id) {
+                        return ac.id === i.id
+                    }
+                }
+            }))
+            setAddedPlayersAndGuests(allAddedCompetitors)
+        }, [tournamentObj]
+    )
     //setting past pairings based on current round so that new pairings can be appended after editing players
     useEffect(
         () => {
@@ -41,6 +69,8 @@ export const EditPlayersModal = ({ activeTournamentObj, setEdit, playedRounds, g
             setInitialPlayersAndGuests(initPlayers.concat(initGuests))
             const pairingsBeforeThisRound = activeTournamentObj.pairings.filter(p => p.round < playedRounds)
             setPastPairings(pairingsBeforeThisRound)
+            const currentRoundPairings = activeTournamentObj.pairings.filter(p => p.round === playedRounds)
+            setCurrentPairings(currentRoundPairings)
             const guestCopy = { ...newGuest }
             guestCopy.club = activeTournamentObj.club.id
             updateNewGuest(guestCopy)
@@ -84,8 +114,24 @@ export const EditPlayersModal = ({ activeTournamentObj, setEdit, playedRounds, g
                 }
                 setPotentialCompetitors(unselectedPlayers.concat(unselectedGuests))
             }
-        }, [search, showGuests, playersAndGuests, players, guests, clubGuests, clubPlayers]
+        }, [search, showGuests, playersAndGuests, players, guests, clubGuests, clubPlayers, tournamentObj]
     )
+    // useEffect(
+    //     () => {
+    //         const addedPlayers = tournamentObj.competitors.filter(c => !activeTournamentObj.competitors.find(ac => ac.id === c.id))
+    //         const addedGuests = tournamentObj.guest_competitors.filter(c => !activeTournamentObj.guest_competitors.find(ac => ac.guest_id === c.guest_id))
+    //         setAddedPlayersAndGuests(addedPlayers.concat(addedGuests))
+    //     },[tournamentObj]
+    // )
+    // useEffect(
+    //     () => {
+    //         console.log(addedPlayersAndGuests)
+
+    //         console.log(activeTournamentObj.competitors)
+    //     },[addedPlayersAndGuests, tournamentObj]
+    // )
+
+    //I dont think this hook or the variable editedPlayerOpponentsRef is necessary at all
     useEffect(
         () => {
             const refObj = {}
@@ -108,19 +154,15 @@ export const EditPlayersModal = ({ activeTournamentObj, setEdit, playedRounds, g
             updateEditedPlayerOpponentsRef(refObj)
         }, [previousOpponents, tournamentObj]
     )
-    // useEffect(
-    //     () => {
-    //         console.log(editedPlayerOpponentsRef)
-    //     }, [editedPlayerOpponentsRef]
-    // )
 
     return (
         <article id="editPlayersContainer">
             <div id="editPlayersHeader">
                 <h3>Edit Players</h3>
                 <button className="buttonStyleReject" onClick={() => {
+                    // getTournament(activeTournamentObj.id)
+                    //     .then(data => updatedTournamentObj(data))
                     setEdit(false)
-                    updatedTournamentObj(activeTournamentObj)
                 }}>cancel</button>
             </div>
             <div id="tournamentPlayerSelectionSection">
@@ -133,6 +175,7 @@ export const EditPlayersModal = ({ activeTournamentObj, setEdit, playedRounds, g
                                     <li key={p.guest_id ? p.guest_id + '-- potentialCompetitor' : p.id + '-- potentialCompetitor'}
                                         className="newTournamentPlayerListItem"
                                         onClick={() => {
+                                            // if (addPlayers) {
                                             const copy = [...potentialCompetitors]
                                             copy.splice(index, 1)
                                             setPotentialCompetitors(copy)
@@ -145,6 +188,7 @@ export const EditPlayersModal = ({ activeTournamentObj, setEdit, playedRounds, g
                                             }
                                             updatedTournamentObj(tournamentCopy)
                                             setSearch("")
+                                            // }
                                         }}>
                                         {p?.full_name}
                                     </li>
@@ -169,7 +213,6 @@ export const EditPlayersModal = ({ activeTournamentObj, setEdit, playedRounds, g
                                             const copy = [...potentialCompetitors]
                                             copy.push(competitor)
                                             setPotentialCompetitors(copy)
-
                                         }}>
                                         {player?.full_name}
                                     </li>
@@ -241,35 +284,121 @@ export const EditPlayersModal = ({ activeTournamentObj, setEdit, playedRounds, g
             <div id="editPlayersToggleAndSubmitBtnBlock">
                 <button className="buttonStyleApprove" onClick={() => setShowGuests(!showGuests)}>toggle guests</button>
                 <button id="submitNewPlayersBtn" className="buttonStyleApprove" onClick={() => {
-                    const copy = { ...tournamentObj }
-                    const competitorIds = tournamentObj.competitors.map(tc => {
-                        return tc.id
-                    })
-                    const guestIds = tournamentObj.guest_competitors.map(tgc => {
-                        return tgc.id
-                    })
-                    //need to add new competitors to playerArgs
-                    copy.competitors = competitorIds
-                    copy.guest_competitors = guestIds
-                    const playersArg = []
-                    for (const opponentRef in editedPlayerOpponentsRef) {
-                        const playerRefObj = {
-                            id: parseInt(opponentRef) || opponentRef,
-                            avoid: editedPlayerOpponentsRef[opponentRef].filter(ref => ref !== 'bye')
-                        }
+                    if (activeTournamentObj.in_person === true) {
 
-                        if (editedPlayerOpponentsRef[opponentRef].includes('bye')) {
-                            playerRefObj.receivedBye = true
+                        //filter current round matchups
+                        const filteredPairings = currentPairings.filter(p => {
+                            const playerW = typeof p.player1 === 'string' ? tournamentObj.guest_competitors.find(g => g.guest_id === p.player1) : tournamentObj.competitors.find(pl => pl.id === p.player1)
+                            const playerB = typeof p.player2 === 'string' ? tournamentObj.guest_competitors.find(g => g.guest_id === p.player2) : tournamentObj.competitors.find(pl => pl.id === p.player2)
+                            return playerW && playerB
+                        })
+                        const allAddedCompetitors = tournamentObj.competitors.concat(tournamentObj.guest_competitors)
+                        const unMatchedPlayersAndGuests = allAddedCompetitors.filter(ac => {
+                            const identifier = ac.guest_id ? ac.guest_id : ac.id
+                            if (!filteredPairings.find(p => p.player1 === identifier || p.player2 === identifier)) {
+                                return true
+                            }
+                            return false
+                        })
+                        // const matchesPerRound = unMatchedPlayersAndGuests.length % 2 === 0 ? unMatchedPlayersAndGuests.length / 2 : (unMatchedPlayersAndGuests.length + 1) / 2
+                        const lastMatchNumFromCurrentPairings = currentPairings[currentPairings.length - 1]?.match
+                        //check length of players to be matched. if one create bye
+                        if (unMatchedPlayersAndGuests.length === 1) {
+                            const unmatchedPlayerOrGuest = unMatchedPlayersAndGuests[0]
+                            let identifier = undefined
+                            if (unmatchedPlayerOrGuest.guest_id) {
+                                identifier = unmatchedPlayerOrGuest.guest_id
+                            }
+                            else {
+                                identifier = unmatchedPlayerOrGuest.id
+                            }
+                            const byeMatchup = { round: playedRounds, match: lastMatchNumFromCurrentPairings, player1: identifier, player2: null }
+                            filteredPairings.push(byeMatchup)
                         }
-                        playersArg.push(playerRefObj)
+                        else if (unMatchedPlayersAndGuests.length === 2) {
+                            const randomWhite = Math.floor(Math.random() * 2)
+                            const whitePlayer = unMatchedPlayersAndGuests.splice(randomWhite, 1)[0]
+                            const blackPlayer = unMatchedPlayersAndGuests[0]
+                            const newMatchup = { round: playedRounds, match: lastMatchNumFromCurrentPairings, player1: whitePlayer.guest_id || whitePlayer.id, player2: blackPlayer.guest_id || blackPlayer.id }
+                            filteredPairings.push(newMatchup)
+                        }
+                        else {
+                            //check if only bye player was removed
+                            if (unMatchedPlayersAndGuests.length) {
+                                let remainingPlayersCheckOpponents = []
+                                for (let i = 0; i < unMatchedPlayersAndGuests.length; i++) {
+                                    const identifier = unMatchedPlayersAndGuests[i].guest_id ? unMatchedPlayersAndGuests[i].guest_id : unMatchedPlayersAndGuests[i].id
+                                    const playersPossibleOpponents = unMatchedPlayersAndGuests.filter(pg => {
+                                        const opponentIdentifier = pg.guest_id ? pg.guest_id : pg.id
+                                        if (previousOpponents[identifier]?.includes(opponentIdentifier) || opponentIdentifier === identifier) {
+                                            return false
+                                        }
+                                        else {
+                                            return opponentIdentifier
+                                        }
+                                    })
+                                    if (playersPossibleOpponents.length) {
+                                        remainingPlayersCheckOpponents.push(unMatchedPlayersAndGuests[i])
+                                    }
+                                    remainingPlayersCheckOpponents.filter(rp => {
+                                        const identifier = rp.guest_id ? rp.guest_id : rp.id
+                                        if (currentPairings.find(p => p.player1 === identifier || p.player2 === identifier)) {
+                                            return false
+                                        }
+                                        else {
+                                            return true
+                                        }
+                                    })
+                                }
+                                const playerAndGuestIdsForPairing = unMatchedPlayersAndGuests.map(pg => {
+                                    if (pg.guest_id) {
+                                        return pg.guest_id
+                                    }
+                                    else {
+                                        return pg.id
+                                    }
+                                })
+                                const playerIdObjectsForPairing = playerAndGuestIdsForPairing.map(pg => {
+                                    let hadBye = false
+                                    if (previousOpponents[pg]?.includes('bye')) {
+                                        hadBye = true
+                                    }
+                                    const previousOppArr = previousOpponents[pg]?.filter(op => op !== 'bye')
+                                    if (previousOpponents[pg]) {
+                                        return { id: pg, avoid: previousOppArr, receivedBye: hadBye }
+                                    }
+                                    else {
+                                        return { id: pg }
+                                    }
+                                })
+                                const newMatchups = Swiss(playerIdObjectsForPairing, playedRounds)
+                                newMatchups.map(nm => {
+                                    filteredPairings.push(nm)
+                                })
+                            }
+                        }
+                        // console.log(filteredPairings)
+                        for (let i = 0; i < filteredPairings.length; i++) {
+                            filteredPairings[i].match = i + 1
+                        }
+                        const copy = { ...tournamentObj }
+                        copy.pairings = pastPairings.concat(filteredPairings)
+                        const competitorIds = tournamentObj.competitors.map(tc => {
+                            return tc.id
+                        })
+                        const guestIds = tournamentObj.guest_competitors.map(tgc => {
+                            return tgc.id
+                        })
+                        copy.competitors = competitorIds
+                        copy.guest_competitors = guestIds
+                        console.log(copy)
+                        updateTournament(copy)
+                            .then(() => resetTournaments())
+                        setEdit(false)
                     }
-                    copy.pairings = pastPairings.concat(Swiss(playersArg, playedRounds))
-                    updateTournament(copy)
-                        .then(() => resetTournaments())
-                    setEdit(false)
-                    // console.log(copy)
                 }}>Submit</button>
             </div>
         </article>
     )
+    // }
 }

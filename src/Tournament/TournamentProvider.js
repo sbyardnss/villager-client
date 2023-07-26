@@ -61,12 +61,12 @@ export const TournamentProvider = (props) => {
     )
 
     //this one is needed currently. find a way to get rid of it
-    useEffect(
-        () => {
-            const allCompetitors = players.concat(guests)
-            setPlayersAndGuests(allCompetitors)
-        }, [players, guests, selectedClub, selectedTournament, editPlayers]
-    )
+    // useEffect(
+    //     () => {
+    //         const allCompetitors = players.concat(guests)
+    //         setPlayersAndGuests(allCompetitors)
+    //     }, [players, guests, selectedClub, selectedTournament, editPlayers]
+    // )
 
     useEffect(
         () => {
@@ -74,7 +74,6 @@ export const TournamentProvider = (props) => {
             setSelectedClubObj(club)
         }, [selectedClub, myChessClubs]
     )
-
 
     //only show guests and players that are in selected club
     //REPLACE STATE VARIABLES FOR GUESTS AND PLAYERS WITH CLUBPLAYERS AND CLUBGUESTS
@@ -85,10 +84,20 @@ export const TournamentProvider = (props) => {
                 setClubPlayers(clubsPlayers)
                 const clubsGuests = guests.filter(g => selectedClubObj?.guest_members?.find(gm => gm.id === g.id))
                 setClubGuests(clubsGuests)
-                const allPlayersAndGuests = clubsPlayers.concat(clubsGuests)
-                setPlayersAndGuests(allPlayersAndGuests)
+                // const allPlayersAndGuests = clubsPlayers.concat(clubsGuests)
+                // setPlayersAndGuests(allPlayersAndGuests)
             }
-        }, [selectedClubObj]//adding selectedClub to this dependency array causes players to entirely disappear
+        }, [selectedClubObj, players, guests, editPlayers, selectedTournament ]//adding selectedClub to this dependency array causes players to entirely disappear
+    )
+    //added this useEffect to replace playersAndGuests useEffect from line 63ish
+    //if it stops working simply remove this one and comment that one back in
+    useEffect(
+        () => {
+            if (clubPlayers && clubGuests) {
+                const allCompetitors = players.concat(guests)
+                setPlayersAndGuests(allCompetitors) 
+            }
+        }, [clubPlayers, clubGuests, selectedTournament]
     )
     const resetTournaments = () => {
         getAllTournaments()

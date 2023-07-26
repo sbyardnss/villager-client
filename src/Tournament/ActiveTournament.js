@@ -277,6 +277,7 @@ export const ActiveTournament = () => {
             }
         }, [tournamentGames, activeTournamentPlayers]
     )
+    console.log(currentRoundMatchups)
     useEffect(
         () => {
             if (scoreCard) {
@@ -375,7 +376,7 @@ export const ActiveTournament = () => {
                                     : allPlayersArr.find(player => player.id === playerResult[0])
                                 return (
                                     <div key={playerResult[0] + '--' + playerResult[1]} className="resultsModalListItem">
-                                        <div>{player?.guest_id ? player?.full_name : player?.username}: </div>
+                                        <div>{player?.full_name}: </div>
                                         <div>{playerResult[1]}</div>
                                     </div>
                                 )
@@ -392,7 +393,7 @@ export const ActiveTournament = () => {
                                     : allPlayersArr.find(player => player.id === playerResult[0])
                                 return (
                                     <div key={playerResult[0] + '--' + playerResult[1]} className="resultsModalListItem">
-                                        <div>{player?.guest_id ? player?.full_name : player?.username}: </div>
+                                        <div>{player?.full_name}: </div>
                                         <div>{playerResult[1]}</div>
                                     </div>
                                 )
@@ -471,7 +472,7 @@ export const ActiveTournament = () => {
                     <section id="tournamentScoringSection">
                         {byeMatchup ?
                             <div key={`${byeMatchup.round} -- ${byeMatchup.match} -- bye`} className="setColor setCustomFont">
-                                {whiteBye?.username || whiteBye?.full_name} has bye
+                                {whiteBye?.full_name} has bye
                             </div>
                             : ""}
                         {
@@ -500,7 +501,8 @@ export const ActiveTournament = () => {
                                                 id="whitePieces"
                                                 onClick={(evt) => {
                                                     handleGameForApiUpdate(evt.target.id, white, black)
-                                                }}>{white?.guest_id ? white.full_name : white?.username}
+                                                }}>{white?.full_name}
+                                                {/* }}>{white?.guest_id ? white.full_name : white?.username} */}
                                             </div>
                                             <div
                                                 className={gameForApi.id === undefined && gameForApi.player_w === whiteTargetForIndicator && gameForApi.player_b === blackTargetForIndicator && gameForApi.win_style === "draw" ? "selectedDrawMatchupButton" : "drawMatchupButton"}
@@ -514,13 +516,14 @@ export const ActiveTournament = () => {
                                                 id="blackPieces"
                                                 onClick={(evt) => {
                                                     handleGameForApiUpdate(evt.target.id, white, black)
-                                                }}>{black?.guest_id ? black.full_name : black?.username}
+                                                    // }}>{black?.guest_id ? black.full_name : black?.username}
+                                                }}>{black.full_name}
                                             </div>
                                             <button
                                                 id="scoringSubmit"
                                                 className="buttonStyleReject"
                                                 onClick={() => {
-                                                    if (gameForApi.winner !== 0){
+                                                    if (gameForApi.winner !== 0) {
                                                         sendNewGame(gameForApi)
                                                             .then(() => resetTournamentGames())
                                                     }
@@ -540,7 +543,7 @@ export const ActiveTournament = () => {
                     <section id="tournamentScoringSection">
                         {byeMatchup ?
                             <div key={`${byeMatchup.round} -- ${byeMatchup.match} -- bye`} className="setColor setCustomFont">
-                                {whiteBye?.username || whiteBye?.full_name} has bye
+                                {whiteBye?.full_name} has bye
                             </div>
                             : ""}
                         {
@@ -554,7 +557,7 @@ export const ActiveTournament = () => {
                                             <div
                                                 className="whitePiecesMatchup"
                                                 id="whitePieces">
-                                                {white?.guest_id ? white.full_name : white?.username}
+                                                {white.full_name}
                                             </div>
                                             <div className="setCustomFont">
                                                 Vs
@@ -562,7 +565,7 @@ export const ActiveTournament = () => {
                                             <div
                                                 className="blackPiecesMatchup"
                                                 id="blackPieces">
-                                                {black?.guest_id ? black.full_name : black?.username}
+                                                {black.full_name}
                                             </div>
                                         </div>
                                     )
@@ -615,7 +618,8 @@ export const ActiveTournament = () => {
                                                     id="whitePieces"
                                                     onClick={(evt) => {
                                                         handleGameForApiUpdate(evt.target.id, white, black, game)
-                                                    }}>{white?.username || white?.full_name}</div>
+                                                        // }}>{white?.username || white?.full_name}</div>
+                                                    }}>{white?.full_name}</div>
                                                 <div className={gameForApi.id === game.id && gameForApi.win_style === "draw" ? "selectedDrawMatchupButton" : "drawMatchupButton"}
                                                     id="drawUpdate"
                                                     onClick={(evt) => {
@@ -625,7 +629,7 @@ export const ActiveTournament = () => {
                                                     id="blackPieces"
                                                     onClick={(evt) => {
                                                         handleGameForApiUpdate(evt.target.id, white, black, game)
-                                                    }}>{black?.username || black?.full_name}</div>
+                                                    }}>{black?.full_name}</div>
                                                 <button onClick={() => {
                                                     alterGame(gameForApi)
                                                         .then(() => resetTournamentGames())

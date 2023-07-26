@@ -391,7 +391,7 @@ export const EditPlayersModal = ({ activeTournamentObj, setEdit, playedRounds, g
                         })
                         copy.competitors = competitorIds
                         copy.guest_competitors = guestIds
-                        console.log(copy)
+                        // console.log(copy)
                         updateTournament(copy)
                             .then(() => resetTournaments())
                         setEdit(false)

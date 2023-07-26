@@ -248,7 +248,6 @@ export const ActiveTournament = () => {
             }
         }, [currentRoundMatchups]
     )
-    console.log(byeGame)
 
     //updating game for api through active tournament
     useEffect(
@@ -336,7 +335,6 @@ export const ActiveTournament = () => {
             }
         }, [tournamentGames, activeTournamentPlayers]
     )
-    console.log(scoreCard)
     useEffect(
         () => {
             if (scoreCard) {

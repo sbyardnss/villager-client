@@ -40,7 +40,8 @@ export const Tournament = () => {
     useEffect(
         () => {
             if (search !== "") {
-                const filteredUsers = playersAndGuests?.filter(pc => {
+                // const filteredUsers = playersAndGuests?.filter(pc => {
+                const filteredUsers = clubPlayers.concat(clubGuests).filter(pc => {
                     return pc.full_name.toLowerCase().includes(search.toLowerCase()) && !newTournament.competitors?.find(member => member.id === pc.id) && !newTournament.guest_competitors?.find(member => member.id === pc.id)
                 })
                 setPotentialCompetitors(filteredUsers)
@@ -251,6 +252,7 @@ export const Tournament = () => {
                                 id="newGuestInput"
                                 type="text"
                                 placeholder="new guest name"
+                                value={newGuest.full_name}
                                 onChange={(e) => {
                                     const copy = { ...newGuest }
                                     copy.full_name = e.target.value
@@ -264,6 +266,7 @@ export const Tournament = () => {
                                     if (newGuest.full_name !== "" && selectedClub) {
                                         createNewGuest(newGuest)
                                             .then(() => resetGuests())
+                                            updateNewGuest({full_name: "", club: selectedClub})
                                     }
                                 }}
                             >Create Guest</button>
@@ -389,16 +392,16 @@ export const Tournament = () => {
                             tournaments?.map(t => {
                                 if (t.complete === false) {
                                     // if (t.competitors.find(c => c.id === localVillagerObj.userId) || t.creator.id === localVillagerObj.userId) {
-                                        return (
-                                            <li key={t.id}
-                                                className="tournamentListItem"
-                                                value={t.id}
-                                                onClick={(e) => {
-                                                    setSelectedTournament(e.target.value)
-                                                }}>
-                                                {t.title}
-                                            </li>
-                                        )
+                                    return (
+                                        <li key={t.id}
+                                            className="tournamentListItem"
+                                            value={t.id}
+                                            onClick={(e) => {
+                                                setSelectedTournament(e.target.value)
+                                            }}>
+                                            {t.title}
+                                        </li>
+                                    )
                                     // }
                                 }
                             })

@@ -171,37 +171,12 @@ export const ActiveTournament = () => {
                 const copy = { ...gameForApi }
                 copy.tournament_round = currentRound
                 updateGameForApi(copy)
-                //creates bye game in the event of uneven number of players in tournament. will send bye game to api when moving to next round
-                // const byePairing = currentRoundPairings?.find(pairing => pairing.player2 === null)
-                // if (byePairing) {
-                //     const byeCopy = { ...gameForApi }
-                //     byeCopy.player_b = null
-                //     // byeCopy.player_w = byePairing.player1
-                //     // byeCopy.winner = byePairing.player1
-                //     byeCopy.bye = true
-                //     byeCopy.win_style = ""
-                //     if (typeof byePairing.player1 === 'string') {
-                //         byeCopy.winner_model_type = 'guestplayer'
-                //         byeCopy.player_w_model_type = 'guestplayer'
-                //         const guestPlayer = activeTournamentPlayers.find(p => p.guest_id === byePairing.player1)
-                //         byeCopy.player_w = guestPlayer?.guest_id
-                //         byeCopy.winner = guestPlayer?.guest_id
-                //     }
-                //     else {
-                //         byeCopy.winner_model_type = 'player'
-                //         byeCopy.player_w_model_type = 'player'
-                //         const player = activeTournamentPlayers.find(p => p.id === byePairing.player1)
-                //         byeCopy.player_w = player?.id
-                //         byeCopy.player_w = player?.id
-                //         byeCopy.winner = player?.id
-                //     }
-                //     setByeGame(byeCopy)
-                //     setByePlayer(byePairing.player1)
-                // }
+                
             }
 
         }, [currentRound, activeTournament.pairings]
     )
+    console.log(activeTournament.pairings)
     useEffect(
         () => {
             const byePairing = currentRoundMatchups?.find(pairing => pairing.player2 === null)
@@ -660,6 +635,8 @@ export const ActiveTournament = () => {
             }
         }
     }
+    console.log(currentRoundMatchups)
+    console.log(byeGame)
     //iterating tournament games to edit if necessary
     const tableOrEdit = () => {
         const sortedTournamentGames = tournamentGames.sort((a, b) => { return a.id - b.id })
@@ -879,6 +856,7 @@ export const ActiveTournament = () => {
                             playedRounds={currentRound}
                             gamesFromThisRound={tournamentGames.filter(g => g.tournament_round === currentRound)}
                             previousOpponents={playerOpponentsReferenceObj}
+                            scoreObject={scoreObj}
                         />
                     </div> : ""}
                     <div id="activeTournamentHeader">

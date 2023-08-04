@@ -789,7 +789,6 @@ export const ActiveTournament = () => {
         //     return null
         // }
     }
-    console.log(scoreObj)
     if (selectedTournament) {
         if (activeTournament && activeTournamentPlayers) {
             const endTournamentModal = document.getElementById('endTournamentModal')

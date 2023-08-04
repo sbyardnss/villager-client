@@ -130,7 +130,6 @@ export const EditPlayersModal = ({ activeTournamentObj, setEdit, playedRounds, g
     //         console.log(activeTournamentObj.competitors)
     //     },[addedPlayersAndGuests, tournamentObj]
     // )
-
     //I dont think this hook or the variable editedPlayerOpponentsRef is necessary at all
     useEffect(
         () => {

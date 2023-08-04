@@ -153,7 +153,7 @@ export const EditPlayersModal = ({ activeTournamentObj, setEdit, playedRounds, g
             updateEditedPlayerOpponentsRef(refObj)
         }, [previousOpponents, tournamentObj]
     )
-
+    console.log(gamesFromThisRound)
     return (
         <article id="editPlayersContainer">
             <div id="editPlayersHeader">
@@ -294,14 +294,14 @@ export const EditPlayersModal = ({ activeTournamentObj, setEdit, playedRounds, g
                         const allAddedCompetitors = tournamentObj.competitors.concat(tournamentObj.guest_competitors)
                         const unMatchedPlayersAndGuests = allAddedCompetitors.filter(ac => {
                             const identifier = ac.guest_id ? ac.guest_id : ac.id
-                            if (!filteredPairings.find(p => p.player1 === identifier || p.player2 === identifier)) {
+                            let gameIdentifier = typeof identifier === 'string' ? 'guest_id' : 'id'
+                            if ((!filteredPairings.find(p => p.player1 === identifier || p.player2 === identifier)) && (!gamesFromThisRound.find(g => g.player_w[gameIdentifier] === identifier || g.player_b[gameIdentifier] === identifier))) {
                                 return true
                             }
                             return false
                         })
                         // const matchesPerRound = unMatchedPlayersAndGuests.length % 2 === 0 ? unMatchedPlayersAndGuests.length / 2 : (unMatchedPlayersAndGuests.length + 1) / 2
                         const lastMatchNumFromCurrentPairings = currentPairings[currentPairings.length - 1]?.match
-
                         //FOR UPDATE: check to see if no games have been played first. if so, simply create new pairings
                         if (!gamesFromThisRound.length) {
                             //iterate all players
@@ -315,6 +315,7 @@ export const EditPlayersModal = ({ activeTournamentObj, setEdit, playedRounds, g
                                     return pg.id
                                 }
                             })
+                            
                             const playerIdObjectsForPairing = playerAndGuestIdsForPairing.map(pg => {
                                 let hadBye = false
                                 //FOR UPDATE: added count here 
@@ -336,93 +337,95 @@ export const EditPlayersModal = ({ activeTournamentObj, setEdit, playedRounds, g
                             const newMatchups = Swiss(playerIdObjectsForPairing, playedRounds)
                             copy.pairings = pastPairings.concat(newMatchups)
                         }
-                        //check length of players to be matched. if one create bye
-                        else if (unMatchedPlayersAndGuests.length === 1) {
-                            const unmatchedPlayerOrGuest = unMatchedPlayersAndGuests[0]
-                            let identifier = undefined
-                            if (unmatchedPlayerOrGuest.guest_id) {
-                                identifier = unmatchedPlayerOrGuest.guest_id
+                        else {
+                            //check length of players to be matched. if one create bye
+                            if (unMatchedPlayersAndGuests.length === 1) {
+                                const unmatchedPlayerOrGuest = unMatchedPlayersAndGuests[0]
+                                let identifier = undefined
+                                if (unmatchedPlayerOrGuest.guest_id) {
+                                    identifier = unmatchedPlayerOrGuest.guest_id
+                                }
+                                else {
+                                    identifier = unmatchedPlayerOrGuest.id
+                                }
+                                const byeMatchup = { round: playedRounds, match: lastMatchNumFromCurrentPairings, player1: identifier, player2: null }
+                                filteredPairings.push(byeMatchup)
+                                copy.pairings = pastPairings.concat(filteredPairings)
+    
+                            }
+                            else if (unMatchedPlayersAndGuests.length === 2) {
+                                const randomWhite = Math.floor(Math.random() * 2)
+                                const whitePlayer = unMatchedPlayersAndGuests.splice(randomWhite, 1)[0]
+                                const blackPlayer = unMatchedPlayersAndGuests[0]
+                                const newMatchup = { round: playedRounds, match: lastMatchNumFromCurrentPairings, player1: whitePlayer.guest_id || whitePlayer.id, player2: blackPlayer.guest_id || blackPlayer.id }
+                                filteredPairings.push(newMatchup)
+                                copy.pairings = pastPairings.concat(filteredPairings)
+    
                             }
                             else {
-                                identifier = unmatchedPlayerOrGuest.id
-                            }
-                            const byeMatchup = { round: playedRounds, match: lastMatchNumFromCurrentPairings, player1: identifier, player2: null }
-                            filteredPairings.push(byeMatchup)
-                            copy.pairings = pastPairings.concat(filteredPairings)
-
-                        }
-                        else if (unMatchedPlayersAndGuests.length === 2) {
-                            const randomWhite = Math.floor(Math.random() * 2)
-                            const whitePlayer = unMatchedPlayersAndGuests.splice(randomWhite, 1)[0]
-                            const blackPlayer = unMatchedPlayersAndGuests[0]
-                            const newMatchup = { round: playedRounds, match: lastMatchNumFromCurrentPairings, player1: whitePlayer.guest_id || whitePlayer.id, player2: blackPlayer.guest_id || blackPlayer.id }
-                            filteredPairings.push(newMatchup)
-                            copy.pairings = pastPairings.concat(filteredPairings)
-
-                        }
-                        else {
-                            //check if only bye player was removed
-                            if (unMatchedPlayersAndGuests.length) {
-                                let remainingPlayersCheckOpponents = []
-                                for (let i = 0; i < unMatchedPlayersAndGuests.length; i++) {
-                                    const identifier = unMatchedPlayersAndGuests[i].guest_id ? unMatchedPlayersAndGuests[i].guest_id : unMatchedPlayersAndGuests[i].id
-                                    const playersPossibleOpponents = unMatchedPlayersAndGuests.filter(pg => {
-                                        const opponentIdentifier = pg.guest_id ? pg.guest_id : pg.id
-                                        if (previousOpponents[identifier]?.includes(opponentIdentifier) || opponentIdentifier === identifier) {
-                                            return false
+                                //check if only bye player was removed
+                                if (unMatchedPlayersAndGuests.length) {
+                                    let remainingPlayersCheckOpponents = []
+                                    for (let i = 0; i < unMatchedPlayersAndGuests.length; i++) {
+                                        const identifier = unMatchedPlayersAndGuests[i].guest_id ? unMatchedPlayersAndGuests[i].guest_id : unMatchedPlayersAndGuests[i].id
+                                        const playersPossibleOpponents = unMatchedPlayersAndGuests.filter(pg => {
+                                            const opponentIdentifier = pg.guest_id ? pg.guest_id : pg.id
+                                            if (previousOpponents[identifier]?.includes(opponentIdentifier) || opponentIdentifier === identifier) {
+                                                return false
+                                            }
+                                            else {
+                                                return opponentIdentifier
+                                            }
+                                        })
+                                        if (playersPossibleOpponents.length) {
+                                            remainingPlayersCheckOpponents.push(unMatchedPlayersAndGuests[i])
                                         }
-                                        else {
-                                            return opponentIdentifier
-                                        }
-                                    })
-                                    if (playersPossibleOpponents.length) {
-                                        remainingPlayersCheckOpponents.push(unMatchedPlayersAndGuests[i])
+                                        remainingPlayersCheckOpponents.filter(rp => {
+                                            const identifier = rp.guest_id ? rp.guest_id : rp.id
+                                            if (currentPairings.find(p => p.player1 === identifier || p.player2 === identifier)) {
+                                                return false
+                                            }
+                                            else {
+                                                return true
+                                            }
+                                        })
                                     }
-                                    remainingPlayersCheckOpponents.filter(rp => {
-                                        const identifier = rp.guest_id ? rp.guest_id : rp.id
-                                        if (currentPairings.find(p => p.player1 === identifier || p.player2 === identifier)) {
-                                            return false
+                                    const playerAndGuestIdsForPairing = unMatchedPlayersAndGuests.map(pg => {
+                                        if (pg.guest_id) {
+                                            return pg.guest_id
                                         }
                                         else {
-                                            return true
+                                            return pg.id
                                         }
                                     })
+                                    const playerIdObjectsForPairing = playerAndGuestIdsForPairing.map(pg => {
+                                        let hadBye = false
+                                        //FOR UPDATE: added count here 
+                                        let count = scoreObject[pg]
+                                        if (previousOpponents[pg]?.includes('bye')) {
+                                            hadBye = true
+                                            //FOR UPDATE: editing count here if the player had a bye
+                                            count--
+                                        }
+                                        const previousOppArr = previousOpponents[pg]?.filter(op => op !== 'bye')
+                                        if (previousOpponents[pg]) {
+                                            //FOR UPDATE: added count parameter
+                                            return { id: pg, score: count, avoid: previousOppArr, receivedBye: hadBye }
+                                        }
+                                        else {
+                                            return { id: pg }
+                                        }
+                                    })
+                                    const newMatchups = Swiss(playerIdObjectsForPairing, playedRounds)
+                                    //could we concat here instead of mapping?
+                                    newMatchups.map(nm => {
+                                        filteredPairings.push(nm)
+                                    })
+                                    copy.pairings = pastPairings.concat(filteredPairings)
                                 }
-                                const playerAndGuestIdsForPairing = unMatchedPlayersAndGuests.map(pg => {
-                                    if (pg.guest_id) {
-                                        return pg.guest_id
-                                    }
-                                    else {
-                                        return pg.id
-                                    }
-                                })
-                                const playerIdObjectsForPairing = playerAndGuestIdsForPairing.map(pg => {
-                                    let hadBye = false
-                                    //FOR UPDATE: added count here 
-                                    let count = scoreObject[pg]
-                                    if (previousOpponents[pg]?.includes('bye')) {
-                                        hadBye = true
-                                        //FOR UPDATE: editing count here if the player had a bye
-                                        count--
-                                    }
-                                    const previousOppArr = previousOpponents[pg]?.filter(op => op !== 'bye')
-                                    if (previousOpponents[pg]) {
-                                        //FOR UPDATE: added count parameter
-                                        return { id: pg, score: count, avoid: previousOppArr, receivedBye: hadBye }
-                                    }
-                                    else {
-                                        return { id: pg }
-                                    }
-                                })
-                                const newMatchups = Swiss(playerIdObjectsForPairing, playedRounds)
-                                //could we concat here instead of mapping?
-                                newMatchups.map(nm => {
-                                    filteredPairings.push(nm)
-                                })
-                                copy.pairings = pastPairings.concat(filteredPairings)
                             }
-
                         }
+
                         // editing match numbers for filtered pairings
                         if (filteredPairings.length) {
                             for (let i = 0; i < filteredPairings.length; i++) {

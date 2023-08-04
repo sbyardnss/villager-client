@@ -634,8 +634,7 @@ export const ActiveTournament = () => {
             }
         }
     }
-    console.log(currentRoundMatchups)
-    console.log(byeGame)
+    console.log(activeTournament.pairings)
     //iterating tournament games to edit if necessary
     const tableOrEdit = () => {
         const sortedTournamentGames = tournamentGames.sort((a, b) => { return a.id - b.id })

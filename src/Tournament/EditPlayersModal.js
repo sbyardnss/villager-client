@@ -5,7 +5,7 @@ import { createNewGuest, getChessClub, getTournament, updateTournament } from ".
 import { RoundRobin, Swiss } from "tournament-pairings"
 
 
-export const EditPlayersModal = ({ activeTournamentObj, setEdit, playedRounds, gamesFromThisRound, previousOpponents, scoreObject }) => {
+export const EditPlayersModal = ({ activeTournamentObj, setEdit, playedRounds, gamesFromThisRound, previousOpponents, scoreObject, setCurrentTournament }) => {
     const { localVillagerObj, players, guests, playersAndGuests, setPlayersAndGuests, selectedClubObj, selectedClub, resetGuests, resetTournaments } = useContext(TournamentContext)
     const [potentialCompetitors, setPotentialCompetitors] = useState([])
     const [search, setSearch] = useState("")
@@ -441,7 +441,11 @@ export const EditPlayersModal = ({ activeTournamentObj, setEdit, playedRounds, g
                         copy.guest_competitors = guestIds
                         // console.log(copy)
                         updateTournament(copy)
-                            .then(() => resetTournaments())
+                            .then(() => {
+                                getTournament(activeTournamentObj.id)
+                                    .then(data => setCurrentTournament(data))
+                            })
+                        // .then(() => resetTournaments())
                         setEdit(false)
                     }
                 }}>Submit</button>

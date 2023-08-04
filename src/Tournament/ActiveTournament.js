@@ -176,7 +176,6 @@ export const ActiveTournament = () => {
 
         }, [currentRound, activeTournament.pairings]
     )
-    console.log(activeTournament.pairings)
     useEffect(
         () => {
             const byePairing = currentRoundMatchups?.find(pairing => pairing.player2 === null)
@@ -851,6 +850,7 @@ export const ActiveTournament = () => {
                     {editPlayers ? <div id="editPlayersModal" className="setCustomFont">
                         <EditPlayersModal
                             activeTournamentObj={activeTournament}
+                            setCurrentTournament={setActiveTournament}
                             // tournamentId={selectedTournament}
                             setEdit={setEditPlayers}
                             playedRounds={currentRound}

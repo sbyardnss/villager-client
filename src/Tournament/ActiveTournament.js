@@ -354,6 +354,22 @@ export const ActiveTournament = () => {
             }
         }, [scoreCard]
     )
+    const resetGameForApi = () => {
+        updateGameForApi({
+            player_w: 0,
+            player_w_model_type: "",
+            player_b: 0,
+            player_b_model_type: "",
+            tournament: 0,
+            time_setting: 0,
+            win_style: "",
+            accepted: true,
+            tournament_round: 0,
+            winner: 0,
+            winner_model_type: "",
+            bye: false
+        })
+    }
     //number population for table
     const roundPopulation = () => {
         let roundNumber = activeTournament?.rounds;
@@ -592,6 +608,7 @@ export const ActiveTournament = () => {
                                                     if (gameForApi.winner !== 0) {
                                                         sendNewGame(gameForApi)
                                                             .then(() => resetTournamentGames())
+                                                        resetGameForApi()
                                                     }
                                                 }}>
                                                 submit
@@ -772,6 +789,7 @@ export const ActiveTournament = () => {
         //     return null
         // }
     }
+    console.log(scoreObj)
     if (selectedTournament) {
         if (activeTournament && activeTournamentPlayers) {
             const endTournamentModal = document.getElementById('endTournamentModal')
@@ -906,12 +924,15 @@ export const ActiveTournament = () => {
                                             }
                                             if (isActive) {
                                                 const playerRefObj = {
-                                                    // id: parseInt(opponentRef) || opponentRef,
                                                     id: identifier,
+                                                    //added below to account for scores
+                                                    score: scoreObj[identifier],
                                                     avoid: playerOpponentsReferenceObj[identifier].filter(ref => ref !== 'bye')
                                                 }
                                                 if (playerOpponentsReferenceObj[identifier].includes('bye')) {
                                                     playerRefObj.receivedBye = true
+                                                    //added below to remove byes from score parameter
+                                                    playerRefObj.score--
                                                 }
                                                 playersArg.push(playerRefObj)
                                             }

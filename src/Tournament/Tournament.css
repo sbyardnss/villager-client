@@ -56,6 +56,7 @@
         justify-content: space-between;
     }
 
+
     /* end Tournament modal */
     #endTournamentModal {
         display: none;
@@ -952,6 +953,7 @@
         display: flex;
         justify-content: center;
     }
+
     #scoringSubmit {
         height: 3em;
         margin: 0;
@@ -970,6 +972,7 @@
         height: 2em;
         width: 5em;
     }
+
     .selectedWhitePiecesMatchup {
         display: flex;
         justify-content: center;
@@ -997,6 +1000,7 @@
         text-align: center;
         height: 2em;
     }
+
     .selectedBlackPiecesMatchup {
         display: flex;
         justify-content: center;
@@ -1024,6 +1028,7 @@
         width: 3em;
         height: 2em;
     }
+
     .selectedDrawMatchupButton {
         display: flex;
         justify-content: center;
@@ -1042,6 +1047,7 @@
         display: flex;
         justify-content: center;
     }
+
     #tournamentTableContainer {
         display: flex;
         /* justify-content: center; */
@@ -1083,6 +1089,7 @@
         left: 0px;
         background-color: black;
     }
+
     .scoreCell {
         text-align: center;
         width: 20px;
@@ -1095,10 +1102,11 @@
     tr {
         height: 3rem;
     }
+
     /* thead th {
         width: 3rem;
     } */
-    
+
 
     tr>:first-child {
         position: -webkit-sticky;
@@ -1158,12 +1166,15 @@
         background: rgb(48, 48, 48);
 
     }
-    thead th:first-child{
+
+    thead th:first-child {
         background-color: #694873;
     }
-    thead th:last-child{
+
+    thead th:last-child {
         background-color: #694873;
     }
+
     .tournamentGameResultBye {
         display: flex;
         justify-content: center;
@@ -1178,6 +1189,7 @@
         /* justify-content: space-between; */
         align-items: center;
     }
+
     #editPlayersInitialBtnBlock {
         height: 70%;
         margin-top: 2em;
@@ -1185,6 +1197,7 @@
         flex-direction: column;
         justify-content: space-around;
     }
+
     .editPlayersInitialBtn {
         width: 12em;
         font-size: larger;
@@ -1194,6 +1207,7 @@
         background-color: #694873;
         cursor: pointer;
     }
+
     #editPlayersModal {
         position: fixed;
         display: flex;
@@ -1213,7 +1227,7 @@
     #editPlayersContainer {
         width: 100%;
     }
-    
+
     #editPlayersHeader {
         display: flex;
         justify-content: space-between;
@@ -1229,4 +1243,53 @@
     #submitNewPlayersBtn {
         width: 8.5em;
     }
+}
+#gamesStartedBtnBlock {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1em;
+}
+.gamesNotStartedBtn {
+    background-color: #934a67;
+    color: rgb(231, 231, 231);
+    height: 4em;
+    font-size: large;
+    width: 48%;
+    border: none;
+    border-radius: 2px;
+    cursor: pointer;
+    transition: .2s cubic-bezier(0.215, 0.61, 0.355, 1);
+}
+.gamesNotStartedBtnActive {
+    background-color: #cf4d81;
+    color: rgb(231, 231, 231);
+    height: 4em;
+    font-size: large;
+    width: 48%;
+    border: none;
+    border-radius: 2px;
+    cursor: pointer;
+    transition: .2s cubic-bezier(0.215, 0.61, 0.355, 1);
+}
+.gamesStartedBtn {
+    background-color: #694873;
+    color: rgb(231, 231, 231);
+    height: 4em;
+    font-size: large;
+    width: 48%;
+    border: none;
+    border-radius: 2px;
+    cursor: pointer;
+    transition: .2s cubic-bezier(0.215, 0.61, 0.355, 1);
+}
+.gamesStartedBtnActive {
+    background-color: #cf4d81;
+    color: rgb(231, 231, 231);
+    height: 4em;
+    font-size: large;
+    width: 48%;
+    border: none;
+    border-radius: 2px;
+    cursor: pointer;
+    transition: .2s cubic-bezier(0.215, 0.61, 0.355, 1);
 }

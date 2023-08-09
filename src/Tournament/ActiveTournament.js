@@ -171,7 +171,6 @@ export const ActiveTournament = () => {
                 const copy = { ...gameForApi }
                 copy.tournament_round = currentRound
                 updateGameForApi(copy)
-                
             }
 
         }, [currentRound, activeTournament.pairings]
@@ -328,6 +327,13 @@ export const ActiveTournament = () => {
             }
         }, [scoreCard]
     )
+    const sortAllPlayersArr = (playersArr) => {
+        return playersArr.sort((a, b) => { 
+            const aIdentifier = a.guest_id ? a.guest_id : a.id
+            const bIdentifier = b.guest_id ? b.guest_id : b.id
+            return scoreObj[bIdentifier] - scoreObj[aIdentifier] 
+        })
+    }
     const resetGameForApi = () => {
         updateGameForApi({
             player_w: 0,
@@ -634,7 +640,6 @@ export const ActiveTournament = () => {
             }
         }
     }
-    console.log(activeTournament.pairings)
     //iterating tournament games to edit if necessary
     const tableOrEdit = () => {
         const sortedTournamentGames = tournamentGames.sort((a, b) => { return a.id - b.id })
@@ -978,12 +983,48 @@ export const ActiveTournament = () => {
                                                 })
                                             }
                                             {currentRound < 6 ? <th ></th> : ""}
-                                            <th>count</th>
+                                            <th>score</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {
+                                        {/* {
                                             allPlayersArr.map(p => {
+                                                let score = 0
+                                                const guestIdOrId = p.guest_id ? p.guest_id : p.id
+                                                const tourneyPlayerScores = scoreCard[guestIdOrId]
+                                                return (
+                                                    <tr key={guestIdOrId} id={guestIdOrId + "--tourneyRow"} className="tablePlayerRow">
+                                                        <td key={p.full_name + '--row'} className="tablePlayerCell sticky-col first-col">{p.full_name}</td>
+                                                        {
+                                                            tourneyPlayerScores?.map((s, index) => {
+                                                                if (typeof s === 'number') {
+                                                                    score += s
+                                                                }
+                                                                if (s === 'bye') {
+                                                                    score += 1
+                                                                }
+                                                                if (s !== 'none') {
+                                                                    return (
+                                                                        <td key={guestIdOrId + '--' + index + '--' + p.full_name} className="scoreCell">{s}</td>
+                                                                    )
+                                                                }
+                                                                else {
+                                                                    return (
+                                                                        <td key={guestIdOrId + '--' + index + '--' + p.full_name} className="scoreCell">0</td>
+                                                                    )
+                                                                }
+                                                            })
+                                                        }
+                                                        {currentRound < 6 ? <td className="scoreCell"></td> : ""}
+                                                        <td key={guestIdOrId + "-- score" + p.full_name} id={guestIdOrId + "-- score"} className="totalScoreCell" value={scoreObj[guestIdOrId]}>
+                                                            {score}
+                                                        </td>
+                                                    </tr>
+                                                )
+                                            })
+                                        } */}
+                                        {
+                                            sortAllPlayersArr(allPlayersArr).map(p => {
                                                 let score = 0
                                                 const guestIdOrId = p.guest_id ? p.guest_id : p.id
                                                 const tourneyPlayerScores = scoreCard[guestIdOrId]

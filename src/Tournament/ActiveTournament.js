@@ -171,33 +171,6 @@ export const ActiveTournament = () => {
                 const copy = { ...gameForApi }
                 copy.tournament_round = currentRound
                 updateGameForApi(copy)
-                //creates bye game in the event of uneven number of players in tournament. will send bye game to api when moving to next round
-                // const byePairing = currentRoundPairings?.find(pairing => pairing.player2 === null)
-                // if (byePairing) {
-                //     const byeCopy = { ...gameForApi }
-                //     byeCopy.player_b = null
-                //     // byeCopy.player_w = byePairing.player1
-                //     // byeCopy.winner = byePairing.player1
-                //     byeCopy.bye = true
-                //     byeCopy.win_style = ""
-                //     if (typeof byePairing.player1 === 'string') {
-                //         byeCopy.winner_model_type = 'guestplayer'
-                //         byeCopy.player_w_model_type = 'guestplayer'
-                //         const guestPlayer = activeTournamentPlayers.find(p => p.guest_id === byePairing.player1)
-                //         byeCopy.player_w = guestPlayer?.guest_id
-                //         byeCopy.winner = guestPlayer?.guest_id
-                //     }
-                //     else {
-                //         byeCopy.winner_model_type = 'player'
-                //         byeCopy.player_w_model_type = 'player'
-                //         const player = activeTournamentPlayers.find(p => p.id === byePairing.player1)
-                //         byeCopy.player_w = player?.id
-                //         byeCopy.player_w = player?.id
-                //         byeCopy.winner = player?.id
-                //     }
-                //     setByeGame(byeCopy)
-                //     setByePlayer(byePairing.player1)
-                // }
             }
 
         }, [currentRound, activeTournament.pairings]
@@ -354,6 +327,29 @@ export const ActiveTournament = () => {
             }
         }, [scoreCard]
     )
+    const sortAllPlayersArr = (playersArr) => {
+        return playersArr.sort((a, b) => { 
+            const aIdentifier = a.guest_id ? a.guest_id : a.id
+            const bIdentifier = b.guest_id ? b.guest_id : b.id
+            return scoreObj[bIdentifier] - scoreObj[aIdentifier] 
+        })
+    }
+    const resetGameForApi = () => {
+        updateGameForApi({
+            player_w: 0,
+            player_w_model_type: "",
+            player_b: 0,
+            player_b_model_type: "",
+            tournament: 0,
+            time_setting: 0,
+            win_style: "",
+            accepted: true,
+            tournament_round: 0,
+            winner: 0,
+            winner_model_type: "",
+            bye: false
+        })
+    }
     //number population for table
     const roundPopulation = () => {
         let roundNumber = activeTournament?.rounds;
@@ -551,14 +547,14 @@ export const ActiveTournament = () => {
                                     }
                                     return tg.tournament_round === currentRound && gamePlayerBIndicator === blackTargetForIndicator && gamePlayerWIndicator === whiteTargetForIndicator
                                 })
-                                if (!matchup) {
-                                    return (
-                                        <div>
-                                            All match ups played. Start new round.
-                                        </div>
-                                    )
-                                }
-                                if (black !== undefined && !matchingGame?.winner && matchingGame?.win_style !== 'draw' && playerOpponentsReferenceObj[whiteTargetForIndicator]?.indexOf(blackTargetForIndicator) !== playerOpponentsReferenceObj[whiteTargetForIndicator]?.length + 1) {
+                                // if (!matchup) {
+                                //     return (
+                                //         <div>
+                                //             All match ups played. Start new round.
+                                //         </div>
+                                //     )
+                                // }
+                                if (black !== undefined && white!== undefined && !matchingGame?.winner && matchingGame?.win_style !== 'draw' && playerOpponentsReferenceObj[whiteTargetForIndicator]?.indexOf(blackTargetForIndicator) !== playerOpponentsReferenceObj[whiteTargetForIndicator]?.length + 1) {
                                     return (
                                         <div key={`${matchup.round} -- ${matchup.match} -- ${index}`}
                                             className="tournamentScoringMatchup">
@@ -592,6 +588,7 @@ export const ActiveTournament = () => {
                                                     if (gameForApi.winner !== 0) {
                                                         sendNewGame(gameForApi)
                                                             .then(() => resetTournamentGames())
+                                                        resetGameForApi()
                                                     }
                                                 }}>
                                                 submit
@@ -772,6 +769,8 @@ export const ActiveTournament = () => {
         //     return null
         // }
     }
+
+    console.log(activeTournament.pairings)
     if (selectedTournament) {
         if (activeTournament && activeTournamentPlayers) {
             const endTournamentModal = document.getElementById('endTournamentModal')
@@ -857,11 +856,13 @@ export const ActiveTournament = () => {
                     {editPlayers ? <div id="editPlayersModal" className="setCustomFont">
                         <EditPlayersModal
                             activeTournamentObj={activeTournament}
+                            setCurrentTournament={setActiveTournament}
                             // tournamentId={selectedTournament}
                             setEdit={setEditPlayers}
                             playedRounds={currentRound}
                             gamesFromThisRound={tournamentGames.filter(g => g.tournament_round === currentRound)}
                             previousOpponents={playerOpponentsReferenceObj}
+                            scoreObject={scoreObj}
                         />
                     </div> : ""}
                     <div id="activeTournamentHeader">
@@ -906,12 +907,15 @@ export const ActiveTournament = () => {
                                             }
                                             if (isActive) {
                                                 const playerRefObj = {
-                                                    // id: parseInt(opponentRef) || opponentRef,
                                                     id: identifier,
+                                                    //added below to account for scores
+                                                    score: scoreObj[identifier],
                                                     avoid: playerOpponentsReferenceObj[identifier].filter(ref => ref !== 'bye')
                                                 }
                                                 if (playerOpponentsReferenceObj[identifier].includes('bye')) {
                                                     playerRefObj.receivedBye = true
+                                                    //added below to remove byes from score parameter
+                                                    playerRefObj.score--
                                                 }
                                                 playersArg.push(playerRefObj)
                                             }
@@ -981,12 +985,48 @@ export const ActiveTournament = () => {
                                                 })
                                             }
                                             {currentRound < 6 ? <th ></th> : ""}
-                                            <th>count</th>
+                                            <th>score</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {
+                                        {/* {
                                             allPlayersArr.map(p => {
+                                                let score = 0
+                                                const guestIdOrId = p.guest_id ? p.guest_id : p.id
+                                                const tourneyPlayerScores = scoreCard[guestIdOrId]
+                                                return (
+                                                    <tr key={guestIdOrId} id={guestIdOrId + "--tourneyRow"} className="tablePlayerRow">
+                                                        <td key={p.full_name + '--row'} className="tablePlayerCell sticky-col first-col">{p.full_name}</td>
+                                                        {
+                                                            tourneyPlayerScores?.map((s, index) => {
+                                                                if (typeof s === 'number') {
+                                                                    score += s
+                                                                }
+                                                                if (s === 'bye') {
+                                                                    score += 1
+                                                                }
+                                                                if (s !== 'none') {
+                                                                    return (
+                                                                        <td key={guestIdOrId + '--' + index + '--' + p.full_name} className="scoreCell">{s}</td>
+                                                                    )
+                                                                }
+                                                                else {
+                                                                    return (
+                                                                        <td key={guestIdOrId + '--' + index + '--' + p.full_name} className="scoreCell">0</td>
+                                                                    )
+                                                                }
+                                                            })
+                                                        }
+                                                        {currentRound < 6 ? <td className="scoreCell"></td> : ""}
+                                                        <td key={guestIdOrId + "-- score" + p.full_name} id={guestIdOrId + "-- score"} className="totalScoreCell" value={scoreObj[guestIdOrId]}>
+                                                            {score}
+                                                        </td>
+                                                    </tr>
+                                                )
+                                            })
+                                        } */}
+                                        {
+                                            sortAllPlayersArr(allPlayersArr).map(p => {
                                                 let score = 0
                                                 const guestIdOrId = p.guest_id ? p.guest_id : p.id
                                                 const tourneyPlayerScores = scoreCard[guestIdOrId]

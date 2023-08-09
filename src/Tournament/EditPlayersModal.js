@@ -433,6 +433,14 @@ export const EditPlayersModal = ({ activeTournamentObj, setEdit, playedRounds, g
                                         newMatchups.map(nm => {
                                             filteredPairings.push(nm)
                                         })
+                                        for (let i = 0; i < filteredPairings.length; i++) {
+                                            if (lastMatchNumFromCurrentPairings) {
+                                                filteredPairings[i].match = lastMatchNumFromCurrentPairings + i + 1
+                                            }
+                                            else {
+                                                filteredPairings[i].match = i + 1
+                                            }
+                                        }
                                         copy.pairings = pastPairings.concat(filteredPairings)
                                     }
                                 }
@@ -450,14 +458,7 @@ export const EditPlayersModal = ({ activeTournamentObj, setEdit, playedRounds, g
                             //     }
                             //     //iterate filtered pairings and account for previously played game
                             // }
-                            for (let i=0; i< copy.pairings.length; i++) {
-                                if (lastMatchNumFromCurrentPairings) {
-                                    copy.pairings[i].match = lastMatchNumFromCurrentPairings + i + 1
-                                }
-                                else {
-                                    copy.pairings[i].match = i + 1
-                                }
-                            }
+
                             // const copy = { ...tournamentObj }
                             // copy.pairings = pastPairings.concat(filteredPairings)
                             const competitorIds = tournamentObj.competitors.map(tc => {

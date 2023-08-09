@@ -769,7 +769,8 @@ export const ActiveTournament = () => {
         //     return null
         // }
     }
-    // console.log(activeTournament.pairings)
+
+    console.log(activeTournament.pairings)
     if (selectedTournament) {
         if (activeTournament && activeTournamentPlayers) {
             const endTournamentModal = document.getElementById('endTournamentModal')

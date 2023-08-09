@@ -439,16 +439,24 @@ export const EditPlayersModal = ({ activeTournamentObj, setEdit, playedRounds, g
                             }
 
                             // editing match numbers for filtered pairings
-                            if (filteredPairings.length) {
-                                for (let i = 0; i < filteredPairings.length; i++) {
-                                    if (lastMatchNumFromCurrentPairings) {
-                                        filteredPairings[i].match = lastMatchNumFromCurrentPairings + 1
-                                    }
-                                    else {
-                                        filteredPairings[i].match = i + 1
-                                    }
+                            // if (filteredPairings.length) {
+                            //     for (let i = 0; i < filteredPairings.length; i++) {
+                            //         if (lastMatchNumFromCurrentPairings) {
+                            //             filteredPairings[i].match = lastMatchNumFromCurrentPairings + i + 1
+                            //         }
+                            //         else {
+                            //             filteredPairings[i].match = i + 1
+                            //         }
+                            //     }
+                            //     //iterate filtered pairings and account for previously played game
+                            // }
+                            for (let i=0; i< copy.pairings.length; i++) {
+                                if (lastMatchNumFromCurrentPairings) {
+                                    copy.pairings[i].match = lastMatchNumFromCurrentPairings + i + 1
                                 }
-                                //iterate filtered pairings and account for previously played game
+                                else {
+                                    copy.pairings[i].match = i + 1
+                                }
                             }
                             // const copy = { ...tournamentObj }
                             // copy.pairings = pastPairings.concat(filteredPairings)

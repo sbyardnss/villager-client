@@ -154,7 +154,8 @@ export const EditPlayersModal = ({ activeTournamentObj, setEdit, playedRounds, g
             updateEditedPlayerOpponentsRef(refObj)
         }, [previousOpponents, tournamentObj]
     )
-    console.log(gamesFromThisRound)
+    // console.log(gamesFromThisRound)
+    console.log(currentPairings)
     return (
         <article id="editPlayersContainer">
             <div id="editPlayersHeader">
@@ -310,6 +311,7 @@ export const EditPlayersModal = ({ activeTournamentObj, setEdit, playedRounds, g
                             const lastMatchNumFromCurrentPairings = currentPairings[currentPairings.length - 1]?.match
                             //FOR UPDATE: check to see if no games have been played first. if so, simply create new pairings
                             if (!gamesStarted && !gamesFromThisRound.length) {
+                                console.log("first")
                                 //iterate all players
                                 //create objects for swiss pairing and create
                                 //add to past pairings
@@ -346,6 +348,7 @@ export const EditPlayersModal = ({ activeTournamentObj, setEdit, playedRounds, g
                             else {
                                 //check length of players to be matched. if one create bye
                                 if (unMatchedPlayersAndGuests.length === 1) {
+                                    console.log("second")
                                     const unmatchedPlayerOrGuest = unMatchedPlayersAndGuests[0]
                                     let identifier = undefined
                                     if (unmatchedPlayerOrGuest.guest_id) {
@@ -360,6 +363,7 @@ export const EditPlayersModal = ({ activeTournamentObj, setEdit, playedRounds, g
 
                                 }
                                 else if (unMatchedPlayersAndGuests.length === 2) {
+                                    console.log("third")
                                     const randomWhite = Math.floor(Math.random() * 2)
                                     const whitePlayer = unMatchedPlayersAndGuests.splice(randomWhite, 1)[0]
                                     const blackPlayer = unMatchedPlayersAndGuests[0]
@@ -370,6 +374,8 @@ export const EditPlayersModal = ({ activeTournamentObj, setEdit, playedRounds, g
                                 }
                                 else {
                                     //check if only bye player was removed
+                                    console.log("fourth")
+                                    console.log(unMatchedPlayersAndGuests)
                                     if (unMatchedPlayersAndGuests.length) {
                                         let remainingPlayersCheckOpponents = []
                                         for (let i = 0; i < unMatchedPlayersAndGuests.length; i++) {
@@ -435,8 +441,14 @@ export const EditPlayersModal = ({ activeTournamentObj, setEdit, playedRounds, g
                             // editing match numbers for filtered pairings
                             if (filteredPairings.length) {
                                 for (let i = 0; i < filteredPairings.length; i++) {
-                                    filteredPairings[i].match = i + 1
+                                    if (lastMatchNumFromCurrentPairings) {
+                                        filteredPairings[i].match = lastMatchNumFromCurrentPairings + 1
+                                    }
+                                    else {
+                                        filteredPairings[i].match = i + 1
+                                    }
                                 }
+                                //iterate filtered pairings and account for previously played game
                             }
                             // const copy = { ...tournamentObj }
                             // copy.pairings = pastPairings.concat(filteredPairings)

@@ -547,14 +547,14 @@ export const ActiveTournament = () => {
                                     }
                                     return tg.tournament_round === currentRound && gamePlayerBIndicator === blackTargetForIndicator && gamePlayerWIndicator === whiteTargetForIndicator
                                 })
-                                if (!matchup) {
-                                    return (
-                                        <div>
-                                            All match ups played. Start new round.
-                                        </div>
-                                    )
-                                }
-                                if (black !== undefined && !matchingGame?.winner && matchingGame?.win_style !== 'draw' && playerOpponentsReferenceObj[whiteTargetForIndicator]?.indexOf(blackTargetForIndicator) !== playerOpponentsReferenceObj[whiteTargetForIndicator]?.length + 1) {
+                                // if (!matchup) {
+                                //     return (
+                                //         <div>
+                                //             All match ups played. Start new round.
+                                //         </div>
+                                //     )
+                                // }
+                                if (black !== undefined && white!== undefined && !matchingGame?.winner && matchingGame?.win_style !== 'draw' && playerOpponentsReferenceObj[whiteTargetForIndicator]?.indexOf(blackTargetForIndicator) !== playerOpponentsReferenceObj[whiteTargetForIndicator]?.length + 1) {
                                     return (
                                         <div key={`${matchup.round} -- ${matchup.match} -- ${index}`}
                                             className="tournamentScoringMatchup">
@@ -769,6 +769,7 @@ export const ActiveTournament = () => {
         //     return null
         // }
     }
+    // console.log(activeTournament.pairings)
     if (selectedTournament) {
         if (activeTournament && activeTournamentPlayers) {
             const endTournamentModal = document.getElementById('endTournamentModal')

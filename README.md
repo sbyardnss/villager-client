@@ -71,7 +71,12 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/t
 # villager-client
 
 
-### Dependencies
-chess.js@0.12.0
-react-chessboard@2.1.3
-tournament-pairings@1.5.2
+# Dependencies
+- ### Chess.js
+- chess.js@0.12.0
+
+- ### Reach Chessboard
+- react-chessboard@2.1.3
+
+- ### Tournament-pairings
+- tournament-pairings@1.5.2

@@ -368,9 +368,9 @@ export const ActiveTournament = () => {
         return tableHtml.reverse()
     }
     const roundHtml = roundPopulation()
-    const cellPopulation = () => {
+    // const cellPopulation = () => {
 
-    }
+    // }
     //creating solkoff tie break data
     const solkoffTieBreaker = (playerIdArr) => {
         const solkoffTieBreakerArr = []
@@ -547,14 +547,14 @@ export const ActiveTournament = () => {
                                     }
                                     return tg.tournament_round === currentRound && gamePlayerBIndicator === blackTargetForIndicator && gamePlayerWIndicator === whiteTargetForIndicator
                                 })
-                                if (!matchup) {
-                                    return (
-                                        <div>
-                                            All match ups played. Start new round.
-                                        </div>
-                                    )
-                                }
-                                if (black !== undefined && !matchingGame?.winner && matchingGame?.win_style !== 'draw' && playerOpponentsReferenceObj[whiteTargetForIndicator]?.indexOf(blackTargetForIndicator) !== playerOpponentsReferenceObj[whiteTargetForIndicator]?.length + 1) {
+                                // if (!matchup) {
+                                //     return (
+                                //         <div>
+                                //             All match ups played. Start new round.
+                                //         </div>
+                                //     )
+                                // }
+                                if (black !== undefined && white!== undefined && !matchingGame?.winner && matchingGame?.win_style !== 'draw' && playerOpponentsReferenceObj[whiteTargetForIndicator]?.indexOf(blackTargetForIndicator) !== playerOpponentsReferenceObj[whiteTargetForIndicator]?.length + 1) {
                                     return (
                                         <div key={`${matchup.round} -- ${matchup.match} -- ${index}`}
                                             className="tournamentScoringMatchup">
@@ -769,6 +769,7 @@ export const ActiveTournament = () => {
         //     return null
         // }
     }
+
     if (selectedTournament) {
         if (activeTournament && activeTournamentPlayers) {
             const endTournamentModal = document.getElementById('endTournamentModal')
@@ -1051,6 +1052,7 @@ export const ActiveTournament = () => {
                                                                 }
                                                             })
                                                         }
+                                                        {!tourneyPlayerScores ? <td key={guestIdOrId + '-- nogameyet' + '--' + p.full_name} className="scoreCell">0</td> : ""}
                                                         {currentRound < 6 ? <td className="scoreCell"></td> : ""}
                                                         <td key={guestIdOrId + "-- score" + p.full_name} id={guestIdOrId + "-- score"} className="totalScoreCell" value={scoreObj[guestIdOrId]}>
                                                             {score}

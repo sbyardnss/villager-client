@@ -32,6 +32,7 @@ export const Login = () => {
 
     return (
         <main className="container--login">
+            {/* this may be causing the error that franks phone was having on login */}
             <dialog className="dialog dialog--auth" ref={invalidDialog}>
                 <div>Username or password was not valid.</div>
                 <button className="button--close" onClick={e => invalidDialog.current.close()}>Close</button>
@@ -42,11 +43,6 @@ export const Login = () => {
             <img id="skellyHand" src={skellyHand}></img>
             {/* <h4>currently down for maintenance</h4>
                     <h4>will be back up Wednesday 7/19</h4> */}
-                    {/* <div id="loginLogo">
-                        <h1>Villager Chess</h1>
-                    </div> */}
-                    {/* <img id="graffiti_logo" src={graffiti}></img> */}
-                    {/* <img id="skellyHand" src={skellyHand}></img> */}
                     <fieldset id="centerItems">
                         <label className="loginLabels" htmlFor="inputUsername">Username</label>
                         <input type="username"

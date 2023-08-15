@@ -534,12 +534,12 @@
 
     /* tournament results modal */
     #resultsModal {
-        display: none;
+        display: flex;
         border: 1px solid #f4d35e;
         border-radius: 8px;
         color: rgb(231, 231, 231);
         position: absolute;
-        top: 20%;
+        top: 15%;
         backdrop-filter: blur(30px);
         background-color: #20202099;
         width: 15em;

@@ -7,6 +7,7 @@ import { Swiss } from "tournament-pairings"
 import { TournamentTable } from "./TournamentTable"
 import { EditScores } from "./EditScores"
 import { ResultsModal } from "./ResultsModal"
+import { EndTournamentModal } from "./EndTournamentModal"
 
 
 export const ActiveTournament = () => {
@@ -584,27 +585,12 @@ export const ActiveTournament = () => {
                             setShowEndTournament={setShowEndTournament}
                         />
                         : ""}
-                    <div id="endTournamentModal" className="setCustomFont">
-                        End Tournament?
-                        <div id="endTournamentBtnBlock">
-                            <button
-                                className="buttonStyleApprove"
-                                onClick={() => {
-                                    endTournament(selectedTournament)
-                                        .then(() => {
-                                            resetTournaments()
-                                            setSelectedTournament(0)
-                                        })
-                                }
-                                }>confirm</button>
-                            <button
-                                className="buttonStyleReject"
-                                onClick={() => {
-                                    endTournamentModal.style.display = "none"
-                                    modal.style.display = "flex"
-                                }}>cancel</button>
-                        </div>
-                    </div>
+                    {showEndTournament ?
+                        <EndTournamentModal
+                            setShowResults={setShowResults}
+                            setShowEndTournament={setShowEndTournament}
+                        />
+                        : ""}
                     {editPlayers ? <div id="editPlayersModal" className="setCustomFont">
                         <EditPlayersModal
                             activeTournamentObj={activeTournament}

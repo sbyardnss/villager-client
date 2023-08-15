@@ -587,7 +587,7 @@
 
     /* end Tournament modal */
     #endTournamentModal {
-        display: none;
+        display: flex;
         border: 1px solid #f4d35e;
         border-radius: 8px;
         color: rgb(231, 231, 231);

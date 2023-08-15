@@ -72,11 +72,11 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/t
 
 
 # Dependencies
-- ### Chess.js
+### Chess.js
 - chess.js@0.12.0
 
-- ### Reach Chessboard
+### Reach Chessboard
 - react-chessboard@2.1.3
 
-- ### Tournament-pairings
+### Tournament-pairings
 - tournament-pairings@1.5.2

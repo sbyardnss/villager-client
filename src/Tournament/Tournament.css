@@ -1065,17 +1065,14 @@
         width: 100%;
         max-width: 20em;
         color: rgb(231, 231, 231);
-        /* overflow: hidden; */
         border-collapse: collapse;
         table-layout: fixed;
     }
 
     thead th {
-        /* position: -webkit-sticky;
-        position: sticky; */
+
         top: 0;
         z-index: 2;
-        /* background: hsl(20, 50%, 70%); */
     }
 
     .sticky-col {
@@ -1084,7 +1081,6 @@
     }
 
     .first-col {
-        /* width: 5rem; */
         max-width: 80px;
         left: 0px;
         background-color: black;
@@ -1103,10 +1099,6 @@
         height: 3rem;
     }
 
-    /* thead th {
-        width: 3rem;
-    } */
-
 
     tr>:first-child {
         position: -webkit-sticky;
@@ -1122,18 +1114,13 @@
         position: sticky;
         right: 0%;
         width: 50px;
-        /* background-color: black; */
         text-align: center;
-        /* border: 1px solid #694873; */
         border-top: none;
         border-bottom: none;
         padding: 0 .25em;
         z-index: 5;
     }
 
-    /* tbody {
-        overflow: scroll;
-    } */
 
     .tablePlayerCell {
         padding: .25em;
@@ -1150,10 +1137,6 @@
         width: 2em;
     }
 
-    /* .tournamentGameResult {
-        display: flex;
-        justify-content: center;
-    } */
     .tablePlayerRow {
         border-collapse: collapse;
     }
@@ -1213,7 +1196,7 @@
         display: flex;
         flex-direction: column;
         align-items: center;
-        top: 20%;
+        top: 15%;
         width: 20em;
         height: 30em;
         padding: .5em;

@@ -298,6 +298,7 @@ export const EditPlayersModal = ({ activeTournamentObj, setEdit, playedRounds, g
                                 const playerB = typeof p.player2 === 'string' ? tournamentObj.guest_competitors.find(g => g.guest_id === p.player2) : tournamentObj.competitors.find(pl => pl.id === p.player2)
                                 return playerW && playerB
                             })
+                            
                             const allAddedCompetitors = tournamentObj.competitors.concat(tournamentObj.guest_competitors)
                             const unMatchedPlayersAndGuests = allAddedCompetitors.filter(ac => {
                                 const identifier = ac.guest_id ? ac.guest_id : ac.id
@@ -339,9 +340,10 @@ export const EditPlayersModal = ({ activeTournamentObj, setEdit, playedRounds, g
                                         return { id: pg, score: count, avoid: previousOppArr, receivedBye: hadBye }
                                     }
                                     else {
-                                        return { id: pg }
+                                        return { id: pg, score: 0, avoid: [], receivedBye: false}
                                     }
                                 })
+                                console.log(playerIdObjectsForPairing)
                                 const newMatchups = Swiss(playerIdObjectsForPairing, playedRounds)
                                 copy.pairings = pastPairings.concat(newMatchups)
                             }
@@ -362,6 +364,7 @@ export const EditPlayersModal = ({ activeTournamentObj, setEdit, playedRounds, g
                                     copy.pairings = pastPairings.concat(filteredPairings)
 
                                 }
+                                //if two create matchup
                                 else if (unMatchedPlayersAndGuests.length === 2) {
                                     console.log("third")
                                     const randomWhite = Math.floor(Math.random() * 2)
@@ -373,43 +376,42 @@ export const EditPlayersModal = ({ activeTournamentObj, setEdit, playedRounds, g
 
                                 }
                                 else {
-                                    //check if only bye player was removed
                                     console.log("fourth")
-                                    console.log(unMatchedPlayersAndGuests)
-                                    if (unMatchedPlayersAndGuests.length) {
-                                        let remainingPlayersCheckOpponents = []
-                                        for (let i = 0; i < unMatchedPlayersAndGuests.length; i++) {
-                                            const identifier = unMatchedPlayersAndGuests[i].guest_id ? unMatchedPlayersAndGuests[i].guest_id : unMatchedPlayersAndGuests[i].id
-                                            const playersPossibleOpponents = unMatchedPlayersAndGuests.filter(pg => {
-                                                const opponentIdentifier = pg.guest_id ? pg.guest_id : pg.id
-                                                if (previousOpponents[identifier]?.includes(opponentIdentifier) || opponentIdentifier === identifier) {
-                                                    return false
-                                                }
-                                                else {
-                                                    return opponentIdentifier
-                                                }
-                                            })
-                                            if (playersPossibleOpponents.length) {
-                                                remainingPlayersCheckOpponents.push(unMatchedPlayersAndGuests[i])
-                                            }
-                                            remainingPlayersCheckOpponents.filter(rp => {
-                                                const identifier = rp.guest_id ? rp.guest_id : rp.id
-                                                if (currentPairings.find(p => p.player1 === identifier || p.player2 === identifier)) {
-                                                    return false
-                                                }
-                                                else {
-                                                    return true
-                                                }
-                                            })
-                                        }
-                                        const playerAndGuestIdsForPairing = unMatchedPlayersAndGuests.map(pg => {
-                                            if (pg.guest_id) {
-                                                return pg.guest_id
+                                    // if (unMatchedPlayersAndGuests.length) {
+                                    let remainingPlayersCheckOpponents = []
+                                    for (let i = 0; i < unMatchedPlayersAndGuests.length; i++) {
+                                        const identifier = unMatchedPlayersAndGuests[i].guest_id ? unMatchedPlayersAndGuests[i].guest_id : unMatchedPlayersAndGuests[i].id
+                                        const playersPossibleOpponents = unMatchedPlayersAndGuests.filter(pg => {
+                                            const opponentIdentifier = pg.guest_id ? pg.guest_id : pg.id
+                                            if (previousOpponents[identifier]?.includes(opponentIdentifier) || opponentIdentifier === identifier) {
+                                                return false
                                             }
                                             else {
-                                                return pg.id
+                                                return opponentIdentifier
                                             }
                                         })
+                                        if (playersPossibleOpponents.length) {
+                                            remainingPlayersCheckOpponents.push(unMatchedPlayersAndGuests[i])
+                                        }
+                                        remainingPlayersCheckOpponents.filter(rp => {
+                                            const identifier = rp.guest_id ? rp.guest_id : rp.id
+                                            if (currentPairings.find(p => p.player1 === identifier || p.player2 === identifier)) {
+                                                return false
+                                            }
+                                            else {
+                                                return true
+                                            }
+                                        })
+                                    }
+                                    const playerAndGuestIdsForPairing = unMatchedPlayersAndGuests.map(pg => {
+                                        if (pg.guest_id) {
+                                            return pg.guest_id
+                                        }
+                                        else {
+                                            return pg.id
+                                        }
+                                    })
+                                    if (remainingPlayersCheckOpponents.length) {
                                         const playerIdObjectsForPairing = playerAndGuestIdsForPairing.map(pg => {
                                             let hadBye = false
                                             //FOR UPDATE: added count here 
@@ -442,7 +444,14 @@ export const EditPlayersModal = ({ activeTournamentObj, setEdit, playedRounds, g
                                             }
                                         }
                                         copy.pairings = pastPairings.concat(filteredPairings)
+
                                     }
+                                    else {
+                                        // if only bye player was removed
+                                        copy.pairings = pastPairings.concat(filteredPairings)
+                                    }
+                                        
+                                    // }
                                 }
                             }
 
@@ -467,6 +476,7 @@ export const EditPlayersModal = ({ activeTournamentObj, setEdit, playedRounds, g
                             const guestIds = tournamentObj.guest_competitors.map(tgc => {
                                 return tgc.id
                             })
+                            console.log(copy)
                             copy.competitors = competitorIds
                             copy.guest_competitors = guestIds
                             // console.log(copy)

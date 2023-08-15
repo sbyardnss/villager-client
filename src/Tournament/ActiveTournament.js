@@ -368,9 +368,9 @@ export const ActiveTournament = () => {
         return tableHtml.reverse()
     }
     const roundHtml = roundPopulation()
-    const cellPopulation = () => {
+    // const cellPopulation = () => {
 
-    }
+    // }
     //creating solkoff tie break data
     const solkoffTieBreaker = (playerIdArr) => {
         const solkoffTieBreakerArr = []
@@ -770,7 +770,6 @@ export const ActiveTournament = () => {
         // }
     }
 
-    console.log(activeTournament.pairings)
     if (selectedTournament) {
         if (activeTournament && activeTournamentPlayers) {
             const endTournamentModal = document.getElementById('endTournamentModal')
@@ -1053,6 +1052,7 @@ export const ActiveTournament = () => {
                                                                 }
                                                             })
                                                         }
+                                                        {!tourneyPlayerScores ? <td key={guestIdOrId + '-- nogameyet' + '--' + p.full_name} className="scoreCell">0</td> : ""}
                                                         {currentRound < 6 ? <td className="scoreCell"></td> : ""}
                                                         <td key={guestIdOrId + "-- score" + p.full_name} id={guestIdOrId + "-- score"} className="totalScoreCell" value={scoreObj[guestIdOrId]}>
                                                             {score}

@@ -4,6 +4,7 @@ import "./Tournament.css"
 import { createNewGuest, getChessClub, getTournament, updateTournament } from "../ServerManager"
 import { RoundRobin, Swiss } from "tournament-pairings"
 import { PlayerSelection } from "./PlayerSelection"
+import { Parameters } from "./Parameters"
 
 
 export const EditPlayersModal = ({ activeTournamentObj, setEdit, playedRounds, gamesFromThisRound, previousOpponents, scoreObject, setCurrentTournament }) => {
@@ -297,10 +298,16 @@ export const EditPlayersModal = ({ activeTournamentObj, setEdit, playedRounds, g
                     }}
                 >Create Guest</button>
             </div> */}
-            <div id="gamesStartedBtnBlock">
+            <Parameters 
+                editOrNew={'edit'}
+                gamesStarted={gamesStarted}
+                setGamesStarted={setGamesStarted}
+            />
+            {/* <div id="gamesStartedBtnBlock">
                 <button className={gamesStarted === true ? "gamesStartedBtnActive" : "gamesStartedBtn"} onClick={() => setGamesStarted(true)}>Games already started</button>
                 <button className={gamesStarted === false ? "gamesNotStartedBtnActive" : "gamesNotStartedBtn"} onClick={() => setGamesStarted(false)}>Games not started</button>
-            </div>
+            </div> */}
+
             <div id="editPlayersToggleAndSubmitBtnBlock">
                 <button className="buttonStyleApprove" onClick={() => setShowGuests(!showGuests)}>toggle guests</button>
                 <button id="submitNewPlayersBtn" className="buttonStyleApprove" onClick={() => {

@@ -5,6 +5,7 @@ import "./Tournament.css"
 import { alterGame, createNewGuest, getAllGuestPlayers, getAllPlayers, getAllTournaments, getMyChessClubs, sendNewTournament } from "../ServerManager"
 import { ActiveTournament } from "./ActiveTournament"
 import { PlayerSelection } from "./PlayerSelection"
+import { Parameters } from "./Parameters"
 
 export const Tournament = () => {
     const { localVillagerObj, tournaments, setTournaments, players, setPlayers, timeSettings, selectedTournament, setSelectedTournament, setGuests, guests, playersAndGuests, selectedClub, setSelectedClub, selectedClubObj, setSelectedClubObj, clubPlayers, clubGuests, resetGuests, myChessClubs, setMyChessClubs, resetTournaments } = useContext(TournamentContext)
@@ -288,8 +289,7 @@ export const Tournament = () => {
                             >Create Guest</button>
                         </div> */}
                         <section id="tournamentParameters">
-                            <div id="tournamentParameterControls">
-                                {/* <label className="setColor" htmlFor="title">Tournament name: </label> */}
+                            {/* <div id="tournamentParameterControls">
                                 <input
                                     type="text"
                                     name="title"
@@ -326,7 +326,13 @@ export const Tournament = () => {
                                     <input id="digitalTournamentCheckbox" className="setColor" type="checkbox" onChange={handleChange} />
                                     <label id="digitalTournamentLabel" className="setColor">digital tournament</label>
                                 </div>
-                            </div>
+                            </div> */}
+                            <Parameters 
+                                editOrNew={'new'}
+                                tournamentObj={newTournament}
+                                updateTournamentObj={updateNewTournament}
+                                handleChange={handleChange}
+                            />
                             <div id="tournamentSubmit">
                                 <button className="buttonStyleApprove" onClick={() => setShowGuests(!showGuests)}>toggle guests</button>
                                 <button

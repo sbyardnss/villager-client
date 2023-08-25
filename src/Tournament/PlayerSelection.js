@@ -81,10 +81,8 @@ export const PlayerSelection = ({potentialCompetitors, setPotentialCompetitors, 
                                             const copy = [...potentialCompetitors]
                                             copy.push(competitor)
                                             setPotentialCompetitors(copy)
-
-
                                         }}>
-                                        {player.full_name}
+                                        {player?.full_name}
                                     </li>
                                 )
                             })

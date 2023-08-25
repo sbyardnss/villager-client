@@ -3,6 +3,7 @@ import { TournamentContext } from "./TournamentProvider"
 import "./Tournament.css"
 import { createNewGuest, getChessClub, getTournament, updateTournament } from "../ServerManager"
 import { RoundRobin, Swiss } from "tournament-pairings"
+import { PlayerSelection } from "./PlayerSelection"
 
 
 export const EditPlayersModal = ({ activeTournamentObj, setEdit, playedRounds, gamesFromThisRound, previousOpponents, scoreObject, setCurrentTournament }) => {
@@ -166,7 +167,21 @@ export const EditPlayersModal = ({ activeTournamentObj, setEdit, playedRounds, g
                     setEdit(false)
                 }}>cancel</button>
             </div>
-            <div id="tournamentPlayerSelectionSection">
+            <PlayerSelection
+                potentialCompetitors={potentialCompetitors}
+                setPotentialCompetitors={setPotentialCompetitors}
+                search={search}
+                setSearch={setSearch}
+                playersAndGuests={playersAndGuests}
+                selectedClub={selectedClub}
+                tournamentObj={tournamentObj}
+                updateTournamentObj={updatedTournamentObj}
+
+                //temporary. add create guest to the playerselection component
+                newGuest={newGuest}
+                updateNewGuest={updateNewGuest}
+            />
+            {/* <div id="tournamentPlayerSelectionSection">
                 <div id="competitorSelectionSplit">
                     <div id="potentialLabel" className="setColor setCustomFont">Potential:</div>
                     <div id="tournamentPotentialCompetitorSelection">
@@ -281,7 +296,7 @@ export const EditPlayersModal = ({ activeTournamentObj, setEdit, playedRounds, g
                         }
                     }}
                 >Create Guest</button>
-            </div>
+            </div> */}
             <div id="gamesStartedBtnBlock">
                 <button className={gamesStarted === true ? "gamesStartedBtnActive" : "gamesStartedBtn"} onClick={() => setGamesStarted(true)}>Games already started</button>
                 <button className={gamesStarted === false ? "gamesNotStartedBtnActive" : "gamesNotStartedBtn"} onClick={() => setGamesStarted(false)}>Games not started</button>
@@ -298,7 +313,7 @@ export const EditPlayersModal = ({ activeTournamentObj, setEdit, playedRounds, g
                                 const playerB = typeof p.player2 === 'string' ? tournamentObj.guest_competitors.find(g => g.guest_id === p.player2) : tournamentObj.competitors.find(pl => pl.id === p.player2)
                                 return playerW && playerB
                             })
-                            
+
                             const allAddedCompetitors = tournamentObj.competitors.concat(tournamentObj.guest_competitors)
                             const unMatchedPlayersAndGuests = allAddedCompetitors.filter(ac => {
                                 const identifier = ac.guest_id ? ac.guest_id : ac.id
@@ -340,7 +355,7 @@ export const EditPlayersModal = ({ activeTournamentObj, setEdit, playedRounds, g
                                         return { id: pg, score: count, avoid: previousOppArr, receivedBye: hadBye }
                                     }
                                     else {
-                                        return { id: pg, score: 0, avoid: [], receivedBye: false}
+                                        return { id: pg, score: 0, avoid: [], receivedBye: false }
                                     }
                                 })
                                 console.log(playerIdObjectsForPairing)
@@ -450,7 +465,7 @@ export const EditPlayersModal = ({ activeTournamentObj, setEdit, playedRounds, g
                                         // if only bye player was removed
                                         copy.pairings = pastPairings.concat(filteredPairings)
                                     }
-                                        
+
                                     // }
                                 }
                             }

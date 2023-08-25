@@ -14,6 +14,9 @@ export const Tournament = () => {
     const [search, setSearch] = useState("")
     const [createTournament, setCreateTournament] = useState(false)
     const [showGuests, setShowGuests] = useState(false)
+
+    const [playersSelected, setPlayersSelected] = useState(false)
+
     const [newGuest, updateNewGuest] = useState({
         full_name: "",
         club: 0
@@ -157,20 +160,24 @@ export const Tournament = () => {
                 return (
                     <section id="newTournamentForm">
                         <div id="newTournamentClubNameHeader" className="setCustomFont">Club: {selectedClubObj?.name}</div>
-                        <PlayerSelection 
-                            potentialCompetitors={potentialCompetitors}
-                            setPotentialCompetitors={setPotentialCompetitors}
-                            search={search}
-                            setSearch={setSearch}
-                            playersAndGuests={playersAndGuests}
-                            selectedClub={selectedClub}
-                            tournamentObj={newTournament}
-                            updateTournamentObj={updateNewTournament}
-
-                            //temporary. add create guest to the playerselection component
-                            newGuest={newGuest}
-                            updateNewGuest={updateNewGuest}
-                        />
+                        {!playersSelected ?
+                            <PlayerSelection
+                                potentialCompetitors={potentialCompetitors}
+                                setPotentialCompetitors={setPotentialCompetitors}
+                                search={search}
+                                setSearch={setSearch}
+                                showGuests={showGuests}
+                                setShowGuests={setShowGuests}
+                                playersAndGuests={playersAndGuests}
+                                selectedClub={selectedClub}
+                                tournamentObj={newTournament}
+                                updateTournamentObj={updateNewTournament}
+                                setPlayersSelected={setPlayersSelected}
+                                //temporary. add create guest to the playerselection component
+                                newGuest={newGuest}
+                                updateNewGuest={updateNewGuest}
+                            />
+                            : ""}
                         {/* <div id="tournamentPlayerSelectionSection">
                             <div id="competitorSelectionSplit">
                                 <div id="potentialLabel" className="setColor setCustomFont">Potential:</div>
@@ -327,64 +334,69 @@ export const Tournament = () => {
                                     <label id="digitalTournamentLabel" className="setColor">digital tournament</label>
                                 </div>
                             </div> */}
-                            <Parameters 
-                                editOrNew={'new'}
-                                tournamentObj={newTournament}
-                                updateTournamentObj={updateNewTournament}
-                                handleChange={handleChange}
-                            />
-                            <div id="tournamentSubmit">
-                                <button className="buttonStyleApprove" onClick={() => setShowGuests(!showGuests)}>toggle guests</button>
-                                <button
-                                    className="buttonStyleApprove"
-                                    onClick={() => {
-                                        if (newTournament.guest_competitors.length > 0 && newTournament.in_person === false) {
-                                            window.alert('No guest competitors on digtal tournament')
-                                        }
-                                        else {
-                                            if (newTournament.competitors && newTournament.timeSetting && newTournament.title) {
-                                                if (window.confirm("Everybody ready?")) {
-                                                    const copy = { ...newTournament }
-                                                    const allCompetitors = newTournament.competitors.concat(newTournament.guest_competitors)
-                                                    const competitorPairing = []
-                                                    const guestCompetitorPairing = []
-                                                    const allCompetitorsPairing = allCompetitors.map(ac => {
-                                                        if (ac.guest_id) {
-                                                            guestCompetitorPairing.push(ac.id)
-                                                            return { id: ac.guest_id }
-                                                        }
-                                                        else {
-                                                            competitorPairing.push(ac.id)
-                                                            return { id: ac.id }
-                                                        }
-                                                    })
-                                                    const firstRoundPairings = Swiss(allCompetitorsPairing, 1)
-                                                    copy.pairings = firstRoundPairings
-                                                    copy.competitors = competitorPairing
-                                                    copy.guest_competitors = guestCompetitorPairing
-                                                    copy.club = selectedClub
-                                                    sendNewTournament(copy)
-                                                        .then(() => {
-                                                            resetTournaments()
-                                                            setCreateTournament(false)
-                                                            setShowGuests(false)
+                            {playersSelected ?
+                                <Parameters
+                                    editOrNew={'new'}
+                                    tournamentObj={newTournament}
+                                    updateTournamentObj={updateNewTournament}
+                                    handleChange={handleChange}
+                                />
+                                : ""}
+                            {playersSelected ?
+                                <div id="tournamentSubmit">
+                                    {/* <button className="buttonStyleApprove" onClick={() => setShowGuests(!showGuests)}>toggle guests</button> */}
+                                    <button className="buttonStyleApprove" onClick={() => setPlayersSelected(false)}>choose players</button>
+                                    <button
+                                        className="buttonStyleApprove"
+                                        onClick={() => {
+                                            if (newTournament.guest_competitors.length > 0 && newTournament.in_person === false) {
+                                                window.alert('No guest competitors on digtal tournament')
+                                            }
+                                            else {
+                                                if (newTournament.competitors && newTournament.timeSetting && newTournament.title) {
+                                                    if (window.confirm("Everybody ready?")) {
+                                                        const copy = { ...newTournament }
+                                                        const allCompetitors = newTournament.competitors.concat(newTournament.guest_competitors)
+                                                        const competitorPairing = []
+                                                        const guestCompetitorPairing = []
+                                                        const allCompetitorsPairing = allCompetitors.map(ac => {
+                                                            if (ac.guest_id) {
+                                                                guestCompetitorPairing.push(ac.id)
+                                                                return { id: ac.guest_id }
+                                                            }
+                                                            else {
+                                                                competitorPairing.push(ac.id)
+                                                                return { id: ac.id }
+                                                            }
                                                         })
+                                                        const firstRoundPairings = Swiss(allCompetitorsPairing, 1)
+                                                        copy.pairings = firstRoundPairings
+                                                        copy.competitors = competitorPairing
+                                                        copy.guest_competitors = guestCompetitorPairing
+                                                        copy.club = selectedClub
+                                                        sendNewTournament(copy)
+                                                            .then(() => {
+                                                                resetTournaments()
+                                                                setCreateTournament(false)
+                                                                setShowGuests(false)
+                                                            })
+                                                    }
                                                 }
                                             }
-                                        }
-                                    }}>
-                                    Start Tournament
-                                </button>
-                                <button className="buttonStyleReject" onClick={() => {
-                                    setCreateTournament(false)
-                                    resetNewTournament()
-                                    resetPlayers()
-                                    resetGuests()
-                                    setSelectedClub(0)
-                                    setSelectedClubObj({})
-                                    setShowGuests(false)
-                                }}>cancel</button>
-                            </div>
+                                        }}>
+                                        Start Tournament
+                                    </button>
+                                    <button className="buttonStyleReject" onClick={() => {
+                                        setCreateTournament(false)
+                                        resetNewTournament()
+                                        resetPlayers()
+                                        resetGuests()
+                                        setSelectedClub(0)
+                                        setSelectedClubObj({})
+                                        setShowGuests(false)
+                                    }}>cancel</button>
+                                </div>
+                                : ""}
                         </section>
                     </section>
                 )

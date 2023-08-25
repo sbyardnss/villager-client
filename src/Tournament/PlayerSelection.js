@@ -3,7 +3,7 @@ import { createNewGuest } from "../ServerManager"
 import { TournamentContext } from "./TournamentProvider"
 
 
-export const PlayerSelection = ({potentialCompetitors, setPotentialCompetitors, search, setSearch, playersAndGuests, newGuest, updateNewGuest, tournamentObj, updateTournamentObj, selectedClub}) => {
+export const PlayerSelection = ({potentialCompetitors, setPotentialCompetitors, search, setSearch, showGuests, setShowGuests, playersAndGuests, setPlayersSelected, newGuest, updateNewGuest, tournamentObj, updateTournamentObj, selectedClub}) => {
 
     const {resetGuests} = useContext(TournamentContext)
     //CONTEXT
@@ -35,6 +35,7 @@ export const PlayerSelection = ({potentialCompetitors, setPotentialCompetitors, 
 
     return (
         <section>
+                <h3 className="setTournamentFontSize setColor">select players</h3>
             <div id="tournamentPlayerSelectionSection">
                 <div id="competitorSelectionSplit">
                     <div id="potentialLabel" className="setColor setCustomFont">Potential:</div>
@@ -150,6 +151,8 @@ export const PlayerSelection = ({potentialCompetitors, setPotentialCompetitors, 
                     }}
                 >Create Guest</button>
             </div>
+            <button className="buttonStyleApprove" onClick={() => setShowGuests(!showGuests)}>toggle guests</button>
+            <button className="buttonStyleReject" onClick={() => setPlayersSelected(true)}>confirm</button>
         </section>
     )
 }

@@ -4,6 +4,7 @@ import { TournamentContext } from "./TournamentProvider"
 import "./Tournament.css"
 import { alterGame, createNewGuest, getAllGuestPlayers, getAllPlayers, getAllTournaments, getMyChessClubs, sendNewTournament } from "../ServerManager"
 import { ActiveTournament } from "./ActiveTournament"
+import { PlayerSelection } from "./PlayerSelection"
 
 export const Tournament = () => {
     const { localVillagerObj, tournaments, setTournaments, players, setPlayers, timeSettings, selectedTournament, setSelectedTournament, setGuests, guests, playersAndGuests, selectedClub, setSelectedClub, selectedClubObj, setSelectedClubObj, clubPlayers, clubGuests, resetGuests, myChessClubs, setMyChessClubs, resetTournaments } = useContext(TournamentContext)
@@ -115,6 +116,7 @@ export const Tournament = () => {
             )
         }
     }
+
     const newTournamentForm = () => {
         if (createTournament === true) {
             if (!selectedClub) {
@@ -154,7 +156,21 @@ export const Tournament = () => {
                 return (
                     <section id="newTournamentForm">
                         <div id="newTournamentClubNameHeader" className="setCustomFont">Club: {selectedClubObj?.name}</div>
-                        <div id="tournamentPlayerSelectionSection">
+                        <PlayerSelection 
+                            potentialCompetitors={potentialCompetitors}
+                            setPotentialCompetitors={setPotentialCompetitors}
+                            search={search}
+                            setSearch={setSearch}
+                            playersAndGuests={playersAndGuests}
+                            selectedClub={selectedClub}
+                            tournamentObj={newTournament}
+                            updateTournamentObj={updateNewTournament}
+
+                            //temporary. add create guest to the playerselection component
+                            newGuest={newGuest}
+                            updateNewGuest={updateNewGuest}
+                        />
+                        {/* <div id="tournamentPlayerSelectionSection">
                             <div id="competitorSelectionSplit">
                                 <div id="potentialLabel" className="setColor setCustomFont">Potential:</div>
                                 <div id="tournamentPotentialCompetitorSelection">
@@ -270,7 +286,7 @@ export const Tournament = () => {
                                     }
                                 }}
                             >Create Guest</button>
-                        </div>
+                        </div> */}
                         <section id="tournamentParameters">
                             <div id="tournamentParameterControls">
                                 {/* <label className="setColor" htmlFor="title">Tournament name: </label> */}

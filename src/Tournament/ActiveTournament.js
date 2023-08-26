@@ -327,7 +327,6 @@ export const ActiveTournament = () => {
             bye: false
         })
     }
-
     //update game for api either initial or updating
     const handleGameForApiUpdate = (targetId, whitePieces, blackPieces, pastGame) => {
         let copy = {}
@@ -601,7 +600,7 @@ export const ActiveTournament = () => {
                             gamesFromThisRound={tournamentGames.filter(g => g.tournament_round === currentRound)}
                             previousOpponents={playerOpponentsReferenceObj}
                             scoreObject={scoreObj}
-                            
+
                         />
                     </div> : ""}
                     <div id="tournamentHeader">
@@ -651,16 +650,27 @@ export const ActiveTournament = () => {
                                                     score: scoreObj[identifier],
                                                     avoid: playerOpponentsReferenceObj[identifier].filter(ref => ref !== 'bye')
                                                 }
+                                                console.log(playerOpponentsReferenceObj)
                                                 if (playerOpponentsReferenceObj[identifier].includes('bye')) {
+                                                    console.log(identifier)
+                                                    console.log(playerOpponentsReferenceObj[identifier])
+
                                                     playerRefObj.receivedBye = true
                                                     //added below to remove byes from score parameter
-                                                    playerRefObj.score--
+                                                    if (playerRefObj.score > 0) {
+                                                        playerRefObj.score--
+                                                    }
+                                                }
+                                                else {
+                                                    playerRefObj.receivedBye = false
                                                 }
                                                 playersArg.push(playerRefObj)
                                             }
                                         }
                                         // console.log(playersArg)
-                                        tournamentCopy.pairings = tournamentCopy.pairings.concat(Swiss(playersArg, currentRound + 1))
+                                        const newPairings = Swiss(playersArg, currentRound + 1)
+                                        // console.log(newPairings)
+                                        tournamentCopy.pairings = tournamentCopy.pairings.concat(newPairings)
                                         tournamentCopy.rounds++
                                         // console.log(tournamentCopy)
                                         tournamentCopy.competitors = tournamentCopy.competitors.map(c => { return c.id })

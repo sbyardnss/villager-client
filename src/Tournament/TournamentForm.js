@@ -127,6 +127,9 @@ export const TournamentForm = ({ createTournament, setCreateTournament, newTourn
                                                         .then(() => {
                                                             resetTournaments()
                                                             setCreateTournament(false)
+                                                            setPlayersSelected(false)
+                                                            setSelectedClub(false)
+                                                            resetNewTournament()
                                                             // setShowGuests(false)
                                                         })
                                                 }

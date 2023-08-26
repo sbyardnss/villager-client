@@ -1,11 +1,32 @@
-import { useContext } from "react"
+import { useContext, useEffect, useState } from "react"
 import { createNewGuest } from "../ServerManager"
 import { TournamentContext } from "./TournamentProvider"
 
 
-export const PlayerSelection = ({potentialCompetitors, setPotentialCompetitors, search, setSearch, showGuests, setShowGuests, playersAndGuests, setPlayersSelected, newGuest, updateNewGuest, tournamentObj, updateTournamentObj, selectedClub}) => {
+export const PlayerSelection = ({potentialCompetitors, setPotentialCompetitors, search, setSearch, playersAndGuests, setPlayersSelected, newGuest, updateNewGuest, tournamentObj, updateTournamentObj, createTournament, setCreateTournament}) => {
 
-    const {resetGuests} = useContext(TournamentContext)
+    const {resetGuests, clubPlayers, clubGuests, selectedClub, setSelectedClub} = useContext(TournamentContext)
+    const [showGuests, setShowGuests] = useState(false)
+
+    useEffect(
+        () => {
+            if (search !== "") {
+                // const filteredUsers = playersAndGuests?.filter(pc => {
+                const filteredUsers = clubPlayers.concat(clubGuests).filter(pc => {
+                    return pc.full_name.toLowerCase().includes(search.toLowerCase()) && !tournamentObj.competitors?.find(member => member.id === pc.id) && !tournamentObj.guest_competitors?.find(member => member.id === pc.id)
+                })
+                setPotentialCompetitors(filteredUsers)
+            }
+            else {
+                const unselectedPlayers = clubPlayers.filter(p => !tournamentObj.competitors.find(c => c.id === p.id))
+                let unselectedGuests = []
+                if (showGuests) {
+                    unselectedGuests = clubGuests.filter(g => !tournamentObj.guest_competitors.find(gc => gc.id === g.id))
+                }
+                setPotentialCompetitors(unselectedPlayers.concat(unselectedGuests))
+            }
+        }, [search, showGuests, playersAndGuests, tournamentObj, createTournament]
+    )
     //CONTEXT
     //resetGuests
 
@@ -153,6 +174,10 @@ export const PlayerSelection = ({potentialCompetitors, setPotentialCompetitors, 
             </div>
             <button className="buttonStyleApprove" onClick={() => setShowGuests(!showGuests)}>toggle guests</button>
             <button className="buttonStyleReject" onClick={() => setPlayersSelected(true)}>confirm</button>
+            <button className="buttonStyleReject" onClick={() => {
+                setCreateTournament(false)
+                setSelectedClub(false)
+            }}>cancel</button>
         </section>
     )
 }

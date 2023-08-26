@@ -601,6 +601,7 @@ export const ActiveTournament = () => {
                             gamesFromThisRound={tournamentGames.filter(g => g.tournament_round === currentRound)}
                             previousOpponents={playerOpponentsReferenceObj}
                             scoreObject={scoreObj}
+                            
                         />
                     </div> : ""}
                     <div id="activeTournamentHeader">

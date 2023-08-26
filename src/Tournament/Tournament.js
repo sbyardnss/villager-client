@@ -42,25 +42,25 @@ export const Tournament = () => {
     )
 
     //search player useEffect
-    useEffect(
-        () => {
-            if (search !== "") {
-                // const filteredUsers = playersAndGuests?.filter(pc => {
-                const filteredUsers = clubPlayers.concat(clubGuests).filter(pc => {
-                    return pc.full_name.toLowerCase().includes(search.toLowerCase()) && !newTournament.competitors?.find(member => member.id === pc.id) && !newTournament.guest_competitors?.find(member => member.id === pc.id)
-                })
-                setPotentialCompetitors(filteredUsers)
-            }
-            else {
-                const unselectedPlayers = clubPlayers.filter(p => !newTournament.competitors.find(c => c.id === p.id))
-                let unselectedGuests = []
-                if (showGuests) {
-                    unselectedGuests = clubGuests.filter(g => !newTournament.guest_competitors.find(gc => gc.id === g.id))
-                }
-                setPotentialCompetitors(unselectedPlayers.concat(unselectedGuests))
-            }
-        }, [search, showGuests, playersAndGuests, newTournament, createTournament]
-    )
+    // useEffect(
+    //     () => {
+    //         if (search !== "") {
+    //             // const filteredUsers = playersAndGuests?.filter(pc => {
+    //             const filteredUsers = clubPlayers.concat(clubGuests).filter(pc => {
+    //                 return pc.full_name.toLowerCase().includes(search.toLowerCase()) && !newTournament.competitors?.find(member => member.id === pc.id) && !newTournament.guest_competitors?.find(member => member.id === pc.id)
+    //             })
+    //             setPotentialCompetitors(filteredUsers)
+    //         }
+    //         else {
+    //             const unselectedPlayers = clubPlayers.filter(p => !newTournament.competitors.find(c => c.id === p.id))
+    //             let unselectedGuests = []
+    //             if (showGuests) {
+    //                 unselectedGuests = clubGuests.filter(g => !newTournament.guest_competitors.find(gc => gc.id === g.id))
+    //             }
+    //             setPotentialCompetitors(unselectedPlayers.concat(unselectedGuests))
+    //         }
+    //     }, [search, showGuests, playersAndGuests, newTournament, createTournament]
+    // )
     const resetNewTournament = () => {
         updateNewTournament({
             title: "",
@@ -166,8 +166,8 @@ export const Tournament = () => {
                                 setPotentialCompetitors={setPotentialCompetitors}
                                 search={search}
                                 setSearch={setSearch}
-                                showGuests={showGuests}
-                                setShowGuests={setShowGuests}
+                                createTournament={createTournament}
+                                setCreateTournament={setCreateTournament}
                                 playersAndGuests={playersAndGuests}
                                 selectedClub={selectedClub}
                                 tournamentObj={newTournament}

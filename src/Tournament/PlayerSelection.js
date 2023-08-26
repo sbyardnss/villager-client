@@ -51,7 +51,6 @@ export const PlayerSelection = ({ potentialCompetitors, setPotentialCompetitors,
     //differing
     //tournamentObj
     //updatedTournamentObj
-    console.log(selectedTournament)
     return (
         <section>
             {!selectedTournament ?

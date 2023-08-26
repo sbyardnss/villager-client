@@ -21,15 +21,18 @@
     align-items: center;
     top: 15%;
     width: 20em;
+    height: fit-content;
     /* height: 30em; */
-    min-height: 20em;
+    /* min-height: 20em; */
     padding: .5em;
     border: 1px solid #694873;
     border-radius: 6px;
     backdrop-filter: blur(30px);
     background-color: #20202099;
     z-index: 6;
+    transition: height .2s;
 }
+
 #editPlayersContainer {
     width: 100%;
 }

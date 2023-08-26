@@ -317,6 +317,8 @@ export const EditPlayersModal = ({ activeTournamentObj, setEdit, playedRounds, g
             {playersSelected ?
                 <div id="editPlayersToggleAndSubmitBtnBlock">
                     {/* <button className="buttonStyleApprove" onClick={() => setShowGuests(!showGuests)}>toggle guests</button> */}
+                    <button className="buttonStyleApprove" onClick={() => setPlayersSelected(false)}>choose players</button>
+
                     <button id="submitNewPlayersBtn" className="buttonStyleApprove" onClick={() => {
                         if (window.confirm(gamesStarted === true ? "Confirm games have already started" : "Confirm games have not started")) {
                             if (activeTournamentObj.in_person === true) {
@@ -523,3 +525,4 @@ export const EditPlayersModal = ({ activeTournamentObj, setEdit, playedRounds, g
     )
     // }
 }
+

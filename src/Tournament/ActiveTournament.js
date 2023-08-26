@@ -629,6 +629,7 @@ export const ActiveTournament = () => {
                                         //need to filter by active tournament players. currently creating matchups for players that have left
 
                                         for (const opponentRef in playerOpponentsReferenceObj) {
+                                            // console.log('first')
                                             let identifier = null
                                             let isActive = true
                                             if (isNaN(parseInt(opponentRef))) {
@@ -644,37 +645,36 @@ export const ActiveTournament = () => {
                                                 }
                                             }
                                             if (isActive) {
+                                                // console.log('second')
+                                                const refCopy = {...playerOpponentsReferenceObj}
                                                 const playerRefObj = {
                                                     id: identifier,
                                                     //added below to account for scores
                                                     score: scoreObj[identifier],
-                                                    avoid: playerOpponentsReferenceObj[identifier].filter(ref => ref !== 'bye')
+                                                    avoid: refCopy[identifier].filter(ref => ref !== 'bye')
                                                 }
-                                                console.log(playerOpponentsReferenceObj)
                                                 if (playerOpponentsReferenceObj[identifier].includes('bye')) {
-                                                    console.log(identifier)
-                                                    console.log(playerOpponentsReferenceObj[identifier])
-
-                                                    playerRefObj.receivedBye = true
+                                                    // console.log(identifier + '--third')
+                                                    playerRefObj.receivedBye = 1
                                                     //added below to remove byes from score parameter
                                                     if (playerRefObj.score > 0) {
                                                         playerRefObj.score--
                                                     }
                                                 }
                                                 else {
-                                                    playerRefObj.receivedBye = false
+                                                    playerRefObj.receivedBye = 0
                                                 }
                                                 playersArg.push(playerRefObj)
                                             }
                                         }
-                                        // console.log(playersArg)
+                                        console.log(playersArg)
                                         const newPairings = Swiss(playersArg, currentRound + 1)
-                                        // console.log(newPairings)
                                         tournamentCopy.pairings = tournamentCopy.pairings.concat(newPairings)
                                         tournamentCopy.rounds++
                                         // console.log(tournamentCopy)
                                         tournamentCopy.competitors = tournamentCopy.competitors.map(c => { return c.id })
                                         tournamentCopy.guest_competitors = tournamentCopy.guest_competitors.map(gc => { return gc.id })
+                                        console.log(tournamentCopy)
                                         updateTournament(tournamentCopy)
                                             .then(() => {
                                                 resetTournaments()

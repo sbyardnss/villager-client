@@ -567,7 +567,13 @@ export const ActiveTournament = () => {
         //     return null
         // }
     }
-
+    console.log(Swiss([
+        { id: 1, score: 2, avoid: [3, 'g1'], receivedBye: true },
+        { id: 2, score: 2, avoid: ['g1', 3, 4], receivedBye: false },
+        { id: 3, score: 2, avoid: [1, 2], receivedBye: true },
+        { id: 4, score: 0, avoid: ['g1', 2], receivedBye: true },
+        { id: 'g1', score: 2, avoid: [2, 4, 1], receivedBye: false }
+    ], 1))
     if (selectedTournament) {
         if (activeTournament && activeTournamentPlayers) {
             const endTournamentModal = document.getElementById('endTournamentModal')
@@ -646,23 +652,28 @@ export const ActiveTournament = () => {
                                             }
                                             if (isActive) {
                                                 // console.log('second')
-                                                const refCopy = {...playerOpponentsReferenceObj}
+                                                const refCopy = { ...playerOpponentsReferenceObj }
                                                 const playerRefObj = {
                                                     id: identifier,
                                                     //added below to account for scores
                                                     score: scoreObj[identifier],
                                                     avoid: refCopy[identifier].filter(ref => ref !== 'bye')
+
+
                                                 }
                                                 if (playerOpponentsReferenceObj[identifier].includes('bye')) {
                                                     // console.log(identifier + '--third')
-                                                    playerRefObj.receivedBye = 1
+                                                    console.log(identifier)
+                                                    console.log(playerOpponentsReferenceObj[identifier])
+                                                    playerRefObj.receivedBye = true
                                                     //added below to remove byes from score parameter
                                                     if (playerRefObj.score > 0) {
                                                         playerRefObj.score--
                                                     }
+                                                    console.log(playerRefObj)
                                                 }
                                                 else {
-                                                    playerRefObj.receivedBye = 0
+                                                    playerRefObj.receivedBye = false
                                                 }
                                                 playersArg.push(playerRefObj)
                                             }
@@ -674,7 +685,7 @@ export const ActiveTournament = () => {
                                         // console.log(tournamentCopy)
                                         tournamentCopy.competitors = tournamentCopy.competitors.map(c => { return c.id })
                                         tournamentCopy.guest_competitors = tournamentCopy.guest_competitors.map(gc => { return gc.id })
-                                        console.log(tournamentCopy)
+                                        // console.log(tournamentCopy)
                                         updateTournament(tournamentCopy)
                                             .then(() => {
                                                 resetTournaments()

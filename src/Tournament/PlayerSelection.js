@@ -3,9 +3,9 @@ import { createNewGuest } from "../ServerManager"
 import { TournamentContext } from "./TournamentProvider"
 
 
-export const PlayerSelection = ({potentialCompetitors, setPotentialCompetitors, search, setSearch, playersAndGuests, setPlayersSelected, newGuest, updateNewGuest, tournamentObj, updateTournamentObj, createTournament, setCreateTournament}) => {
+export const PlayerSelection = ({ potentialCompetitors, setPotentialCompetitors, search, setSearch, playersAndGuests, setPlayersSelected, newGuest, updateNewGuest, tournamentObj, updateTournamentObj, createTournament, setCreateTournament }) => {
 
-    const {resetGuests, clubPlayers, clubGuests, selectedClub, setSelectedClub} = useContext(TournamentContext)
+    const { resetGuests, clubPlayers, clubGuests, selectedClub, setSelectedClub, selectedTournament } = useContext(TournamentContext)
     const [showGuests, setShowGuests] = useState(false)
 
     useEffect(
@@ -36,7 +36,7 @@ export const PlayerSelection = ({potentialCompetitors, setPotentialCompetitors, 
     //search, setSearch
     //playersAndGuests
     //newGuest, updateNewGuest
-    
+
     //differing
     //newTournament
     //updateNewTournament
@@ -47,16 +47,22 @@ export const PlayerSelection = ({potentialCompetitors, setPotentialCompetitors, 
     //search, setSearch
     //playersAndGuests
     //newGuest, updateNewGuest
-    
+
     //differing
     //tournamentObj
     //updatedTournamentObj
-    
-
-
+    console.log(selectedTournament)
     return (
         <section>
-                <h3 className="setTournamentFontSize setColor">select players</h3>
+            {!selectedTournament ?
+                <div className="controlSpread">
+                    <h3 className="setTournamentFontSize setColor">select players</h3>
+                    <button className="buttonStyleReject" onClick={() => {
+                        setCreateTournament(false)
+                        setSelectedClub(0)
+                    }}>cancel</button>
+                </div>
+                : ""}
             <div id="tournamentPlayerSelectionSection">
                 <div id="competitorSelectionSplit">
                     <div id="potentialLabel" className="setColor setCustomFont">Potential:</div>
@@ -172,12 +178,15 @@ export const PlayerSelection = ({potentialCompetitors, setPotentialCompetitors, 
                     }}
                 >Create Guest</button>
             </div>
-            <button className="buttonStyleApprove" onClick={() => setShowGuests(!showGuests)}>toggle guests</button>
-            <button className="buttonStyleReject" onClick={() => setPlayersSelected(true)}>confirm</button>
-            <button className="buttonStyleReject" onClick={() => {
-                setCreateTournament(false)
-                setSelectedClub(false)
-            }}>cancel</button>
+            <div className="controlSpread">
+
+                <button className="buttonStyleApprove" onClick={() => setShowGuests(!showGuests)}>toggle guests</button>
+                <button className="buttonStyleReject" onClick={() => setPlayersSelected(true)}>confirm</button>
+                {/* <button className="buttonStyleReject" onClick={() => {
+                    setCreateTournament(false)
+                    setSelectedClub(false)
+                }}>cancel</button> */}
+            </div>
         </section>
     )
 }

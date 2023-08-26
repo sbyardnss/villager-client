@@ -604,7 +604,7 @@ export const ActiveTournament = () => {
                             
                         />
                     </div> : ""}
-                    <div id="activeTournamentHeader">
+                    <div id="tournamentHeader">
                         <div className="setColor setTournamentFontSize">{activeTournament.title}</div>
                         <button
                             className="progressionControlBtn buttonStyleReject"

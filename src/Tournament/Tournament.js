@@ -127,7 +127,10 @@ export const Tournament = () => {
                 return (
                     <section id="newTournamentForm">
                         <section id="clubSelectionSection">
-                            <div className="setCustomFont">Select Club</div>
+                            <div id="tournamentHeader">
+                                <div className="setCustomFont">Select Club</div>
+                                <button className="buttonStyleReject" onClick={() => setCreateTournament(false)}>cancel</button>
+                            </div>
                             <div id="clubSelectionList" className="setCustomFont">
                                 {
                                     myChessClubs.map(club => {
@@ -178,162 +181,7 @@ export const Tournament = () => {
                                 updateNewGuest={updateNewGuest}
                             />
                             : ""}
-                        {/* <div id="tournamentPlayerSelectionSection">
-                            <div id="competitorSelectionSplit">
-                                <div id="potentialLabel" className="setColor setCustomFont">Potential:</div>
-                                <div id="tournamentPotentialCompetitorSelection">
-                                    {
-                                        potentialCompetitors.map((p, index) => {
-                                            return (
-                                                <li key={p.guest_id ? p.guest_id + '-- potentialCompetitor' : p.id + '-- potentialCompetitor'}
-                                                    className="newTournamentPlayerListItem"
-                                                    onClick={() => {
-                                                        const copy = [...potentialCompetitors]
-                                                        copy.splice(index, 1)
-                                                        setPotentialCompetitors(copy)
-                                                        const tournamentCopy = { ...newTournament }
-                                                        if (p.guest_id) {
-                                                            tournamentCopy.guest_competitors.push(p)
-                                                        }
-                                                        else {
-                                                            tournamentCopy.competitors.push(p)
-                                                        }
-                                                        updateNewTournament(tournamentCopy)
-                                                        setSearch("")
-                                                    }}>
-                                                    {p.full_name}
-                                                </li>
-                                            )
-                                        })
-                                    }
-                                </div>
-                            </div>
-                            <div id="competitorSelectionSplit">
-                                <div id="selectedLabel" className="setColor setCustomFont">Selected:</div>
-                                <div id="tournamentSelectedCompetitors">
-                                    {
-                                        newTournament.competitors.map((competitor, index) => {
-                                            const player = playersAndGuests.find(p => p.id === competitor.id)
-                                            return (
-                                                <li key={competitor.id + '-- competitor'}
-                                                    className="newTournamentPlayerListItem"
-                                                    onClick={() => {
-                                                        const tournamentCopy = { ...newTournament }
-                                                        tournamentCopy.competitors.splice(index, 1)
-                                                        updateNewTournament(tournamentCopy)
-                                                        const copy = [...potentialCompetitors]
-                                                        copy.push(competitor)
-                                                        setPotentialCompetitors(copy)
-
-
-                                                    }}>
-                                                    {player.full_name}
-                                                </li>
-                                            )
-                                        })
-                                    }
-                                    {
-                                        newTournament.guest_competitors.map((competitor, index) => {
-                                            const player = playersAndGuests.find(p => p.guest_id === competitor.guest_id)
-                                            return (
-                                                <li key={competitor.guest_id + '-- competitor'}
-                                                    className="newTournamentPlayerListItem"
-                                                    onClick={() => {
-                                                        const tournamentCopy = { ...newTournament }
-                                                        tournamentCopy.guest_competitors.splice(index, 1)
-                                                        updateNewTournament(tournamentCopy)
-                                                        const copy = [...potentialCompetitors]
-                                                        copy.push(competitor)
-                                                        setPotentialCompetitors(copy)
-                                                    }}>
-                                                    {player?.full_name}
-                                                </li>
-                                            )
-                                        })
-                                    }
-
-                                </div>
-                            </div>
-                        </div>
-                        <div id="playerSearch" className="setCustomFont">
-                            <input
-                                id="playerSearchInput"
-                                className="text-input"
-                                type="text"
-                                placeholder="search for player or guest"
-                                value={search}
-                                onChange={(e) => setSearch(e.target.value)}
-                            />
-                            <button
-                                id="resetPlayerSearchBtn"
-                                className="buttonStyleReject"
-                                onClick={() => setSearch("")}
-                            >reset</button>
-                        </div>
-                        <div id="createGuestDiv">
-                            <input
-                                className="text-input"
-                                id="newGuestInput"
-                                type="text"
-                                placeholder="new guest name"
-                                value={newGuest.full_name}
-                                onChange={(e) => {
-                                    const copy = { ...newGuest }
-                                    copy.full_name = e.target.value
-                                    updateNewGuest(copy)
-                                }}
-                            />
-                            <button
-                                id="newGuestSubmitBtn"
-                                className="setCustomFont"
-                                onClick={() => {
-                                    if (newGuest.full_name !== "" && selectedClub) {
-                                        createNewGuest(newGuest)
-                                            .then(() => resetGuests())
-                                            updateNewGuest({full_name: "", club: selectedClub})
-                                    }
-                                }}
-                            >Create Guest</button>
-                        </div> */}
                         <section id="tournamentParameters">
-                            {/* <div id="tournamentParameterControls">
-                                <input
-                                    type="text"
-                                    name="title"
-                                    className="text-input"
-                                    placeholder="tournament title"
-                                    value={newTournament.title}
-                                    onChange={(e) => {
-                                        const copy = { ...newTournament }
-                                        copy.title = e.target.value
-                                        updateNewTournament(copy)
-                                    }}
-                                />
-                                <div id="tournamentTimeSettingSelection">
-                                    <select
-                                        className="tournamentFormDropdownSelection"
-                                        onChange={(e) => {
-                                            const copy = { ...newTournament }
-                                            copy.timeSetting = parseInt(e.target.value)//WHY DO I HAVE TO PARSEINT HERE?
-                                            updateNewTournament(copy)
-                                        }}>
-                                        <option key={0} className="timeSelectOption" value={0}>time setting</option>
-                                        {
-                                            timeSettings.map(ts => {
-                                                return (
-                                                    <option key={ts.id} value={ts.id} className="newTournamentTimeSettingListItem">
-                                                        {ts.time_amount} minutes -- {ts.increment} second increment
-                                                    </option>
-                                                )
-                                            })
-                                        }
-                                    </select>
-                                </div>
-                                <div>
-                                    <input id="digitalTournamentCheckbox" className="setColor" type="checkbox" onChange={handleChange} />
-                                    <label id="digitalTournamentLabel" className="setColor">digital tournament</label>
-                                </div>
-                            </div> */}
                             {playersSelected ?
                                 <Parameters
                                     editOrNew={'new'}
@@ -344,7 +192,6 @@ export const Tournament = () => {
                                 : ""}
                             {playersSelected ?
                                 <div id="tournamentSubmit">
-                                    {/* <button className="buttonStyleApprove" onClick={() => setShowGuests(!showGuests)}>toggle guests</button> */}
                                     <button className="buttonStyleApprove" onClick={() => setPlayersSelected(false)}>choose players</button>
                                     <button
                                         className="buttonStyleApprove"

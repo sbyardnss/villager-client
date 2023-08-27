@@ -10,7 +10,7 @@ import { TournamentForm } from "./TournamentForm"
 
 export const Tournament = () => {
     const { localVillagerObj, tournaments, setTournaments, players, setPlayers, timeSettings, selectedTournament, setSelectedTournament, setGuests, guests, playersAndGuests, selectedClub, setSelectedClub, selectedClubObj, setSelectedClubObj, clubPlayers, clubGuests, resetGuests, myChessClubs, setMyChessClubs, resetTournaments } = useContext(TournamentContext)
-    const [potentialCompetitors, setPotentialCompetitors] = useState([])
+    // const [potentialCompetitors, setPotentialCompetitors] = useState([])
     const [pastTournaments, setPastTournaments] = useState(false)
     const [search, setSearch] = useState("")
     const [createTournament, setCreateTournament] = useState(false)
@@ -273,9 +273,9 @@ export const Tournament = () => {
                 setCreateTournament={setCreateTournament}
                 newTournament={newTournament}
                 updateNewTournament={updateNewTournament}
-                handleChange={handleChange}
-                potentialCompetitors={potentialCompetitors}
-                setPotentialCompetitors={setPotentialCompetitors}
+                // handleChange={handleChange}
+                // potentialCompetitors={potentialCompetitors}
+                // setPotentialCompetitors={setPotentialCompetitors}
                 playersSelected={playersSelected}
                 setPlayersSelected={setPlayersSelected}
                 search={search}

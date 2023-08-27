@@ -3,10 +3,11 @@ import { createNewGuest } from "../ServerManager"
 import { TournamentContext } from "./TournamentProvider"
 
 
-export const PlayerSelection = ({ potentialCompetitors, setPotentialCompetitors, search, setSearch, playersAndGuests, setPlayersSelected, newGuest, updateNewGuest, tournamentObj, updateTournamentObj, createTournament, setCreateTournament }) => {
+export const PlayerSelection = ({ search, setSearch, playersAndGuests, setPlayersSelected, newGuest, updateNewGuest, tournamentObj, updateTournamentObj, createTournament, setCreateTournament }) => {
 
     const { resetGuests, clubPlayers, clubGuests, selectedClub, setSelectedClub, selectedTournament } = useContext(TournamentContext)
     const [showGuests, setShowGuests] = useState(false)
+    const [potentialCompetitors, setPotentialCompetitors] = useState([])
 
     useEffect(
         () => {
@@ -25,8 +26,9 @@ export const PlayerSelection = ({ potentialCompetitors, setPotentialCompetitors,
                 }
                 setPotentialCompetitors(unselectedPlayers.concat(unselectedGuests))
             }
-        }, [search, showGuests, playersAndGuests, tournamentObj, createTournament]
+        }, [search, showGuests, clubPlayers, clubGuests, tournamentObj, createTournament]
     )
+    // console.log(clubGuests)
     //CONTEXT
     //resetGuests
 

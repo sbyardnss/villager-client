@@ -100,7 +100,7 @@ export const ActiveTournament = () => {
             if (activeTournament.pairings) {
                 let opponentObj = {}
                 activeTournament.pairings.map(p => {
-                    if (!opponentObj[p.player1] && p.player1) {
+                    if (!opponentObj[p?.player1] && p.player1) {
                         opponentObj[p.player1] = []
                     }
                     if (!opponentObj[p.player2] && p.player2) {

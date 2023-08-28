@@ -11,7 +11,7 @@ import { EndTournamentModal } from "./EndTournamentModal"
 
 
 export const ActiveTournament = () => {
-    const { tournaments, setTournaments, playersAndGuests, tournamentGames, selectedTournament, setSelectedTournament, resetTournamentGames, editPlayers, setEditPlayers, resetTournaments, myChessClubs } = useContext(TournamentContext)
+    const { tournaments, setTournaments, playersAndGuests, tournamentGames, selectedTournament, setSelectedTournament, resetTournamentGames, editPlayers, setEditPlayers, resetTournaments, myChessClubs, createPairings } = useContext(TournamentContext)
     //initial setup state variables
     const [activeTournament, setActiveTournament] = useState({})
     const [activeTournamentPlayers, setActiveTournamentPlayers] = useState([])
@@ -63,7 +63,7 @@ export const ActiveTournament = () => {
         winner_model_type: "",
         bye: true
     })
-
+    // createPairings(activeTournamentPlayers, playerOpponentsReferenceObj, currentRound, scoreObj, scoreCard)
     //setting active tournament here from tournaments
     useEffect(
         () => {
@@ -567,13 +567,13 @@ export const ActiveTournament = () => {
         //     return null
         // }
     }
-    console.log(Swiss([
-        { id: 1, score: 2, avoid: [3, 'g1'], receivedBye: true },
-        { id: 2, score: 2, avoid: ['g1', 3, 4], receivedBye: false },
-        { id: 3, score: 2, avoid: [1, 2], receivedBye: true },
-        { id: 4, score: 0, avoid: ['g1', 2], receivedBye: true },
-        { id: 'g1', score: 2, avoid: [2, 4, 1], receivedBye: false }
-    ], 1))
+    // console.log(Swiss([
+    //     { id: 1, score: 2, avoid: [3, 'g1'], receivedBye: true },
+    //     { id: 2, score: 2, avoid: ['g1', 3, 4], receivedBye: false },
+    //     { id: 3, score: 2, avoid: [1, 2], receivedBye: true },
+    //     { id: 4, score: 0, avoid: ['g1', 2], receivedBye: true },
+    //     { id: 'g1', score: 2, avoid: [2, 4, 1], receivedBye: false }
+    // ], 1))
     if (selectedTournament) {
         if (activeTournament && activeTournamentPlayers) {
             const endTournamentModal = document.getElementById('endTournamentModal')
@@ -658,8 +658,6 @@ export const ActiveTournament = () => {
                                                     //added below to account for scores
                                                     score: scoreObj[identifier],
                                                     avoid: refCopy[identifier].filter(ref => ref !== 'bye')
-
-
                                                 }
                                                 if (playerOpponentsReferenceObj[identifier].includes('bye')) {
                                                     // console.log(identifier + '--third')

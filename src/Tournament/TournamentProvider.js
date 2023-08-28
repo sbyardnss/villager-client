@@ -1,6 +1,6 @@
 import { useState, useEffect, createContext } from "react";
 import { getAllGuestPlayers, getAllPlayers, getAllTimeSettings, getAllTournaments, getMyChessClubs, getMyTournaments, getTournamentGames } from "../ServerManager";
-
+import { Swiss } from "tournament-pairings";
 export const TournamentContext = createContext()
 
 export const TournamentProvider = (props) => {
@@ -87,7 +87,7 @@ export const TournamentProvider = (props) => {
                 // const allPlayersAndGuests = clubsPlayers.concat(clubsGuests)
                 // setPlayersAndGuests(allPlayersAndGuests)
             }
-        }, [selectedClubObj, players, guests, editPlayers, selectedTournament ]//adding selectedClub to this dependency array causes players to entirely disappear
+        }, [selectedClubObj, players, guests, editPlayers, selectedTournament]//adding selectedClub to this dependency array causes players to entirely disappear
     )
     //added this useEffect to replace playersAndGuests useEffect from line 63ish
     //if it stops working simply remove this one and comment that one back in
@@ -95,7 +95,7 @@ export const TournamentProvider = (props) => {
         () => {
             if (clubPlayers && clubGuests) {
                 const allCompetitors = players.concat(guests)
-                setPlayersAndGuests(allCompetitors) 
+                setPlayersAndGuests(allCompetitors)
             }
         }, [clubPlayers, clubGuests, selectedTournament]
     )
@@ -112,6 +112,83 @@ export const TournamentProvider = (props) => {
         getAllGuestPlayers()
             .then(data => setGuests(data))
     }
+    const playerArgCreator = (playerOppRef, refObj, scoreObject, actTourneyPlayers, curRound) => {
+        let identifier = null
+        let isActive = true
+        let playerArg = {}
+        //check if player is active and get identifier
+        if (isNaN(parseInt(playerOppRef))) {
+            identifier = playerOppRef
+            if (!actTourneyPlayers.find(ap => ap.guest_id === identifier)) {
+                isActive = false
+            }
+        }
+        else {
+            identifier = parseInt(playerOppRef)
+            if (!actTourneyPlayers.find(ap => ap.id === identifier)) {
+                isActive = false
+            }
+        }
+        if (isActive) {
+            playerArg = {
+                id: identifier,
+                score: scoreObject[identifier],
+                avoid: refObj[identifier].filter(ref => ref !== 'bye')
+            }
+            if (refObj[identifier].includes('bye') && playerArg.score > .5) {
+                playerArg.score--
+            }
+            return playerArg
+        }
+    }
+    const createPairings = (tournamentPlayers, oppRefObj, curRound, scoreObject, scoreCard) => {
+        const playerArgs = []
+        //check length of active players
+        // console.log(tournamentPlayers.length %2)
+        if (tournamentPlayers.length % 2 !== 0) {
+            //odd, then find player for bye
+            const scoreCardArr = []
+            for (const playerId in scoreCard) {
+                if (!scoreCard[playerId].includes('bye')) {
+                    scoreCardArr.push([parseInt(playerId) || playerId, scoreCard[playerId].filter(s => s !== 'none' && s !== 1)])
+                }
+            }
+            scoreCardArr.sort((a, b) => b[1].length - a[1].length)
+            for (const potentialByePlayerArr of scoreCardArr) {
+                //create args for other players and check if the new pairings will work
+                for (const oppRef in oppRefObj) {
+                    console.log(oppRef)
+                    if (parseInt(oppRef) !== potentialByePlayerArr[0] && oppRef !== potentialByePlayerArr[0]) {
+                        const playerArgObj = playerArgCreator(oppRef, oppRefObj, scoreObject, tournamentPlayers, curRound)
+                        playerArgs.push(playerArgObj)
+                    }
+                }
+                const newMatchupsSansBye = Swiss(playerArgs, curRound + 1)
+                if (newMatchupsSansBye) {
+                    const byePairing = { round: curRound + 1, match: tournamentPlayers.length / 2 + .5, player1: parseInt(potentialByePlayerArr[0]) || potentialByePlayerArr[0], player2: null }
+                    const pairings = newMatchupsSansBye.concat(byePairing)
+                    return pairings
+                }
+                else {
+                    if (scoreCardArr.indexOf(potentialByePlayerArr) === scoreCardArr.length - 1) {
+                        window.alert('cannot create anymore matchups without double byes or double opponents')
+                    }
+                }
+            }
+        }
+        else {
+            //even, create with swiss
+            for (const oppRef in oppRefObj) {
+                const playerArgObj = playerArgCreator(oppRef, oppRefObj, scoreObject, tournamentPlayers, curRound)
+                playerArgs.push(playerArgObj)
+            }
+            const pairings = Swiss(playerArgs, curRound + 1)
+            if (pairings) {
+                return pairings
+            }
+        }
+    }
+
 
 
     return (
@@ -120,7 +197,8 @@ export const TournamentProvider = (props) => {
             selectedTournament, setSelectedTournament, resetTournamentGames, resetGuests,
             setGuests, guests, playersAndGuests, setPlayersAndGuests, selectedClub, setSelectedClub,
             selectedClubObj, setSelectedClubObj, setClubPlayers, clubPlayers, setClubGuests, clubGuests, editPlayers, setEditPlayers,
-            myChessClubs, setMyChessClubs, resetTournaments
+            myChessClubs, setMyChessClubs, resetTournaments,
+            createPairings
         }}>
             {props.children}
         </TournamentContext.Provider>

@@ -631,53 +631,54 @@ export const ActiveTournament = () => {
                                             sendNewGame(byeGame)
                                         }
                                         const tournamentCopy = { ...activeTournament }
-                                        const playersArg = []
-                                        //need to filter by active tournament players. currently creating matchups for players that have left
+                                        // const playersArg = []
+                                        // //need to filter by active tournament players. currently creating matchups for players that have left
 
-                                        for (const opponentRef in playerOpponentsReferenceObj) {
-                                            // console.log('first')
-                                            let identifier = null
-                                            let isActive = true
-                                            if (isNaN(parseInt(opponentRef))) {
-                                                identifier = opponentRef
-                                                if (!activeTournamentPlayers.find(ap => ap.guest_id === identifier)) {
-                                                    isActive = false
-                                                }
-                                            }
-                                            else {
-                                                identifier = parseInt(opponentRef)
-                                                if (!activeTournamentPlayers.find(ap => ap.id === identifier)) {
-                                                    isActive = false
-                                                }
-                                            }
-                                            if (isActive) {
-                                                // console.log('second')
-                                                const refCopy = { ...playerOpponentsReferenceObj }
-                                                const playerRefObj = {
-                                                    id: identifier,
-                                                    //added below to account for scores
-                                                    score: scoreObj[identifier],
-                                                    avoid: refCopy[identifier].filter(ref => ref !== 'bye')
-                                                }
-                                                if (playerOpponentsReferenceObj[identifier].includes('bye')) {
-                                                    // console.log(identifier + '--third')
-                                                    console.log(identifier)
-                                                    console.log(playerOpponentsReferenceObj[identifier])
-                                                    playerRefObj.receivedBye = true
-                                                    //added below to remove byes from score parameter
-                                                    if (playerRefObj.score > 0) {
-                                                        playerRefObj.score--
-                                                    }
-                                                    console.log(playerRefObj)
-                                                }
-                                                else {
-                                                    playerRefObj.receivedBye = false
-                                                }
-                                                playersArg.push(playerRefObj)
-                                            }
-                                        }
-                                        console.log(playersArg)
-                                        const newPairings = Swiss(playersArg, currentRound + 1)
+                                        // for (const opponentRef in playerOpponentsReferenceObj) {
+                                        //     // console.log('first')
+                                        //     let identifier = null
+                                        //     let isActive = true
+                                        //     if (isNaN(parseInt(opponentRef))) {
+                                        //         identifier = opponentRef
+                                        //         if (!activeTournamentPlayers.find(ap => ap.guest_id === identifier)) {
+                                        //             isActive = false
+                                        //         }
+                                        //     }
+                                        //     else {
+                                        //         identifier = parseInt(opponentRef)
+                                        //         if (!activeTournamentPlayers.find(ap => ap.id === identifier)) {
+                                        //             isActive = false
+                                        //         }
+                                        //     }
+                                        //     if (isActive) {
+                                        //         // console.log('second')
+                                        //         const refCopy = { ...playerOpponentsReferenceObj }
+                                        //         const playerRefObj = {
+                                        //             id: identifier,
+                                        //             //added below to account for scores
+                                        //             score: scoreObj[identifier],
+                                        //             avoid: refCopy[identifier].filter(ref => ref !== 'bye')
+                                        //         }
+                                        //         if (playerOpponentsReferenceObj[identifier].includes('bye')) {
+                                        //             // console.log(identifier + '--third')
+                                        //             console.log(identifier)
+                                        //             console.log(playerOpponentsReferenceObj[identifier])
+                                        //             playerRefObj.receivedBye = true
+                                        //             //added below to remove byes from score parameter
+                                        //             if (playerRefObj.score > 0) {
+                                        //                 playerRefObj.score--
+                                        //             }
+                                        //             console.log(playerRefObj)
+                                        //         }
+                                        //         else {
+                                        //             playerRefObj.receivedBye = false
+                                        //         }
+                                        //         playersArg.push(playerRefObj)
+                                        //     }
+                                        // }
+                                        // console.log(playersArg)
+                                        // const newPairings = Swiss(playersArg, currentRound + 1)
+                                        const newPairings = createPairings(activeTournamentPlayers, playerOpponentsReferenceObj, currentRound, scoreObj, scoreCard, byeGame.player_w)
                                         tournamentCopy.pairings = tournamentCopy.pairings.concat(newPairings)
                                         tournamentCopy.rounds++
                                         // console.log(tournamentCopy)

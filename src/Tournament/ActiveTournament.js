@@ -607,6 +607,8 @@ export const ActiveTournament = () => {
                             previousOpponents={playerOpponentsReferenceObj}
                             scoreObject={scoreObj}
 
+                            scoreCard={scoreCard}
+                            currentByePlayer={byeGame.player_w}
                         />
                     </div> : ""}
                     <div id="tournamentHeader">

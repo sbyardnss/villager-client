@@ -7,8 +7,8 @@ import { PlayerSelection } from "./PlayerSelection"
 import { Parameters } from "./Parameters"
 
 
-export const EditPlayersModal = ({ activeTournamentObj, setEdit, playedRounds, gamesFromThisRound, previousOpponents, scoreObject, setCurrentTournament }) => {
-    const { localVillagerObj, players, guests, playersAndGuests, setPlayersAndGuests, selectedClubObj, selectedClub, resetGuests, resetTournaments } = useContext(TournamentContext)
+export const EditPlayersModal = ({ activeTournamentObj, setEdit, playedRounds, gamesFromThisRound, previousOpponents, scoreObject, setCurrentTournament, scoreCard, currentByePlayer }) => {
+    const { localVillagerObj, players, guests, playersAndGuests, setPlayersAndGuests, selectedClubObj, selectedClub, resetGuests, resetTournaments, createPairings } = useContext(TournamentContext)
     const [potentialCompetitors, setPotentialCompetitors] = useState([])
     const [search, setSearch] = useState("")
     const [showGuests, setShowGuests] = useState(false)
@@ -347,33 +347,45 @@ export const EditPlayersModal = ({ activeTournamentObj, setEdit, playedRounds, g
                                     //iterate all players
                                     //create objects for swiss pairing and create
                                     //add to past pairings
-                                    const playerAndGuestIdsForPairing = allAddedCompetitors.map(pg => {
-                                        if (pg.guest_id) {
-                                            return pg.guest_id
-                                        }
-                                        else {
-                                            return pg.id
-                                        }
-                                    })
-                                    const playerIdObjectsForPairing = playerAndGuestIdsForPairing.map(pg => {
-                                        let hadBye = false
-                                        //FOR UPDATE: added count here 
-                                        let count = scoreObject[pg]
-                                        if (previousOpponents[pg]?.includes('bye')) {
-                                            hadBye = true
-                                            //FOR UPDATE: editing count here if the player had a bye
-                                            count--
-                                        }
-                                        const previousOppArr = previousOpponents[pg]?.filter(op => op !== 'bye')
-                                        if (previousOpponents[pg]) {
-                                            //FOR UPDATE: added count parameter
-                                            return { id: pg, score: count, avoid: previousOppArr, receivedBye: hadBye }
-                                        }
-                                        else {
-                                            return { id: pg, score: 0, avoid: [], receivedBye: false }
-                                        }
-                                    })
-                                    const newMatchups = Swiss(playerIdObjectsForPairing, playedRounds)
+
+
+
+                                    // const playerAndGuestIdsForPairing = allAddedCompetitors.map(pg => {
+                                    //     if (pg.guest_id) {
+                                    //         return pg.guest_id
+                                    //     }
+                                    //     else {
+                                    //         return pg.id
+                                    //     }
+                                    // })
+                                    // const playerIdObjectsForPairing = playerAndGuestIdsForPairing.map(pg => {
+                                    //     let hadBye = false
+                                    //     //FOR UPDATE: added count here 
+                                    //     let count = scoreObject[pg]
+                                    //     if (previousOpponents[pg]?.includes('bye')) {
+                                    //         hadBye = true
+                                    //         //FOR UPDATE: editing count here if the player had a bye
+                                    //         count--
+                                    //     }
+                                    //     const previousOppArr = previousOpponents[pg]?.filter(op => op !== 'bye')
+                                    //     if (previousOpponents[pg]) {
+                                    //         //FOR UPDATE: added count parameter
+                                    //         return { id: pg, score: count, avoid: previousOppArr, receivedBye: hadBye }
+                                    //     }
+                                    //     else {
+                                    //         return { id: pg, score: 0, avoid: [], receivedBye: false }
+                                    //     }
+                                    // })
+                                    // const newMatchups = Swiss(playerIdObjectsForPairing, playedRounds)
+
+
+
+
+
+                                    const newMatchups = createPairings(allAddedCompetitors, previousOpponents, playedRounds, scoreCard)
+
+
+                                    
                                     copy.pairings = pastPairings.concat(newMatchups)
                                 }
                                 else {

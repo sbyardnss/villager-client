@@ -743,6 +743,7 @@ export const ActiveTournament = () => {
                                 scoreObj={scoreObj}
                                 allPlayersArr={allPlayersArr}
                                 scoreCard={scoreCard}
+                                byePlayer={byePlayer}
                             />
                             : ""}
                     </article>

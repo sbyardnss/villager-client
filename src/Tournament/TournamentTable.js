@@ -1,9 +1,9 @@
 
 
-export const TournamentTable = ({ activeTournamentRounds, currentRound, scoreObj, allPlayersArr, scoreCard}) => {
+export const TournamentTable = ({ activeTournamentRounds, currentRound, scoreObj, allPlayersArr, scoreCard, byePlayer}) => {
 
-
-    //sorting table players by score
+    console.log(byePlayer)
+    //sorting table players by score    
     const sortAllPlayersArr = (playersArr) => {
         return playersArr.sort((a, b) => {
             const aIdentifier = a.guest_id ? a.guest_id : a.id
@@ -65,10 +65,16 @@ export const TournamentTable = ({ activeTournamentRounds, currentRound, scoreObj
                                             }
                                             if (s === 'bye') {
                                                 score += 1
+                                                
                                             }
                                             if (s !== 'none') {
                                                 return (
                                                     <td key={guestIdOrId + '--' + index + '--' + p.full_name} className="scoreCell">{s}</td>
+                                                )
+                                            }
+                                            else if (s === 'none' && byePlayer === guestIdOrId && index + 1 === currentRound) {
+                                                return (
+                                                    <td key={guestIdOrId + '--' + index + '--' + p.full_name} className="scoreCell">bye</td>
                                                 )
                                             }
                                             else {
@@ -78,7 +84,7 @@ export const TournamentTable = ({ activeTournamentRounds, currentRound, scoreObj
                                             }
                                         })
                                     }
-                                    {!tourneyPlayerScores ? <td key={guestIdOrId + '-- nogameyet' + '--' + p.full_name} className="scoreCell">0</td> : ""}
+                                    {!tourneyPlayerScores ? <td key={guestIdOrId + '-- noGameYet' + '--' + p.full_name} className="scoreCell">0</td> : ""}
                                     {currentRound < 6 ? <td className="scoreCell"></td> : ""}
                                     <td key={guestIdOrId + "-- score" + p.full_name} id={guestIdOrId + "-- score"} className="totalScoreCell" value={scoreObj[guestIdOrId]}>
                                         {score}

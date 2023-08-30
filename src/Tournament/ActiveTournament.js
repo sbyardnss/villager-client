@@ -681,18 +681,20 @@ export const ActiveTournament = () => {
                                         // }
                                         // console.log(playersArg)
                                         // const newPairings = Swiss(playersArg, currentRound + 1)
-                                        const newPairings = createPairings(activeTournamentPlayers, playerOpponentsReferenceObj, currentRound, scoreObj, scoreCard, byeGame.player_w)
+
+
+                                        const newPairings = createPairings('new', activeTournamentPlayers, playerOpponentsReferenceObj, currentRound, scoreObj, scoreCard, byeGame.player_w)
                                         tournamentCopy.pairings = tournamentCopy.pairings.concat(newPairings)
                                         tournamentCopy.rounds++
                                         // console.log(tournamentCopy)
                                         tournamentCopy.competitors = tournamentCopy.competitors.map(c => { return c.id })
                                         tournamentCopy.guest_competitors = tournamentCopy.guest_competitors.map(gc => { return gc.id })
                                         // console.log(tournamentCopy)
-                                        updateTournament(tournamentCopy)
-                                            .then(() => {
-                                                resetTournaments()
-                                                resetTournamentGames()
-                                            })
+                                        // updateTournament(tournamentCopy)
+                                        //     .then(() => {
+                                        //         resetTournaments()
+                                        //         resetTournamentGames()
+                                        //     })
                                     }
                                 }}>New Round</button>
                             : ""}

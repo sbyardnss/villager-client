@@ -690,11 +690,11 @@ export const ActiveTournament = () => {
                                         tournamentCopy.competitors = tournamentCopy.competitors.map(c => { return c.id })
                                         tournamentCopy.guest_competitors = tournamentCopy.guest_competitors.map(gc => { return gc.id })
                                         // console.log(tournamentCopy)
-                                        // updateTournament(tournamentCopy)
-                                        //     .then(() => {
-                                        //         resetTournaments()
-                                        //         resetTournamentGames()
-                                        //     })
+                                        updateTournament(tournamentCopy)
+                                            .then(() => {
+                                                resetTournaments()
+                                                resetTournamentGames()
+                                            })
                                     }
                                 }}>New Round</button>
                             : ""}

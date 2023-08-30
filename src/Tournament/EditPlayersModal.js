@@ -159,7 +159,6 @@ export const EditPlayersModal = ({ activeTournamentObj, setEdit, playedRounds, g
         }, [previousOpponents, tournamentObj]
     )
     // console.log(gamesFromThisRound)
-    // console.log(currentPairings)
     return (
         <article id="editPlayersContainer">
             <div id="editPlayersHeader">
@@ -350,39 +349,39 @@ export const EditPlayersModal = ({ activeTournamentObj, setEdit, playedRounds, g
 
 
 
-                                    const playerAndGuestIdsForPairing = allAddedCompetitors.map(pg => {
-                                        if (pg.guest_id) {
-                                            return pg.guest_id
-                                        }
-                                        else {
-                                            return pg.id
-                                        }
-                                    })
-                                    const playerIdObjectsForPairing = playerAndGuestIdsForPairing.map(pg => {
-                                        let hadBye = false
-                                        //FOR UPDATE: added count here 
-                                        let count = scoreObject[pg]
-                                        if (previousOpponents[pg]?.includes('bye')) {
-                                            hadBye = true
-                                            //FOR UPDATE: editing count here if the player had a bye
-                                            count--
-                                        }
-                                        const previousOppArr = previousOpponents[pg]?.filter(op => op !== 'bye')
-                                        if (previousOpponents[pg]) {
-                                            //FOR UPDATE: added count parameter
-                                            return { id: pg, score: count, avoid: previousOppArr, receivedBye: hadBye }
-                                        }
-                                        else {
-                                            return { id: pg, score: 0, avoid: [], receivedBye: false }
-                                        }
-                                    })
-                                    const newMatchups = Swiss(playerIdObjectsForPairing, playedRounds)
+                                    // const playerAndGuestIdsForPairing = allAddedCompetitors.map(pg => {
+                                    //     if (pg.guest_id) {
+                                    //         return pg.guest_id
+                                    //     }
+                                    //     else {
+                                    //         return pg.id
+                                    //     }
+                                    // })
+                                    // const playerIdObjectsForPairing = playerAndGuestIdsForPairing.map(pg => {
+                                    //     let hadBye = false
+                                    //     //FOR UPDATE: added count here 
+                                    //     let count = scoreObject[pg]
+                                    //     if (previousOpponents[pg]?.includes('bye')) {
+                                    //         hadBye = true
+                                    //         //FOR UPDATE: editing count here if the player had a bye
+                                    //         count--
+                                    //     }
+                                    //     const previousOppArr = previousOpponents[pg]?.filter(op => op !== 'bye')
+                                    //     if (previousOpponents[pg]) {
+                                    //         //FOR UPDATE: added count parameter
+                                    //         return { id: pg, score: count, avoid: previousOppArr, receivedBye: hadBye }
+                                    //     }
+                                    //     else {
+                                    //         return { id: pg, score: 0, avoid: [], receivedBye: false }
+                                    //     }
+                                    // })
+                                    // const newMatchups = Swiss(playerIdObjectsForPairing, playedRounds)
 
 
 
 
 
-                                    // const newMatchups = createPairings(allAddedCompetitors, previousOpponents, playedRounds, scoreCard)
+                                    const newMatchups = createPairings('edit', allAddedCompetitors, previousOpponents, playedRounds, scoreObject, scoreCard)
 
 
                                     

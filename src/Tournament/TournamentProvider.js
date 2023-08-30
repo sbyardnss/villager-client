@@ -140,10 +140,12 @@ export const TournamentProvider = (props) => {
             playerArg = {
                 id: identifier,
                 score: scoreObject[identifier] || 0,
-                avoid: refObj[identifier].filter(ref => ref !== 'bye') || []
+                avoid: refObj[identifier] ? refObj[identifier].filter(ref => ref !== 'bye') : []
             }
-            if (refObj[identifier].includes('bye') && playerArg.score > .5) {
-                playerArg.score--
+            if (refObj[identifier]) {
+                if (refObj[identifier].includes('bye') && playerArg.score > .5) {
+                    playerArg.score--
+                }
             }
             return playerArg
         }
@@ -210,25 +212,30 @@ export const TournamentProvider = (props) => {
         const playerArgs = []
         if (tournamentPlayers.length % 2 !== 0) {
             const scoreCardArr = []
+            const playerIdentifierArr = []
             //filter out players that have had bye and note number of losses 
             for (const player of tournamentPlayers) {
                 const identifier = findIdentifier(player)
-                if (!scoreCard[identifier].includes('bye') && identifier !== currentByePlayer) {
-                    scoreCardArr.push([identifier, scoreCard[identifier].filter(s => s !== 'none' && s !== 1)])
+                playerIdentifierArr.push(identifier)
+                if (scoreCard[identifier]) {
+                    if (!scoreCard[identifier].includes('bye') && identifier !== currentByePlayer) {
+                        scoreCardArr.push([identifier, scoreCard[identifier].filter(s => s !== 'none' && s !== 1)])
+                    }
                 }
             }
             //sort by most losses
             scoreCardArr.sort((a, b) => b[1].length - a[1].length)
-            //iterate potential bye players and find a pairing set that will work
+            // iterate potential bye players and find a pairing set that will work
             for (const potentialByePlayerArr of scoreCardArr) {
-                for (const oppRef in opponentReferenceObj) {
-                    if (parseInt(oppRef) !== potentialByePlayerArr[0] && oppRef !== potentialByePlayerArr[0]) {
-                        const playerArgObj = playerArgCreator(oppRef, opponentReferenceObj, scoreObject, tournamentPlayers)
+                // for (const oppRef in opponentReferenceObj) {
+                for (const playerIdentifier of playerIdentifierArr) {
+                    if (parseInt(playerIdentifier) !== potentialByePlayerArr[0] && playerIdentifier !== potentialByePlayerArr[0]) {
+                        const playerArgObj = playerArgCreator(playerIdentifier, opponentReferenceObj, scoreObject, tournamentPlayers)
                         playerArgs.push(playerArgObj)
-
                     }
                 }
                 const newMatchupsSansBye = Swiss(playerArgs, targetRound)
+                console.log(newMatchupsSansBye)
                 if (newMatchupsSansBye && !newMatchupsSansBye.filter(m => m.player2 === null).length) {
                     const byePairing = { round: targetRound, match: tournamentPlayers.length / 2 + .5, player1: parseInt(potentialByePlayerArr[0]) || potentialByePlayerArr[0], player2: null }
                     const pairings = newMatchupsSansBye.concat(byePairing)
@@ -241,6 +248,8 @@ export const TournamentProvider = (props) => {
                     }
                 }
             }
+
+
         }
         else {
             for (const player of tournamentPlayers) {

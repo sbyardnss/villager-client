@@ -70,9 +70,16 @@ export const TournamentProvider = (props) => {
 
     useEffect(
         () => {
-            const club = myChessClubs.find(club => club.id === selectedClub)
-            setSelectedClubObj(club)
-        }, [selectedClub, myChessClubs]
+            if (selectedTournament) {
+                const tournamentObj = tournaments.find(t => t.id === selectedTournament)
+                const club = myChessClubs.find(club => club.id === tournamentObj.club.id)
+                setSelectedClubObj(club)
+            }
+            else {
+                const club = myChessClubs.find(club => club.id === selectedClub)
+                setSelectedClubObj(club)
+            }
+        }, [selectedClub, myChessClubs, selectedTournament]
     )
 
     //only show guests and players that are in selected club
@@ -112,7 +119,7 @@ export const TournamentProvider = (props) => {
         getAllGuestPlayers()
             .then(data => setGuests(data))
     }
-    const playerArgCreator = (playerOppRef, refObj, scoreObject, actTourneyPlayers, curRound) => {
+    const playerArgCreator = (playerOppRef, refObj, scoreObject, actTourneyPlayers) => {
         let identifier = null
         let isActive = true
         let playerArg = {}
@@ -160,7 +167,7 @@ export const TournamentProvider = (props) => {
                 //create args for other players and check if the new pairings will work
                 for (const oppRef in oppRefObj) {
                     if (parseInt(oppRef) !== potentialByePlayerArr[0] && oppRef !== potentialByePlayerArr[0]) {
-                        const playerArgObj = playerArgCreator(oppRef, oppRefObj, scoreObject, tournamentPlayers, curRound)
+                        const playerArgObj = playerArgCreator(oppRef, oppRefObj, scoreObject, tournamentPlayers)
                         playerArgs.push(playerArgObj)
                     }
                 }

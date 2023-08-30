@@ -120,7 +120,8 @@ export const ActiveTournament = () => {
             }
         }, [activeTournamentPlayers, activeTournament.pairings]
     )
-
+    // console.log(activeTournamentPlayers)
+    // console.log(createPairings(activeTournamentPlayers, playerOpponentsReferenceObj, currentRound, scoreObj, scoreCard))
     useEffect(
         () => {
             if (activeTournament.club) {

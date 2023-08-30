@@ -4,7 +4,7 @@ import { alterGame } from "../ServerManager"
 
 
 export const EditScores = ({ allPlayersArr, handleGameForApiUpdate, setEditScores, gameForApi }) => {
-    const { tournamentGames, resetTournamentGames } = useContext(TournamentContext)
+    const { tournamentGames, resetTournamentGames, findIdentifier } = useContext(TournamentContext)
     const sortedTournamentGames = tournamentGames.sort((a, b) => { return a.id - b.id })
     return (
         <section id="tournamentEditSection">
@@ -12,6 +12,10 @@ export const EditScores = ({ allPlayersArr, handleGameForApiUpdate, setEditScore
             <section id="previousMatchups">
                 {
                     sortedTournamentGames.map(game => {
+                        // const whiteIdentifier = findIdentifier(game.player_w)
+                        // const isWhiteGuest = isNaN(parseInt(whiteIdentifier)) ? true : false
+                        // const blackIdentifier = findIdentifier(game.player_b)
+                        // const isBlackGuest = isNaN(parseInt(blackIdentifier)) ? true : false
                         const white = allPlayersArr.find(player => {
                             if (game.player_w.guest_id) {
                                 return player.guest_id === game.player_w.guest_id
@@ -28,6 +32,20 @@ export const EditScores = ({ allPlayersArr, handleGameForApiUpdate, setEditScore
                                 return player.id === game.player_b?.id
                             }
                         })
+                        // let white = {}
+                        // let black = {}
+                        // if (isWhiteGuest === true) {
+                        //     white = allPlayersArr.find(player => player.guest_id === whiteIdentifier)
+                        // }
+                        // else{
+                        //     white = allPlayersArr.find(player => player.id === whiteIdentifier)
+                        // }
+                        // if (isBlackGuest === true) {
+                        //     black = allPlayersArr.find(player => player.guest_id === blackIdentifier)
+                        // }
+                        // else{
+                        //     black = allPlayersArr.find(player => player.id === blackIdentifier)
+                        // }
                         const whiteTargetForIndicator = white?.guest_id ? white?.guest_id : white?.id
                         const blackTargetForIndicator = black?.guest_id ? black?.guest_id : black?.id
                         if (game.bye === false) {

@@ -200,7 +200,7 @@ export const TournamentProvider = (props) => {
     //     }
     // }
     const findIdentifier = (playerObj) => {
-        return playerObj.guest_id ? playerObj.guest_id : playerObj.id
+        return playerObj?.guest_id ? playerObj?.guest_id : playerObj?.id
     }
 
     const createPairings = (editOrNew, tournamentPlayers, opponentReferenceObj, curRound, scoreObject, scoreCard, currentByePlayer) => {
@@ -235,7 +235,6 @@ export const TournamentProvider = (props) => {
                     }
                 }
                 const newMatchupsSansBye = Swiss(playerArgs, targetRound)
-                console.log(newMatchupsSansBye)
                 if (newMatchupsSansBye && !newMatchupsSansBye.filter(m => m.player2 === null).length) {
                     const byePairing = { round: targetRound, match: tournamentPlayers.length / 2 + .5, player1: parseInt(potentialByePlayerArr[0]) || potentialByePlayerArr[0], player2: null }
                     const pairings = newMatchupsSansBye.concat(byePairing)
@@ -279,7 +278,7 @@ export const TournamentProvider = (props) => {
             setGuests, guests, playersAndGuests, setPlayersAndGuests, selectedClub, setSelectedClub,
             selectedClubObj, setSelectedClubObj, setClubPlayers, clubPlayers, setClubGuests, clubGuests, editPlayers, setEditPlayers,
             myChessClubs, setMyChessClubs, resetTournaments,
-            createPairings
+            createPairings, findIdentifier
         }}>
             {props.children}
         </TournamentContext.Provider>

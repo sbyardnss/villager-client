@@ -69,3 +69,14 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/d
 
 This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
 # villager-client
+
+
+# Dependencies
+### Chess.js
+- chess.js@0.12.0
+
+### Reach Chessboard
+- react-chessboard@2.1.3
+
+### Tournament-pairings
+- tournament-pairings@1.5.2

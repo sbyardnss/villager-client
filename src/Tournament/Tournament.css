@@ -1,3 +1,47 @@
+#tournamentHeader {
+    display: flex;
+    width: 90%;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: .5em;
+}
+
+.controlSpread {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    /* width: 30em; */
+    /* margin: 1em 0; */
+}
+
+#editPlayersModal {
+    position: fixed;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    top: 15%;
+    width: 20em;
+    height: fit-content;
+    /* height: 30em; */
+    /* min-height: 20em; */
+    padding: .5em;
+    border: 1px solid #694873;
+    border-radius: 6px;
+    backdrop-filter: blur(30px);
+    background-color: #20202099;
+    z-index: 6;
+    transition: height .2s;
+}
+
+#editPlayersContainer {
+    width: 100%;
+}
+
+#editPlayersHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
 @media screen and (min-width:641px) {
     #tournamentContainer {
         margin-top: 120px;
@@ -371,11 +415,11 @@
         margin: 1em 0;
     }
 
-    #activeTournamentHeader {
+    /* #tournamentHeader {
         display: flex;
-        width: 20em;
+        width: 90%;
         justify-content: space-between;
-    }
+    } */
 
 
     .progressionControlBtn {
@@ -534,12 +578,12 @@
 
     /* tournament results modal */
     #resultsModal {
-        display: none;
+        display: flex;
         border: 1px solid #f4d35e;
         border-radius: 8px;
         color: rgb(231, 231, 231);
         position: absolute;
-        top: 20%;
+        top: 15%;
         backdrop-filter: blur(30px);
         background-color: #20202099;
         width: 15em;
@@ -587,7 +631,7 @@
 
     /* end Tournament modal */
     #endTournamentModal {
-        display: none;
+        display: flex;
         border: 1px solid #f4d35e;
         border-radius: 8px;
         color: rgb(231, 231, 231);
@@ -624,6 +668,9 @@
     }
 
     #newTournamentForm {
+        /* display: flex;
+        flex-direction: column;
+        align-items: center; */
         border: 2px solid rgb(40, 40, 40);
         border-radius: 8px;
         background-image: url("../images/closup_dark_board.jpeg");
@@ -882,11 +929,11 @@
     }
 
     /* tournament progression controls for selected tournament */
-    #activeTournamentHeader {
+    /* #tournamentHeader {
         display: flex;
-        width: 95%;
+        width: 90%;
         justify-content: space-between;
-    }
+    } */
 
     #tournamentProgressionControls {
         display: flex;
@@ -1065,17 +1112,14 @@
         width: 100%;
         max-width: 20em;
         color: rgb(231, 231, 231);
-        /* overflow: hidden; */
         border-collapse: collapse;
         table-layout: fixed;
     }
 
     thead th {
-        /* position: -webkit-sticky;
-        position: sticky; */
+
         top: 0;
         z-index: 2;
-        /* background: hsl(20, 50%, 70%); */
     }
 
     .sticky-col {
@@ -1084,7 +1128,6 @@
     }
 
     .first-col {
-        /* width: 5rem; */
         max-width: 80px;
         left: 0px;
         background-color: black;
@@ -1103,10 +1146,6 @@
         height: 3rem;
     }
 
-    /* thead th {
-        width: 3rem;
-    } */
-
 
     tr>:first-child {
         position: -webkit-sticky;
@@ -1122,18 +1161,13 @@
         position: sticky;
         right: 0%;
         width: 50px;
-        /* background-color: black; */
         text-align: center;
-        /* border: 1px solid #694873; */
         border-top: none;
         border-bottom: none;
         padding: 0 .25em;
         z-index: 5;
     }
 
-    /* tbody {
-        overflow: scroll;
-    } */
 
     .tablePlayerCell {
         padding: .25em;
@@ -1150,10 +1184,6 @@
         width: 2em;
     }
 
-    /* .tournamentGameResult {
-        display: flex;
-        justify-content: center;
-    } */
     .tablePlayerRow {
         border-collapse: collapse;
     }
@@ -1208,12 +1238,12 @@
         cursor: pointer;
     }
 
-    #editPlayersModal {
+    /* #editPlayersModal {
         position: fixed;
         display: flex;
         flex-direction: column;
         align-items: center;
-        top: 20%;
+        top: 15%;
         width: 20em;
         height: 30em;
         padding: .5em;
@@ -1222,9 +1252,9 @@
         backdrop-filter: blur(30px);
         background-color: #20202099;
         z-index: 6;
-    }
+    } */
 
-    #editPlayersContainer {
+    /* #editPlayersContainer {
         width: 100%;
     }
 
@@ -1232,8 +1262,7 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-        width: 90%;
-    }
+    } */
 
     #editPlayersToggleAndSubmitBtnBlock {
         display: flex;
@@ -1244,50 +1273,59 @@
         width: 8.5em;
     }
 }
+
 #gamesStartedBtnBlock {
     display: flex;
+    flex-direction: column;
+    align-items: center;
     justify-content: space-between;
-    margin-bottom: 1em;
+    /* margin-bottom: 1em; */
+    padding: 1em;
+    height: 10em;
 }
+
 .gamesNotStartedBtn {
-    background-color: #934a67;
+    background-color: #694873;
     color: rgb(231, 231, 231);
     height: 4em;
     font-size: large;
-    width: 48%;
+    width: 70%;
     border: none;
     border-radius: 2px;
     cursor: pointer;
     transition: .2s cubic-bezier(0.215, 0.61, 0.355, 1);
 }
+
 .gamesNotStartedBtnActive {
     background-color: #cf4d81;
     color: rgb(231, 231, 231);
     height: 4em;
     font-size: large;
-    width: 48%;
+    width: 70%;
     border: none;
     border-radius: 2px;
     cursor: pointer;
     transition: .2s cubic-bezier(0.215, 0.61, 0.355, 1);
 }
+
 .gamesStartedBtn {
     background-color: #694873;
     color: rgb(231, 231, 231);
     height: 4em;
     font-size: large;
-    width: 48%;
+    width: 70%;
     border: none;
     border-radius: 2px;
     cursor: pointer;
     transition: .2s cubic-bezier(0.215, 0.61, 0.355, 1);
 }
+
 .gamesStartedBtnActive {
     background-color: #cf4d81;
     color: rgb(231, 231, 231);
     height: 4em;
     font-size: large;
-    width: 48%;
+    width: 70%;
     border: none;
     border-radius: 2px;
     cursor: pointer;

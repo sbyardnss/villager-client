@@ -1,9 +1,9 @@
-import { useState, useEffect, useContext, useRef } from "react"
+import { useState, useEffect, useContext } from "react"
 import { TournamentContext } from "./TournamentProvider"
-import { alterGame, endTournament, getAllTournaments, getScoreCard, sendNewGame, updateTournament } from "../ServerManager"
+import { sendNewGame, updateTournament } from "../ServerManager"
 import "./Tournament.css"
 import { EditPlayersModal } from "./EditPlayersModal"
-import { Swiss } from "tournament-pairings"
+// import { Swiss } from "tournament-pairings"
 import { TournamentTable } from "./TournamentTable"
 import { EditScores } from "./EditScores"
 import { ResultsModal } from "./ResultsModal"
@@ -11,7 +11,7 @@ import { EndTournamentModal } from "./EndTournamentModal"
 
 
 export const ActiveTournament = () => {
-    const { tournaments, setTournaments, playersAndGuests, tournamentGames, selectedTournament, setSelectedTournament, resetTournamentGames, editPlayers, setEditPlayers, resetTournaments, myChessClubs, createPairings, selectedClub, setSelectedClub } = useContext(TournamentContext)
+    const { tournaments, playersAndGuests, tournamentGames, selectedTournament, setSelectedTournament, resetTournamentGames, editPlayers, setEditPlayers, resetTournaments, myChessClubs, createPairings, selectedClub, setSelectedClub } = useContext(TournamentContext)
     //initial setup state variables
     const [activeTournament, setActiveTournament] = useState({})
     const [activeTournamentPlayers, setActiveTournamentPlayers] = useState([])
@@ -19,6 +19,7 @@ export const ActiveTournament = () => {
 
     //managing tournament state variables
     const [currentRound, setCurrentRound] = useState(0)
+    const [scoring, setScoring] = useState(true)
     const [editScores, setEditScores] = useState(false)
     const [viewTable, setViewTable] = useState(false)
     const [showResults, setShowResults] = useState(false)
@@ -72,7 +73,7 @@ export const ActiveTournament = () => {
             setSelectedClub(selectedTournamentObj.club.id)
         }, [selectedTournament, tournaments]
     )
-    
+
     useEffect(
         () => {
             if (activeTournament.complete === true) {
@@ -418,13 +419,7 @@ export const ActiveTournament = () => {
                                     }
                                     return tg.tournament_round === currentRound && gamePlayerBIndicator === blackTargetForIndicator && gamePlayerWIndicator === whiteTargetForIndicator
                                 })
-                                // if (!matchup) {
-                                //     return (
-                                //         <div>
-                                //             All match ups played. Start new round.
-                                //         </div>
-                                //     )
-                                // }
+
                                 if (black !== undefined && white !== undefined && !matchingGame?.winner && matchingGame?.win_style !== 'draw' && playerOpponentsReferenceObj[whiteTargetForIndicator]?.indexOf(blackTargetForIndicator) !== playerOpponentsReferenceObj[whiteTargetForIndicator]?.length + 1) {
                                     return (
                                         <div key={`${matchup.round} -- ${matchup.match} -- ${index}`}
@@ -565,18 +560,9 @@ export const ActiveTournament = () => {
                 }}>create round games</button>
             )
         }
-        // resetTournamentGames()
-        // else {
-        //     return null
-        // }
+
     }
-    // console.log(Swiss([
-    //     { id: 1, score: 2, avoid: [3, 'g1'], receivedBye: true },
-    //     { id: 2, score: 2, avoid: ['g1', 3, 4], receivedBye: false },
-    //     { id: 3, score: 2, avoid: [1, 2], receivedBye: true },
-    //     { id: 4, score: 0, avoid: ['g1', 2], receivedBye: true },
-    //     { id: 'g1', score: 2, avoid: [2, 4, 1], receivedBye: false }
-    // ], 1))
+
     if (selectedTournament) {
         if (activeTournament && activeTournamentPlayers) {
             const endTournamentModal = document.getElementById('endTournamentModal')
@@ -636,55 +622,6 @@ export const ActiveTournament = () => {
                                             sendNewGame(byeGame)
                                         }
                                         const tournamentCopy = { ...activeTournament }
-                                        // const playersArg = []
-                                        // //need to filter by active tournament players. currently creating matchups for players that have left
-
-                                        // for (const opponentRef in playerOpponentsReferenceObj) {
-                                        //     // console.log('first')
-                                        //     let identifier = null
-                                        //     let isActive = true
-                                        //     if (isNaN(parseInt(opponentRef))) {
-                                        //         identifier = opponentRef
-                                        //         if (!activeTournamentPlayers.find(ap => ap.guest_id === identifier)) {
-                                        //             isActive = false
-                                        //         }
-                                        //     }
-                                        //     else {
-                                        //         identifier = parseInt(opponentRef)
-                                        //         if (!activeTournamentPlayers.find(ap => ap.id === identifier)) {
-                                        //             isActive = false
-                                        //         }
-                                        //     }
-                                        //     if (isActive) {
-                                        //         // console.log('second')
-                                        //         const refCopy = { ...playerOpponentsReferenceObj }
-                                        //         const playerRefObj = {
-                                        //             id: identifier,
-                                        //             //added below to account for scores
-                                        //             score: scoreObj[identifier],
-                                        //             avoid: refCopy[identifier].filter(ref => ref !== 'bye')
-                                        //         }
-                                        //         if (playerOpponentsReferenceObj[identifier].includes('bye')) {
-                                        //             // console.log(identifier + '--third')
-                                        //             console.log(identifier)
-                                        //             console.log(playerOpponentsReferenceObj[identifier])
-                                        //             playerRefObj.receivedBye = true
-                                        //             //added below to remove byes from score parameter
-                                        //             if (playerRefObj.score > 0) {
-                                        //                 playerRefObj.score--
-                                        //             }
-                                        //             console.log(playerRefObj)
-                                        //         }
-                                        //         else {
-                                        //             playerRefObj.receivedBye = false
-                                        //         }
-                                        //         playersArg.push(playerRefObj)
-                                        //     }
-                                        // }
-                                        // console.log(playersArg)
-                                        // const newPairings = Swiss(playersArg, currentRound + 1)
-
-
                                         const newPairings = createPairings('new', activeTournamentPlayers, playerOpponentsReferenceObj, currentRound, scoreObj, scoreCard, byeGame.player_w)
                                         tournamentCopy.pairings = tournamentCopy.pairings.concat(newPairings)
                                         tournamentCopy.rounds++
@@ -704,8 +641,14 @@ export const ActiveTournament = () => {
                             <button
                                 className="progressionControlBtn controlBtnApprove"
                                 onClick={() => {
-                                    setEditScores(true)
-                                    // setScoring(false)
+                                    // setEditScores(true)
+                                    setEditScores(!editScores)
+                                    if (editScores === true) {
+                                        setScoring(true)
+                                    }
+                                    else {
+                                        setScoring(false)
+                                    }
                                 }}>edit scores</button>
                             : ""}
                         {scoringButtonOrNone()}
@@ -737,7 +680,9 @@ export const ActiveTournament = () => {
                         Round {currentRound}
                     </div>
                     <section id="matchupsContainer">
-                        {submitResultsOrNull()}
+                        {scoring ?
+                            submitResultsOrNull()
+                            : ""}
                     </section>
                     <article id="tableCenter">
                         {viewTable ?

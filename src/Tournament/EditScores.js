@@ -8,7 +8,7 @@ export const EditScores = ({ allPlayersArr, handleGameForApiUpdate, setEditScore
     const sortedTournamentGames = tournamentGames.sort((a, b) => { return a.id - b.id })
     return (
         <section id="tournamentEditSection">
-            <button className="buttonStyleReject" id="cancelEditBtn" onClick={() => setEditScores(false)}>cancel edit</button>
+            {/* <button className="buttonStyleReject" id="cancelEditBtn" onClick={() => setEditScores(false)}>cancel edit</button> */}
             <section id="previousMatchups">
                 {
                     sortedTournamentGames.map(game => {

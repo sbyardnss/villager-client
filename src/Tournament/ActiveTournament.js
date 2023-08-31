@@ -643,13 +643,12 @@ export const ActiveTournament = () => {
                                 onClick={() => {
                                     // setEditScores(true)
                                     setEditScores(!editScores)
-                                    if (editScores === true) {
-                                        setScoring(true)
+                                    if (editScores === false) {
+                                        setViewTable(false)
                                     }
-                                    else {
-                                        setScoring(false)
-                                    }
-                                }}>edit scores</button>
+                                    
+                                    setScoring(!scoring)
+                                }}>{scoring ? "edit scores" : "scoring"}</button>
                             : ""}
                         {scoringButtonOrNone()}
                         {activeTournament.complete === false ?
@@ -667,6 +666,9 @@ export const ActiveTournament = () => {
                         {activeTournament.complete === false ?
                             <button className="progressionControlBtn controlBtnApprove" onClick={() => {
                                 setViewTable(!viewTable)
+                                if (editScores) {
+                                    setEditScores(false)
+                                }
                             }}>View Table</button>
                             : ""}
                         <button

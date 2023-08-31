@@ -11,7 +11,7 @@ import { EndTournamentModal } from "./EndTournamentModal"
 
 
 export const ActiveTournament = () => {
-    const { tournaments, setTournaments, playersAndGuests, tournamentGames, selectedTournament, setSelectedTournament, resetTournamentGames, editPlayers, setEditPlayers, resetTournaments, myChessClubs, createPairings } = useContext(TournamentContext)
+    const { tournaments, setTournaments, playersAndGuests, tournamentGames, selectedTournament, setSelectedTournament, resetTournamentGames, editPlayers, setEditPlayers, resetTournaments, myChessClubs, createPairings, selectedClub, setSelectedClub } = useContext(TournamentContext)
     //initial setup state variables
     const [activeTournament, setActiveTournament] = useState({})
     const [activeTournamentPlayers, setActiveTournamentPlayers] = useState([])
@@ -69,8 +69,10 @@ export const ActiveTournament = () => {
         () => {
             const selectedTournamentObj = tournaments?.find(t => t.id === selectedTournament)
             setActiveTournament(selectedTournamentObj)
+            setSelectedClub(selectedTournamentObj.club.id)
         }, [selectedTournament, tournaments]
     )
+    
     useEffect(
         () => {
             if (activeTournament.complete === true) {

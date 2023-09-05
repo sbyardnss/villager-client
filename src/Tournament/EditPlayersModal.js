@@ -524,7 +524,7 @@ export const EditPlayersModal = ({ activeTournamentObj, setEdit, playedRounds, g
                                         getTournament(activeTournamentObj.id)
                                             .then(data => setCurrentTournament(data))
                                     })
-                                // .then(() => resetTournaments())
+                                .then(() => resetTournaments())
                                 setEdit(false)
                             }
 

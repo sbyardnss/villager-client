@@ -611,6 +611,12 @@ export const ActiveTournament = () => {
                                 updatePlayerOpponentsReferenceObj({})
                                 // setScoring(false)
                             }}>exit</button>
+                            <button
+                            className="progressionControlBtn controlBtnApprove"
+                            onClick={() => {
+                                // modal.style.display = "flex";
+                                setShowResults(true)
+                            }}>Results</button>
                     </div>
                     <div id="tournamentProgressionControls">
                         {activeTournament.complete === false ?
@@ -654,7 +660,9 @@ export const ActiveTournament = () => {
                                     }
                                     
                                 }}>{scoring ? "edit scores" : "scoring"}</button>
+                                
                             : ""}
+                            
                         {scoringButtonOrNone()}
                         {activeTournament.complete === false ?
                             <button className="progressionControlBtn controlBtnApprove" onClick={() => {
@@ -679,12 +687,12 @@ export const ActiveTournament = () => {
                                 setViewTable(!viewTable)
                             }}>View Table</button>
                             : ""}
-                        <button
+                        {/* <button
                             className="progressionControlBtn controlBtnApprove"
                             onClick={() => {
                                 // modal.style.display = "flex";
                                 setShowResults(true)
-                            }}>Results</button>
+                            }}>Results</button> */}
                     </div>
                     <div className="setColor setTournamentFontSize">
                         Round {currentRound}

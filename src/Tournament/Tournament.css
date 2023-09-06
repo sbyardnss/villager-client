@@ -929,11 +929,11 @@
     }
 
     /* tournament progression controls for selected tournament */
-    /* #tournamentHeader {
+    #tournamentHeader {
         display: flex;
-        width: 90%;
+        width: 95%;
         justify-content: space-between;
-    } */
+    }
 
     #tournamentProgressionControls {
         display: flex;

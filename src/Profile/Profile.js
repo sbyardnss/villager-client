@@ -40,12 +40,12 @@ export const Profile = () => {
     const [passwordVisible, setPasswordVisible] = useState(false)
     useEffect(
         () => {
-            Promise.all([/*getAllMessages(), */getProfile(), getMyGames(), getMyTournaments()]).then(([/*messageData, */profileData, myGameData, tournamentData]) => {
+            Promise.all([/*getAllMessages(), */getProfile(), getMyGames()/*, getMyTournaments()*/]).then(([/*messageData, */profileData, myGameData/*, tournamentData*/]) => {
                 // setMessages(messageData)
                 setProfileInfo(profileData)
                 setUpdate(profileData)
                 setMyGames(myGameData)
-                setMyTournaments(tournamentData)
+                // setMyTournaments(tournamentData)
             })
         }, []
     )

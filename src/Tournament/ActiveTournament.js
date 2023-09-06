@@ -744,6 +744,7 @@ export const ActiveTournament = () => {
                             setEditScores={setEditScores}
                             gameForApi={gameForApi}
                             updateGameForApi={updateGameForApi}
+                            resetGameForApi={resetGameForApi}
                         />
                         : ""}
                 </main>

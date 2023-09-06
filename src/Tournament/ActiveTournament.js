@@ -589,13 +589,11 @@ export const ActiveTournament = () => {
                         <EditPlayersModal
                             activeTournamentObj={activeTournament}
                             setCurrentTournament={setActiveTournament}
-                            // tournamentId={selectedTournament}
                             setEdit={setEditPlayers}
                             playedRounds={currentRound}
                             gamesFromThisRound={tournamentGames.filter(g => g.tournament_round === currentRound)}
                             previousOpponents={playerOpponentsReferenceObj}
                             scoreObject={scoreObj}
-
                             scoreCard={scoreCard}
                             currentByePlayer={byeGame.player_w}
                         />
@@ -609,12 +607,10 @@ export const ActiveTournament = () => {
                                 setSelectedTournament(0)
                                 setEditScores(false)
                                 updatePlayerOpponentsReferenceObj({})
-                                // setScoring(false)
                             }}>exit</button>
                             <button
                             className="progressionControlBtn controlBtnApprove"
                             onClick={() => {
-                                // modal.style.display = "flex";
                                 setShowResults(true)
                             }}>Results</button>
                     </div>
@@ -631,10 +627,8 @@ export const ActiveTournament = () => {
                                         const newPairings = createPairings('new', activeTournamentPlayers, playerOpponentsReferenceObj, currentRound, scoreObj, scoreCard, byeGame.player_w)
                                         tournamentCopy.pairings = tournamentCopy.pairings.concat(newPairings)
                                         tournamentCopy.rounds++
-                                        // console.log(tournamentCopy)
                                         tournamentCopy.competitors = tournamentCopy.competitors.map(c => { return c.id })
                                         tournamentCopy.guest_competitors = tournamentCopy.guest_competitors.map(gc => { return gc.id })
-                                        // console.log(tournamentCopy)
                                         updateTournament(tournamentCopy)
                                             .then(() => {
                                                 resetTournaments()

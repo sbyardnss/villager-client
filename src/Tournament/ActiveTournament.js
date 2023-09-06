@@ -507,7 +507,7 @@ export const ActiveTournament = () => {
         }
     }
     //populate create games button for digital tournaments
-    const scoringButtonOrNone = () => {
+    const newRoundButtonDigitalTournament = () => {
         if (activeTournament.in_person === false) {
             return (
                 <button className="controlBtnApprove progressionControlBtn" onClick={() => {
@@ -641,23 +641,45 @@ export const ActiveTournament = () => {
                             <button
                                 className="progressionControlBtn controlBtnApprove"
                                 onClick={() => {
-                                    // setEditScores(true)
-                                    // setEditScores(!editScores)
-                                    if (editScores === false) {
-                                        setViewTable(false)
-                                        setScoring(false)
-                                        setEditScores(true)
-                                    }
-                                    else {
-                                        setScoring(true)
-                                        setEditScores(false)
-                                    }
+                                    // if (editScores === false) {
+                                    //     setViewTable(false)
+                                    //     setScoring(false)
+                                    //     setEditScores(true)
+                                    // }
+                                    // else {
+                                    //     setScoring(true)
+                                    //     setEditScores(false)
+                                    // }
+                                    setScoring(true)
+                                    setViewTable(false)
+                                    setEditScores(false)
                                     
-                                }}>{scoring ? "edit scores" : "scoring"}</button>
+                                }}>scoring</button>
+                                
+                            : ""}
+                        {activeTournament.complete === false ?
+                            <button
+                                className="progressionControlBtn controlBtnApprove"
+                                onClick={() => {
+                                    // if (editScores === false) {
+                                    //     setViewTable(false)
+                                    //     setScoring(false)
+                                    //     setEditScores(true)
+                                    // }
+                                    // else {
+                                    //     setScoring(true)
+                                    //     setEditScores(false)
+                                    // }
+                                    setEditScores(true)
+                                    setScoring(false)
+                                    setViewTable(false)
+                                    
+                                }}>edit scores</button>
                                 
                             : ""}
                             
-                        {scoringButtonOrNone()}
+                        {newRoundButtonDigitalTournament()}
+
                         {activeTournament.complete === false ?
                             <button className="progressionControlBtn controlBtnApprove" onClick={() => {
                                 const currentRoundGames = tournamentGames.filter(g => g.tournament_round === currentRound)
@@ -672,13 +694,16 @@ export const ActiveTournament = () => {
                             : ""}
                         {activeTournament.complete === false ?
                             <button className="progressionControlBtn controlBtnApprove" onClick={() => {
-                                if (editScores) {
-                                    setEditScores(false)
-                                }
-                                if (viewTable === true) {
-                                    setScoring(true)
-                                }
-                                setViewTable(!viewTable)
+                                // if (editScores) {
+                                //     setEditScores(false)
+                                // }
+                                // if (viewTable === true) {
+                                //     setScoring(true)
+                                // }
+                                // setViewTable(!viewTable)
+                                setViewTable(true)
+                                setEditScores(false)
+                                setScoring(false)
                             }}>View Table</button>
                             : ""}
                         {/* <button

@@ -1001,6 +1001,14 @@
         padding: .25em;
         width: 100%;
     }
+    .editScoresTrophy {
+        position: relative;
+        top: -20%;
+        z-index: 10;
+        height: 1em;
+        background-color: black;
+        border-radius: 4px;
+    }
 
     /* matchup table */
     #matchupsContainer {

@@ -1,6 +1,7 @@
 import { useContext } from "react"
 import { TournamentContext } from "./TournamentProvider"
 import { alterGame } from "../ServerManager"
+import trophyIcon from "../images/small_trophy_with_background.png"
 
 
 export const EditScores = ({ allPlayersArr, handleGameForApiUpdate, setEditScores, gameForApi }) => {
@@ -8,14 +9,17 @@ export const EditScores = ({ allPlayersArr, handleGameForApiUpdate, setEditScore
     const sortedTournamentGames = tournamentGames.sort((a, b) => { return a.id - b.id })
     return (
         <section id="tournamentEditSection">
+            
             {/* <button className="buttonStyleReject" id="cancelEditBtn" onClick={() => setEditScores(false)}>cancel edit</button> */}
             <section id="previousMatchups">
                 {
                     sortedTournamentGames.map(game => {
-                        // const whiteIdentifier = findIdentifier(game.player_w)
+                        const whiteIdentifier = findIdentifier(game.player_w)
                         // const isWhiteGuest = isNaN(parseInt(whiteIdentifier)) ? true : false
-                        // const blackIdentifier = findIdentifier(game.player_b)
+                        const blackIdentifier = findIdentifier(game?.player_b)
                         // const isBlackGuest = isNaN(parseInt(blackIdentifier)) ? true : false
+                        // const winnerIdentifier = findIdentifier(game?.winner)
+                        
                         const white = allPlayersArr.find(player => {
                             if (game.player_w.guest_id) {
                                 return player.guest_id === game.player_w.guest_id
@@ -32,6 +36,7 @@ export const EditScores = ({ allPlayersArr, handleGameForApiUpdate, setEditScore
                                 return player.id === game.player_b?.id
                             }
                         })
+                        
                         // let white = {}
                         // let black = {}
                         // if (isWhiteGuest === true) {
@@ -54,6 +59,7 @@ export const EditScores = ({ allPlayersArr, handleGameForApiUpdate, setEditScore
                                     <div>
                                         <div className="setCustomFont">Round {game.tournament_round}</div>
                                     </div>
+                                    {/* {winnerIdentifier === whiteIdentifier ? <img className="editScoresTrophy" src={trophyIcon} />: ""} */}
                                     <div className="editMatchup">
                                         <div className={gameForApi.id === game.id && gameForApi.winner === whiteTargetForIndicator ? "selectedWhitePiecesMatchup" : "whitePiecesMatchup"}
                                             id="whitePieces"
@@ -70,7 +76,7 @@ export const EditScores = ({ allPlayersArr, handleGameForApiUpdate, setEditScore
                                             id="blackPieces"
                                             onClick={(evt) => {
                                                 handleGameForApiUpdate(evt.target.id, white, black, game)
-                                            }}>{black?.full_name}</div>
+                                            }}>{black?.full_name} </div>
                                         <button onClick={() => {
                                             alterGame(gameForApi)
                                                 .then(() => resetTournamentGames())

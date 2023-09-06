@@ -2,7 +2,6 @@
 
 export const TournamentTable = ({ activeTournamentRounds, currentRound, scoreObj, allPlayersArr, scoreCard, byePlayer}) => {
 
-    console.log(byePlayer)
     //sorting table players by score    
     const sortAllPlayersArr = (playersArr) => {
         return playersArr.sort((a, b) => {

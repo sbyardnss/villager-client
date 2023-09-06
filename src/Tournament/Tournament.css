@@ -934,6 +934,14 @@
         width: 95%;
         justify-content: space-between;
     }
+    #activeTournamentTitle {
+        width: 8em;
+        white-space: nowrap;
+        overflow: scroll;
+        border: 1px solid #f4d35e;
+        border-radius: 4px;
+        padding: .2em;
+    }
 
     #tournamentProgressionControls {
         display: flex;

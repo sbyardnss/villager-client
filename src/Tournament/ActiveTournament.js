@@ -1,9 +1,9 @@
-import { useState, useEffect, useContext, useRef } from "react"
+import { useState, useEffect, useContext } from "react"
 import { TournamentContext } from "./TournamentProvider"
-import { alterGame, endTournament, getAllTournaments, getScoreCard, sendNewGame, updateTournament } from "../ServerManager"
+import { sendNewGame, updateTournament } from "../ServerManager"
 import "./Tournament.css"
 import { EditPlayersModal } from "./EditPlayersModal"
-import { Swiss } from "tournament-pairings"
+// import { Swiss } from "tournament-pairings"
 import { TournamentTable } from "./TournamentTable"
 import { EditScores } from "./EditScores"
 import { ResultsModal } from "./ResultsModal"
@@ -11,7 +11,7 @@ import { EndTournamentModal } from "./EndTournamentModal"
 
 
 export const ActiveTournament = () => {
-    const { tournaments, setTournaments, playersAndGuests, tournamentGames, selectedTournament, setSelectedTournament, resetTournamentGames, editPlayers, setEditPlayers, resetTournaments, myChessClubs, createPairings } = useContext(TournamentContext)
+    const { tournaments, playersAndGuests, tournamentGames, selectedTournament, setSelectedTournament, resetTournamentGames, editPlayers, setEditPlayers, resetTournaments, myChessClubs, createPairings, selectedClub, setSelectedClub } = useContext(TournamentContext)
     //initial setup state variables
     const [activeTournament, setActiveTournament] = useState({})
     const [activeTournamentPlayers, setActiveTournamentPlayers] = useState([])
@@ -19,6 +19,7 @@ export const ActiveTournament = () => {
 
     //managing tournament state variables
     const [currentRound, setCurrentRound] = useState(0)
+    const [scoring, setScoring] = useState(true)
     const [editScores, setEditScores] = useState(false)
     const [viewTable, setViewTable] = useState(false)
     const [showResults, setShowResults] = useState(false)
@@ -69,8 +70,10 @@ export const ActiveTournament = () => {
         () => {
             const selectedTournamentObj = tournaments?.find(t => t.id === selectedTournament)
             setActiveTournament(selectedTournamentObj)
+            setSelectedClub(selectedTournamentObj.club.id)
         }, [selectedTournament, tournaments]
     )
+
     useEffect(
         () => {
             if (activeTournament.complete === true) {
@@ -398,6 +401,7 @@ export const ActiveTournament = () => {
                                 {whiteBye?.full_name} has bye
                             </div>
                             : ""}
+                        {/* {(tournamentGames.filter(g => g.tournament_round === currentRound).length === currentRoundMatchups.length) || (tournamentGames.filter(g => g.tournament_round === currentRound).length === currentRoundMatchups.length-1 && byeMatchup) ? <div className="setCustomFont">all games played. start new round</div>: ""} */}
 
                         {
                             currentRoundMatchups?.map((matchup, index) => {
@@ -416,13 +420,7 @@ export const ActiveTournament = () => {
                                     }
                                     return tg.tournament_round === currentRound && gamePlayerBIndicator === blackTargetForIndicator && gamePlayerWIndicator === whiteTargetForIndicator
                                 })
-                                // if (!matchup) {
-                                //     return (
-                                //         <div>
-                                //             All match ups played. Start new round.
-                                //         </div>
-                                //     )
-                                // }
+
                                 if (black !== undefined && white !== undefined && !matchingGame?.winner && matchingGame?.win_style !== 'draw' && playerOpponentsReferenceObj[whiteTargetForIndicator]?.indexOf(blackTargetForIndicator) !== playerOpponentsReferenceObj[whiteTargetForIndicator]?.length + 1) {
                                     return (
                                         <div key={`${matchup.round} -- ${matchup.match} -- ${index}`}
@@ -510,7 +508,7 @@ export const ActiveTournament = () => {
         }
     }
     //populate create games button for digital tournaments
-    const scoringButtonOrNone = () => {
+    const newRoundButtonDigitalTournament = () => {
         if (activeTournament.in_person === false) {
             return (
                 <button className="controlBtnApprove progressionControlBtn" onClick={() => {
@@ -563,18 +561,9 @@ export const ActiveTournament = () => {
                 }}>create round games</button>
             )
         }
-        // resetTournamentGames()
-        // else {
-        //     return null
-        // }
+
     }
-    // console.log(Swiss([
-    //     { id: 1, score: 2, avoid: [3, 'g1'], receivedBye: true },
-    //     { id: 2, score: 2, avoid: ['g1', 3, 4], receivedBye: false },
-    //     { id: 3, score: 2, avoid: [1, 2], receivedBye: true },
-    //     { id: 4, score: 0, avoid: ['g1', 2], receivedBye: true },
-    //     { id: 'g1', score: 2, avoid: [2, 4, 1], receivedBye: false }
-    // ], 1))
+
     if (selectedTournament) {
         if (activeTournament && activeTournamentPlayers) {
             const endTournamentModal = document.getElementById('endTournamentModal')
@@ -601,19 +590,17 @@ export const ActiveTournament = () => {
                         <EditPlayersModal
                             activeTournamentObj={activeTournament}
                             setCurrentTournament={setActiveTournament}
-                            // tournamentId={selectedTournament}
                             setEdit={setEditPlayers}
                             playedRounds={currentRound}
                             gamesFromThisRound={tournamentGames.filter(g => g.tournament_round === currentRound)}
                             previousOpponents={playerOpponentsReferenceObj}
                             scoreObject={scoreObj}
-
                             scoreCard={scoreCard}
                             currentByePlayer={byeGame.player_w}
                         />
                     </div> : ""}
                     <div id="tournamentHeader">
-                        <div className="setColor setTournamentFontSize">{activeTournament.title}</div>
+                        <div id="activeTournamentTitle" className="setColor setTournamentFontSize">{activeTournament.title}</div>
                         <button
                             className="progressionControlBtn buttonStyleReject"
                             onClick={() => {
@@ -621,8 +608,12 @@ export const ActiveTournament = () => {
                                 setSelectedTournament(0)
                                 setEditScores(false)
                                 updatePlayerOpponentsReferenceObj({})
-                                // setScoring(false)
                             }}>exit</button>
+                            <button
+                            className="progressionControlBtn controlBtnApprove"
+                            onClick={() => {
+                                setShowResults(true)
+                            }}>Results</button>
                     </div>
                     <div id="tournamentProgressionControls">
                         {activeTournament.complete === false ?
@@ -634,67 +625,19 @@ export const ActiveTournament = () => {
                                             sendNewGame(byeGame)
                                         }
                                         const tournamentCopy = { ...activeTournament }
-                                        // const playersArg = []
-                                        // //need to filter by active tournament players. currently creating matchups for players that have left
-
-                                        // for (const opponentRef in playerOpponentsReferenceObj) {
-                                        //     // console.log('first')
-                                        //     let identifier = null
-                                        //     let isActive = true
-                                        //     if (isNaN(parseInt(opponentRef))) {
-                                        //         identifier = opponentRef
-                                        //         if (!activeTournamentPlayers.find(ap => ap.guest_id === identifier)) {
-                                        //             isActive = false
-                                        //         }
-                                        //     }
-                                        //     else {
-                                        //         identifier = parseInt(opponentRef)
-                                        //         if (!activeTournamentPlayers.find(ap => ap.id === identifier)) {
-                                        //             isActive = false
-                                        //         }
-                                        //     }
-                                        //     if (isActive) {
-                                        //         // console.log('second')
-                                        //         const refCopy = { ...playerOpponentsReferenceObj }
-                                        //         const playerRefObj = {
-                                        //             id: identifier,
-                                        //             //added below to account for scores
-                                        //             score: scoreObj[identifier],
-                                        //             avoid: refCopy[identifier].filter(ref => ref !== 'bye')
-                                        //         }
-                                        //         if (playerOpponentsReferenceObj[identifier].includes('bye')) {
-                                        //             // console.log(identifier + '--third')
-                                        //             console.log(identifier)
-                                        //             console.log(playerOpponentsReferenceObj[identifier])
-                                        //             playerRefObj.receivedBye = true
-                                        //             //added below to remove byes from score parameter
-                                        //             if (playerRefObj.score > 0) {
-                                        //                 playerRefObj.score--
-                                        //             }
-                                        //             console.log(playerRefObj)
-                                        //         }
-                                        //         else {
-                                        //             playerRefObj.receivedBye = false
-                                        //         }
-                                        //         playersArg.push(playerRefObj)
-                                        //     }
-                                        // }
-                                        // console.log(playersArg)
-                                        // const newPairings = Swiss(playersArg, currentRound + 1)
-
-
                                         const newPairings = createPairings('new', activeTournamentPlayers, playerOpponentsReferenceObj, currentRound, scoreObj, scoreCard, byeGame.player_w)
                                         tournamentCopy.pairings = tournamentCopy.pairings.concat(newPairings)
                                         tournamentCopy.rounds++
-                                        // console.log(tournamentCopy)
                                         tournamentCopy.competitors = tournamentCopy.competitors.map(c => { return c.id })
                                         tournamentCopy.guest_competitors = tournamentCopy.guest_competitors.map(gc => { return gc.id })
-                                        // console.log(tournamentCopy)
                                         updateTournament(tournamentCopy)
                                             .then(() => {
                                                 resetTournaments()
                                                 resetTournamentGames()
                                             })
+                                        setViewTable(false)
+                                        setEditScores(false)
+                                        setScoring(true)
                                     }
                                 }}>New Round</button>
                             : ""}
@@ -702,11 +645,45 @@ export const ActiveTournament = () => {
                             <button
                                 className="progressionControlBtn controlBtnApprove"
                                 onClick={() => {
-                                    setEditScores(true)
-                                    // setScoring(false)
-                                }}>edit scores</button>
+                                    // if (editScores === false) {
+                                    //     setViewTable(false)
+                                    //     setScoring(false)
+                                    //     setEditScores(true)
+                                    // }
+                                    // else {
+                                    //     setScoring(true)
+                                    //     setEditScores(false)
+                                    // }
+                                    setScoring(true)
+                                    setViewTable(false)
+                                    setEditScores(false)
+                                    
+                                }}>scoring</button>
+                                
                             : ""}
-                        {scoringButtonOrNone()}
+                        {activeTournament.complete === false ?
+                            <button
+                                className="progressionControlBtn controlBtnApprove"
+                                onClick={() => {
+                                    // if (editScores === false) {
+                                    //     setViewTable(false)
+                                    //     setScoring(false)
+                                    //     setEditScores(true)
+                                    // }
+                                    // else {
+                                    //     setScoring(true)
+                                    //     setEditScores(false)
+                                    // }
+                                    setEditScores(true)
+                                    setScoring(false)
+                                    setViewTable(false)
+                                    
+                                }}>edit scores</button>
+                                
+                            : ""}
+                            
+                        {newRoundButtonDigitalTournament()}
+
                         {activeTournament.complete === false ?
                             <button className="progressionControlBtn controlBtnApprove" onClick={() => {
                                 const currentRoundGames = tournamentGames.filter(g => g.tournament_round === currentRound)
@@ -721,21 +698,32 @@ export const ActiveTournament = () => {
                             : ""}
                         {activeTournament.complete === false ?
                             <button className="progressionControlBtn controlBtnApprove" onClick={() => {
-                                setViewTable(!viewTable)
+                                // if (editScores) {
+                                //     setEditScores(false)
+                                // }
+                                // if (viewTable === true) {
+                                //     setScoring(true)
+                                // }
+                                // setViewTable(!viewTable)
+                                setViewTable(true)
+                                setEditScores(false)
+                                setScoring(false)
                             }}>View Table</button>
                             : ""}
-                        <button
+                        {/* <button
                             className="progressionControlBtn controlBtnApprove"
                             onClick={() => {
                                 // modal.style.display = "flex";
                                 setShowResults(true)
-                            }}>Results</button>
+                            }}>Results</button> */}
                     </div>
                     <div className="setColor setTournamentFontSize">
                         Round {currentRound}
                     </div>
                     <section id="matchupsContainer">
-                        {submitResultsOrNull()}
+                        {scoring ?
+                            submitResultsOrNull()
+                            : ""}
                     </section>
                     <article id="tableCenter">
                         {viewTable ?
@@ -756,6 +744,7 @@ export const ActiveTournament = () => {
                             setEditScores={setEditScores}
                             gameForApi={gameForApi}
                             updateGameForApi={updateGameForApi}
+                            resetGameForApi={resetGameForApi}
                         />
                         : ""}
                 </main>

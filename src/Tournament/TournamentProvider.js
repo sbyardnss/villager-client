@@ -151,54 +151,7 @@ export const TournamentProvider = (props) => {
         }
     }
 
-    // const createPairings1 = (tournamentPlayers, oppRefObj, curRound, scoreObject, scoreCard, currentByePlayer) => {
-    //     const playerArgs = []
-    //     //check length of active players
-    //     // console.log(tournamentPlayers.length %2)
-    //     if (tournamentPlayers.length % 2 !== 0) {
-    //         //odd, then find player for bye
-    //         const scoreCardArr = []
-    //         for (const playerId in scoreCard) {
-    //             if (!scoreCard[playerId].includes('bye') && parseInt(playerId) !== currentByePlayer && playerId !== currentByePlayer) {
-    //                 scoreCardArr.push([parseInt(playerId) || playerId, scoreCard[playerId].filter(s => s !== 'none' && s !== 1)])
-    //             }
-    //         }
-    //         scoreCardArr.sort((a, b) => b[1].length - a[1].length)
-    //         //current round not accounted for in scorecard
 
-    //         for (const potentialByePlayerArr of scoreCardArr) {
-    //             //create args for other players and check if the new pairings will work
-    //             for (const oppRef in oppRefObj) {
-    //                 if (parseInt(oppRef) !== potentialByePlayerArr[0] && oppRef !== potentialByePlayerArr[0]) {
-    //                     const playerArgObj = playerArgCreator(oppRef, oppRefObj, scoreObject, tournamentPlayers)
-    //                     playerArgs.push(playerArgObj)
-    //                 }
-    //             }
-    //             const newMatchupsSansBye = Swiss(playerArgs, curRound + 1)
-    //             if (newMatchupsSansBye && !newMatchupsSansBye.filter(m => m.player2 === null).length) {
-    //                 const byePairing = { round: curRound + 1, match: tournamentPlayers.length / 2 + .5, player1: parseInt(potentialByePlayerArr[0]) || potentialByePlayerArr[0], player2: null }
-    //                 const pairings = newMatchupsSansBye.concat(byePairing)
-    //                 return pairings
-    //             }
-    //             else {
-    //                 if (scoreCardArr.indexOf(potentialByePlayerArr) === scoreCardArr.length - 1) {
-    //                     window.alert('cannot create anymore matchups without double byes or double opponents')
-    //                 }
-    //             }
-    //         }
-    //     }
-    //     else {
-    //         //even, create with swiss
-    //         for (const oppRef in oppRefObj) {
-    //             const playerArgObj = playerArgCreator(oppRef, oppRefObj, scoreObject, tournamentPlayers, curRound)
-    //             playerArgs.push(playerArgObj)
-    //         }
-    //         const pairings = Swiss(playerArgs, curRound + 1)
-    //         if (pairings) {
-    //             return pairings
-    //         }
-    //     }
-    // }
     const findIdentifier = (playerObj) => {
         return playerObj?.guest_id ? playerObj?.guest_id : playerObj?.id
     }
@@ -227,7 +180,6 @@ export const TournamentProvider = (props) => {
             scoreCardArr.sort((a, b) => b[1].length - a[1].length)
             // iterate potential bye players and find a pairing set that will work
             for (const potentialByePlayerArr of scoreCardArr) {
-                // for (const oppRef in opponentReferenceObj) {
                 for (const playerIdentifier of playerIdentifierArr) {
                     if (parseInt(playerIdentifier) !== potentialByePlayerArr[0] && playerIdentifier !== potentialByePlayerArr[0]) {
                         const playerArgObj = playerArgCreator(playerIdentifier, opponentReferenceObj, scoreObject, tournamentPlayers)

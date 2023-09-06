@@ -401,6 +401,7 @@ export const ActiveTournament = () => {
                                 {whiteBye?.full_name} has bye
                             </div>
                             : ""}
+                        {/* {(tournamentGames.filter(g => g.tournament_round === currentRound).length === currentRoundMatchups.length) || (tournamentGames.filter(g => g.tournament_round === currentRound).length === currentRoundMatchups.length-1 && byeMatchup) ? <div className="setCustomFont">all games played. start new round</div>: ""} */}
 
                         {
                             currentRoundMatchups?.map((matchup, index) => {
@@ -634,6 +635,9 @@ export const ActiveTournament = () => {
                                                 resetTournaments()
                                                 resetTournamentGames()
                                             })
+                                        setViewTable(false)
+                                        setEditScores(false)
+                                        setScoring(true)
                                     }
                                 }}>New Round</button>
                             : ""}

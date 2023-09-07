@@ -1,0 +1,1350 @@
+#tournamentHeader {
+    display: flex;
+    width: 90%;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: .5em;
+}
+
+.controlSpread {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    /* width: 30em; */
+    /* margin: 1em 0; */
+}
+
+#editPlayersModal {
+    position: fixed;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    top: 15%;
+    width: 20em;
+    height: fit-content;
+    /* height: 30em; */
+    /* min-height: 20em; */
+    padding: .5em;
+    border: 1px solid #694873;
+    border-radius: 6px;
+    backdrop-filter: blur(30px);
+    background-color: #20202099;
+    z-index: 6;
+    transition: height .2s;
+}
+
+#editPlayersContainer {
+    width: 100%;
+}
+
+#editPlayersHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+@media screen and (min-width:641px) {
+    #tournamentContainer {
+        margin-top: 120px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+    }
+
+    .setColor {
+        color: rgb(231, 231, 231);
+    }
+
+    .setTournamentFontSize {
+        font-size: x-large;
+        font-weight: 200;
+    }
+
+    .controlBtnApprove {
+        background-color: #694873;
+        color: rgb(231, 231, 231);
+        border: none;
+        border-radius: 2px;
+        cursor: pointer;
+        transition: .2s cubic-bezier(0.215, 0.61, 0.355, 1);
+    }
+
+    /* finish tournament modal */
+    #resultsModal {
+        display: none;
+        border: 1px solid #f4d35e;
+        border-radius: 8px;
+        color: rgb(231, 231, 231);
+        position: absolute;
+        top: 20%;
+        backdrop-filter: blur(30px);
+        background-color: #20202099;
+        width: 15em;
+        height: fit-content;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        font-size: larger;
+        padding: .5em;
+    }
+
+    .resultsModalListItem {
+        width: 6em;
+        display: flex;
+        justify-content: space-between;
+    }
+
+    #modalBtns {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+    }
+
+
+    /* end Tournament modal */
+    #endTournamentModal {
+        display: none;
+        border: 1px solid #f4d35e;
+        border-radius: 8px;
+        color: rgb(231, 231, 231);
+        position: absolute;
+        top: 20%;
+        backdrop-filter: blur(30px);
+        background-color: #20202099;
+        width: 12.8em;
+        height: 10em;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        font-size: x-large;
+        /* padding: .5em; */
+
+    }
+
+    #endTournamentBtnBlock {
+        display: flex;
+        margin-top: 2em;
+        width: 60%;
+        justify-content: space-around;
+    }
+
+    /* tournament setup */
+    #createTournamentButton {
+        width: 12em;
+        font-size: larger;
+        border: none;
+        border-radius: 4px;
+        padding: .5em;
+        background-color: #694873;
+        cursor: pointer;
+    }
+
+    #createTournamentButton:hover {
+        background-color: rgb(180, 100, 160);
+
+    }
+
+    #newTournamentForm {
+        border: 2px solid rgb(40, 40, 40);
+        border-radius: 8px;
+        background-image: url("../images/closup_dark_board.jpeg");
+        background-size: 100%;
+        background-position: 20%;
+        background-repeat: no-repeat;
+        width: 80%;
+        margin-bottom: 1em;
+        padding: 1em;
+    }
+
+    #newTournamentClubNameHeader {
+        display: flex;
+        justify-content: center;
+        margin: .5em 0;
+        background-color: #694873;
+        border: 1px solid rgb(143, 121, 0);
+        border-radius: 4px;
+        padding: .25em;
+        font-size: large;
+    }
+
+    #clubSelectionSection {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    #clubSelectionList {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 90%;
+        padding: .25em;
+        height: 20em;
+        overflow: scroll;
+        border: 1px solid #694873;
+        border-radius: 4px;
+    }
+
+    .selectedClubSelectionTabItem {
+        display: flex;
+        align-items: center;
+        background-color: #5a7c9e;
+        margin: .5em;
+        border-radius: 4px;
+        height: 1.5em;
+        padding: .25em;
+        width: 90%;
+        cursor: pointer;
+    }
+
+    .clubSelectionTabItem {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #694873;
+        margin: .5em;
+        border-radius: 4px;
+        height: 1.5em;
+        padding: .25em;
+        width: 90%;
+        cursor: pointer;
+    }
+
+    .clubSelectionTabItem:hover {
+        background-color: rgb(180, 100, 160);
+
+    }
+
+    #competitorSelectionSplit {
+        display: flex;
+        flex-direction: column;
+        width: 40%;
+    }
+
+    #tournamentPlayerSelectionSection {
+        display: flex;
+        justify-content: space-around;
+        list-style: none;
+        margin-bottom: 1em;
+    }
+
+    #potentialLabel {
+        font-size: x-large;
+        font-weight: 200;
+
+    }
+
+    #selectedLabel {
+        font-size: x-large;
+        font-weight: 200;
+    }
+
+    #tournamentPotentialCompetitorSelection {
+        border: 1px solid #694873;
+        border-radius: 4px;
+        padding: .5em;
+        backdrop-filter: blur(2px);
+        height: 14em;
+        overflow: scroll;
+
+    }
+
+    #tournamentSelectedCompetitors {
+        backdrop-filter: blur(2px);
+        height: 14em;
+        overflow: scroll;
+
+    }
+
+    #tournamentSelectedCompetitors {
+        border: 1px solid #4a9392;
+        border-radius: 4px;
+        padding: .5em;
+        /* color: rgb(231, 231, 231); */
+    }
+
+    .newTournamentPlayerListItem {
+        color: rgb(231, 231, 231);
+        cursor: pointer;
+        padding: .2em;
+        border-radius: 2px;
+    }
+
+    .newTournamentPlayerListItem:hover {
+        background-color: rgb(0, 100, 100);
+    }
+
+    #playerSearch {
+        margin: 0 0 1em 2em;
+    }
+
+    #playerSearchInput {
+        width: 11em;
+        margin-right: 1em;
+    }
+
+    #resetPlayerSearchBtn {
+        width: 7.5em;
+    }
+
+    #createGuestDiv {
+        margin: 1em 0 1em 2em;
+        /* width: 15.5em; */
+        display: flex;
+        /* justify-content: space-between; */
+    }
+
+    #newGuestInput {
+        width: 11em;
+        margin-right: 1em;
+    }
+
+    #newGuestSubmitBtn {
+        background-color: #0e4a78;
+        border: none;
+        border-radius: 2px;
+        width: 7.5em;
+    }
+
+    #newGuestSubmitBtn:hover {
+        background-color: #3280bc;
+
+    }
+
+    #tournamentParameters {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 2em;
+    }
+
+    #tournamentSubmit {
+        height: 6em;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+    }
+
+    #tournamentParameterControls {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        height: 6em;
+    }
+
+    /* tournament list */
+    #activeTournamentsHeader {
+        width: fit-content;
+        color: rgb(231, 231, 231);
+        margin: 0;
+
+    }
+
+
+    #activeTournamentsSection {
+        width: 80%;
+        padding: 1em;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin: 0;
+        /* border: 1px solid rgb(143, 121, 0); */
+        border-radius: 6px;
+    }
+
+    #activeTournamentsList {
+        width: 100%;
+        height: 12em;
+        margin-top: 1em;
+        overflow: scroll;
+        list-style: none;
+        padding: .5em;
+        border: 1px solid #694873;
+        border-radius: 6px;
+    }
+
+
+
+    #pastTournamentList {
+        width: 100%;
+        height: 8.5em;
+        overflow: scroll;
+        list-style: none;
+        margin-top: 2em;
+        padding: .5em;
+        border: 1px solid #4a9392;
+        border-radius: 6px;
+    }
+
+    .pastTournamentsBtn {
+        align-self: flex-start;
+        margin-bottom: 1em;
+        margin-top: 2em;
+        width: fit-content;
+        font-size: medium;
+        border: none;
+        border-radius: 4px;
+        padding: .5em;
+        background-color: #694873;
+        cursor: pointer;
+
+    }
+
+    .tournamentListItem {
+        color: rgb(231, 231, 231);
+        cursor: pointer;
+        padding: .5em;
+        border: 1px solid rgb(143, 121, 0);
+        border-radius: 2px;
+        margin-bottom: .25em;
+    }
+
+    .activeTournamentListItem:hover {
+        background-color: aqua;
+    }
+
+    #digitalTournamentCheckbox {
+        cursor: pointer;
+    }
+
+    /* tournament progression controls for selected tournament */
+    #tournamentProgressionControls {
+        display: flex;
+        justify-content: space-between;
+        width: 30em;
+        margin: 1em 0;
+    }
+
+    /* #tournamentHeader {
+        display: flex;
+        width: 90%;
+        justify-content: space-between;
+    } */
+
+
+    .progressionControlBtn {
+        width: 8em;
+        /* font-size: medium; */
+
+    }
+
+    .progressionControlBtn:hover {
+        background-color: rgb(180, 100, 160);
+
+    }
+
+    /* scoring */
+    #tournamentScoringSection {
+        /* width: 100%; */
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .tournamentScoringMatchup {
+        display: flex;
+        justify-content: space-around;
+        padding: .25em;
+        width: 100%;
+    }
+
+    /* editing scores */
+    #tournamentEditSection {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        margin-top: 1em;
+
+    }
+
+    #previousMatchups {
+        /* width: 100%; */
+        display: flex;
+        flex-direction: column;
+    }
+
+    .editScoreListItem {
+        display: flex;
+        width: 100%;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .editMatchup {
+        display: flex;
+        justify-content: space-around;
+        padding: .25em;
+        width: 100%;
+    }
+
+    /* matchup table */
+    #matchupsContainer {
+        width: 80%;
+        margin: 1em 0;
+        display: flex;
+        justify-content: center;
+    }
+
+    .whitePiecesMatchup {
+        background-color: whitesmoke;
+        color: black;
+        font-weight: 500;
+        padding: .5em;
+        border-radius: 5px 0 5px 0;
+        border: 1px solid rgb(40, 40, 40);
+        text-align: center;
+        width: 10em;
+    }
+
+    .blackPiecesMatchup {
+        background-color: rgb(40, 40, 40);
+        color: whitesmoke;
+        font-weight: 500;
+        padding: .5em;
+        border-radius: 5px 0 5px 0;
+        text-align: center;
+        width: 10em;
+    }
+
+    .drawMatchupButton {
+        background-color: rgb(96, 219, 250);
+        font-weight: 500;
+        padding: .5em;
+        border-radius: 5px 0 5px 0;
+        text-align: center;
+        border: 1px solid rgb(40, 40, 40);
+        width: 6em;
+
+    }
+
+    /* tournament table */
+
+    #tournamentTable {
+        /* background-color: blanchedalmond; */
+        color: rgb(231, 231, 231);
+        border: 1px solid #f4d35e;
+        border-radius: 6px;
+        padding: 1em;
+    }
+
+    .roundHeader {
+        background-color: gray;
+        width: 2em;
+    }
+
+    .currentRoundHeader {
+        background-color: #934a67;
+        width: 2em;
+    }
+
+    /* .tournamentGameResult {
+        display: flex;
+        justify-content: center;
+    } */
+
+    .tournamentGameResultBye {
+        display: flex;
+        justify-content: center;
+    }
+}
+
+@media screen and (min-width:320px) and (max-width: 640px) {
+    #tournamentContainer {
+        margin-top: 80px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        /* width: 100%; */
+    }
+
+    .setColor {
+        color: rgb(231, 231, 231);
+    }
+
+    .setTournamentFontSize {
+        font-size: x-large;
+        font-weight: 200;
+    }
+
+    .controlBtnApprove {
+        background-color: #694873;
+        color: rgb(231, 231, 231);
+        /* height: 2em; */
+        border: none;
+        border-radius: 2px;
+        cursor: pointer;
+        transition: .2s cubic-bezier(0.215, 0.61, 0.355, 1);
+    }
+
+    /* tournament results modal */
+    #resultsModal {
+        display: flex;
+        border: 1px solid #f4d35e;
+        border-radius: 8px;
+        color: rgb(231, 231, 231);
+        position: absolute;
+        top: 15%;
+        backdrop-filter: blur(30px);
+        background-color: #20202099;
+        width: 15em;
+        height: fit-content;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        font-size: larger;
+        padding: .5em;
+        z-index: 10;
+    }
+
+    .resultsModalListItem {
+        width: 9em;
+        height: 1.5em;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .resultsHeader {
+        color: #f4d35e;
+    }
+
+    #modalBtns {
+        width: 100%;
+        display: flex;
+        justify-content: space-around;
+    }
+
+    #fullResults {
+        font-size: smaller;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: .5em;
+    }
+
+    #tieBreakResults {
+        display: flex;
+        width: 100%;
+        margin-top: 1em;
+        justify-content: space-between;
+    }
+
+    /* end Tournament modal */
+    #endTournamentModal {
+        display: flex;
+        border: 1px solid #f4d35e;
+        border-radius: 8px;
+        color: rgb(231, 231, 231);
+        position: absolute;
+        top: 40%;
+        backdrop-filter: blur(30px);
+        background-color: #20202099;
+        width: 12.8em;
+        height: 10em;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        font-size: x-large;
+        z-index: 6;
+        /* padding: .5em; */
+    }
+
+    #endTournamentBtnBlock {
+        display: flex;
+        margin-top: 2em;
+        width: 60%;
+        justify-content: space-around;
+    }
+
+    /* tournament setup */
+    #createTournamentButton {
+        width: 12em;
+        font-size: larger;
+        border: none;
+        border-radius: 4px;
+        padding: .5em;
+        background-color: #694873;
+        cursor: pointer;
+    }
+
+    #newTournamentForm {
+        /* display: flex;
+        flex-direction: column;
+        align-items: center; */
+        border: 2px solid rgb(40, 40, 40);
+        border-radius: 8px;
+        background-image: url("../images/closup_dark_board.jpeg");
+        /* background-size: 100%; */
+        background-size: cover;
+        background-position: 50%;
+        width: 80%;
+        /* margin-bottom: 1em; */
+        padding: 1em;
+    }
+
+    #newTournamentClubNameHeader {
+        display: flex;
+        justify-content: center;
+        margin: .5em 0;
+        background-color: #694873;
+        border: 1px solid rgb(143, 121, 0);
+        border-radius: 4px;
+        padding: .25em;
+        font-size: large;
+    }
+
+    #clubSelectionSection {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    #clubSelectionList {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 90%;
+        padding: .25em;
+        height: 20em;
+        overflow: scroll;
+        border: 1px solid #694873;
+        border-radius: 4px;
+    }
+
+    .selectedClubSelectionTabItem {
+        display: flex;
+        align-items: center;
+        background-color: #5a7c9e;
+        margin: .5em;
+        border-radius: 4px;
+        height: 1.5em;
+        padding: .25em;
+        width: 90%;
+        cursor: pointer;
+    }
+
+    .clubSelectionTabItem {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #694873;
+        margin: .5em;
+        border-radius: 4px;
+        height: 1.5em;
+        padding: .25em;
+        width: 90%;
+        cursor: pointer;
+
+    }
+
+    #competitorSelectionSplit {
+        display: flex;
+        flex-direction: column;
+        width: 45%;
+        /* border: 1px solid #694873; */
+    }
+
+    #tournamentPlayerSelectionSection {
+        display: flex;
+        justify-content: space-around;
+        list-style: none;
+        margin-bottom: 1em;
+    }
+
+    #potentialLabel {
+        font-size: x-large;
+        font-weight: 200;
+
+    }
+
+    #selectedLabel {
+        font-size: x-large;
+        font-weight: 200;
+    }
+
+    #tournamentPotentialCompetitorSelection {
+        border: 1px solid #694873;
+        border-radius: 4px;
+        padding: .5em;
+        backdrop-filter: blur(2px);
+        height: 10em;
+        overflow: scroll;
+
+    }
+
+    #tournamentSelectedCompetitors {
+        backdrop-filter: blur(2px);
+        height: 10em;
+        overflow: scroll;
+
+    }
+
+    #tournamentSelectedCompetitors {
+        border: 1px solid #4a9392;
+        border-radius: 4px;
+        padding: .5em;
+        /* color: rgb(231, 231, 231); */
+    }
+
+    .newTournamentPlayerListItem {
+        color: rgb(231, 231, 231);
+        margin-bottom: .25em;
+        padding: .2em;
+        border-radius: 2px;
+        cursor: pointer;
+    }
+
+    .newTournamentPlayerListItem:hover {
+        background-color: rgb(0, 100, 100);
+    }
+
+    #tournamentParameters {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        /* padding: 0 2em; */
+    }
+
+    #playerSearch {
+        margin: 1em 0;
+        display: flex;
+        justify-content: space-between;
+    }
+
+    #createGuestDiv {
+        margin: 1em 0;
+        display: flex;
+        justify-content: space-between;
+    }
+
+    #newGuestInput {
+        width: 11em;
+    }
+
+    #newGuestSubmitBtn {
+        background-color: #0e4a78;
+        border: none;
+        border-radius: 2px;
+        width: 8.5em;
+    }
+
+    #newGuestSubmitBtn:hover {
+        background-color: #3280bc;
+    }
+
+    #playerSearchInput {
+        width: 16em;
+    }
+
+    #tournamentSubmit {
+        height: 6em;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+    }
+
+    .tournamentFormDropdownSelection {
+        width: 100%;
+    }
+
+    #tournamentParameterControls {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        height: 6em;
+        width: 10em;
+    }
+
+
+    /* tournament list */
+    #activeTournamentsHeader {
+        width: fit-content;
+        color: rgb(231, 231, 231);
+        margin: 0;
+    }
+
+    #activeTournamentsSection {
+        width: 80%;
+        padding: 1em;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin: 0;
+        /* border: 1px solid rgb(143, 121, 0); */
+        border-radius: 6px;
+    }
+
+    #activeTournamentsList {
+        width: 100%;
+        height: 12em;
+        margin-top: 1em;
+        overflow: scroll;
+        list-style: none;
+        padding: .5em;
+        border: 1px solid #694873;
+        border-radius: 6px;
+    }
+
+
+
+    #pastTournamentList {
+        width: 100%;
+        height: 8.5em;
+        overflow: scroll;
+        list-style: none;
+        /* margin-top: 1em; */
+        padding: .5em;
+        border: 1px solid #4a9392;
+        border-radius: 6px;
+    }
+
+    .pastTournamentsBtn {
+        align-self: flex-start;
+        margin-bottom: 1em;
+        margin-top: 2em;
+        width: fit-content;
+        font-size: medium;
+        border: none;
+        border-radius: 4px;
+        padding: .5em;
+        background-color: #694873;
+        cursor: pointer;
+    }
+
+    .tournamentListItem {
+        color: rgb(231, 231, 231);
+        cursor: pointer;
+        padding: .5em;
+        border: 1px solid rgb(143, 121, 0);
+        border-radius: 2px;
+        margin-bottom: .25em;
+    }
+
+    .activeTournamentListItem:hover {
+        background-color: aqua;
+    }
+
+    #digitalTournamentCheckbox {
+        cursor: pointer;
+    }
+
+    /* tournament progression controls for selected tournament */
+    #tournamentHeader {
+        display: flex;
+        width: 95%;
+        justify-content: space-between;
+    }
+    #activeTournamentTitle {
+        width: 8em;
+        white-space: nowrap;
+        overflow: scroll;
+        border: 1px solid #f4d35e;
+        border-radius: 4px;
+        padding: .2em;
+    }
+
+    #tournamentProgressionControls {
+        display: flex;
+        justify-content: space-between;
+        width: 96%;
+        margin: 1em 0;
+    }
+
+    .progressionControlBtn {
+        width: 5em;
+        min-height: 3em;
+    }
+
+    /* scoring */
+    #tournamentScoringSection {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .tournamentScoringMatchup {
+        display: flex;
+        justify-content: space-evenly;
+        align-items: center;
+        padding: .25em;
+        width: 95%;
+    }
+
+    /* editing scores */
+    #tournamentEditSection {
+        width: 92%;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        /* margin: 2em 0; */
+        margin-bottom: 2em;
+
+    }
+
+    #previousMatchups {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .editScoreListItem {
+        display: flex;
+        width: 100%;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .editMatchup {
+        display: flex;
+        justify-content: space-around;
+        padding: .25em;
+        width: 100%;
+    }
+    .editScoresTrophy {
+        position: relative;
+        top: -20%;
+        z-index: 10;
+        height: 1em;
+        background-color: black;
+        border-radius: 4px;
+    }
+
+    /* matchup table */
+    #matchupsContainer {
+        width: 95%;
+        margin-bottom: 1em;
+        display: flex;
+        justify-content: center;
+    }
+
+    #scoringSubmit {
+        height: 3em;
+        margin: 0;
+    }
+
+    .whitePiecesMatchup {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: whitesmoke;
+        color: black;
+        font-weight: 500;
+        padding: .5em;
+        border-radius: 5px 0 5px 0;
+        border: 1px solid #694873;
+        height: 2em;
+        width: 5em;
+    }
+
+    .selectedWhitePiecesMatchup {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: rgb(115, 242, 176);
+        color: black;
+        font-weight: 500;
+        padding: .5em;
+        border-radius: 5px 0 5px 0;
+        border: 1px solid #694873;
+        height: 2em;
+        width: 5em;
+    }
+
+    .blackPiecesMatchup {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border: 1px solid #694873;
+        color: whitesmoke;
+        font-weight: 500;
+        padding: .5em;
+        border-radius: 5px 0 5px 0;
+        width: 5em;
+        text-align: center;
+        height: 2em;
+    }
+
+    .selectedBlackPiecesMatchup {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: rgb(103, 40, 117);
+        border: 1px solid #694873;
+        color: whitesmoke;
+        font-weight: 500;
+        padding: .5em;
+        border-radius: 5px 0 5px 0;
+        width: 5em;
+        text-align: center;
+        height: 2em;
+    }
+
+    .drawMatchupButton {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: rgb(96, 219, 250);
+        font-weight: 500;
+        padding: .5em;
+        border-radius: 5px 0 5px 0;
+        border: 1px solid rgb(40, 40, 40);
+        width: 3em;
+        height: 2em;
+    }
+
+    .selectedDrawMatchupButton {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: rgb(229, 96, 250);
+        font-weight: 500;
+        padding: .5em;
+        border-radius: 5px 0 5px 0;
+        border: 1px solid rgb(40, 40, 40);
+        width: 3em;
+        height: 2em;
+    }
+
+    /* tournament table */
+    #tableCenter {
+        display: flex;
+        justify-content: center;
+    }
+
+    #tournamentTableContainer {
+        display: flex;
+        /* justify-content: center; */
+        /* border: 1px solid #f4d35e; */
+        /* border-radius: 6px; */
+        /* padding: .5em; */
+        max-width: 20em;
+        overflow: scroll;
+        width: 90%;
+        margin-bottom: 1em;
+    }
+
+    #tournamentTable {
+        /* width:fit-content; */
+        width: 100%;
+        max-width: 20em;
+        color: rgb(231, 231, 231);
+        border-collapse: collapse;
+        table-layout: fixed;
+    }
+
+    thead th {
+
+        top: 0;
+        z-index: 2;
+    }
+
+    .sticky-col {
+        position: -webkit-sticky;
+        position: sticky;
+    }
+
+    .first-col {
+        max-width: 80px;
+        left: 0px;
+        background-color: black;
+    }
+
+    .scoreCell {
+        text-align: center;
+        width: 20px;
+        border: 1px solid #694873;
+        border-top: none;
+
+    }
+
+
+    tr {
+        height: 3rem;
+    }
+
+
+    tr>:first-child {
+        position: -webkit-sticky;
+        position: sticky;
+        left: 0;
+        max-width: 80px;
+        width: 80px;
+        z-index: 5;
+    }
+
+    tr>:last-child {
+        position: -webkit-sticky;
+        position: sticky;
+        right: 0%;
+        width: 50px;
+        text-align: center;
+        border-top: none;
+        border-bottom: none;
+        padding: 0 .25em;
+        z-index: 5;
+    }
+
+
+    .tablePlayerCell {
+        padding: .25em;
+        background: rgb(48, 48, 48);
+    }
+
+    .roundHeader {
+        background-color: gray;
+        width: 2em;
+    }
+
+    .currentRoundHeader {
+        background-color: #934a67;
+        width: 2em;
+    }
+
+    .tablePlayerRow {
+        border-collapse: collapse;
+    }
+
+    .totalScoreCell {
+        border: 1px solid #694873;
+        border-left: none;
+        border-right: none;
+        text-align: center;
+        background: rgb(48, 48, 48);
+
+    }
+
+    thead th:first-child {
+        background-color: #694873;
+    }
+
+    thead th:last-child {
+        background-color: #694873;
+    }
+
+    .tournamentGameResultBye {
+        display: flex;
+        justify-content: center;
+    }
+
+    /* edit players */
+    #editPlayersContainerInitial {
+        height: 100%;
+        width: 90%;
+        display: flex;
+        flex-direction: column;
+        /* justify-content: space-between; */
+        align-items: center;
+    }
+
+    #editPlayersInitialBtnBlock {
+        height: 70%;
+        margin-top: 2em;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+    }
+
+    .editPlayersInitialBtn {
+        width: 12em;
+        font-size: larger;
+        border: none;
+        border-radius: 4px;
+        padding: .5em;
+        background-color: #694873;
+        cursor: pointer;
+    }
+
+    /* #editPlayersModal {
+        position: fixed;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        top: 15%;
+        width: 20em;
+        height: 30em;
+        padding: .5em;
+        border: 1px solid #694873;
+        border-radius: 6px;
+        backdrop-filter: blur(30px);
+        background-color: #20202099;
+        z-index: 6;
+    } */
+
+    /* #editPlayersContainer {
+        width: 100%;
+    }
+
+    #editPlayersHeader {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    } */
+
+    #editPlayersToggleAndSubmitBtnBlock {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    #submitNewPlayersBtn {
+        width: 8.5em;
+    }
+}
+
+#gamesStartedBtnBlock {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    /* margin-bottom: 1em; */
+    padding: 1em;
+    height: 10em;
+}
+
+.gamesNotStartedBtn {
+    background-color: #694873;
+    color: rgb(231, 231, 231);
+    height: 4em;
+    font-size: large;
+    width: 70%;
+    border: none;
+    border-radius: 2px;
+    cursor: pointer;
+    transition: .2s cubic-bezier(0.215, 0.61, 0.355, 1);
+}
+
+.gamesNotStartedBtnActive {
+    background-color: #cf4d81;
+    color: rgb(231, 231, 231);
+    height: 4em;
+    font-size: large;
+    width: 70%;
+    border: none;
+    border-radius: 2px;
+    cursor: pointer;
+    transition: .2s cubic-bezier(0.215, 0.61, 0.355, 1);
+}
+
+.gamesStartedBtn {
+    background-color: #694873;
+    color: rgb(231, 231, 231);
+    height: 4em;
+    font-size: large;
+    width: 70%;
+    border: none;
+    border-radius: 2px;
+    cursor: pointer;
+    transition: .2s cubic-bezier(0.215, 0.61, 0.355, 1);
+}
+
+.gamesStartedBtnActive {
+    background-color: #cf4d81;
+    color: rgb(231, 231, 231);
+    height: 4em;
+    font-size: large;
+    width: 70%;
+    border: none;
+    border-radius: 2px;
+    cursor: pointer;
+    transition: .2s cubic-bezier(0.215, 0.61, 0.355, 1);
+}

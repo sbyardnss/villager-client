@@ -1,3 +1,160 @@
-#userListContainer {
-    margin-top: 80px;
+@media screen and (min-width: 641px) {
+    #userListContainer {
+        margin-top: 110px;
+        display: block
+    }
+
+    #userListTitle {
+        display: flex;
+        justify-content: center;
+        width: 100%;
+        color: rgb(231, 231, 231);
+        font-weight: 200;
+    }
+
+    #userList {
+        /* backdrop-filter: blur(10px);
+        background-color: #0d676775;
+        margin-left: auto;
+        margin-right: auto;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        list-style: none;
+        overflow: scroll;
+        height: fit-content;
+        max-height: 60vh;
+        width: 50%;
+        border: 1px solid grey;
+        border-radius: 10px;
+        padding: 1em;
+        box-shadow: rgba(255, 255, 255, 0.26) 0 1px 2px inset; */
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+        /* height: 20em; */
+        backdrop-filter: blur(10px);
+        /* background-color: #336b8775; */
+        background-image: url("../images/closup_dark_board.jpeg");
+        background-position: bottom;
+        background-size: 70% 100%;
+        background-repeat: no-repeat;
+        padding: 1em;
+        overflow: scroll;
+        list-style: none;
+    }
+
+    .userListItem {
+        border: 1px solid #694873;
+        border-radius: 6px;
+        margin-bottom: .25em;
+        /* background-color: rgb(80, 48, 109); */
+        color: whitesmoke;
+        padding: 1em;
+        width: 20em;
+        display: flex;
+        justify-content: space-between;
+        backdrop-filter: blur(30px);
+        font-family: 'Public Sans', sans-serif;
+        font-weight: 200;
+        font-size: larger;
+    }
+
+    .userListFriendItem {
+        border: 1px solid #4a9392;
+        border-radius: 6px;
+        margin-bottom: .25em;
+        /* background-color: rgb(61, 108, 111); */
+        color: whitesmoke;
+        padding: 1em;
+        width: 20em;
+        display: flex;
+        justify-content: space-between;
+        backdrop-filter: blur(30px);
+        font-family: 'Public Sans', sans-serif;
+        font-weight: 200;
+        font-size: larger;
+    }
+}
+
+@media screen and (min-width: 320px) and (max-width: 640px) {
+    #userListContainer {
+        margin-top: 110px;
+        display: block;
+        width: 100%;
+    }
+
+    #userListTitle {
+        display: flex;
+        justify-content: center;
+        width: 100%;
+        color: rgb(231, 231, 231);
+        font-weight: 200;
+        margin: 0;
+    }
+
+    #userList {
+        /* backdrop-filter: blur(10px);
+        background-color: #0d676775;
+        margin-left: auto;
+        margin-right: auto;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        list-style: none;
+        overflow: scroll;
+        height: fit-content;
+        max-height: 60vh;
+        width: 50%;
+        border: 1px solid grey;
+        border-radius: 10px;
+        padding: 1em;
+        box-shadow: rgba(255, 255, 255, 0.26) 0 1px 2px inset; */
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+        /* height: 20em; */
+        backdrop-filter: blur(10px);
+        /* background-color: #336b8775; */
+        /* background-image: url("../images/closup_dark_board.jpeg"); */
+        background-position: bottom;
+        background-size: 70% 100%;
+        background-repeat: no-repeat;
+        padding: 1em;
+        overflow: scroll;
+        list-style: none;
+        margin: 0;
+    }
+
+    .userListItem {
+        border: 1px solid #694873;
+        border-radius: 6px;
+        margin-bottom: .25em;
+        /* background-color: rgb(80, 48, 109); */
+        color: whitesmoke;
+        padding: 1em;
+        width: 14em;
+        display: flex;
+        justify-content: space-between;
+        backdrop-filter: blur(30px);
+        font-family: 'Public Sans', sans-serif;
+        font-weight: 200;
+        font-size: larger;
+    }
+
+    .userListFriendItem {
+        border: 1px solid #4a9392;
+        border-radius: 6px;
+        margin-bottom: .25em;
+        /* background-color: rgb(61, 108, 111); */
+        color: whitesmoke;
+        padding: 1em;
+        width: 14em;
+        display: flex;
+        justify-content: space-between;
+        backdrop-filter: blur(30px);
+        font-family: 'Public Sans', sans-serif;
+        font-weight: 200;
+        font-size: larger;
+    }
 }

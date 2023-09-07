@@ -1,17 +1,295 @@
-#profileContainer {
-    margin-top: 80px;
+@media screen and (min-width:641px) {
+    #profileContainer {
+        margin-top: 120px;
+        display: flex;
+        justify-content: center;
+
+    }
+
+    .profileHeader {
+        color: rgb(231, 231, 231);
+        font-weight: 200;
+    }
+
+    #profileCard {
+        width: 50%;
+
+    }
+
+    #profileHead {
+        color: rgb(231, 231, 231);
+        font-weight: 200;
+    }
+
+    #profilePerformanceAndFriends {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    /* profile info and update */
+    #profileInfoAndEdit {
+        display: flex;
+        justify-content: space-between;
+        height: fit-content;
+        margin-bottom: 2em;
+    }
+
+    .staticProfileInfo {
+        font-size: x-large;
+    }
+
+    #submitCancelProfileChanges {
+        margin-top: .5em;
+    }
+
+    #profileInfo {
+        color: rgb(231, 231, 231);
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+
+    }
+
+    .editProfileButton {
+        width: fit-content;
+        height: 1.5em;
+    }
+
+    #updateProfileSection {
+        display: flex;
+        flex-direction: column;
+        width: 50%;
+        color: rgb(231, 231, 231);
+    }
+
+    /* profile friend list */
+    #profileFriendContainer {
+        border: 1px solid orange;
+        width: fit-content;
+        padding: 1em;
+        border-radius: 4px;
+        color: rgb(231, 231, 231);
+        margin-bottom: 2em;
+    }
+
+    .profileUserListItem {
+        display: flex;
+        align-items: center;
+    }
+
+
+    /* performance data */
+    #profilePerformaceData {
+        color: rgb(231, 231, 231);
+        font-size: xx-large;
+        font-weight: 200;
+    }
+
+    /* past games section */
+
+
+    .profilePastGamesListItem {
+        color: rgb(231, 231, 231);
+    }
+
+    .tournamentPastGameListItem {
+        color: rgb(231, 231, 231);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        /* border: 1px solid orange; */
+        height: 2em;
+        padding: .5em;
+        backdrop-filter: blur(30px);
+        border: 1px solid #694873;
+        border-radius: 4px;
+        margin-bottom: .25em;
+        min-width: fit-content;
+    }
+
+    .pastGameListItem {
+        color: rgb(231, 231, 231);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        height: 2em;
+        padding: .5em;
+        backdrop-filter: blur(30px);
+        border: 1px solid #4a9392;
+        border-radius: 4px;
+        margin-bottom: .25em;
+        min-width: fit-content;
+
+    }
+
+    .trophyIconProfile {
+        height: 2em;
+    }
+
+    .pastGamesListLogisticsInfo {
+        font-size: small;
+        margin-right: 1em;
+    }
+    .mobileTournamentDiv {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+
 }
-/* profile info and update */
-#updateProfileSection {
-    display: flex;
-    flex-direction: column;
-    width: 50%;
-}
-/* profile friend list */
-#profileFriendContainer {
-    border: 1px solid orange;
-}
-.profileUserListItem {
-    display: flex;
-    align-items: center;
+
+@media screen and (min-width:320px) and (max-width: 640px) {
+    #profileContainer {
+        margin-top: 80px;
+        display: flex;
+        justify-content: center;
+        /* width: 95%; */
+
+    }
+
+    .profileHeader {
+        color: rgb(231, 231, 231);
+        font-weight: 200;
+    }
+
+    #profileCard {
+        width: 95%;
+    }
+
+    #profileHead {
+        color: rgb(231, 231, 231);
+        font-weight: 200;
+    }
+
+    #profilePerformanceAndFriends {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    /* profile info and update */
+    #profileInfoAndEdit {
+        display: flex;
+        justify-content: space-between;
+        height: fit-content;
+        margin-bottom: 2em;
+    }
+
+    .staticProfileInfo {
+        font-size: x-large;
+    }
+
+    #submitCancelProfileChanges {
+        display: block;
+        justify-content: space-around;
+        margin-top: .5em;
+        /* width: 90%; */
+
+    }
+    .cancelProfileEditButton {
+        width: 50%;
+        height: 3em;
+        margin-top: 1em;
+    }
+
+    #profileInfo {
+        color: rgb(231, 231, 231);
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .editProfileButton {
+        width: fit-content;
+        height: 1.5em;
+    }
+
+    #updateProfileSection {
+        display: flex;
+        flex-direction: column;
+        width: 50%;
+        color: rgb(231, 231, 231);
+    }
+
+    /* profile friend list */
+    #profileFriendContainer {
+        display: none;
+        border: 1px solid orange;
+        width: fit-content;
+        padding: 1em;
+        border-radius: 4px;
+        color: rgb(231, 231, 231);
+        margin-bottom: 2em;
+    }
+    
+
+    .profileUserListItem {
+        display: flex;
+        align-items: center;
+    }
+
+
+    /* performance data */
+    #profilePerformaceData {
+        color: rgb(231, 231, 231);
+        font-size: xx-large;
+        font-weight: 200;
+        margin-bottom: 1em;
+    }
+
+    /* past games section */
+
+
+    .profilePastGamesListItem {
+        color: rgb(231, 231, 231);
+    }
+
+    .tournamentPastGameListItem {
+        color: rgb(231, 231, 231);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        /* border: 1px solid orange; */
+        height: fit-content;
+        padding: .5em;
+        backdrop-filter: blur(30px);
+        border: 1px solid #694873;
+        border-radius: 4px;
+        margin-bottom: .25em;
+        min-width: fit-content;
+    }
+
+
+    .pastGameListItem {
+        color: rgb(231, 231, 231);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        height: 2em;
+        padding: .5em;
+        backdrop-filter: blur(30px);
+        border: 1px solid #4a9392;
+        border-radius: 4px;
+        margin-bottom: .25em;
+        min-width: fit-content;
+
+    }
+
+    .mobileTournamentDiv {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+    .trophyIconProfile {
+        height: 1.5em;
+    }
+    .opponentSectionForListItem {
+        width: fit-content;
+        margin: 0;
+    }
+
+    .pastGamesListLogisticsInfo {
+        font-size: small;
+        margin-right: 1em;
+    }
+
 }

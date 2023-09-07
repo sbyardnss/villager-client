@@ -1,61 +1,298 @@
-#messagingContainer {
-    margin-top: 80px;
+@media screen and (min-width:641px) {
+    #messagingContainer {
+        margin-top: 120px;
+        display: flex;
+        justify-content: center;
+        width: 100%;
+    }
+
+    #chatAndInterface {
+        display: flex;
+        justify-content: center;
+    }
+    .setSize {
+        font-size: x-large;
+    }
+    .selectChatClubFilter {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    /* friend list */
+    #messagingFriendList {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        list-style: none;
+        padding: 0;
+        margin: 1em 0 0 0;
+        width: 100%;
+        height: 70vh;
+        overflow: scroll;
+        z-index: 2;
+    }
+
+    #activeChatMessagingFriendList {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    #messagesFriends {
+        width: 50%;
+        margin-right: 1em;
+
+    }
+
+    .selectedFriendListItem {
+        margin-bottom: .25em;
+        padding: .5em;
+        backdrop-filter: blur(30px);
+        border: 2px solid #4a9392;
+        border-radius: 4px;
+        /* border: 1px solid firebrick; */
+        border-radius: 6px;
+        width: 95%;
+        color: rgb(231, 231, 231);
+        background-color: rgb(19, 77, 58);
+
+    }
+
+    .messagingFriendListItem {
+        margin-bottom: .25em;
+        padding: .5em;
+        /* border: 1px solid firebrick; */
+        backdrop-filter: blur(30px);
+        border: 1px solid #694873;
+        border-radius: 4px;
+        cursor: pointer;
+        width: 95%;
+        color: rgb(231, 231, 231)
+    }
+
+    .messagingFriendListItem:hover {
+        /* width: 8.25em; */
+        background-color: rgb(19, 77, 58);
+        cursor: pointer;
+        transition: .6s cubic-bezier(0.215, 0.61, 0.355, 1);
+    }
+
+    /* chat */
+    #chat {
+        max-width: 30em;
+        display: block;
+        border: 1px solid #2a3132;
+        border-radius: 6px;
+        height: 60vh;
+        width: 50vw;
+        overflow: scroll;
+        padding: 1em;
+        /* background-color: rgb(234, 220, 203); */
+        margin-bottom: .25em;
+    }
+    #chatRecipientHeader {
+        display: none;
+    }
+    .receivedMsg {
+        border: 2px solid darkorchid;
+        background-color: lavender;
+        border-radius: 4px;
+        padding: .5em;
+        width: fit-content;
+        margin-right: auto;
+        list-style: none;
+    }
+
+    .sentMsg {
+        border: 2px solid darkgreen;
+        background-color: rgb(205, 250, 205);
+        border-radius: 4px;
+        padding: .5em;
+        width: fit-content;
+        margin-left: auto;
+        list-style: none;
+    }
+    #chatInterface {
+        width: 100%;
+    }
+    #chatInput {
+        width: 80%;
+        padding: .5em;
+        border-radius: 4px;
+        border: 1px solid gray;
+        margin-right: .25em;
+    }
+
+    #sendMsgBtn {
+        width: 15%;
+    }
+
+    .msgDateTimeFormat {
+        display: flex;
+        justify-content: flex-end;
+        font-size: small;
+        opacity: 50%;
+    }
 }
 
-#chatAndInterface {
-    display: flex;
-    justify-content: center;
-}
+@media screen and (min-width:320px) and (max-width: 640px) {
+    #messagingContainer {
+        margin-top: 80px;
+        display: flex;
+        justify-content: center;
+        /* width: 90%; */
+    }
 
-/* friend list */
-#messagesFriends {
-    width: 40%;
-}
+    #chatAndInterface {
+        position: absolute;
+        width: 95%;
+        height: 86%;
+        display: flex;
+        justify-content: center;
+        z-index: -1;
+    }
+    .setSize {
+        font-size: x-large;
+    }
+    .selectChatClubFilter {
+        display: flex;
+        justify-content: space-between;
+    }
+    /* friend list */
+    #messagingFriendList {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        list-style: none;
+        padding: 0;
+        margin: 1em 0 0 0;
+        width: 100%;
+        height: 70vh;
+        overflow: scroll;
+        z-index: 2;
+    }
+    #activeChatMessagingFriendList {
+        display: none;
+        position: absolute;
+        right: 200%;
+    }
 
-.messagingFriendListItem {
-    border: 1px solid firebrick;
-    cursor: pointer;
-}
+    #messagesFriends {
+        width: 95%;
+        /* margin-right: 1em; */
+    }
 
-.messagingFriendListItem:hover {
-    border: 1px solid firebrick;
-    background-color: aquamarine;
-    cursor: pointer;
-}
+    .selectedFriendListItem {
+        margin-bottom: .25em;
+        padding: .5em;
+        backdrop-filter: blur(30px);
+        border: 2px solid #4a9392;
+        border-radius: 4px;
+        /* border: 1px solid firebrick; */
+        border-radius: 6px;
+        width: 80%;
+        color: rgb(231, 231, 231);
+        background-color: rgb(19, 77, 58);
+    }
 
-/* chat */
-#chat {
-    display: block;
-    border: 1px solid orange;
-    height: 60vh;
-    width: 80vw;
-    overflow: scroll;
-    background-color: blanchedalmond;
-}
+    .messagingFriendListItem {
+        margin-bottom: .25em;
+        padding: .5em;
+        /* border: 1px solid firebrick; */
+        backdrop-filter: blur(30px);
+        border: 1px solid #694873;
+        border-radius: 4px;
+        cursor: pointer;
+        width: 95%;
+        color: rgb(231, 231, 231)
+    }
 
-.receivedMsg {
-    border: 2px solid darkorchid;
-    background-color: lavender;
-    border-radius: 4px;
-    padding: .5em;
-    width: fit-content;
-    margin-right: auto;
-    list-style: none;
-}
+    .messagingFriendListItem:hover {
+        /* width: 8.25em; */
+        background-color: rgb(19, 77, 58);
+        cursor: pointer;
+        transition: .6s cubic-bezier(0.215, 0.61, 0.355, 1);
+    }
 
-.sentMsg {
-    border: 2px solid darkgreen;
-    background-color: rgb(205, 250, 205);
-    border-radius: 4px;
-    padding: .5em;
-    width: fit-content;
-    margin-left: auto;
-    list-style: none;
-}
+    /* chat */
+    #fullChatAndInterface {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-evenly;
+    }
+    #chatRecipientHeader {
+        font-size: larger;
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+    }
+    #chat {
+        /* max-width: 30em; */
+        display: block;
+        border: 1px solid #2a3132;
+        border-radius: 6px;
+        height: 75vh;
+        width: inherit;
+        overflow: scroll;
+        /* padding: 1em; */
+        /* background-color: rgb(234, 220, 203); */
+        margin-bottom: .25em;
+    }
 
-#chatInterface {
-    width: 80%;
-    padding: .5em;
-    border-radius: 4px;
-    border: 1px solid gray;
+    .receivedMsg {
+        border: 2px solid darkorchid;
+        background-color: lavender;
+        border-radius: 4px;
+        padding: .5em;
+        width: fit-content;
+        /* margin-right: auto;
+        margin-left: .5em; */
+        margin: .5em auto 0 .5em;
+        list-style: none;
+    }
+
+    .sentMsg {
+        border: 2px solid darkgreen;
+        background-color: rgb(205, 250, 205);
+        border-radius: 4px;
+        padding: .5em;
+        width: fit-content;
+        /* margin-left: auto;
+        margin-right: .5em;
+        margin-top: ; */
+        margin: .5em .5em 0 auto;
+
+        list-style: none;
+    }
+    #chatInterface {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0;
+    }
+    #chatInput {
+        width: 78%;
+        padding: .5em;
+        border-radius: 4px;
+        border: 1px solid gray;
+        margin-right: .25em;
+    }
+
+    #sendMsgBtn {
+        width: 17%;
+        height: 2.25em;
+    }
+
+    .msgDateTimeFormat {
+        display: flex;
+        justify-content: flex-end;
+        font-size: small;
+        opacity: 50%;
+    }
 }

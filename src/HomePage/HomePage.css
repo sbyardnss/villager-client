@@ -1,30 +1,1060 @@
-#homepageContainer {
-    margin-top: 80px;
-}
+@media screen and (min-width:641px) {
+
+    /* overall layout */
+    #homepageContainer {
+        margin-top: 120px;
+        display: flex;
+        justify-content: center;
+    }
+
+    #homepageLayoutDiv {
+        max-width: 960px;
+        width: 800px;
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+    }
+    @keyframes fadeIn {
+        0% {opacity: 0;}
+        10% {opacity: 1;}
+        90% {opacity: 1;}
+        100% {opacity: 0;}
+    }
+    #challengeCreatedModal {
+        display: flex;
+        position: fixed;
+        justify-content: center;
+        align-items: center;
+        z-index: 20;
+        top: 40%;
+        background-color: #2a2e34;
+        width: 20em;
+        height: 6em;
+        border: 2px solid #694873;
+        border-radius: 6px;
+        animation: fadeIn 2s ease-in-out;
+    }
+
+    #forumAndActiveGames {
+        display: flex;
+        flex-direction: column;
+        /* justify-content: space-evenly; */
+        flex-wrap: wrap;
+        max-width: 480px;
+        width: 100%;
+        color: rgb(231, 231, 231);
+        z-index: 10;
+    }
+
+    #challengesAndPuzzles {
+        /* width: 30%; */
+        min-width: 16em;
+    }
+
+    .challengesBackground {
+        content: "";
+        /* background-image: url("../images/playing_chess.jpeg"); */
+        background-position: 60% 60%;
+        opacity: .25;
+        position: absolute;
+        top: 0px;
+        bottom: 0px;
+        left: 0px;
+        right: 0px;
+        z-index: -10;
+        /* background-size: cover; */
+    }
+
+    #challengesArticle {
+        opacity: 100%;
+        backdrop-filter: blur(10px);
+        background-image: url("../images/playing_chess.jpg");
+        background-position: 60% 60%;
+        background-repeat: no-repeat;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: flex-start;
+        padding: 1em;
+        max-width: 960px;
+        flex-wrap: wrap;
+        height: 19em;
+        /* width: 30%; */
+        min-width: 14em;
+        /* border: 1px solid blue; */
+        color: rgb(231, 231, 231);
+        margin-bottom: 1em;
+        /* background-color: #76362645; */
+
+    }
+
+    #activeGamesArticle {
+        height: 328px;
+        /* padding: 1em; */
+    }
+
+    h2,
+    h3,
+    h4 {
+        margin: .25em 0;
+    }
+
+    /* general use classnames */
+    .opponentSectionForListItem {
+        width: 8em;
+        margin-left: .5em;
+
+    }
+
+    /* community forum section styling */
+    #communityForum {
+        height: 20.5em;
+        padding: .5em;
+        backdrop-filter: blur(10px);
+        background-color: #2a313275;
+        box-shadow: rgba(255, 255, 255, 0.26) 0 1px 2px inset;
+        margin-bottom: 1em;
+    }
+
+    #communityForumHeader {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    #communityForumClubFilter {
+        list-style: none;
+        display: flex;
+        align-items: flex-end;
+        width: 20em;
+        height: 3em;
+        border: 1px solid #694873;
+        border-radius: 4px;
+        padding: 0;
+        /* overflow: scroll; */
+        margin: .25em 0;
+        overflow-x: scroll;
+        overflow-y: hidden;
+        white-space: nowrap;
+        
+    }
+    ::-webkit-scrollbar {
+        display: none;
+    }
+    #forumFilterHeader {
+        margin: 0;
+    }
+    #noClubsNotificationTab {
+        width: 100%;
+        text-align: center;
+    }
+    .communityForumFilterTab {
+        margin: 0 .5em;
+        height: 2em;
+        background-color: #694873;
+        padding: .25em .5em;
+        border-radius: 4px 4px 0 0;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+    }
+
+    .communityForumFilterTab:hover {
+        background-color: #cf4d81;
+        color: rgb(231, 231, 231);
+        transition: .2s cubic-bezier(0.215, 0.61, 0.355, 1);
+    }
+
+    #communityForumMsgs {
+        overflow: scroll;
+        background-color: rgb(234, 220, 203);
+        height: 14.5em;
+        border-radius: 4px;
+        box-shadow: rgba(255, 255, 255, 0.26) 0 2px 2px;
+        color: #2a2e34;
+    }
+
+    .communityPostWithDelete {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    #communityForumInterface {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        margin: .5em 0;
+    }
+
+    #communityForumInput {
+        width: 85%;
+    }
+
+    #communityForumSubmitBtn {
+        width: 10%;
+    }
+
+    .communityPost {
+        list-style: none;
+        margin: 1em;
+    }
+
+    /* active tournament section styling */
+    .activeTournamentListItem {
+        list-style: none;
+        border: 1px solid rgb(59, 174, 174);
+
+    }
 
 
-/* community forum section styling */
-#communityForum {
-    width: 40%;
-}
-#communityForumInterface {
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-}
-#communityForumInput {
-    width: 70%;
-}
-#communityForumSubmitBtn {
-    width: 25%;
-}
-.communityPost {
-    list-style: none;
-    border: 1px solid orange;
+    /* active games section */
+
+    #myActiveGames {
+        display: flex;
+        flex-direction: column;
+        height: 20em;
+        /* width: 50%; */
+        backdrop-filter: blur(10px);
+        /* background-color: #336b8775; */
+        background-image: url("../images/closup_dark_board.jpeg");
+        background-position: bottom;
+        background-size: 100vh;
+    }
+    #noGamesMsg {
+        display: block;
+        width: fit-content;
+        margin-top: 2em;
+        margin-left: auto;
+        margin-right: auto;
+        backdrop-filter: blur(10px);
+        border: 1px solid rgb(188, 160, 0);
+        border-radius: 6px;
+        padding: .25em;
+    }
+
+    #activeGamesHeader {
+        margin-left: 1em;
+    }
+
+    #activeGamesUl {
+        padding: 1em;
+    }
+
+    #myUnfinishedGamesScrollWindow {
+        overflow: scroll;
+    }
+
+    .tournamentActiveGameListItem {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        /* border: 1px solid orange; */
+        width: 96%;
+        height: 2em;
+        padding: .5em;
+        backdrop-filter: blur(30px);
+        border: 1px solid #694873;
+        border-radius: 4px;
+        margin-bottom: .25em;
+    }
+
+    .activeGameListItem {
+        display: flex;
+        justify-content: space-between;
+        width: 96%;
+        align-items: center;
+        height: 2em;
+        padding: .5em;
+        backdrop-filter: blur(30px);
+        border: 1px solid #4a9392;
+        border-radius: 4px;
+        margin-bottom: .25em;
+    }
+
+    .activeGameInfo {
+        display: flex;
+        width: 100%;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .myGamesListLogisticsInfo {
+        font-size: small;
+        margin-right: 1em;
+    }
+
+    .trophyIconHomepage {
+        height: 3em;
+    }
+
+    /* create challenge section */
+    #createChallengeSection {
+        width: 100%;
+        margin: 0px;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: flex-start;
+    }
+
+    #createChallengeDiv {
+        display: flex;
+        align-items: center;
+        justify-content: space-evenly;
+    }
+
+    #piecesSelectionContainer {
+        display: flex;
+        border-radius: 11px;
+        padding: 0px;
+        align-items: center;
+    }
+
+    #challengeColorSelectContainerAndCreateBtn {
+        display: flex;
+        flex-direction: column;
+    }
+
+    #whitePiecesSelect {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: rgb(52, 52, 52);
+        font-style: oblique;
+        /* font-size: x-large; */
+        font-weight: 400;
+        background-color: whitesmoke;
+        width: 5em;
+        height: 3em;
+        padding: .5em;
+        /* border: 2px solid rgb(52, 52, 52); */
+        border-radius: 8px 0 0 8px;
+        border-right: none;
+        cursor: pointer;
+    }
+
+    #blackPiecesSelect {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: whitesmoke;
+        font-style: oblique;
+        /* font-size: x-large; */
+        font-weight: 400;
+        background-color: rgb(52, 52, 52);
+        width: 5em;
+        height: 3em;
+        padding: .5em;
+        /* border: 2px solid rgb(52, 52, 52); */
+        border-radius: 0 8px 8px 0;
+        border-right: none;
+        cursor: pointer;
+    }
+
+    #randomSelect {
+        cursor: pointer;
+        background-color: gray;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: whitesmoke;
+        font-style: oblique;
+        /* font-size: x-large; */
+        width: 5em;
+        height: 3em;
+        padding: .5em;
+        border-radius: 0 8px 8px 0;
+    }
+
+    #blackPiecesSelect:hover {
+        background-color: rgb(90, 0, 68);
+    }
+
+    #whitePiecesSelect:hover {
+        background-color: rgb(241, 133, 214);
+    }
+
+    #randomSelect:hover {
+        background-color: rgb(241, 133, 214);
+
+    }
+
+    #createChallengeBtn {
+        display: block;
+        font-size: large;
+        width: 7em;
+        margin-top: 1em;
+        margin-left: auto;
+        margin-right: auto;
+
+    }
+
+    /* challenges list sections */
+    #challengesList {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        height: 6em;
+        /* min-width: 14em; */
+        padding: .25em;
+        border: 1px solid #694873;
+        border-radius: 6px;
+        overflow: scroll;
+    }
+
+    .challengeListItem {
+        height: fit-content;
+        display: flex;
+        flex-direction: column;
+        font-size: small;
+        backdrop-filter: blur(30px);
+        /* background-color: gray; */
+    }
+
+    .challengerInfo {
+        height: 2em;
+        display: flex;
+        align-items: center;
+        font-weight: 400;
+        border: 1px solid #f4d35e;
+        padding: .5em;
+        border-radius: 4px;
+    }
+
+    #whiteChallengeSpan {
+        color: rgb(52, 52, 52);
+        font-style: oblique;
+        font-weight: 500;
+        background-color: whitesmoke;
+        width: 3em;
+        padding: .25em;
+        border: 1px solid rgb(52, 52, 52);
+        border-radius: 3px;
+        text-align: center;
+        /* margin-left: .5em; */
+        margin: 0 .5em;
+
+
+    }
+
+    #blackChallengeSpan {
+        color: whitesmoke;
+        font-style: oblique;
+        font-weight: 500;
+        background-color: rgb(24, 24, 24);
+        width: 3em;
+        padding: .25em;
+        border: 1px solid rgb(52, 52, 52);
+        border-radius: 3px;
+        text-align: center;
+        /* margin-left: .5em; */
+        margin: 0 .5em;
+    }
+
+    .challengeBtn {
+        min-width: 4em;
+        /* display: block;
+    text-align: center; */
+    }
+
+
+    /* puzzle section */
+    #puzzlesArticle {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-evenly;
+        border: 1px solid #2a2e34;
+        /* padding: 1em; */
+        /* border-radius: 6px 6px 0 0; */
+        height: 20em;
+    }
+
+    #chessBoardContainer {
+        width: 80%;
+    }
+
+    #homePagePuzzle {
+        cursor: pointer;
+        z-index: 99;
+    }
+
+    #puzzleLabel {
+        color: rgb(231, 231, 231);
+        width: 100%;
+        margin: 1em 0 0 1em;
+    }
+
+    #puzzleSelect {
+        color: rgb(231, 231, 231);
+        background-color: #2a2e34;
+        width: 80%;
+        margin: 1em;
+    }
+
+    #puzzleParamaters {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        width: 100%;
+
+    }
+
+    #puzzleSelectAndSubmit {
+        display: flex;
+        align-items: center;
+        width: 90%
+    }
+
+    /* #submitPuzzleSelectionBtn {
+    height: 2em;
+    border: none;
+    border-radius: 2px;
+    background-color: #694873;
+    color: rgb(231, 231, 231);
+
+} */
 }
 
-/* active tournament section styling */
-.activeTournamentListItem {
-    list-style: none;
-    border: 1px solid rgb(59, 174, 174)
+@media screen and (min-width:320px) and (max-width: 640px) {
+
+    /* overall layout */
+    #homepageContainer {
+        zoom: .8;
+        margin-top: 100px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        /* width: 95%; */
+    }
+
+    #homepageLayoutDiv {
+        /* max-width: 760px; */
+        width: 95%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+    @keyframes fadeIn {
+        0% {opacity: 0;}
+        10% {opacity: 1;}
+        90% {opacity: 1;}
+        100% {opacity: 0;}
+    }
+    #challengeCreatedModal {
+        display: flex;
+        position: fixed;
+        justify-content: center;
+        align-items: center;
+        z-index: 20;
+        top: 40%;
+        background-color: #2a2e34;
+        width: 20em;
+        height: 6em;
+        border: 2px solid #694873;
+        border-radius: 6px;
+        animation: fadeIn 2s ease-in-out;
+    }
+
+
+    #forumAndActiveGames {
+        display: flex;
+        flex-direction: column;
+        /* justify-content: space-evenly; */
+        flex-wrap: wrap;
+        max-width: 480px;
+        width: 100%;
+        color: rgb(231, 231, 231);
+        z-index: 10;
+    }
+
+    #challengesAndPuzzles {
+        width: 100%;
+        min-width: 16em;
+    }
+
+    .challengesBackground {
+        content: "";
+        /* background-image: url("../images/playing_chess.jpg"); */
+        background-position: 60% 60%;
+        position: absolute;
+        top: 0px;
+        bottom: 0px;
+        left: 0px;
+        right: 0px;
+        z-index: -10;
+        /* background-size: cover; */
+    }
+
+    #challengesArticle {
+        opacity: 100%;
+        backdrop-filter: blur(10px);
+        background-image: url("../images/playing_chess.jpg");
+        background-position: 60% 60%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+        padding: 1em;
+        flex-wrap: wrap;
+        /* height: 19em; */
+        /* width: 100%; */
+        min-width: 14em;
+        /* border: 1px solid blue; */
+        color: rgb(231, 231, 231);
+        margin-bottom: 1em;
+        /* background-color: #76362645; */
+
+    }
+
+    #activeGamesArticle {
+        height: fit-content;
+        margin-bottom: 1em;
+        /* padding: 1em; */
+    }
+
+    h2,
+    h3,
+    h4 {
+        margin: .25em 0;
+    }
+
+    /* general use classnames */
+    .opponentSectionForListItem {
+        width: 8em;
+        margin-left: .5em;
+
+    }
+
+    /* community forum section styling */
+    #communityForum {
+        height: 20.5em;
+        padding: .5em;
+        backdrop-filter: blur(10px);
+        background-color: #2a313275;
+        box-shadow: rgba(255, 255, 255, 0.26) 0 1px 2px inset;
+        margin-bottom: 1em;
+    }
+
+    #communityForumHeader {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    #communityForumClubFilter {
+        list-style: none;
+        display: flex;
+        align-items: flex-end;
+        justify-content: flex-start;
+        width: 18em;
+        height: 3em;
+        border: 1px solid #694873;
+        border-radius: 4px;
+        padding: 0;
+        /* overflow: scroll; */
+        /* direction: ltr; */
+        margin: .25em 0;
+        overflow-x: auto;
+        overflow-y: hidden;
+        white-space: nowrap;
+        
+    }
+    ::-webkit-scrollbar {
+        display: none;
+    }
+    #forumFilterHeader {
+        margin: 0;
+    }
+    #noClubsNotificationTab {
+        width: 100%;
+        text-align: center;
+    }
+    
+    .communityForumFilterTab {
+        margin: 0 .5em;
+        background-color: #694873;
+        padding: .5em;
+        border-radius: 4px 4px 0 0;
+        cursor: pointer;
+        width: 20em;
+        height: 1.5em;
+        display: flex;
+        align-items: center;
+    }
+
+    .communityForumFilterTab:hover {
+        background-color: #cf4d81;
+        color: rgb(231, 231, 231);
+        transition: .2s cubic-bezier(0.215, 0.61, 0.355, 1);
+    }
+
+    #communityForumMsgs {
+        overflow: scroll;
+        background-color: rgb(234, 220, 203);
+        height: 14.5em;
+        border-radius: 4px;
+        box-shadow: rgba(255, 255, 255, 0.26) 0 2px 2px;
+        color: #2a2e34;
+
+    }
+
+    .communityPostWithDelete {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    #communityForumInterface {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        margin: .5em 0;
+    }
+
+    #communityForumInput {
+        width: 85%;
+    }
+
+    #communityForumSubmitBtn {
+        width: 10%;
+    }
+
+    .communityPost {
+        list-style: none;
+        width: 90%;
+        margin: 1em;
+        border: 1px solid rgb(52, 52, 52);
+        padding: .25em;
+    }
+
+    /* active tournament section styling */
+    .activeTournamentListItem {
+        list-style: none;
+        border: 1px solid rgb(59, 174, 174);
+
+    }
+
+
+    /* active games section */
+
+    #myActiveGames {
+        display: flex;
+        flex-direction: column;
+        height: 16em;
+        overflow: scroll;
+        /* width: 50%; */
+        backdrop-filter: blur(10px);
+        /* background-color: #336b8775; */
+        background-image: url("../images/closup_dark_board.jpeg");
+        background-position: bottom;
+        background-size: 100vh;
+
+    }
+    #noGamesMsg {
+        display: block;
+        width: fit-content;
+        margin-top: 2em;
+        margin-left: auto;
+        margin-right: auto;
+        backdrop-filter: blur(10px);
+        border: 1px solid rgb(188, 160, 0);
+        border-radius: 6px;
+        padding: .25em;
+
+    }
+
+    #activeGamesHeader {
+        margin-left: 1em;
+    }
+
+    #activeGamesUl {
+        padding: 1em;
+    }
+
+    #myUnfinishedGamesScrollWindow {
+        overflow: scroll;
+    }
+
+    .tournamentActiveGameListItem {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        /* border: 1px solid orange; */
+        width: 96%;
+        height: 2em;
+        padding: .5em;
+        backdrop-filter: blur(30px);
+        border: 1px solid #694873;
+        border-radius: 4px;
+        margin-bottom: .25em;
+    }
+
+    .activeGameListItem {
+        display: flex;
+        justify-content: space-between;
+        width: 96%;
+        align-items: center;
+        height: 2em;
+        padding: .5em;
+        backdrop-filter: blur(30px);
+        border: 1px solid #4a9392;
+        border-radius: 4px;
+        margin-bottom: .25em;
+    }
+
+    .activeGameInfo {
+        display: flex;
+        width: 100%;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .myGamesListLogisticsInfo {
+        font-size: small;
+        margin-right: 1em;
+    }
+
+    .trophyIconHomepage {
+        height: 3em;
+    }
+
+    /* create challenge section */
+    #createChallengeSection {
+        width: 100%;
+        margin: 0 0 1em 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    #createChallengeDiv {
+        display: flex;
+        align-items: center;
+        justify-content: space-evenly;
+    }
+
+    #piecesSelectionContainer {
+        display: flex;
+        border: 3px solid rgb(188, 160, 0);
+        border-radius: 11px;
+        padding: 0px;
+        align-items: center;
+    }
+
+    #challengeColorSelectContainerAndCreateBtn {
+        display: flex;
+        flex-direction: column;
+
+    }
+
+    #whitePiecesSelect {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: rgb(52, 52, 52);
+        font-style: oblique;
+        font-size: large;
+        font-weight: 400;
+        background-color: whitesmoke;
+        width: 5em;
+        height: 3em;
+        padding: .5em;
+        /* border: 2px solid rgb(52, 52, 52); */
+        border-radius: 8px 0 0 8px;
+        border-right: none;
+        cursor: pointer;
+    }
+
+    #blackPiecesSelect {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: whitesmoke;
+        font-style: oblique;
+        font-size: large;
+        font-weight: 400;
+        background-color: rgb(52, 52, 52);
+        width: 5em;
+        height: 3em;
+        padding: .5em;
+        /* border: 2px solid rgb(52, 52, 52); */
+        border-radius: 0 8px 8px 0;
+        border-right: none;
+        cursor: pointer;
+    }
+
+    #randomSelect {
+        cursor: pointer;
+        background-color: gray;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: whitesmoke;
+        font-style: oblique;
+        font-size: large;
+        width: 5em;
+        height: 3em;
+        padding: .5em;
+        border-radius: 0 8px 8px 0;
+    }
+
+    #blackPiecesSelect:hover {
+        background-color: rgb(90, 0, 68);
+    }
+
+    #whitePiecesSelect:hover {
+        background-color: rgb(241, 133, 214);
+    }
+
+    #randomSelect:hover {
+        background-color: rgb(241, 133, 214);
+
+    }
+
+    #createChallengeBtn {
+        display: block;
+        font-size: large;
+        width: 7em;
+        margin-top: 1em;
+        margin-left: auto;
+        margin-right: auto;
+
+    }
+
+    /* challenges list sections */
+    #challengesList {
+        display: flex;
+        flex-direction: column;
+        width: 80%;
+        align-items: center;
+        /* min-width: 14em; */
+        padding: 1em;
+        border: 2px solid #694873;
+        border-radius: 6px;
+        height: 10em;
+        overflow: scroll;
+    }
+
+    #noChallengesMsg {
+        font-size: large;
+    }
+
+    .challengeListItem {
+        height: fit-content;
+        display: flex;
+        width: 100%;
+        flex-direction: column;
+        font-size: medium;
+        backdrop-filter: blur(30px);
+        /* background-color: gray; */
+
+    }
+
+    .challengerInfo {
+        height: 2em;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border: 1px solid #f4d35e;
+        padding: .5em;
+        font-weight: 500;
+        border-radius: 4px;
+    }
+
+    #whiteChallengeSpan {
+        color: rgb(52, 52, 52);
+        font-style: oblique;
+        font-weight: 500;
+        background-color: whitesmoke;
+        width: 3em;
+        padding: .25em;
+        border: 1px solid rgb(52, 52, 52);
+        border-radius: 3px;
+        text-align: center;
+        /* margin-left: .5em; */
+        margin: 0 .5em;
+
+
+    }
+
+    #blackChallengeSpan {
+        color: whitesmoke;
+        font-style: oblique;
+        font-weight: 500;
+        background-color: rgb(24, 24, 24);
+        width: 3em;
+        padding: .25em;
+        border: 1px solid rgb(52, 52, 52);
+        border-radius: 3px;
+        text-align: center;
+        /* margin-left: .5em; */
+        margin: 0 .5em;
+    }
+
+    .challengeBtn {
+        min-width: 4em;
+        /* display: block;
+        text-align: center; */
+    }
+
+
+    /* puzzle section */
+    #puzzlesArticle {
+        display: none;
+        /* display: flex; */
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-evenly;
+        border: 1px solid #2a2e34;
+        /* padding: 1em; */
+        /* border-radius: 6px 6px 0 0; */
+        height: 20em;
+    }
+
+    #chessBoardContainer {
+        width: 80%;
+    }
+
+    #homePagePuzzle {
+        cursor: pointer;
+        z-index: 99;
+    }
+
+    #puzzleLabel {
+        color: rgb(231, 231, 231);
+        width: 100%;
+        margin: 1em 0 0 1em;
+    }
+
+    #puzzleSelect {
+        color: rgb(231, 231, 231);
+        background-color: #2a2e34;
+        width: 80%;
+        margin: 1em;
+    }
+
+    #puzzleParamaters {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        width: 100%;
+
+    }
+
+    #puzzleSelectAndSubmit {
+        display: flex;
+        align-items: center;
+        width: 90%
+    }
+
+    /* #submitPuzzleSelectionBtn {
+        height: 2em;
+        border: none;
+        border-radius: 2px;
+        background-color: #694873;
+        color: rgb(231, 231, 231);
+    
+    } */
 }

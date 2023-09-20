@@ -162,8 +162,9 @@ export const TournamentProvider = (props) => {
         //iterate players
 
         const targetRound = editOrNew === 'new' ? curRound + 1 : curRound
-        const playerArgs = []
+        let playerArgs = []
         if (tournamentPlayers.length % 2 !== 0) {
+            // console.log(tournamentPlayers) //NEW PLAYER SHOWING ON PLAYERS
             const scoreCardArr = []
             const playerIdentifierArr = []
             //filter out players that have had bye and note number of losses 
@@ -178,6 +179,7 @@ export const TournamentProvider = (props) => {
             }
             //sort by most losses
             scoreCardArr.sort((a, b) => b[1].length - a[1].length)
+            // console.log(scoreCardArr) //OK HERE. NEW PLAYER ARR NOT PRESENT THOUGH
             // iterate potential bye players and find a pairing set that will work
             for (const potentialByePlayerArr of scoreCardArr) {
                 for (const playerIdentifier of playerIdentifierArr) {
@@ -186,11 +188,15 @@ export const TournamentProvider = (props) => {
                         playerArgs.push(playerArgObj)
                     }
                 }
+                // console.log(playerArgs) //PLAYER ARGS SHOWING CORRECTLY, THEN DOUBLING
                 const newMatchupsSansBye = Swiss(playerArgs, targetRound)
                 if (newMatchupsSansBye && !newMatchupsSansBye.filter(m => m.player2 === null).length) {
                     const byePairing = { round: targetRound, match: tournamentPlayers.length / 2 + .5, player1: parseInt(potentialByePlayerArr[0]) || potentialByePlayerArr[0], player2: null }
                     const pairings = newMatchupsSansBye.concat(byePairing)
                     return pairings
+                }
+                else if (scoreCardArr.indexOf(potentialByePlayerArr) < scoreCardArr.length - 1) {
+                    playerArgs = []
                 }
                 else {
                     if (scoreCardArr.indexOf(potentialByePlayerArr) === scoreCardArr.length - 1) {

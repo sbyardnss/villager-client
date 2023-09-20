@@ -273,7 +273,7 @@ export const ActiveTournament = () => {
             updateResultsForTieBreak(resultsForTieBreak)
         }, [tournamentGames, selectedTournament]
     )
-    
+
     // potential scorecard replacement
     useEffect(
         () => {
@@ -621,6 +621,7 @@ export const ActiveTournament = () => {
                             scoreObject={scoreObj}
                             scoreCard={scoreCard}
                             currentByePlayer={byeGame.player_w}
+                            blackWhiteTally={blackWhiteTally}
                         />
                     </div> : ""}
                     <div id="tournamentHeader">
@@ -649,7 +650,7 @@ export const ActiveTournament = () => {
                                             sendNewGame(byeGame)
                                         }
                                         const tournamentCopy = { ...activeTournament }
-                                        const newPairings = createPairings('new', activeTournamentPlayers, playerOpponentsReferenceObj, currentRound, scoreObj, scoreCard, byeGame.player_w)
+                                        const newPairings = createPairings('new', activeTournamentPlayers, playerOpponentsReferenceObj, currentRound, scoreObj, scoreCard, byeGame.player_w, blackWhiteTally)
                                         tournamentCopy.pairings = tournamentCopy.pairings.concat(newPairings)
                                         tournamentCopy.rounds++
                                         tournamentCopy.competitors = tournamentCopy.competitors.map(c => { return c.id })

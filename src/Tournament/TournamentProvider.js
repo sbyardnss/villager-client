@@ -119,7 +119,7 @@ export const TournamentProvider = (props) => {
         getAllGuestPlayers()
             .then(data => setGuests(data))
     }
-    const playerArgCreator = (playerOppRef, refObj, scoreObject, actTourneyPlayers) => {
+    const playerArgCreator = (playerOppRef, refObj, scoreObject, actTourneyPlayers, playerBWTally) => {
         let identifier = null
         let isActive = true
         let playerArg = {}
@@ -140,6 +140,7 @@ export const TournamentProvider = (props) => {
             playerArg = {
                 id: identifier,
                 score: scoreObject[identifier] || 0,
+                colors: playerBWTally,
                 avoid: refObj[identifier] ? refObj[identifier].filter(ref => ref !== 'bye') : []
             }
             if (refObj[identifier]) {
@@ -156,7 +157,7 @@ export const TournamentProvider = (props) => {
         return playerObj?.guest_id ? playerObj?.guest_id : playerObj?.id
     }
 
-    const createPairings = (editOrNew, tournamentPlayers, opponentReferenceObj, curRound, scoreObject, scoreCard, currentByePlayer) => {
+    const createPairings = (editOrNew, tournamentPlayers, opponentReferenceObj, curRound, scoreObject, scoreCard, currentByePlayer, bWTally) => {
         //check whether odd or even number of players
         //if so choose bye player and then continue to iterate
         //iterate players
@@ -183,8 +184,11 @@ export const TournamentProvider = (props) => {
             // iterate potential bye players and find a pairing set that will work
             for (const potentialByePlayerArr of scoreCardArr) {
                 for (const playerIdentifier of playerIdentifierArr) {
+
+                    const playerBWTally = bWTally[playerIdentifier]
+
                     if (parseInt(playerIdentifier) !== potentialByePlayerArr[0] && playerIdentifier !== potentialByePlayerArr[0]) {
-                        const playerArgObj = playerArgCreator(playerIdentifier, opponentReferenceObj, scoreObject, tournamentPlayers)
+                        const playerArgObj = playerArgCreator(playerIdentifier, opponentReferenceObj, scoreObject, tournamentPlayers, playerBWTally)
                         playerArgs.push(playerArgObj)
                     }
                 }
@@ -212,7 +216,14 @@ export const TournamentProvider = (props) => {
             for (const player of tournamentPlayers) {
                 const identifier = findIdentifier(player)
                 const oppRef = opponentReferenceObj[identifier]
-                const playerArgObj = playerArgCreator(identifier, opponentReferenceObj, scoreObject, tournamentPlayers, targetRound)
+                console.log(identifier)
+                console.log(bWTally)
+                let playerBWTally = []
+                if (bWTally[parseInt(identifier)] || bWTally[identifier]) {
+                    playerBWTally = bWTally[parseInt(identifier)] || bWTally[identifier]
+                }
+                const playerArgObj = playerArgCreator(identifier, opponentReferenceObj, scoreObject, tournamentPlayers, playerBWTally)
+                console.log(playerArgObj)
                 playerArgs.push(playerArgObj)
             }
             const pairings = Swiss(playerArgs, targetRound)

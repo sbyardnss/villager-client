@@ -30,9 +30,6 @@ export const TournamentProvider = (props) => {
     const [games, setGames] = useState([])
 
 
-    //KEEP THIS FOR FUTURE ADDITION AND REMOVAL OF PLAYERS MID TOURNAMENT
-    // const [pastPairings, setPastPairings] = useState([])
-
     useEffect(
         () => {
             Promise.all([getAllPlayers(), getAllGuestPlayers(), getMyTournaments(), getAllTimeSettings()]).then(([playerData, guestData, tournamentData, timeSettingData]) => {
@@ -165,7 +162,6 @@ export const TournamentProvider = (props) => {
         const targetRound = editOrNew === 'new' ? curRound + 1 : curRound
         let playerArgs = []
         if (tournamentPlayers.length % 2 !== 0) {
-            // console.log(tournamentPlayers) //NEW PLAYER SHOWING ON PLAYERS
             const scoreCardArr = []
             const playerIdentifierArr = []
             //filter out players that have had bye and note number of losses 
@@ -180,23 +176,22 @@ export const TournamentProvider = (props) => {
             }
             //sort by most losses
             scoreCardArr.sort((a, b) => b[1].length - a[1].length)
-            // console.log(scoreCardArr) //OK HERE. NEW PLAYER ARR NOT PRESENT THOUGH
             // iterate potential bye players and find a pairing set that will work
             for (const potentialByePlayerArr of scoreCardArr) {
-                console.log(playerIdentifierArr)
                 for (const playerIdentifier of playerIdentifierArr) {
-                    let playerBWTally = []
-                    if (bWTally[parseInt(playerIdentifier)] || bWTally[playerIdentifier]) {
-                        playerBWTally = bWTally[parseInt(playerIdentifier)] || bWTally[playerIdentifier]
-                    }
-
+                    // let playerBWTally = []
+                    // if (bWTally[parseInt(playerIdentifier)] || bWTally[playerIdentifier]) {
+                    //     playerBWTally = bWTally[parseInt(playerIdentifier)] || bWTally[playerIdentifier]
+                    // }
+                    const playerBWTally = bWTally[playerIdentifier] || []
+                    console.log(playerBWTally)
                     if (parseInt(playerIdentifier) !== potentialByePlayerArr[0] && playerIdentifier !== potentialByePlayerArr[0]) {
                         const playerArgObj = playerArgCreator(playerIdentifier, opponentReferenceObj, scoreObject, tournamentPlayers, playerBWTally)
                         playerArgs.push(playerArgObj)
                     }
                 }
-                console.log(playerArgs) //PLAYER ARGS SHOWING CORRECTLY, THEN DOUBLING
-                const newMatchupsSansBye = Swiss(playerArgs, targetRound)
+                
+                const newMatchupsSansBye = Swiss(playerArgs, targetRound, false, true)
                 if (newMatchupsSansBye && !newMatchupsSansBye.filter(m => m.player2 === null).length) {
                     const byePairing = { round: targetRound, match: tournamentPlayers.length / 2 + .5, player1: parseInt(potentialByePlayerArr[0]) || potentialByePlayerArr[0], player2: null }
                     const pairings = newMatchupsSansBye.concat(byePairing)
@@ -217,19 +212,17 @@ export const TournamentProvider = (props) => {
         }
         else {
             for (const player of tournamentPlayers) {
-                const identifier = findIdentifier(player)
-                const oppRef = opponentReferenceObj[identifier]
-                console.log(identifier)
-                console.log(bWTally)
-                let playerBWTally = []
-                if (bWTally[parseInt(identifier)] || bWTally[identifier]) {
-                    playerBWTally = bWTally[parseInt(identifier)] || bWTally[identifier]
-                }
+                const identifier = findIdentifier(player)                
+                // let playerBWTally = []
+                // if (bWTally[parseInt(identifier)] || bWTally[identifier]) {
+                //     playerBWTally = bWTally[parseInt(identifier)] || bWTally[identifier]
+                // }
+                
+                const playerBWTally = bWTally[identifier] || []
                 const playerArgObj = playerArgCreator(identifier, opponentReferenceObj, scoreObject, tournamentPlayers, playerBWTally)
-                console.log(playerArgObj)
                 playerArgs.push(playerArgObj)
             }
-            const pairings = Swiss(playerArgs, targetRound)
+            const pairings = Swiss(playerArgs, targetRound, false, true)
             if (pairings) {
                 return pairings
             }
@@ -245,7 +238,7 @@ export const TournamentProvider = (props) => {
 
     return (
         <TournamentContext.Provider value={{
-            localVillagerObj, players, setPlayers, timeSettings, tournaments, setTournaments, tournamentGames, setGames,
+            localVillagerObj, players, setPlayers, timeSettings, tournaments, setTournaments, tournamentGames, /*setGames,*/
             selectedTournament, setSelectedTournament, resetTournamentGames, resetGuests,
             setGuests, guests, playersAndGuests, setPlayersAndGuests, selectedClub, setSelectedClub,
             selectedClubObj, setSelectedClubObj, setClubPlayers, clubPlayers, setClubGuests, clubGuests, editPlayers, setEditPlayers,

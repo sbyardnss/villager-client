@@ -473,7 +473,7 @@ export const EditPlayersModal = ({ activeTournamentObj, setEdit, playedRounds, g
                                                     return { id: pg }
                                                 }
                                             })
-                                            const newMatchups = Swiss(playerIdObjectsForPairing, playedRounds)
+                                            const newMatchups = Swiss(playerIdObjectsForPairing, playedRounds, false, true)
                                             //could we concat here instead of mapping?
                                             newMatchups.map(nm => {
                                                 filteredPairings.push(nm)

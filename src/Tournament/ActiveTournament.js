@@ -273,7 +273,6 @@ export const ActiveTournament = () => {
             updateResultsForTieBreak(resultsForTieBreak)
         }, [tournamentGames, selectedTournament]
     )
-
     // potential scorecard replacement
     useEffect(
         () => {

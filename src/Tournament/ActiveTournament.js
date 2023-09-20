@@ -32,7 +32,7 @@ export const ActiveTournament = () => {
     const [scoreObj, setScoreObj] = useState({})
     const [allPlayersArr, setAllPlayersArr] = useState([])
     const [playerOpponentsReferenceObj, updatePlayerOpponentsReferenceObj] = useState({})
-
+    const [blackWhiteTally,setBlackWhiteTally] = useState({})
     // new scorecard state variable
     const [scoreCard, setScoreCard] = useState({})
 
@@ -235,6 +235,7 @@ export const ActiveTournament = () => {
     //getting data for tie breaker from tournament games
     useEffect(
         () => {
+            let blackOrWhiteTallyObj = {}
             const resultsForTieBreak = []
             {
                 tournamentGames.map(tg => {
@@ -245,8 +246,30 @@ export const ActiveTournament = () => {
                     gameResult.win_style = tg.win_style
                     gameResult.round = tg.tournament_round
                     resultsForTieBreak.push(gameResult)
+
+                    const whiteIdentifier = tg.player_w.guest_id ? tg.player_w.guest_id : tg.player_w.id
+                    const blackIdentifier = tg.player_b?.guest_id ? tg.player_b?.guest_id : tg.player_b?.id
+
+                    //dont include bye games in bw tally
+                    if (tg.player_b) {
+                        if (blackOrWhiteTallyObj[whiteIdentifier]) {
+                            blackOrWhiteTallyObj[whiteIdentifier].push('w')
+                        }
+                        else {
+                            blackOrWhiteTallyObj[whiteIdentifier] = ['w']
+                        }
+                        if (blackIdentifier) {
+                            if (blackOrWhiteTallyObj[blackIdentifier]) {
+                                blackOrWhiteTallyObj[blackIdentifier].push('b')
+                            }
+                            else {
+                                blackOrWhiteTallyObj[blackIdentifier] = ['b']
+                            }
+                        }
+                    }
                 })
             }
+            setBlackWhiteTally(blackOrWhiteTallyObj)
             updateResultsForTieBreak(resultsForTieBreak)
         }, [tournamentGames, selectedTournament]
     )
@@ -566,8 +589,8 @@ export const ActiveTournament = () => {
 
     if (selectedTournament) {
         if (activeTournament && activeTournamentPlayers) {
-            const endTournamentModal = document.getElementById('endTournamentModal')
-            const modal = document.getElementById('resultsModal')
+            // const endTournamentModal = document.getElementById('endTournamentModal')
+            // const modal = document.getElementById('resultsModal')
             return <>
                 <main id="tournamentContainer">
                     {showResults ?
@@ -578,6 +601,9 @@ export const ActiveTournament = () => {
                             setShowResults={setShowResults}
                             resultsForTieBreak={resultsForTieBreak}
                             setShowEndTournament={setShowEndTournament}
+                            tournamentGames={tournamentGames}
+                            currentRound={currentRound}
+                            currentByePlayer={byeGame.player_w}
                         />
                         : ""}
                     {showEndTournament ?
@@ -596,7 +622,8 @@ export const ActiveTournament = () => {
                             previousOpponents={playerOpponentsReferenceObj}
                             scoreObject={scoreObj}
                             scoreCard={scoreCard}
-                            currentByePlayer={byeGame.player_w}
+                            currentByePlayer={byePlayer}
+                            blackWhiteTally={blackWhiteTally}
                         />
                     </div> : ""}
                     <div id="tournamentHeader">
@@ -609,7 +636,7 @@ export const ActiveTournament = () => {
                                 setEditScores(false)
                                 updatePlayerOpponentsReferenceObj({})
                             }}>exit</button>
-                            <button
+                        <button
                             className="progressionControlBtn controlBtnApprove"
                             onClick={() => {
                                 setShowResults(true)
@@ -625,7 +652,7 @@ export const ActiveTournament = () => {
                                             sendNewGame(byeGame)
                                         }
                                         const tournamentCopy = { ...activeTournament }
-                                        const newPairings = createPairings('new', activeTournamentPlayers, playerOpponentsReferenceObj, currentRound, scoreObj, scoreCard, byeGame.player_w)
+                                        const newPairings = createPairings('new', activeTournamentPlayers, playerOpponentsReferenceObj, currentRound, scoreObj, scoreCard, byeGame.player_w, blackWhiteTally)
                                         tournamentCopy.pairings = tournamentCopy.pairings.concat(newPairings)
                                         tournamentCopy.rounds++
                                         tournamentCopy.competitors = tournamentCopy.competitors.map(c => { return c.id })
@@ -657,9 +684,9 @@ export const ActiveTournament = () => {
                                     setScoring(true)
                                     setViewTable(false)
                                     setEditScores(false)
-                                    
+
                                 }}>scoring</button>
-                                
+
                             : ""}
                         {activeTournament.complete === false ?
                             <button
@@ -677,11 +704,11 @@ export const ActiveTournament = () => {
                                     setEditScores(true)
                                     setScoring(false)
                                     setViewTable(false)
-                                    
+
                                 }}>edit scores</button>
-                                
+
                             : ""}
-                            
+
                         {newRoundButtonDigitalTournament()}
 
                         {activeTournament.complete === false ?

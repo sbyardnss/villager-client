@@ -9,10 +9,11 @@ export const PlayerSelection = ({ search, setSearch, playersAndGuests, setPlayer
     const [showGuests, setShowGuests] = useState(false)
     const [potentialCompetitors, setPotentialCompetitors] = useState([])
 
+    // const [addedPlayers, setAddedPlayers] = useState([])
+    // const [removedPlayers, setRemovedPlayers] = useState([])
     useEffect(
         () => {
             if (search !== "") {
-                // const filteredUsers = playersAndGuests?.filter(pc => {
                 const filteredUsers = clubPlayers.concat(clubGuests).filter(pc => {
                     return pc.full_name.toLowerCase().includes(search.toLowerCase()) && !tournamentObj.competitors?.find(member => member.id === pc.id) && !tournamentObj.guest_competitors?.find(member => member.id === pc.id)
                 })
@@ -28,31 +29,7 @@ export const PlayerSelection = ({ search, setSearch, playersAndGuests, setPlayer
             }
         }, [search, showGuests, clubPlayers, clubGuests, tournamentObj, createTournament]
     )
-    // console.log(clubGuests)
-    //CONTEXT
-    //resetGuests
 
-
-    //TOURNAMENT SETUP
-    //potentialCompetitors and set
-    //search, setSearch
-    //playersAndGuests
-    //newGuest, updateNewGuest
-
-    //differing
-    //newTournament
-    //updateNewTournament
-
-
-    //EDITPLAYERSMODAL
-    //potentialCompetitors and set
-    //search, setSearch
-    //playersAndGuests
-    //newGuest, updateNewGuest
-
-    //differing
-    //tournamentObj
-    //updatedTournamentObj
     return (
         <section>
             {!selectedTournament ?

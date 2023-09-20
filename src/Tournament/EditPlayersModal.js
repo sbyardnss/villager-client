@@ -380,8 +380,7 @@ export const EditPlayersModal = ({ activeTournamentObj, setEdit, playedRounds, g
 
 
 
-
-                                    const newMatchups = createPairings('edit', allAddedCompetitors, previousOpponents, playedRounds, scoreObject, scoreCard, blackWhiteTally)
+                                    const newMatchups = createPairings('edit', allAddedCompetitors, previousOpponents, playedRounds, scoreObject, scoreCard, currentByePlayer, blackWhiteTally)
 
 
                                     
@@ -459,7 +458,7 @@ export const EditPlayersModal = ({ activeTournamentObj, setEdit, playedRounds, g
 
                                                 //history of colors played for player
                                                 const playerBlackWhiteHistory = blackWhiteTally[pg] || []
-                                                
+
                                                 if (previousOpponents[pg]?.includes('bye')) {
                                                     hadBye = true
                                                     //FOR UPDATE: editing count here if the player had a bye

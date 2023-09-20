@@ -183,16 +183,19 @@ export const TournamentProvider = (props) => {
             // console.log(scoreCardArr) //OK HERE. NEW PLAYER ARR NOT PRESENT THOUGH
             // iterate potential bye players and find a pairing set that will work
             for (const potentialByePlayerArr of scoreCardArr) {
+                console.log(playerIdentifierArr)
                 for (const playerIdentifier of playerIdentifierArr) {
-
-                    const playerBWTally = bWTally[playerIdentifier]
+                    let playerBWTally = []
+                    if (bWTally[parseInt(playerIdentifier)] || bWTally[playerIdentifier]) {
+                        playerBWTally = bWTally[parseInt(playerIdentifier)] || bWTally[playerIdentifier]
+                    }
 
                     if (parseInt(playerIdentifier) !== potentialByePlayerArr[0] && playerIdentifier !== potentialByePlayerArr[0]) {
                         const playerArgObj = playerArgCreator(playerIdentifier, opponentReferenceObj, scoreObject, tournamentPlayers, playerBWTally)
                         playerArgs.push(playerArgObj)
                     }
                 }
-                // console.log(playerArgs) //PLAYER ARGS SHOWING CORRECTLY, THEN DOUBLING
+                console.log(playerArgs) //PLAYER ARGS SHOWING CORRECTLY, THEN DOUBLING
                 const newMatchupsSansBye = Swiss(playerArgs, targetRound)
                 if (newMatchupsSansBye && !newMatchupsSansBye.filter(m => m.player2 === null).length) {
                     const byePairing = { round: targetRound, match: tournamentPlayers.length / 2 + .5, player1: parseInt(potentialByePlayerArr[0]) || potentialByePlayerArr[0], player2: null }

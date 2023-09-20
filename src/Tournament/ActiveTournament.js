@@ -589,8 +589,8 @@ export const ActiveTournament = () => {
 
     if (selectedTournament) {
         if (activeTournament && activeTournamentPlayers) {
-            const endTournamentModal = document.getElementById('endTournamentModal')
-            const modal = document.getElementById('resultsModal')
+            // const endTournamentModal = document.getElementById('endTournamentModal')
+            // const modal = document.getElementById('resultsModal')
             return <>
                 <main id="tournamentContainer">
                     {showResults ?
@@ -601,6 +601,9 @@ export const ActiveTournament = () => {
                             setShowResults={setShowResults}
                             resultsForTieBreak={resultsForTieBreak}
                             setShowEndTournament={setShowEndTournament}
+                            tournamentGames={tournamentGames}
+                            currentRound={currentRound}
+                            currentByePlayer={byeGame.player_w}
                         />
                         : ""}
                     {showEndTournament ?
@@ -619,7 +622,7 @@ export const ActiveTournament = () => {
                             previousOpponents={playerOpponentsReferenceObj}
                             scoreObject={scoreObj}
                             scoreCard={scoreCard}
-                            currentByePlayer={byeGame.player_w}
+                            currentByePlayer={byePlayer}
                             blackWhiteTally={blackWhiteTally}
                         />
                     </div> : ""}

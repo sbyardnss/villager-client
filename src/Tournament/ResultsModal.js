@@ -112,7 +112,6 @@ export const ResultsModal = ({ activeTournament, allPlayersArr, scoreObj, setSho
         }
     })
     resultArr.sort((a, b) => { return b[1] - a[1] })
-    console.log(resultArr)
     return (
         <div id="resultsModal">
             Results

@@ -184,7 +184,6 @@ export const TournamentProvider = (props) => {
                     //     playerBWTally = bWTally[parseInt(playerIdentifier)] || bWTally[playerIdentifier]
                     // }
                     const playerBWTally = bWTally[playerIdentifier] || []
-                    console.log(playerBWTally)
                     if (parseInt(playerIdentifier) !== potentialByePlayerArr[0] && playerIdentifier !== potentialByePlayerArr[0]) {
                         const playerArgObj = playerArgCreator(playerIdentifier, opponentReferenceObj, scoreObject, tournamentPlayers, playerBWTally)
                         playerArgs.push(playerArgObj)

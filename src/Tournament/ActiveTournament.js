@@ -12,11 +12,12 @@ import { Scoring } from "./Scoring"
 
 
 export const ActiveTournament = () => {
-    const { tournaments, playersAndGuests, tournamentGames, selectedTournament, setSelectedTournament, resetTournamentGames, editPlayers, setEditPlayers, resetTournaments, myChessClubs, createPairings, selectedClub, setSelectedClub } = useContext(TournamentContext)
+    const { localVillagerObj, checkIfUserIsAppCreator, tournaments, playersAndGuests, tournamentGames, selectedTournament, setSelectedTournament, resetTournamentGames, editPlayers, setEditPlayers, resetTournaments, myChessClubs, createPairings, selectedClub, setSelectedClub } = useContext(TournamentContext)
     //initial setup state variables
     const [activeTournament, setActiveTournament] = useState({})
     const [activeTournamentPlayers, setActiveTournamentPlayers] = useState([])
     const [currentRoundMatchups, setCurrentRoundMatchups] = useState([])
+    const [tournamentCreatorBool, setTournamentCreatorBool] = useState(false)
 
     //managing tournament state variables
     const [currentRound, setCurrentRound] = useState(0)
@@ -65,7 +66,6 @@ export const ActiveTournament = () => {
         winner_model_type: "",
         bye: true
     })
-    // createPairings(activeTournamentPlayers, playerOpponentsReferenceObj, currentRound, scoreObj, scoreCard)
     //setting active tournament here from tournaments
     useEffect(
         () => {
@@ -79,6 +79,9 @@ export const ActiveTournament = () => {
         () => {
             if (activeTournament.complete === true) {
                 setViewTable(true)
+            }
+            if (activeTournament.creator?.id === localVillagerObj.userId) {
+                setTournamentCreatorBool(true)
             }
         }, [activeTournament]
     )
@@ -124,8 +127,6 @@ export const ActiveTournament = () => {
             }
         }, [activeTournamentPlayers, activeTournament.pairings]
     )
-    // console.log(activeTournamentPlayers)
-    // console.log(createPairings(activeTournamentPlayers, playerOpponentsReferenceObj, currentRound, scoreObj, scoreCard))
     useEffect(
         () => {
             if (activeTournament.club) {
@@ -604,6 +605,7 @@ export const ActiveTournament = () => {
                             tournamentGames={tournamentGames}
                             currentRound={currentRound}
                             currentByePlayer={byeGame.player_w}
+                            tournamentCreatorBool={tournamentCreatorBool}
                         />
                         : ""}
                     {showEndTournament ?
@@ -643,7 +645,7 @@ export const ActiveTournament = () => {
                             }}>Results</button>
                     </div>
                     <div id="tournamentProgressionControls">
-                        {activeTournament.complete === false ?
+                        {activeTournament.complete === false  && (tournamentCreatorBool || checkIfUserIsAppCreator()) ?
                             <button
                                 className="progressionControlBtn controlBtnApprove"
                                 onClick={() => {
@@ -668,7 +670,7 @@ export const ActiveTournament = () => {
                                     }
                                 }}>New Round</button>
                             : ""}
-                        {activeTournament.complete === false ?
+                        {activeTournament.complete === false && (tournamentCreatorBool || checkIfUserIsAppCreator()) ? 
                             <button
                                 className="progressionControlBtn controlBtnApprove"
                                 onClick={() => {
@@ -680,7 +682,7 @@ export const ActiveTournament = () => {
                                 }}>scoring</button>
 
                             : ""}
-                        {activeTournament.complete === false ?
+                        {activeTournament.complete === false && (tournamentCreatorBool || checkIfUserIsAppCreator()) ?
                             <button
                                 className="progressionControlBtn controlBtnApprove"
                                 onClick={() => {
@@ -690,7 +692,7 @@ export const ActiveTournament = () => {
                                 }}>edit scores</button>
                             : ""}
                         {newRoundButtonDigitalTournament()}
-                        {activeTournament.complete === false ?
+                        {activeTournament.complete === false && (tournamentCreatorBool || checkIfUserIsAppCreator()) ?
                             <button className="progressionControlBtn controlBtnApprove" onClick={() => {
                                 const currentRoundGames = tournamentGames.filter(g => g.tournament_round === currentRound)
                                 if ((currentRoundGames.length === currentRoundMatchups.length && !currentRoundMatchups.find(p => p.player2 === null)) || (currentRoundGames.length === currentRoundMatchups.length - 1 && currentRoundMatchups.find(p => p.player2 === null))) {

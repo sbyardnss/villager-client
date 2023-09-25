@@ -155,6 +155,7 @@ export const TournamentProvider = (props) => {
         }
         return false
     }
+    
 
     const findIdentifier = (playerObj) => {
         return playerObj?.guest_id ? playerObj?.guest_id : playerObj?.id

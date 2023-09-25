@@ -15,6 +15,11 @@ export const Scoring = ({ activeTournament, activeTournamentPlayers, handleGameF
                             {whiteBye?.full_name} has bye
                         </div>
                         : ""}
+                    {byeMatchup !== undefined && tournamentGames.filter(tg => tg.tournament_round === currentRound).length + 1 === currentRoundMatchups.length ?
+                        <div className="setCustomFont">Round complete. Start new round.</div> :
+                        byeMatchup === undefined && tournamentGames.filter(tg => tg.tournament_round === currentRound).length === currentRoundMatchups.length ?
+                            <div className="setCustomFont">Round complete. Start new round.</div> :
+                            ""}
                     {
                         currentRoundMatchups?.map((matchup, index) => {
                             const white = activeTournamentPlayers?.find(player => player.id === matchup.player1 || player.guest_id === matchup.player1)

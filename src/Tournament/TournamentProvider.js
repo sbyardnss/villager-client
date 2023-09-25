@@ -149,6 +149,12 @@ export const TournamentProvider = (props) => {
         }
     }
 
+    const checkIfUserIsAppCreator = () => {
+        if (localVillagerObj.userId === 1) {
+            return true
+        }
+        return false
+    }
 
     const findIdentifier = (playerObj) => {
         return playerObj?.guest_id ? playerObj?.guest_id : playerObj?.id
@@ -242,7 +248,7 @@ export const TournamentProvider = (props) => {
             setGuests, guests, playersAndGuests, setPlayersAndGuests, selectedClub, setSelectedClub,
             selectedClubObj, setSelectedClubObj, setClubPlayers, clubPlayers, setClubGuests, clubGuests, editPlayers, setEditPlayers,
             myChessClubs, setMyChessClubs, resetTournaments,
-            createPairings, findIdentifier
+            createPairings, findIdentifier, checkIfUserIsAppCreator
         }}>
             {props.children}
         </TournamentContext.Provider>

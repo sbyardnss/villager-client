@@ -2,21 +2,12 @@ import { useContext } from "react"
 import { TournamentContext } from "./TournamentProvider"
 import { sendNewGame } from "../ServerManager"
 
-export const Scoring = ({activeTournament, activeTournamentPlayers, handleGameForApiUpdate, resetGameForApi, currentRoundMatchups, playerOpponentsReferenceObj, gameForApi, currentRound}) => {
-    /*currentroundmatchups
-    activeTournamentPlayers
-    activeTournament
-    handleGameForApiUpdate
-    tournamentGames
-    resetGameForApi
-    resetTournamentGames
-    */
-    const { tournamentGames, resetTournamentGames } = useContext(TournamentContext)
+export const Scoring = ({ activeTournament, activeTournamentPlayers, handleGameForApiUpdate, resetGameForApi, currentRoundMatchups, playerOpponentsReferenceObj, gameForApi, currentRound }) => {
+    const { localVillagerObj, checkIfUserIsAppCreator, tournamentGames, resetTournamentGames } = useContext(TournamentContext)
     const byeMatchup = currentRoundMatchups?.find(matchup => matchup.player1 === null || matchup.player2 === null)
     const whiteBye = activeTournamentPlayers?.find(player => player.id === byeMatchup?.player1 || player.guest_id === byeMatchup?.player1)
     if (activeTournament?.complete === false) {
-        if (activeTournament?.in_person === true) {
-            // const blackBye = activeTournamentPlayers?.find(player => player.id === byeMatchup.player2 || player.guest_id === byeMatchup.player2)
+        if (activeTournament?.in_person === true && (localVillagerObj.userId === activeTournament?.creator.id || checkIfUserIsAppCreator())) {
             return (
                 <section id="tournamentScoringSection">
                     {byeMatchup ?
@@ -24,8 +15,6 @@ export const Scoring = ({activeTournament, activeTournamentPlayers, handleGameFo
                             {whiteBye?.full_name} has bye
                         </div>
                         : ""}
-                    {/* {(tournamentGames.filter(g => g.tournament_round === currentRound).length === currentRoundMatchups.length) || (tournamentGames.filter(g => g.tournament_round === currentRound).length === currentRoundMatchups.length-1 && byeMatchup) ? <div className="setCustomFont">all games played. start new round</div>: ""} */}
-
                     {
                         currentRoundMatchups?.map((matchup, index) => {
                             const white = activeTournamentPlayers?.find(player => player.id === matchup.player1 || player.guest_id === matchup.player1)
@@ -90,11 +79,44 @@ export const Scoring = ({activeTournament, activeTournamentPlayers, handleGameFo
                     }
                 </section>
             )
+        }
+        else {
             return (
-                <section>
-
+                <section id="tournamentScoringSection">
+                    {byeMatchup ?
+                        <div key={`${byeMatchup.round} -- ${byeMatchup.match} -- bye`} className="setColor setCustomFont">
+                            {whiteBye?.full_name} has bye
+                        </div>
+                        : ""}
+                    {
+                        currentRoundMatchups?.map(matchup => {
+                            const white = activeTournamentPlayers?.find(player => player.id === matchup.player1 || player.guest_id === matchup.player1)
+                            const black = activeTournamentPlayers?.find(player => player.id === matchup.player2 || player.guest_id === matchup.player2)
+                            if (black !== undefined) {
+                                return (
+                                    <div key={`${matchup.round} -- ${matchup.match}`}
+                                        className="tournamentScoringMatchup">
+                                        <div
+                                            className="whitePiecesMatchup"
+                                            id="whitePieces">
+                                            {white.full_name}
+                                        </div>
+                                        <div className="setCustomFont">
+                                            Vs
+                                        </div>
+                                        <div
+                                            className="blackPiecesMatchup"
+                                            id="blackPieces">
+                                            {black.full_name}
+                                        </div>
+                                    </div>
+                                )
+                            }
+                        })
+                    }
                 </section>
             )
         }
     }
+
 }

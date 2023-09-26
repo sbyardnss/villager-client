@@ -267,42 +267,43 @@ export const Tournament = () => {
         return <>
             <main id="tournamentContainer">
                 {/* {newTournamentForm()} */}
-                <TournamentForm 
-                //createTournament
-                createTournament ={createTournament}
-                setCreateTournament={setCreateTournament}
-                newTournament={newTournament}
-                updateNewTournament={updateNewTournament}
-                // handleChange={handleChange}
-                // potentialCompetitors={potentialCompetitors}
-                // setPotentialCompetitors={setPotentialCompetitors}
-                playersSelected={playersSelected}
-                setPlayersSelected={setPlayersSelected}
-                search={search}
-                setSearch={setSearch}
-                newGuest={newGuest}
-                updateNewGuest={updateNewGuest}
-                resetNewTournament={resetNewTournament}
-                resetPlayers={resetPlayers}
-                showGuests={showGuests}
-                setShowGuests={setShowGuests}
-    //setCreatetournament
-    //newTournament
-    //updateNewTournament
-    //handleChange
-    //potential Competitors, set
-    //playersSelected, set
-    //search, set
-    //newguest, update
-    //resetNewTournament()
-    //resetPlayers()
-    //setShowGuests(false)
+                <TournamentForm
+                    //createTournament
+                    createTournament={createTournament}
+                    setCreateTournament={setCreateTournament}
+                    newTournament={newTournament}
+                    updateNewTournament={updateNewTournament}
+                    // handleChange={handleChange}
+                    // potentialCompetitors={potentialCompetitors}
+                    // setPotentialCompetitors={setPotentialCompetitors}
+                    playersSelected={playersSelected}
+                    setPlayersSelected={setPlayersSelected}
+                    search={search}
+                    setSearch={setSearch}
+                    newGuest={newGuest}
+                    updateNewGuest={updateNewGuest}
+                    resetNewTournament={resetNewTournament}
+                    resetPlayers={resetPlayers}
+                    showGuests={showGuests}
+                    setShowGuests={setShowGuests}
+                //setCreatetournament
+                //newTournament
+                //updateNewTournament
+                //handleChange
+                //potential Competitors, set
+                //playersSelected, set
+                //search, set
+                //newguest, update
+                //resetNewTournament()
+                //resetPlayers()
+                //setShowGuests(false)
                 />
                 <article key="activeTournaments" id="activeTournamentsSection">
                     <h3 id="activeTournamentsHeader">my active tournaments</h3>
                     <section id="activeTournamentsList" className="setCustomFont">
                         {
                             tournaments?.map(t => {
+                                const dateFormat = new Date(t.date).toLocaleDateString('en-us')
                                 if (t.complete === false) {
                                     // if (t.competitors.find(c => c.id === localVillagerObj.userId) || t.creator.id === localVillagerObj.userId) {
                                     return (
@@ -312,18 +313,23 @@ export const Tournament = () => {
                                             onClick={(e) => {
                                                 setSelectedTournament(e.target.value)
                                             }}>
-                                            {t.title}
+                                            <div>
+                                                {t.title}
+                                            </div>
+                                            <div style={{ fontSize: "small"}}>
+                                            {dateFormat}
+                                        </div>
                                         </li>
-                                    )
+                    )
                                     // }
                                 }
                             })
                         }
-                    </section>
-                    <button className="pastTournamentsBtn setCustomFont" onClick={() => setPastTournaments(!pastTournaments)}>toggle past tournaments</button>
-                    {pastTournamentSection()}
-                </article>
-            </main>
+                </section>
+                <button className="pastTournamentsBtn setCustomFont" onClick={() => setPastTournaments(!pastTournaments)}>toggle past tournaments</button>
+                {pastTournamentSection()}
+            </article>
+        </main >
         </>
     }
 }

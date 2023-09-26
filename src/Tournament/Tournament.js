@@ -76,26 +76,33 @@ export const Tournament = () => {
     }
     const pastTournamentSection = () => {
         if (pastTournamentsToggle === true) {
-            return (
-                <section id="pastTournamentList">
-                    {
-                        pastTournaments.map(t => {
-                            if (t.complete === true) {
-                                return (
-                                    <li key={t.id}
-                                        className="tournamentListItem"
-                                        value={t.id}
-                                        onClick={(e) => {
-                                            setSelectedTournament(e.target.value)
-                                        }}>
-                                        {t.title}
-                                    </li>
-                                )
-                            }
-                        })
-                    }
-                </section>
-            )
+            if (pastTournaments.length) {
+                return (
+                    <section id="pastTournamentList">
+                        {
+                            pastTournaments.map(t => {
+                                if (t.complete === true) {
+                                    return (
+                                        <li key={t.id}
+                                            className="tournamentListItem"
+                                            value={t.id}
+                                            onClick={(e) => {
+                                                setSelectedTournament(e.target.value)
+                                            }}>
+                                            {t.title}
+                                        </li>
+                                    )
+                                }
+                            })
+                        }
+                    </section>
+                )
+            }
+            else {
+                return (
+                    <div className="setCustomFont">...loading</div>
+                )
+            }
         }
     }
     if (selectedTournament) {

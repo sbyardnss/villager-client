@@ -9,9 +9,9 @@ import { Parameters } from "./Parameters"
 import { TournamentForm } from "./TournamentForm"
 
 export const Tournament = () => {
-    const { localVillagerObj, tournaments, setPlayers, selectedTournament, setSelectedTournament, selectedClub, selectedClubObj } = useContext(TournamentContext)
+    const { localVillagerObj, tournaments, setPlayers, selectedTournament, setSelectedTournament, selectedClub, selectedClubObj, pastTournaments, setPastTournaments } = useContext(TournamentContext)
     const [pastTournamentsToggle, setPastTournamentsToggle] = useState(false)
-    const [pastTournaments, setPastTournaments] = useState([])
+    // const [pastTournaments, setPastTournaments] = useState([])
     const [search, setSearch] = useState("")
     const [createTournament, setCreateTournament] = useState(false)
     const [showGuests, setShowGuests] = useState(false)

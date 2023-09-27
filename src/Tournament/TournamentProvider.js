@@ -12,6 +12,7 @@ export const TournamentProvider = (props) => {
     const [guests, setGuests] = useState([])
     const [timeSettings, setTimeSettings] = useState([])
     const [tournaments, setTournaments] = useState([])
+    const [pastTournaments, setPastTournaments] = useState([])
     const [myChessClubs, setMyChessClubs] = useState([])
 
     //contingent data
@@ -46,7 +47,14 @@ export const TournamentProvider = (props) => {
                 .then(data => setMyChessClubs(data))
         }, [players, guests]
     )
-
+    
+    useEffect(
+        () => {
+            if (pastTournaments.length) {
+                setTournaments(tournaments.concat(pastTournaments))
+            }
+        },[pastTournaments]
+    )
     //tournament games disappearing if i move within here at all. should be stable within app though
     useEffect(
         () => {
@@ -155,7 +163,7 @@ export const TournamentProvider = (props) => {
         }
         return false
     }
-    
+
 
     const findIdentifier = (playerObj) => {
         return playerObj?.guest_id ? playerObj?.guest_id : playerObj?.id
@@ -196,7 +204,7 @@ export const TournamentProvider = (props) => {
                         playerArgs.push(playerArgObj)
                     }
                 }
-                
+
                 const newMatchupsSansBye = Swiss(playerArgs, targetRound, false, true)
                 if (newMatchupsSansBye && !newMatchupsSansBye.filter(m => m.player2 === null).length) {
                     const byePairing = { round: targetRound, match: tournamentPlayers.length / 2 + .5, player1: parseInt(potentialByePlayerArr[0]) || potentialByePlayerArr[0], player2: null }
@@ -218,12 +226,12 @@ export const TournamentProvider = (props) => {
         }
         else {
             for (const player of tournamentPlayers) {
-                const identifier = findIdentifier(player)                
+                const identifier = findIdentifier(player)
                 // let playerBWTally = []
                 // if (bWTally[parseInt(identifier)] || bWTally[identifier]) {
                 //     playerBWTally = bWTally[parseInt(identifier)] || bWTally[identifier]
                 // }
-                
+
                 const playerBWTally = bWTally[identifier] || []
                 const playerArgObj = playerArgCreator(identifier, opponentReferenceObj, scoreObject, tournamentPlayers, playerBWTally)
                 playerArgs.push(playerArgObj)
@@ -244,7 +252,7 @@ export const TournamentProvider = (props) => {
 
     return (
         <TournamentContext.Provider value={{
-            localVillagerObj, players, setPlayers, timeSettings, tournaments, setTournaments, tournamentGames, /*setGames,*/
+            localVillagerObj, players, setPlayers, timeSettings, tournaments, setTournaments, pastTournaments, setPastTournaments, tournamentGames,
             selectedTournament, setSelectedTournament, resetTournamentGames, resetGuests,
             setGuests, guests, playersAndGuests, setPlayersAndGuests, selectedClub, setSelectedClub,
             selectedClubObj, setSelectedClubObj, setClubPlayers, clubPlayers, setClubGuests, clubGuests, editPlayers, setEditPlayers,

@@ -9,8 +9,7 @@ import { Parameters } from "./Parameters"
 import { TournamentForm } from "./TournamentForm"
 
 export const Tournament = () => {
-    const { localVillagerObj, tournaments, setTournaments, players, setPlayers, timeSettings, selectedTournament, setSelectedTournament, setGuests, guests, playersAndGuests, selectedClub, setSelectedClub, selectedClubObj, setSelectedClubObj, clubPlayers, clubGuests, resetGuests, myChessClubs, setMyChessClubs, resetTournaments } = useContext(TournamentContext)
-    // const [potentialCompetitors, setPotentialCompetitors] = useState([])
+    const { localVillagerObj, tournaments, setPlayers, selectedTournament, setSelectedTournament, selectedClub, selectedClubObj } = useContext(TournamentContext)
     const [pastTournamentsToggle, setPastTournamentsToggle] = useState(false)
     const [pastTournaments, setPastTournaments] = useState([])
     const [search, setSearch] = useState("")
@@ -82,6 +81,7 @@ export const Tournament = () => {
                         {
                             pastTournaments.map(t => {
                                 if (t.complete === true) {
+                                    const dateFormat = new Date(t.date).toLocaleDateString('en-us')
                                     return (
                                         <li key={t.id}
                                             className="tournamentListItem"
@@ -90,6 +90,7 @@ export const Tournament = () => {
                                                 setSelectedTournament(e.target.value)
                                             }}>
                                             {t.title}
+                                            <span style={{ fontSize: "small", marginLeft: "auto" }}>{dateFormat}</span>
                                         </li>
                                     )
                                 }
@@ -115,7 +116,6 @@ export const Tournament = () => {
     else {
         return <>
             <main id="tournamentContainer">
-                {/* {newTournamentForm()} */}
                 <TournamentForm
                     createTournament={createTournament}
                     setCreateTournament={setCreateTournament}
@@ -136,33 +136,33 @@ export const Tournament = () => {
                 <article key="activeTournaments" id="activeTournamentsSection">
                     <h3 id="activeTournamentsHeader">my active tournaments</h3>
                     <section id="activeTournamentsList" className="setCustomFont">
+
                         {
-                            tournaments?.map(t => {
-                                const dateFormat = new Date(t.date).toLocaleDateString('en-us')
-                                if (t.complete === false) {
-                                    return (
-                                        <li key={t.id}
-                                            className="tournamentListItem"
-                                            value={t.id}
-                                            onClick={(e) => {
-                                                setSelectedTournament(e.target.value)
-                                            }}>
-                                            <div>
+                            !tournaments.length ?
+                                <div>...loading</div>
+                                :
+                                tournaments?.map(t => {
+                                    if (t.complete === false) {
+                                        const dateFormat = new Date(t.date).toLocaleDateString('en-us')
+                                        return (
+                                            <li key={t.id}
+                                                className="tournamentListItem"
+                                                value={t.id}
+                                                onClick={(e) => {
+                                                    setSelectedTournament(e.target.value)
+                                                }}>
                                                 {t.title}
-                                            </div>
-                                            <div style={{ fontSize: "small" }}>
-                                                {dateFormat}
-                                            </div>
-                                        </li>
-                                    )
-                                }
-                            })
+                                                <span style={{ fontSize: "small" }}>{dateFormat}</span>
+                                            </li>
+                                        )
+                                    }
+                                })
                         }
                     </section>
                     <button className="pastTournamentsBtn setCustomFont" onClick={() => {
                         setPastTournamentsToggle(!pastTournamentsToggle)
                         getMyPastTournaments()
-                        .then(data => setPastTournaments(data))
+                            .then(data => setPastTournaments(data))
                     }}>toggle past tournaments</button>
                     {pastTournamentSection()}
                 </article>

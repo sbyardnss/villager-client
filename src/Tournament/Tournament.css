@@ -354,6 +354,8 @@
 
     #activeTournamentsList {
         width: 100%;
+        max-width: 30em;
+
         height: 12em;
         margin-top: 1em;
         overflow: scroll;
@@ -367,6 +369,7 @@
 
     #pastTournamentList {
         width: 100%;
+        max-width: 30em;
         height: 8.5em;
         overflow: scroll;
         list-style: none;
@@ -377,7 +380,7 @@
     }
 
     .pastTournamentsBtn {
-        align-self: flex-start;
+        align-self: center;
         margin-bottom: 1em;
         margin-top: 2em;
         width: fit-content;
@@ -391,6 +394,9 @@
     }
 
     .tournamentListItem {
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
         color: rgb(231, 231, 231);
         cursor: pointer;
         padding: .5em;
@@ -912,6 +918,9 @@
     }
 
     .tournamentListItem {
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
         color: rgb(231, 231, 231);
         cursor: pointer;
         padding: .5em;

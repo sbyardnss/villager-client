@@ -133,39 +133,42 @@ export const Tournament = () => {
                     setShowGuests={setShowGuests}
 
                 />
-                <article key="activeTournaments" id="activeTournamentsSection">
-                    <h3 id="activeTournamentsHeader">my active tournaments</h3>
-                    <section id="activeTournamentsList" className="setCustomFont">
-
-                        {
-                            !tournaments.length ?
-                                <div>...loading</div>
-                                :
-                                tournaments?.map(t => {
-                                    if (t.complete === false) {
-                                        const dateFormat = new Date(t.date).toLocaleDateString('en-us')
-                                        return (
-                                            <li key={t.id}
-                                                className="tournamentListItem"
-                                                value={t.id}
-                                                onClick={(e) => {
-                                                    setSelectedTournament(e.target.value)
-                                                }}>
-                                                {t.title}
-                                                <span style={{ fontSize: "small" }}>{dateFormat}</span>
-                                            </li>
-                                        )
-                                    }
-                                })
-                        }
-                    </section>
-                    <button className="pastTournamentsBtn setCustomFont" onClick={() => {
-                        setPastTournamentsToggle(!pastTournamentsToggle)
-                        getMyPastTournaments()
-                            .then(data => setPastTournaments(data))
-                    }}>toggle past tournaments</button>
-                    {pastTournamentSection()}
-                </article>
+                {
+                    !createTournament ?
+                        <article key="activeTournaments" id="activeTournamentsSection">
+                            <h3 id="activeTournamentsHeader">my active tournaments</h3>
+                            <section id="activeTournamentsList" className="setCustomFont">
+                                {
+                                    !tournaments.length ?
+                                        <div>...loading</div>
+                                        :
+                                        tournaments?.map(t => {
+                                            if (t.complete === false) {
+                                                const dateFormat = new Date(t.date).toLocaleDateString('en-us')
+                                                return (
+                                                    <li key={t.id}
+                                                        className="tournamentListItem"
+                                                        value={t.id}
+                                                        onClick={(e) => {
+                                                            setSelectedTournament(e.target.value)
+                                                        }}>
+                                                        {t.title}
+                                                        <span style={{ fontSize: "small" }}>{dateFormat}</span>
+                                                    </li>
+                                                )
+                                            }
+                                        })
+                                }
+                            </section>
+                            <button className="pastTournamentsBtn setCustomFont" onClick={() => {
+                                setPastTournamentsToggle(!pastTournamentsToggle)
+                                getMyPastTournaments()
+                                    .then(data => setPastTournaments(data))
+                            }}>toggle past tournaments</button>
+                            {pastTournamentSection()}
+                        </article>
+                        : ""
+                }
             </main >
         </>
     }

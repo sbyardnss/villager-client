@@ -107,6 +107,26 @@ export const getMyTournaments = () => {
     })
         .then(res => res.json())
 }
+export const getMyOpenTournaments = () => {
+    const localVillagerObj = getToken()
+    return fetch(`${apiKey}/tournaments/my_open_tournaments`, {
+        headers: {
+            "Authorization": `Token ${localVillagerObj.token}`,
+            "Content-Type": "application/json"
+        }
+    })
+        .then(res => res.json())
+}
+export const getMyPastTournaments = () => {
+    const localVillagerObj = getToken()
+    return fetch(`${apiKey}/tournaments/my_past_tournaments`, {
+        headers: {
+            "Authorization": `Token ${localVillagerObj.token}`,
+            "Content-Type": "application/json"
+        }
+    })
+        .then(res => res.json())
+}
 export const getTournamentGames = (tournamentId) => {
     const localVillagerObj = getToken()
     return fetch(`${apiKey}/games/${tournamentId}/get_selected_tournament_games`, {

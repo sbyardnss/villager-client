@@ -1,9 +1,10 @@
+import { useContext } from "react"
+import { TournamentContext } from "./TournamentProvider"
 
 
 
-export const ResultsModal = ({ activeTournament, allPlayersArr, scoreObj, setShowResults, resultsForTieBreak, setShowEndTournament, tournamentGames, currentRound, currentByePlayer }) => {
-    console.log(currentByePlayer)
-
+export const ResultsModal = ({ activeTournament, allPlayersArr, scoreObj, setShowResults, resultsForTieBreak, setShowEndTournament, tournamentGames, currentRound, currentByePlayer, tournamentCreatorBool }) => {
+    const { checkIfUserIsAppCreator } = useContext(TournamentContext)
     //function to determine whether to add current bye point to players score or not
     const isNewOrPastRound = () => {
         if (tournamentGames.find(tGame => tGame.tournament_round === currentRound)) {
@@ -132,7 +133,7 @@ export const ResultsModal = ({ activeTournament, allPlayersArr, scoreObj, setSho
                 {tieBreakDisplay(arrForTieBreakers)}
             </section>
             <div id="modalBtns">
-                {activeTournament?.complete === false ?
+                {activeTournament?.complete === false && (tournamentCreatorBool || checkIfUserIsAppCreator()) ?
                     <button
                         className="buttonStyleApprove"
                         onClick={() => {

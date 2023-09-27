@@ -151,6 +151,25 @@ export const TournamentForm = ({ createTournament, setCreateTournament, newTourn
                             </div>
                             : ""}
                     </section>
+                    {playersSelected ?
+                        <ul id="selectedPlayersList" className="setCustomFont">
+                            {
+                                newTournament.competitors.map(c => {
+                                    return (
+                                        <li key={c.id} className="selectedCompetitorListItem">{c.full_name}</li>
+                                    )
+                                })
+                            }
+                            {
+                                newTournament.guest_competitors.map(c => {
+                                    return (
+                                        <li key={c.id} className="selectedCompetitorListItem">{c.full_name}</li>
+                                    )
+                                })
+                            }
+                        </ul>
+                        : ""
+                    }
                 </section>
             )
         }

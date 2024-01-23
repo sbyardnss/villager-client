@@ -34,21 +34,22 @@ export const Profile = () => {
         username: "",
         first_name: "",
         last_name: "",
-        password: "",
+        // password: "",
         email: ""
     })
     const [passwordVisible, setPasswordVisible] = useState(false)
     useEffect(
         () => {
-            Promise.all([/*getAllMessages(), */getProfile(), getMyGames(), getMyTournaments()]).then(([/*messageData, */profileData, myGameData, tournamentData]) => {
+            Promise.all([/*getAllMessages(), */getProfile(), getMyGames()/*, getMyTournaments()*/]).then(([/*messageData, */profileData, myGameData/*, tournamentData*/]) => {
                 // setMessages(messageData)
                 setProfileInfo(profileData)
                 setUpdate(profileData)
                 setMyGames(myGameData)
-                setMyTournaments(tournamentData)
+                // setMyTournaments(tournamentData)
             })
         }, []
     )
+    // console.log(update)
     useEffect(
         () => {
             const gamesIWon = myGames.filter(g => g.winner?.id === localVillagerObj.userId).length
@@ -83,7 +84,7 @@ export const Profile = () => {
     const showPasswordButtons = () => {
         if (passwordVisible === true) {
             return <>
-                <button className="cancelProfileEditButton" onClick={
+                <button className="cancelProfileEditButton buttonStyleReject" onClick={
                     () => {
                         setPasswordVisible(false)
                     }
@@ -92,7 +93,7 @@ export const Profile = () => {
         }
         else {
             return <>
-                <button className="cancelProfileEditButton" onClick={
+                <button className="cancelProfileEditButton buttonStyleApprove" onClick={
                     () => {
                         setPasswordVisible(true)
                     }
@@ -137,8 +138,8 @@ export const Profile = () => {
                             setUpdate(copy)
                         }
                     }></input>
-                    <label className="editProfileInputLabel" htmlFor="password">password</label>
-                    <input className="editProfileInput text-input" type={showPassword(passwordVisible)} value={update.password} onChange={
+                    <label className="editProfileInputLabel" htmlFor="password">set new password (don't forget it!)</label>
+                    <input className="editProfileInput text-input" type={showPassword(passwordVisible)} onChange={
                         (evt) => {
                             const copy = { ...profileInfo }
                             copy.password = evt.target.value
@@ -146,14 +147,14 @@ export const Profile = () => {
                         }
                     }></input>
                     <div id="submitCancelProfileChanges">
-                        <button type="submit" className="cancelProfileEditButton" onClick={
+                        <button type="submit" className="cancelProfileEditButton buttonStyleApprove" onClick={
                             () => {
                                 updateProfile(update, localVillagerObj.userId)
                                 setProfileEdit(false)
                                 getProfile().then(data => setProfileInfo(data))
                             }
                         }>submit</button>
-                        <button className="cancelProfileEditButton" onClick={
+                        <button className="cancelProfileEditButton buttonStyleReject" onClick={
                             () => {
                                 setProfileEdit(false)
                                 setUpdate({})

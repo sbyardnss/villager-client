@@ -157,7 +157,6 @@ export const Play = () => {
                         }
                         if (game.in_checkmate()) {
                             copy.win_style = "checkmate"
-                            console.log("this useEffect worked")
                         }
                         else {
                             copy.win_style = "draw"

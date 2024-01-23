@@ -3,7 +3,7 @@ import "./HomePage.css"
 import { React, useContext, useState, useEffect, useRef } from "react"
 import { Chessboard } from "react-chessboard"
 import Chess from "chess.js"
-import { acceptChallenge, deleteCommunityPost, getAllCommunityPosts, getAllGames, getAllPlayers, getAllTournaments, getMyChessClubs, getPuzzles, getTournament, sendNewGame, submitNewPostToAPI } from "../ServerManager"
+import { acceptChallenge, deleteChallengeGame, deleteCommunityPost, getAllCommunityPosts, getAllGames, getAllPlayers, getAllTournaments, getMyChessClubs, getPuzzles, getTournament, sendNewGame, submitNewPostToAPI } from "../ServerManager"
 import { PlayContext } from "../Play/PlayProvider"
 import { useNavigate } from "react-router-dom"
 import trophyIcon from "../images/small_trophy_with_background.png"
@@ -17,11 +17,12 @@ export const HomePage = () => {
     const [tournaments, setTournaments] = useState([])
     const [myTournaments, setMyTournaments] = useState([])
     const [challenges, setChallenges] = useState([])
+    const [myChallenges, setMyChallenges] = useState([])
     const [myUnfinishedGames, setMyUnfinishedGames] = useState([])
     const [displayedPuzzle, setDisplayedPuzzle] = useState({})
     const [myChessClubs, setMyChessClubs] = useState([])
     const [selectedClub, setSelectedClub] = useState(0)
-
+    const [challengeAlertVisible, setChallengeAlertVisible] = useState(false)
     const [newPost, updateNewPost] = useState({
         poster: localVillagerObj.userId,
         message: ""
@@ -83,8 +84,11 @@ export const HomePage = () => {
                     return game
                 }
             })
-
             setChallenges(challengeGames)
+            const myCreatedChallenges = games?.filter(game => {
+                return game.accepted === false && game.player_w?.id === localVillagerObj.userId && !game.player_w?.guest_id || game.accepted === false && game.player_b?.id === localVillagerObj.userId && !game.player_b?.guest_id
+            })
+            setMyChallenges(myCreatedChallenges)
             const nonGuestGames = games?.filter(game => {
                 return (!game.player_b?.guest_id && !game.player_w?.guest_id)
             })
@@ -94,14 +98,14 @@ export const HomePage = () => {
             setMyUnfinishedGames(unfinishedGames)
         }, [games]
     )
+    // useEffect(
+    //     () => {
+    //         if (selectedPuzzle.fen !== "") {
+    //             navigate("/play")
+    //         }
+    //     }, [selectedPuzzle]
+    // )
 
-    useEffect(
-        () => {
-            if (selectedPuzzle.fen !== "") {
-                navigate("/play")
-            }
-        }, [selectedPuzzle]
-    )
     //update displayed puzzle
     // useEffect(
     //     () => {
@@ -166,7 +170,6 @@ export const HomePage = () => {
                     {
                         challenges?.map(c => {
                             const challengingPlayer = c.player_w ? c.player_w : c.player_b
-
                             if (challengingPlayer.id !== localVillagerObj.userId) {
                                 return (
                                     <div key={c.id} className="challengeListItem">
@@ -199,6 +202,11 @@ export const HomePage = () => {
     }
     return <>
         <main id="homepageContainer">
+            {challengeAlertVisible === true ?
+                <div id="challengeCreatedModal">
+                    <h2 className="setCustomFont">Challenge Created!</h2>
+                </div>
+                : ""}
             <div id="homepageLayoutDiv">
                 <div id="forumAndActiveGames">
                     <article id="communityForum">
@@ -283,7 +291,6 @@ export const HomePage = () => {
                                     {!myUnfinishedGames.length ? <h3 className="setCustomFont" id="noGamesMsg">you have no active games</h3> : ""}
                                     {
                                         myUnfinishedGames?.map(ug => {
-                                            console.log(ug)
                                             // const opponent = ug.player_w?.id === localVillagerObj.userId ? ug.player_b : ug.player_w
                                             let tournament = {}
                                             if (ug.tournament) {
@@ -366,11 +373,76 @@ export const HomePage = () => {
                                 onClick={() => {
                                     if (window.confirm("create open challenge?")) {
                                         sendNewGame(challengeForApi)
+                                            .then(() => resetGames())
+                                        setChallengeAlertVisible(true)
+
+                                        setTimeout(() => {
+                                            setChallengeAlertVisible(false)
+                                        }, 2000)
                                     }
                                 }}>create</button>
                         </section>
-                        <h2 className="setCustomFont">open challenges</h2>
-                        {openChallengesOrMsg()}
+                        <h2 className="setCustomFont">My Challenges</h2>
+                        {!myChallenges.length ? <div id="noChallengesMsg" className="setCustomFont">You have no challenges</div> : ""}
+                        <section id="challengesList">
+                            {
+                                myChallenges?.map(c => {
+                                    const playingAs = c.player_w ? "whiteChallengeSpan" : "blackChallengeSpan"
+                                    const playingColor = c.player_w ? "white" : "black"
+                                    return (
+                                        <div key={c.id} className="challengeListItem">
+                                            <div>
+                                                <div className="challengerInfo">
+                                                    <div>
+                                                        Playing as
+                                                        <span id={playingAs}>{playingColor}</span>
+                                                    </div>
+                                                    <button className="challengeBtn buttonStyleReject"
+                                                        onClick={() => {
+                                                            deleteChallengeGame(c.id)
+                                                                .then(() => resetGames())
+                                                        }}>abort</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    )
+
+                                })
+                            }
+                        </section>
+                        <h2 className="setCustomFont">Open Challenges</h2>
+                        {/* {openChallengesOrMsg()} */}
+                        {!challenges.length ? <div id="noChallengesMsg">There are currently no open challenges</div> : ""}
+                        <section id="challengesList">
+                            {
+                                challenges?.map(c => {
+                                    const challengingPlayer = c.player_w ? c.player_w : c.player_b
+                                    if (challengingPlayer.id !== localVillagerObj.userId) {
+                                        return (
+                                            <div key={c.id} className="challengeListItem">
+                                                <div>
+                                                    {/* <div>Challenger:</div> */}
+                                                    <div className="challengerInfo">
+                                                        <div>
+                                                            Play as <span id={c.player_w ? "blackChallengeSpan" : "whiteChallengeSpan"}>{c.player_w ? "black" : "white"}</span> vs <span id={c.player_w ? "whiteChallengeSpan" : "blackChallengeSpan"}>{challengingPlayer.username}</span>
+                                                        </div>
+                                                        <button className="challengeBtn buttonStyleAmbiguous"
+                                                            onClick={() => {
+                                                                const copy = { ...c }
+                                                                c.player_w ? copy.player_b = localVillagerObj.userId : copy.player_w = localVillagerObj.userId
+                                                                c.player_w ? copy.player_w = c.player_w.id : copy.player_b = c.player_b.id
+                                                                copy.accepted = true
+                                                                acceptChallenge(copy)
+                                                                    .then(() => resetGames())
+                                                            }}>accept</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        )
+                                    }
+                                })
+                            }
+                        </section>
                     </div>
                     <div id="puzzlesArticle">
                         <div id="puzzleParamaters">

@@ -107,6 +107,26 @@ export const getMyTournaments = () => {
     })
         .then(res => res.json())
 }
+export const getMyOpenTournaments = () => {
+    const localVillagerObj = getToken()
+    return fetch(`${apiKey}/tournaments/my_open_tournaments`, {
+        headers: {
+            "Authorization": `Token ${localVillagerObj.token}`,
+            "Content-Type": "application/json"
+        }
+    })
+        .then(res => res.json())
+}
+export const getMyPastTournaments = () => {
+    const localVillagerObj = getToken()
+    return fetch(`${apiKey}/tournaments/my_past_tournaments`, {
+        headers: {
+            "Authorization": `Token ${localVillagerObj.token}`,
+            "Content-Type": "application/json"
+        }
+    })
+        .then(res => res.json())
+}
 export const getTournamentGames = (tournamentId) => {
     const localVillagerObj = getToken()
     return fetch(`${apiKey}/games/${tournamentId}/get_selected_tournament_games`, {
@@ -179,6 +199,17 @@ export const getChessClub = (clubId) => {
     })
         .then(res => res.json())
 }
+export const getScoreCard = (tournamentId) => {
+    const localVillagerObj = getToken()
+    return fetch(`${apiKey}/tournaments/${tournamentId}/score_card`, {
+        headers: {
+            "Authorization": `Token ${localVillagerObj.token}`,
+            "Content-Type": "application/json"
+        }
+    })
+        .then(res => res.json())
+}
+
 
 
 
@@ -427,6 +458,16 @@ export const deleteGuest = (guestIdObj) => {
 export const leaveClub = (clubId) => {
     const localVillagerObj = getToken()
     return fetch(`${apiKey}/clubs/${clubId}/leave_club`, {
+        method: "DELETE",
+        headers: {
+            "Authorization": `Token ${localVillagerObj.token}`,
+            "Content-Type": "application/json"
+        }
+    })
+}
+export const deleteChallengeGame = (gameId) => {
+    const localVillagerObj = getToken()
+    return fetch(`${apiKey}/games/${gameId}`, {
         method: "DELETE",
         headers: {
             "Authorization": `Token ${localVillagerObj.token}`,

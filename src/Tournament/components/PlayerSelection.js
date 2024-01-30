@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react"
-import { createNewGuest } from "../ServerManager"
+import { createNewGuest } from "../../ServerManager"
 import { TournamentContext } from "./TournamentProvider"
 
 

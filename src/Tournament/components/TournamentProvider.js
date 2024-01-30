@@ -1,5 +1,5 @@
 import { useState, useEffect, createContext } from "react";
-import { getAllGuestPlayers, getAllPlayers, getAllTimeSettings, getAllTournaments, getMyChessClubs, getMyOpenTournaments, getMyTournaments, getTournamentGames } from "../ServerManager";
+import { getAllGuestPlayers, getAllPlayers, getAllTimeSettings, getAllTournaments, getMyChessClubs, getMyOpenTournaments, getMyTournaments, getTournamentGames } from "../../ServerManager";
 import { Swiss } from "tournament-pairings";
 export const TournamentContext = createContext()
 
@@ -53,7 +53,7 @@ export const TournamentProvider = (props) => {
             if (pastTournaments.length) {
                 setTournaments(tournaments.concat(pastTournaments))
             }
-        },[pastTournaments]
+        },[pastTournaments, tournaments]
     )
     //tournament games disappearing if i move within here at all. should be stable within app though
     useEffect(
@@ -84,7 +84,7 @@ export const TournamentProvider = (props) => {
                 const club = myChessClubs.find(club => club.id === selectedClub)
                 setSelectedClubObj(club)
             }
-        }, [selectedClub, myChessClubs, selectedTournament]
+        }, [selectedClub, myChessClubs, selectedTournament, tournaments]
     )
 
     //only show guests and players that are in selected club
@@ -109,7 +109,7 @@ export const TournamentProvider = (props) => {
                 const allCompetitors = players.concat(guests)
                 setPlayersAndGuests(allCompetitors)
             }
-        }, [clubPlayers, clubGuests, selectedTournament]
+        }, [clubPlayers, clubGuests, selectedTournament, players, guests]
     )
     const resetTournaments = () => {
         getAllTournaments()

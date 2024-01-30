@@ -3,7 +3,7 @@ import { Parameters } from "./Parameters"
 import { PlayerSelection } from "./PlayerSelection"
 import { TournamentContext } from "./TournamentProvider"
 import { Swiss } from "tournament-pairings"
-import { sendNewTournament } from "../ServerManager"
+import { sendNewTournament } from "../../ServerManager"
 
 
 export const TournamentForm = ({ createTournament, setCreateTournament, newTournament, updateNewTournament, handleChange, potentialCompetitors, setPotentialCompetitors, playersSelected, setPlayersSelected, search, setSearch, newGuest, updateNewGuest, resetNewTournament, resetPlayers }) => {

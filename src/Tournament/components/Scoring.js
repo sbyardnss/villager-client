@@ -1,6 +1,6 @@
 import { useContext } from "react"
 import { TournamentContext } from "./TournamentProvider"
-import { sendNewGame } from "../ServerManager"
+import { sendNewGame } from "../../ServerManager"
 
 export const Scoring = ({ activeTournament, activeTournamentPlayers, handleGameForApiUpdate, resetGameForApi, currentRoundMatchups, playerOpponentsReferenceObj, gameForApi, currentRound }) => {
     const { localVillagerObj, checkIfUserIsAppCreator, tournamentGames, resetTournamentGames } = useContext(TournamentContext)

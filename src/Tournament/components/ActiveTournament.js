@@ -1,7 +1,7 @@
 import { useState, useEffect, useContext } from "react"
 import { TournamentContext } from "./TournamentProvider"
-import { sendNewGame, updateTournament } from "../ServerManager"
-import "./Tournament.css"
+import { sendNewGame, updateTournament } from "../../ServerManager"
+import "../Tournament.css"
 import { EditPlayersModal } from "./EditPlayersModal"
 // import { Swiss } from "tournament-pairings"
 import { TournamentTable } from "./TournamentTable"
@@ -72,7 +72,7 @@ export const ActiveTournament = () => {
             const selectedTournamentObj = tournaments?.find(t => t.id === selectedTournament)
             setActiveTournament(selectedTournamentObj)
             setSelectedClub(selectedTournamentObj.club.id)
-        }, [selectedTournament, tournaments]
+        }, [selectedTournament, tournaments, setSelectedClub]
     )
 
     useEffect(
@@ -144,7 +144,7 @@ export const ActiveTournament = () => {
                 }
                 setAllPlayersArr(allPlayersRef)
             }
-        }, [scoreObj, activeTournament.club]
+        }, [scoreObj, activeTournament.club, myChessClubs, playerOpponentsReferenceObj]
     )
     //setting round from active tournament
     useEffect(

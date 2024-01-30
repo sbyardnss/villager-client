@@ -40,6 +40,7 @@ export const Login = () => {
 
             <section id="loginBox">
                 <form className="form--login" onSubmit={handleLogin}>
+                    <h1>{window.innerWidth > 630 ? "ONLY STYLED FOR MOBILE BEYOND THIS POINT": ""}</h1> 
             <img id="skellyHand" src={skellyHand}></img>
             {/* <h4>currently down for maintenance</h4>
                     <h4>will be back up Wednesday 7/19</h4> */}

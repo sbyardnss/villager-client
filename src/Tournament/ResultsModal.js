@@ -1,8 +1,17 @@
+import { useContext } from "react"
+import { TournamentContext } from "./TournamentProvider"
 
 
 
-export const ResultsModal = ({ activeTournament, allPlayersArr, scoreObj, setShowResults, resultsForTieBreak, setShowEndTournament }) => {
-
+export const ResultsModal = ({ activeTournament, allPlayersArr, scoreObj, setShowResults, resultsForTieBreak, setShowEndTournament, tournamentGames, currentRound, currentByePlayer, tournamentCreatorBool }) => {
+    const { checkIfUserIsAppCreator } = useContext(TournamentContext)
+    //function to determine whether to add current bye point to players score or not
+    const isNewOrPastRound = () => {
+        if (tournamentGames.find(tGame => tGame.tournament_round === currentRound)) {
+            return true
+        }
+        return false
+    }
     //creating solkoff tie break data
     const solkoffTieBreaker = (playerIdArr) => {
         const solkoffTieBreakerArr = []
@@ -90,7 +99,6 @@ export const ResultsModal = ({ activeTournament, allPlayersArr, scoreObj, setSho
 
         )
     }
-
     const resultArr = []
     const arrForTieBreakers = []
     allPlayersArr.map(player => {
@@ -105,7 +113,6 @@ export const ResultsModal = ({ activeTournament, allPlayersArr, scoreObj, setSho
         }
     })
     resultArr.sort((a, b) => { return b[1] - a[1] })
-
     return (
         <div id="resultsModal">
             Results
@@ -117,7 +124,7 @@ export const ResultsModal = ({ activeTournament, allPlayersArr, scoreObj, setSho
                             return (
                                 <div key={r[0]} className="resultsModalListItem">
                                     <div>{r[0]}: </div>
-                                    <div>{r[1].toString()}</div>
+                                    <div>{r[2] === currentByePlayer && isNewOrPastRound() === true ? (r[1] + 1).toString() : r[1].toString()}</div>
                                 </div>
                             )
                         })
@@ -126,7 +133,7 @@ export const ResultsModal = ({ activeTournament, allPlayersArr, scoreObj, setSho
                 {tieBreakDisplay(arrForTieBreakers)}
             </section>
             <div id="modalBtns">
-                {activeTournament?.complete === false ?
+                {activeTournament?.complete === false && (tournamentCreatorBool || checkIfUserIsAppCreator()) ?
                     <button
                         className="buttonStyleApprove"
                         onClick={() => {

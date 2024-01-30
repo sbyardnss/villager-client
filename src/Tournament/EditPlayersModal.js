@@ -7,7 +7,7 @@ import { PlayerSelection } from "./PlayerSelection"
 import { Parameters } from "./Parameters"
 
 
-export const EditPlayersModal = ({ activeTournamentObj, setEdit, playedRounds, gamesFromThisRound, previousOpponents, scoreObject, setCurrentTournament, scoreCard, currentByePlayer }) => {
+export const EditPlayersModal = ({ activeTournamentObj, setEdit, playedRounds, gamesFromThisRound, previousOpponents, scoreObject, setCurrentTournament, scoreCard, currentByePlayer, blackWhiteTally }) => {
     const { localVillagerObj, players, guests, playersAndGuests, setPlayersAndGuests, selectedClubObj, selectedClub, resetGuests, resetTournaments, createPairings } = useContext(TournamentContext)
     const [potentialCompetitors, setPotentialCompetitors] = useState([])
     const [search, setSearch] = useState("")
@@ -380,8 +380,7 @@ export const EditPlayersModal = ({ activeTournamentObj, setEdit, playedRounds, g
 
 
 
-
-                                    const newMatchups = createPairings('edit', allAddedCompetitors, previousOpponents, playedRounds, scoreObject, scoreCard)
+                                    const newMatchups = createPairings('edit', allAddedCompetitors, previousOpponents, playedRounds, scoreObject, scoreCard, currentByePlayer, blackWhiteTally)
 
 
                                     
@@ -456,6 +455,10 @@ export const EditPlayersModal = ({ activeTournamentObj, setEdit, playedRounds, g
                                                 let hadBye = false
                                                 //FOR UPDATE: added count here 
                                                 let count = scoreObject[pg]
+
+                                                //history of colors played for player
+                                                const playerBlackWhiteHistory = blackWhiteTally[pg] || []
+
                                                 if (previousOpponents[pg]?.includes('bye')) {
                                                     hadBye = true
                                                     //FOR UPDATE: editing count here if the player had a bye
@@ -464,13 +467,13 @@ export const EditPlayersModal = ({ activeTournamentObj, setEdit, playedRounds, g
                                                 const previousOppArr = previousOpponents[pg]?.filter(op => op !== 'bye')
                                                 if (previousOpponents[pg]) {
                                                     //FOR UPDATE: added count parameter
-                                                    return { id: pg, score: count, avoid: previousOppArr, receivedBye: hadBye }
+                                                    return { id: pg, score: count, avoid: previousOppArr, colors: playerBlackWhiteHistory, receivedBye: hadBye }
                                                 }
                                                 else {
                                                     return { id: pg }
                                                 }
                                             })
-                                            const newMatchups = Swiss(playerIdObjectsForPairing, playedRounds)
+                                            const newMatchups = Swiss(playerIdObjectsForPairing, playedRounds, false, true)
                                             //could we concat here instead of mapping?
                                             newMatchups.map(nm => {
                                                 filteredPairings.push(nm)

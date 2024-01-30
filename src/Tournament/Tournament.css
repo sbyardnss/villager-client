@@ -19,7 +19,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    top: 15%;
+    top: 12%;
     width: 20em;
     height: fit-content;
     /* height: 30em; */
@@ -42,6 +42,16 @@
     justify-content: space-between;
     align-items: center;
 }
+
+#selectedPlayersList {
+    background-color: black;
+    padding: .5em;
+}
+
+.selectedCompetitorListItem {
+    margin: .25em;
+}
+
 @media screen and (min-width:641px) {
     #tournamentContainer {
         margin-top: 120px;
@@ -354,6 +364,8 @@
 
     #activeTournamentsList {
         width: 100%;
+        max-width: 30em;
+
         height: 12em;
         margin-top: 1em;
         overflow: scroll;
@@ -367,6 +379,7 @@
 
     #pastTournamentList {
         width: 100%;
+        max-width: 30em;
         height: 8.5em;
         overflow: scroll;
         list-style: none;
@@ -377,7 +390,7 @@
     }
 
     .pastTournamentsBtn {
-        align-self: flex-start;
+        align-self: center;
         margin-bottom: 1em;
         margin-top: 2em;
         width: fit-content;
@@ -391,6 +404,9 @@
     }
 
     .tournamentListItem {
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
         color: rgb(231, 231, 231);
         cursor: pointer;
         padding: .5em;
@@ -767,14 +783,14 @@
         border-radius: 4px;
         padding: .5em;
         backdrop-filter: blur(2px);
-        height: 10em;
+        height: 14em;
         overflow: scroll;
 
     }
 
     #tournamentSelectedCompetitors {
         backdrop-filter: blur(2px);
-        height: 10em;
+        height: 14em;
         overflow: scroll;
 
     }
@@ -912,6 +928,9 @@
     }
 
     .tournamentListItem {
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
         color: rgb(231, 231, 231);
         cursor: pointer;
         padding: .5em;
@@ -934,6 +953,7 @@
         width: 95%;
         justify-content: space-between;
     }
+
     #activeTournamentTitle {
         width: 8em;
         white-space: nowrap;
@@ -1001,6 +1021,7 @@
         padding: .25em;
         width: 100%;
     }
+
     .editScoresTrophy {
         position: relative;
         top: -20%;

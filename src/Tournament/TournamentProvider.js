@@ -1,5 +1,5 @@
 import { useState, useEffect, createContext } from "react";
-import { getAllGuestPlayers, getAllPlayers, getAllTimeSettings, getAllTournaments, getMyChessClubs, getMyTournaments, getTournamentGames } from "../ServerManager";
+import { getAllGuestPlayers, getAllPlayers, getAllTimeSettings, getAllTournaments, getMyChessClubs, getMyOpenTournaments, getMyTournaments, getTournamentGames } from "../ServerManager";
 import { Swiss } from "tournament-pairings";
 export const TournamentContext = createContext()
 
@@ -12,6 +12,7 @@ export const TournamentProvider = (props) => {
     const [guests, setGuests] = useState([])
     const [timeSettings, setTimeSettings] = useState([])
     const [tournaments, setTournaments] = useState([])
+    const [pastTournaments, setPastTournaments] = useState([])
     const [myChessClubs, setMyChessClubs] = useState([])
 
     //contingent data
@@ -30,12 +31,9 @@ export const TournamentProvider = (props) => {
     const [games, setGames] = useState([])
 
 
-    //KEEP THIS FOR FUTURE ADDITION AND REMOVAL OF PLAYERS MID TOURNAMENT
-    // const [pastPairings, setPastPairings] = useState([])
-
     useEffect(
         () => {
-            Promise.all([getAllPlayers(), getAllGuestPlayers(), getMyTournaments(), getAllTimeSettings()]).then(([playerData, guestData, tournamentData, timeSettingData]) => {
+            Promise.all([getAllPlayers(), getAllGuestPlayers(), /*getMyTournaments()*/ getMyOpenTournaments(), getAllTimeSettings()]).then(([playerData, guestData, tournamentData, timeSettingData]) => {
                 setPlayers(playerData)
                 setGuests(guestData)
                 setTournaments(tournamentData)
@@ -49,7 +47,14 @@ export const TournamentProvider = (props) => {
                 .then(data => setMyChessClubs(data))
         }, [players, guests]
     )
-
+    
+    useEffect(
+        () => {
+            if (pastTournaments.length) {
+                setTournaments(tournaments.concat(pastTournaments))
+            }
+        },[pastTournaments]
+    )
     //tournament games disappearing if i move within here at all. should be stable within app though
     useEffect(
         () => {
@@ -119,7 +124,7 @@ export const TournamentProvider = (props) => {
         getAllGuestPlayers()
             .then(data => setGuests(data))
     }
-    const playerArgCreator = (playerOppRef, refObj, scoreObject, actTourneyPlayers) => {
+    const playerArgCreator = (playerOppRef, refObj, scoreObject, actTourneyPlayers, playerBWTally) => {
         let identifier = null
         let isActive = true
         let playerArg = {}
@@ -140,6 +145,7 @@ export const TournamentProvider = (props) => {
             playerArg = {
                 id: identifier,
                 score: scoreObject[identifier] || 0,
+                colors: playerBWTally,
                 avoid: refObj[identifier] ? refObj[identifier].filter(ref => ref !== 'bye') : []
             }
             if (refObj[identifier]) {
@@ -151,18 +157,25 @@ export const TournamentProvider = (props) => {
         }
     }
 
+    const checkIfUserIsAppCreator = () => {
+        if (localVillagerObj.userId === 1) {
+            return true
+        }
+        return false
+    }
+
 
     const findIdentifier = (playerObj) => {
         return playerObj?.guest_id ? playerObj?.guest_id : playerObj?.id
     }
 
-    const createPairings = (editOrNew, tournamentPlayers, opponentReferenceObj, curRound, scoreObject, scoreCard, currentByePlayer) => {
+    const createPairings = (editOrNew, tournamentPlayers, opponentReferenceObj, curRound, scoreObject, scoreCard, currentByePlayer, bWTally) => {
         //check whether odd or even number of players
         //if so choose bye player and then continue to iterate
         //iterate players
 
         const targetRound = editOrNew === 'new' ? curRound + 1 : curRound
-        const playerArgs = []
+        let playerArgs = []
         if (tournamentPlayers.length % 2 !== 0) {
             const scoreCardArr = []
             const playerIdentifierArr = []
@@ -181,16 +194,25 @@ export const TournamentProvider = (props) => {
             // iterate potential bye players and find a pairing set that will work
             for (const potentialByePlayerArr of scoreCardArr) {
                 for (const playerIdentifier of playerIdentifierArr) {
+                    // let playerBWTally = []
+                    // if (bWTally[parseInt(playerIdentifier)] || bWTally[playerIdentifier]) {
+                    //     playerBWTally = bWTally[parseInt(playerIdentifier)] || bWTally[playerIdentifier]
+                    // }
+                    const playerBWTally = bWTally[playerIdentifier] || []
                     if (parseInt(playerIdentifier) !== potentialByePlayerArr[0] && playerIdentifier !== potentialByePlayerArr[0]) {
-                        const playerArgObj = playerArgCreator(playerIdentifier, opponentReferenceObj, scoreObject, tournamentPlayers)
+                        const playerArgObj = playerArgCreator(playerIdentifier, opponentReferenceObj, scoreObject, tournamentPlayers, playerBWTally)
                         playerArgs.push(playerArgObj)
                     }
                 }
-                const newMatchupsSansBye = Swiss(playerArgs, targetRound)
+
+                const newMatchupsSansBye = Swiss(playerArgs, targetRound, false, true)
                 if (newMatchupsSansBye && !newMatchupsSansBye.filter(m => m.player2 === null).length) {
                     const byePairing = { round: targetRound, match: tournamentPlayers.length / 2 + .5, player1: parseInt(potentialByePlayerArr[0]) || potentialByePlayerArr[0], player2: null }
                     const pairings = newMatchupsSansBye.concat(byePairing)
                     return pairings
+                }
+                else if (scoreCardArr.indexOf(potentialByePlayerArr) < scoreCardArr.length - 1) {
+                    playerArgs = []
                 }
                 else {
                     if (scoreCardArr.indexOf(potentialByePlayerArr) === scoreCardArr.length - 1) {
@@ -205,11 +227,16 @@ export const TournamentProvider = (props) => {
         else {
             for (const player of tournamentPlayers) {
                 const identifier = findIdentifier(player)
-                const oppRef = opponentReferenceObj[identifier]
-                const playerArgObj = playerArgCreator(identifier, opponentReferenceObj, scoreObject, tournamentPlayers, targetRound)
+                // let playerBWTally = []
+                // if (bWTally[parseInt(identifier)] || bWTally[identifier]) {
+                //     playerBWTally = bWTally[parseInt(identifier)] || bWTally[identifier]
+                // }
+
+                const playerBWTally = bWTally[identifier] || []
+                const playerArgObj = playerArgCreator(identifier, opponentReferenceObj, scoreObject, tournamentPlayers, playerBWTally)
                 playerArgs.push(playerArgObj)
             }
-            const pairings = Swiss(playerArgs, targetRound)
+            const pairings = Swiss(playerArgs, targetRound, false, true)
             if (pairings) {
                 return pairings
             }
@@ -225,12 +252,12 @@ export const TournamentProvider = (props) => {
 
     return (
         <TournamentContext.Provider value={{
-            localVillagerObj, players, setPlayers, timeSettings, tournaments, setTournaments, tournamentGames, setGames,
+            localVillagerObj, players, setPlayers, timeSettings, tournaments, setTournaments, pastTournaments, setPastTournaments, tournamentGames,
             selectedTournament, setSelectedTournament, resetTournamentGames, resetGuests,
             setGuests, guests, playersAndGuests, setPlayersAndGuests, selectedClub, setSelectedClub,
             selectedClubObj, setSelectedClubObj, setClubPlayers, clubPlayers, setClubGuests, clubGuests, editPlayers, setEditPlayers,
             myChessClubs, setMyChessClubs, resetTournaments,
-            createPairings, findIdentifier
+            createPairings, findIdentifier, checkIfUserIsAppCreator
         }}>
             {props.children}
         </TournamentContext.Provider>

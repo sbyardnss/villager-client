@@ -8,7 +8,7 @@ jobs:
 
     steps:
     - name: Checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
 
     - name: Use Node.js
       uses: actions/setup-node@v2
@@ -26,10 +26,9 @@ jobs:
       with:
         url: http://https://villagerchess.netlify.app/ # Replace with your application URL
 
-    - name: Run Cypress Tests
-      uses: cypress-io/github-action@v2
-      env:
-        REACT_APP_API: https://villager-chess-server-acc4f0b418c8.herokuapp.com
+    - name: Cypress run
+      uses: cypress-io/github-action@v6
       with:
-        start: npm start # This is your start script
-        wait-on: 'http://https://villagerchess.netlify.app/' # Replace with your application URL
+        build: npm run build
+        start: npm start
+        browser: chrome

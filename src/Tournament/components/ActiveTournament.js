@@ -10,9 +10,10 @@ import { ResultsModal } from "./ResultsModal"
 import { EndTournamentModal } from "./EndTournamentModal"
 import { Scoring } from "./Scoring"
 import { createPlayerOpponentReferenceObject } from "../actions/create-player-opponents-ref"
+import { createPairings } from "../actions/create-pairings"
 
 export const ActiveTournament = () => {
-    const { localVillagerObj, checkIfUserIsAppCreator, tournaments, playersAndGuests, tournamentGames, selectedTournament, setSelectedTournament, resetTournamentGames, editPlayers, setEditPlayers, resetTournaments, myChessClubs, createPairings, selectedClub, setSelectedClub } = useContext(TournamentContext)
+    const { localVillagerObj, checkIfUserIsAppCreator, tournaments, playersAndGuests, tournamentGames, selectedTournament, setSelectedTournament, resetTournamentGames, editPlayers, setEditPlayers, resetTournaments, myChessClubs, selectedClub, setSelectedClub } = useContext(TournamentContext)
     //initial setup state variables
     const [activeTournament, setActiveTournament] = useState({})
     const [activeTournamentPlayers, setActiveTournamentPlayers] = useState([])

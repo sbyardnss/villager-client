@@ -13,7 +13,7 @@ jobs:
     - name: Use Node.js
       uses: actions/setup-node@v2
       with:
-        node-version: '14' # Replace with your Node.js version
+        node-version: '18.15.0' # Replace with your Node.js version
 
     - name: Install Dependencies
       run: npm ci
@@ -24,10 +24,10 @@ jobs:
     - name: Wait for Server to Respond
       uses: jakejarvis/wait-action@master
       with:
-        url: http://localhost:3000 # Replace with your application URL
+        url: http://https://villagerchess.netlify.app/ # Replace with your application URL
 
     - name: Run Cypress Tests
       uses: cypress-io/github-action@v2
       with:
         start: npm start # This is your start script
-        wait-on: 'http://localhost:3000' # Replace with your application URL
+        wait-on: 'http://https://villagerchess.netlify.app/' # Replace with your application URL

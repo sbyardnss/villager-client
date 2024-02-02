@@ -28,6 +28,8 @@ jobs:
 
     - name: Run Cypress Tests
       uses: cypress-io/github-action@v2
+      env:
+        REACT_APP_API: https://villager-chess-server-acc4f0b418c8.herokuapp.com
       with:
         start: npm start # This is your start script
         wait-on: 'http://https://villagerchess.netlify.app/' # Replace with your application URL

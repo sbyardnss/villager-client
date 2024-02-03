@@ -3,6 +3,7 @@ module.exports = {
 
   },
   specs() {
-    require('cypress/e2e/tournament/specs/active-tournament.cy.js')
+    // require('cypress/e2e/tournament/specs/active-tournament.cy.js')
+    require('./specs/active-tournament.cy')
   }
 }

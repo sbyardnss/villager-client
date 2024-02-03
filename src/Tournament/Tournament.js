@@ -1,12 +1,12 @@
 import { useState, useEffect, useContext } from "react"
 import { RoundRobin, Swiss } from "tournament-pairings"
-import { TournamentContext } from "./TournamentProvider"
+import { TournamentContext } from "./components/TournamentProvider"
 import "./Tournament.css"
 import { alterGame, createNewGuest, getAllGuestPlayers, getAllPlayers, getAllTournaments, getMyChessClubs, getMyPastTournaments, sendNewTournament } from "../ServerManager"
-import { ActiveTournament } from "./ActiveTournament"
-import { PlayerSelection } from "./PlayerSelection"
-import { Parameters } from "./Parameters"
-import { TournamentForm } from "./TournamentForm"
+import { ActiveTournament } from "./components/ActiveTournament"
+import { PlayerSelection } from "./components/PlayerSelection"
+import { Parameters } from "./components/Parameters"
+import { TournamentForm } from "./components/TournamentForm"
 
 export const Tournament = () => {
     const { localVillagerObj, tournaments, setPlayers, selectedTournament, setSelectedTournament, selectedClub, selectedClubObj, pastTournaments, setPastTournaments } = useContext(TournamentContext)
@@ -39,7 +39,7 @@ export const Tournament = () => {
             const guestCopy = { ...newGuest }
             guestCopy.club = selectedClub
             updateNewGuest(guestCopy)
-        }, [selectedClubObj]
+        }, [selectedClubObj, newGuest, selectedClub]
     )
 
     const resetNewTournament = () => {
@@ -148,6 +148,7 @@ export const Tournament = () => {
                                                 return (
                                                     <li key={t.id}
                                                         className="tournamentListItem"
+                                                        data-cy={`tournament--${t.id}`}
                                                         value={t.id}
                                                         onClick={(e) => {
                                                             setSelectedTournament(e.target.value)

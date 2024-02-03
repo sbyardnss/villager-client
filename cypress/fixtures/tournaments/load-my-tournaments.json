@@ -1,0 +1,29 @@
+[
+  {
+    "id": 1,
+    "title": "first tournament",
+    "creator": 1,
+    "date": "2023-06-01",
+    "time_setting": 1,
+    "complete": false,
+    "competitors": [1, 2],
+    "guest_competitors": [1],
+    "rounds": 1,
+    "in_person": false,
+    "pairings": [
+      {
+        "round": 1,
+        "match": 1,
+        "player1": 1,
+        "player2": 2
+      },
+      {
+        "round": 1,
+        "match": 2,
+        "player1": "g1",
+        "player2": null
+      }
+    ],
+    "club": 1
+  }
+]

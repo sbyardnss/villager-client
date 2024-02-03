@@ -1,5 +1,5 @@
 import { useContext } from "react"
-import { endTournament } from "../ServerManager"
+import { endTournament } from "../../ServerManager"
 import { TournamentContext } from "./TournamentProvider"
 
 export const EndTournamentModal = ({ setShowEndTournament, setShowResults}) => {

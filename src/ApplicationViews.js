@@ -5,7 +5,7 @@ import { Play } from "./Play/Play"
 import { Profile } from "./Profile/Profile"
 import { Messages } from "./Messages/Messages"
 import { Tournament } from "./Tournament/Tournament"
-import { TournamentProvider } from "./Tournament/TournamentProvider"
+import { TournamentProvider } from "./Tournament/components/TournamentProvider"
 import { PlayProvider } from "./Play/PlayProvider"
 import { ChessClubs } from "./ChessClubs/ChessClubs"
 

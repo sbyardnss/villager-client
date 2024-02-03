@@ -1,0 +1,26 @@
+name: Run Cypress Tests
+
+on: [push]
+
+jobs:
+  install:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Install modules
+        uses: npi ci
+      - name: Cypress run
+        uses: cypress-io/github-action@v3
+        with:
+          browser: chrome
+          headless: true
+          start: npm start
+          wait-on: http://localhost:3000
+        # env:
+        #   REACT_APP_API: https://villager-chess-server-acc4f0b418c8.herokuapp.com
+          # project: ./site
+          # browser: chrome
+          # build: npm build
+          # start: npm start
+          # wait-on: "http://localhost:3000"

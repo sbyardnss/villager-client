@@ -2,10 +2,10 @@ import { useContext } from "react"
 import { TournamentContext } from "./TournamentProvider"
 import { alterGame } from "../../ServerManager"
 import trophyIcon from "../../images/small_trophy_with_background.png";
-
+import { findIdentifier } from "../actions/find-identifier";
 
 export const EditScores = ({ allPlayersArr, handleGameForApiUpdate, setEditScores, gameForApi, resetGameForApi }) => {
-    const { tournamentGames, resetTournamentGames, findIdentifier, clubPlayers, clubGuests } = useContext(TournamentContext)
+    const { tournamentGames, resetTournamentGames, clubPlayers, clubGuests } = useContext(TournamentContext)
     const sortedTournamentGames = tournamentGames.sort((a, b) => { return a.id - b.id })
     return (
         <section id="tournamentEditSection">

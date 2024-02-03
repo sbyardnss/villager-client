@@ -2,13 +2,14 @@ import { useContext, useEffect, useState } from "react"
 import { TournamentContext } from "./TournamentProvider"
 import "../Tournament.css"
 import { createNewGuest, getChessClub, getTournament, updateTournament } from "../../ServerManager"
+import { createPairings } from "../actions/create-pairings"
 import { RoundRobin, Swiss } from "tournament-pairings"
 import { PlayerSelection } from "./PlayerSelection"
 import { Parameters } from "./Parameters"
 
 
 export const EditPlayersModal = ({ activeTournamentObj, setEdit, playedRounds, gamesFromThisRound, previousOpponents, scoreObject, setCurrentTournament, scoreCard, currentByePlayer, blackWhiteTally }) => {
-    const { localVillagerObj, players, guests, playersAndGuests, setPlayersAndGuests, selectedClubObj, selectedClub, resetGuests, resetTournaments, createPairings } = useContext(TournamentContext)
+    const { localVillagerObj, players, guests, playersAndGuests, setPlayersAndGuests, selectedClubObj, selectedClub, resetGuests, resetTournaments } = useContext(TournamentContext)
     const [potentialCompetitors, setPotentialCompetitors] = useState([])
     const [search, setSearch] = useState("")
     const [showGuests, setShowGuests] = useState(false)

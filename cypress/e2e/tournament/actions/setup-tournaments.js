@@ -29,5 +29,9 @@ export function setupTournaments() {
     '/tournaments/my_open_tournaments',
     { fixture: 'tournaments/load-my-tournaments.json' }
   ).as('loadMyTournaments')
-
+  cy.intercept(
+    'GET',
+    '/games/1/get_selected_tournament_games',
+    { fixture: 'tournaments/load-tournament-games.json'}
+  ).as('loadTournamentGames')
 }

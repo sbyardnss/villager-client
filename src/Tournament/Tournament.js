@@ -148,6 +148,7 @@ export const Tournament = () => {
                                                 return (
                                                     <li key={t.id}
                                                         className="tournamentListItem"
+                                                        data-cy={`tournament--${t.id}`}
                                                         value={t.id}
                                                         onClick={(e) => {
                                                             setSelectedTournament(e.target.value)

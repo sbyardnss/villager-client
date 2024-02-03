@@ -1,8 +1,9 @@
 describe('Active Tournament Functionality', () => {
   beforeEach(() => {
-    cy.visit('/');
+    cy.login();
+    // cy.visit('/');
   })
   it('passes', () => {
-    cy.visit('/')
+    cy.visit('/tournament')
   })
 })

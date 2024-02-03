@@ -23,3 +23,23 @@
 //
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
+
+Cypress.Commands.add('login', () => {
+  // cy.request({
+  //   method: 'POST',
+  //   url: 'https://villager-chess-server-acc4f0b418c8.herokuapp.com/login',
+  //   headers: {
+  //     "Content-Type": "application/json",
+  //     "Accept": "application/json",
+  //   },
+  //   body: {
+  //     user: {
+  //       username: 'sbyard',
+  //       password: 'sb',
+  //     }
+  //   }
+  // })
+  //   .then((resp) => {
+  window.localStorage.setItem('villager', JSON.stringify({ valid: true, token: "06787add96eb3264080015997720cb0877b40f90", userId: 1 }))
+    // })
+})

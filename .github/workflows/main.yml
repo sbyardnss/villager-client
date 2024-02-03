@@ -9,7 +9,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Install modules
-        uses: npm ci
+        run: npm ci
       - name: Cypress run
         uses: cypress-io/github-action@v3
         with:

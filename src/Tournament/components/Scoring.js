@@ -21,7 +21,7 @@ export const Scoring = ({ activeTournament, activeTournamentPlayers, handleGameF
                             <div className="setCustomFont">Round complete. Start new round.</div> :
                             ""}
                     {
-                        currentRoundMatchups?.map((matchup, index) => {
+                        currentRoundMatchups?.forEach((matchup, index) => {
                             const white = activeTournamentPlayers?.find(player => player.id === matchup.player1 || player.guest_id === matchup.player1)
                             const black = activeTournamentPlayers?.find(player => player.id === matchup.player2 || player.guest_id === matchup.player2)
                             const whiteTargetForIndicator = white?.guest_id ? white?.guest_id : white?.id

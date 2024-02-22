@@ -8,10 +8,10 @@ export const TournamentProvider = (props) => {
     const localVillagerObj = JSON.parse(localVillager)
 
     //base data
-    const [players, setPlayers] = useState([])
-    const [guests, setGuests] = useState([])
-    const [timeSettings, setTimeSettings] = useState([])
-    const [tournaments, setTournaments] = useState([])
+    const [players, setPlayers] = useState([])//
+    const [guests, setGuests] = useState([])//
+    const [timeSettings, setTimeSettings] = useState([])//
+    const [tournaments, setTournaments] = useState([])//
     const [pastTournaments, setPastTournaments] = useState([])
     const [myChessClubs, setMyChessClubs] = useState([])
 

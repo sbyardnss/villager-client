@@ -501,3 +501,14 @@ export const registerUser = (user) => {
     })
         .then(res => res.json())
 }
+
+//BELOW ADDED FOR REFACTOR
+export const getClubMatesAndGuests = () => {
+    return fetch(`${apiKey}/players/club_mates`, {
+        headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+        },
+    })
+        .then(res => res.json())
+}

@@ -1,29 +1,10 @@
-import type { Tournament } from "../modules/Tournaments/state";
-
-interface AppState {
-  user: Villager,
-  clubs: ChessClub[],
-  activeTournaments: Tournament[],
-}
-
-export const AppStateDefaults: AppState = {
-  user: {
-    valid: false,
-    token: '',
-    userId: 0,
-  },
-  clubs: [],
-  activeTournaments: [],
-}
-
-
-interface Villager {
+export interface Villager {
   valid: boolean,
   token: string,
   userId: number,
 }
 
-interface ChessClub {
+export interface ChessClub {
   id: number,
   name: string,
   manager: PlayerInClub,
@@ -38,13 +19,13 @@ interface ChessClub {
   has_password: boolean,
 }
 
-interface GuestInClub {
+export interface GuestInClub {
   id: number,
   full_name: string,
   guest_id: string,
 }
 
-interface PlayerInClub {
+export interface PlayerInClub {
   id: number,
   full_name: string,
   username: string,

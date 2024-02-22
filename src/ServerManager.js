@@ -504,10 +504,36 @@ export const registerUser = (user) => {
 
 //BELOW ADDED FOR REFACTOR
 export const getClubMatesAndGuests = () => {
+    const localVillagerObj = getToken()
     return fetch(`${apiKey}/players/club_mates`, {
         headers: {
+            "Authorization": `Token ${localVillagerObj.token}`,
             "Content-Type": "application/json",
-            "Accept": "application/json"
+            "Accept": "application/json",
+        },
+    })
+        .then(res => res.json())
+}
+
+export const getOpenChallenges = () => {
+    const localVillagerObj = getToken()
+    return fetch(`${apiKey}/games/get_open_challenges`, {
+        headers: {
+            "Authorization": `Token ${localVillagerObj.token}`,
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+        },
+    })
+        .then(res => res.json())
+}
+
+export const getActiveUserGames = () => {
+    const localVillagerObj = getToken()
+    return fetch(`${apiKey}/games/get_active_user_games`, {
+        headers: {
+            "Authorization": `Token ${localVillagerObj.token}`,
+            "Content-Type": "application/json",
+            "Accept": "application/json",
         },
     })
         .then(res => res.json())

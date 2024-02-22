@@ -1,9 +1,11 @@
-import { TournamentForm } from "../components/TournamentForm";
-import { ActiveTournament } from "../components/ActiveTournament";
-import { useState } from "react";
+import { TournamentForm } from "../../../components/TournamentForm";
+import { ActiveTournament } from "../../../components/ActiveTournament";
+import { useState, useContext } from "react";
+import { TournamentContext } from "./TournamentProvider";
 
 
 export function TournamentController() {
+    const { selectedTournament, setSelectedTournament } = useContext(TournamentContext)
     // const [selectedTournament, setSelectedTournament] = useState(0);
     const [createNewTournament, setCreateNewTournament] = useState(false);
     // const [selectedClub, setSelectedClub] = useState(0);

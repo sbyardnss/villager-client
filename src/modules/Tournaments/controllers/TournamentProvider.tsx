@@ -1,14 +1,14 @@
 import React, { createContext, useState, useEffect, PropsWithChildren } from "react";
 import { getClubMatesAndGuests, getAllTimeSettings, getMyOpenTournaments, getMyChessClubs } from "../../../ServerManager";
 import type { Player, Guest } from "../types";
-import { GetLoggedInUser } from "../../../App/actions/get-current-user";
+// import { GetLoggedInUser } from "../../App/actions/get-current-user";
 
 export const TournamentContext = createContext(null as any);
 
 interface TournamentProviderProps extends PropsWithChildren<{}> { }
 
 export function TournamentProvider({ children }: TournamentProviderProps) {
-  const localVillagerUser = GetLoggedInUser();
+  // const localVillagerUser = GetLoggedInUser();
 
   const [selectedTournament, setSelectedTournament] = useState(0);
   const [selectedClub, setSelectedClub] = useState(0);
@@ -39,11 +39,10 @@ export function TournamentProvider({ children }: TournamentProviderProps) {
   )
   useEffect(
     () => {
-      Promise.all([getMyOpenTournaments(), getAllTimeSettings(), getMyChessClubs()])
-        .then(([tournamentData, timeData, clubData]) => {
+      Promise.all([getMyOpenTournaments(), getAllTimeSettings()])
+        .then(([tournamentData, timeData]) => {
           setMyTournaments(tournamentData);
           setTimeSettings(timeData);
-          setMyChessClubs(clubData);
         })
     }, []
   )

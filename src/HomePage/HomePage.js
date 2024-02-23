@@ -1,4 +1,4 @@
-import "./HomePage.css"
+import "../styles/HomePage.css"
 
 import { React, useContext, useState, useEffect, useRef } from "react"
 import { Chessboard } from "react-chessboard"

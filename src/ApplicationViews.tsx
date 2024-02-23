@@ -48,18 +48,20 @@ export const ApplicationViews = () => {
     //     </Routes>
     // )
     return (
-        <Routes>
-            <AppProvider>
+        <AppProvider>
+            <Routes>
                 <Route path="/" element={
                     <>
                         <Outlet />
                     </>
                 }>
                     <Route path="" element={
-                        <HomePage />
+                        <PlayProvider>
+                            <HomePage />
+                        </PlayProvider>
                     } />
                 </Route>
-            </AppProvider>
-        </Routes>
+            </Routes>
+        </AppProvider>
     )
 }

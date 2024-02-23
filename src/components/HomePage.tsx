@@ -236,7 +236,7 @@ export const HomePage = () => {
   }
 
   const openChallengesOrMsg = () => {
-    const othersChallenges = challenges.filter((c: Game) => c.player_b?.id !== localVillagerUser.id && c.player_w?.id !== localVillagerUser.id)
+    const othersChallenges = challenges.filter((c: Game) => c.player_b?.id !== localVillagerUser.userId && c.player_w?.id !== localVillagerUser.userId)
     if (!othersChallenges.length) {
       return (
         <div id="noChallengesMsg">
@@ -313,7 +313,7 @@ export const HomePage = () => {
                   const date_time = new Date(post.date_time)
                   const date = date_time.toLocaleDateString('en-us')
                   const time = date_time.toLocaleTimeString('en-us', { hour: 'numeric', minute: '2-digit' })
-                  if (post.poster?.id === localVillagerUser.id) {
+                  if (post.poster?.id === localVillagerUser.userId) {
                     return (
                       <li key={post.id} className="communityPost">
                         <h3>
@@ -380,7 +380,7 @@ export const HomePage = () => {
                         tournament = tournamentObj;
                       }
                       // const opponent = ug.player_w?.id === localVillagerUser ? players.find(p => p.id === ug.player_b?.id) : players.find(p => p.id === ug.player_w?.id)
-                      const opponentObj = ug.player_w?.id === localVillagerUser.id ? ug.player_b : ug.player_w;
+                      const opponentObj = ug.player_w?.id === localVillagerUser.userId ? ug.player_b : ug.player_w;
                       let opponent: PlayerRelated;
                       const isTournamentGame = () => {
                         return ug.tournament ? "tournamentActiveGameListItem" : "activeGameListItem"
@@ -392,7 +392,7 @@ export const HomePage = () => {
                         const opponent = opponentObj;
                         return (
                           <div key={ug.id} className={isTournamentGame()} id={isSelected()}>
-                            <div><span id={ug.player_w?.id === localVillagerUser.id ? "whiteChallengeSpan" : "blackChallengeSpan"}>{ug.player_w?.id === localVillagerUser.id ? "white" : "black"}</span></div>
+                            <div><span id={ug.player_w?.id === localVillagerUser.userId ? "whiteChallengeSpan" : "blackChallengeSpan"}>{ug.player_w?.id === localVillagerUser.userId ? "white" : "black"}</span></div>
                             <div className="activeGameInfo">
                               <div className="opponentSectionForListItem">vs {opponent.username}</div>
                               <div>{ug.tournament ? <img className="trophyIconHomepage" src={trophyIcon} /> : ""}</div>
@@ -427,13 +427,13 @@ export const HomePage = () => {
                 <div id="piecesSelectionContainer">
                   <div id="whitePiecesSelect" onClick={() => {
                     const challengeCopy = { ...challengeForApi }
-                    challengeCopy.player_w = localVillagerUser.id;
+                    challengeCopy.player_w = localVillagerUser.userId;
                     challengeCopy.player_b = null
                     updateChallengeForApi(challengeCopy)
                   }}>white</div>
                   <div id="blackPiecesSelect" onClick={() => {
                     const challengeCopy = { ...challengeForApi }
-                    challengeCopy.player_b = localVillagerUser.id;
+                    challengeCopy.player_b = localVillagerUser.userId;
                     challengeCopy.player_w = null
                     updateChallengeForApi(challengeCopy)
                   }}>black</div>
@@ -441,11 +441,11 @@ export const HomePage = () => {
                     const challengeCopy = { ...challengeForApi }
                     const randomNumber = Math.floor(Math.random() * 2)
                     if (randomNumber === 1) {
-                      challengeCopy.player_w = localVillagerUser.id;
+                      challengeCopy.player_w = localVillagerUser.userId;
                       challengeCopy.player_b = null
                     }
                     else {
-                      challengeCopy.player_b = localVillagerUser.id;
+                      challengeCopy.player_b = localVillagerUser.userId;
                       challengeCopy.player_w = null
                     }
                     updateChallengeForApi(challengeCopy)
@@ -503,7 +503,7 @@ export const HomePage = () => {
                 challenges?.map((c: ChallengeEditing) => {
                   //TODO: STORY: CHALLENGE TYPE FIX
                   const challengingPlayer = (c.player_w ? c.player_w : c.player_b) as PlayerRelated;
-                  if (challengingPlayer?.id !== localVillagerUser.id) {
+                  if (challengingPlayer?.id !== localVillagerUser.userId) {
                     return (
                       <div key={c.id} className="challengeListItem">
                         <div>
@@ -515,7 +515,7 @@ export const HomePage = () => {
                             <button className="challengeBtn buttonStyleAmbiguous"
                               onClick={() => {
                                 const copy = { ...c }
-                                c.player_w ? copy.player_b = localVillagerUser.id : copy.player_w = localVillagerUser.id
+                                c.player_w ? copy.player_b = localVillagerUser.userId : copy.player_w = localVillagerUser.userId
                                 //TODO: STORY: CHALLENGE TYPE FIX
                                 //TODO: CURRENTLY ASSIGNING THIS TO A NUMBER WHICH COMPLICATES TYPE. REQUIRES ADDING BOTH PLAYERRELATED AND NUMBER TO FIELDS
                                 c.player_w ? copy.player_w = (c.player_w as PlayerRelated).id : copy.player_b = (c.player_b as PlayerRelated).id

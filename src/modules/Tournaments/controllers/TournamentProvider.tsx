@@ -69,12 +69,12 @@ export function TournamentProvider({ children }: TournamentProviderProps) {
   //     .then(data => setGuests(data))
   // }
 
-  const checkIfUserIsAppCreator = () => {
-    if (localVillagerUser.userId === 1) {
-      return true
-    }
-    return false
-  }
+  // const checkIfUserIsAppCreator = () => {
+  //   if (localVillagerUser.userId === 1) {
+  //     return true
+  //   }
+  //   return false
+  // }
   return (
     <TournamentContext.Provider value={{
       // Your context value here

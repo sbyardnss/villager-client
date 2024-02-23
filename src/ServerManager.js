@@ -538,3 +538,15 @@ export const getActiveUserGames = () => {
     })
         .then(res => res.json())
 }
+
+export const getMyClubsCommunityPosts = (clubIdArr) => {
+    const localVillagerObj = getToken()
+    return fetch(`${apiKey}/communityposts/get_my_clubs_posts`, {
+        headers: {
+            "Authorization": `Token ${localVillagerObj.token}`,
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(clubIdArr)
+    })
+        .then(res => res.json())
+} 

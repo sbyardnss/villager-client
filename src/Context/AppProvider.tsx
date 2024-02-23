@@ -1,6 +1,7 @@
 import { PropsWithChildren, createContext, useState, useEffect } from "react";
 import { GetLoggedInUser } from "../modules/App/actions/get-current-user";
 import { getMyChessClubs } from "../ServerManager";
+import { AppStateDefaults } from "../modules/App/state";
 
 export const AppContext = createContext(null as any);
 
@@ -14,6 +15,7 @@ useEffect(
       getMyChessClubs()
         .then((clubData) => {
           setMyChessClubs(clubData);
+          AppStateDefaults.clubs = clubData;
         })
     }, []
   )

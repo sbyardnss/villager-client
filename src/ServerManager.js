@@ -542,6 +542,7 @@ export const getActiveUserGames = () => {
 export const getMyClubsCommunityPosts = (clubIdArr) => {
     const localVillagerObj = getToken()
     return fetch(`${apiKey}/communityposts/get_my_clubs_posts`, {
+        method: "POST",
         headers: {
             "Authorization": `Token ${localVillagerObj.token}`,
             "Content-Type": "application/json"

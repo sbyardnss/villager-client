@@ -1,6 +1,6 @@
 import "../styles/HomePage.css";
 // import { React, useContext, useState, useEffect, useRef, KeyboardEvent, ChangeEventHandler } from "react"
-import { useContext, useState, useEffect, useRef, KeyboardEvent, ChangeEventHandler } from "react"
+import { useContext, useState, useEffect, useRef, KeyboardEvent, ChangeEventHandler, ReactNode } from "react"
 import { Chessboard } from "react-chessboard"
 // import Chess from "chess.js"
 import { getMyClubsCommunityPosts, getActiveUserGames, getOpenChallenges, acceptChallenge, deleteChallengeGame, deleteCommunityPost, getAllCommunityPosts, getAllGames, getAllPlayers, getAllTournaments, getMyChessClubs, getPuzzles, getTournament, sendNewGame, submitNewPostToAPI } from "../ServerManager"
@@ -35,10 +35,10 @@ export const HomePage = () => {
     computer_opponent: false,
     winner: null
   });
-  
+
   //POTENTIALLY TEMPORARY BEGIN
   const { players, games, resetGames, selectedGameObj, updateSelectedGameObj, selectedGame, setSelectedGame, puzzles, selectedPuzzle, setSelectedPuzzle, selectedRange, setSelectedRange } = useContext(PlayContext);
-  
+
   const [myChallenges, setMyChallenges] = useState([]);
   const [displayedPuzzle, setDisplayedPuzzle] = useState<Puzzle>({
     puzzleid: '',
@@ -56,13 +56,22 @@ export const HomePage = () => {
 
   useEffect(
     () => {
-      Promise.all([getOpenChallenges(), getMyClubsCommunityPosts(), getActiveUserGames()])
-        .then(([challengeData, postData, openGameData]) => {
+      Promise.all([getOpenChallenges(), getActiveUserGames()])
+        .then(([challengeData, openGameData]) => {
           setChallenges(challengeData);
-          setCommunityPosts(postData);
           setUsersActiveGames(openGameData);
         })
     }, []
+  )
+  useEffect(
+    () => {
+      const clubIds = myChessClubs.map((club: ChessClub) => club.id);
+      getMyClubsCommunityPosts(clubIds)
+        .then(postData => {
+          setCommunityPosts(postData);
+        })
+
+    }, [myChessClubs]
   )
 
   useEffect(
@@ -75,7 +84,7 @@ export const HomePage = () => {
     () => {
       const postsForSelectedClub = communityPosts.filter((post: CommunityPost) => post.club === selectedClub);
       setDisplayedCommunityPosts(postsForSelectedClub);
-    }, [selectedClub, myChessClubs]
+    }, [selectedClub, myChessClubs, communityPosts]
   )
   /*
   community posts
@@ -235,51 +244,53 @@ export const HomePage = () => {
     }
   }
 
-  const openChallengesOrMsg = () => {
-    const othersChallenges = challenges.filter((c: Game) => c.player_b?.id !== localVillagerUser.userId && c.player_w?.id !== localVillagerUser.userId)
-    if (!othersChallenges.length) {
-      return (
-        <div id="noChallengesMsg">
-          There are currently no open challenges
-        </div>
-      )
-    }
-    else {
-      return <>
-        <section id="openChallengesList">
-          {/* {
-                        challenges?.map(c => {
-                            const challengingPlayer = c.player_w ? c.player_w : c.player_b
-                            if (challengingPlayer.id !== localVillagerObj.userId) {
-                                return (
-                                    <div key={c.id} className="challengeListItem">
-                                        <div>
-                                            
-                                            <div className="openChallengerInfo">
-                                                <div>
-                                                    Play <span id={c.player_w ? "blackChallengeSpan" : "whiteChallengeSpan"}>{c.player_w ? "black" : "white"}</span> vs <span id={c.player_w ? "whiteChallengeSpan" : "blackChallengeSpan"}>{challengingPlayer.username}</span>
-                                                </div>
-                                                <button className="challengeBtn buttonStyleAmbiguous"
-                                                    onClick={() => {
-                                                        const copy = { ...c }
-                                                        c.player_w ? copy.player_b = localVillagerObj.userId : copy.player_w = localVillagerObj.userId
-                                                        c.player_w ? copy.player_w = c.player_w.id : copy.player_b = c.player_b.id
-                                                        copy.accepted = true
-                                                        acceptChallenge(copy)
-                                                            .then(() => resetGames())
-                                                    }}>accept</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                )
-                            }
-                        })
-                    } */}
-        </section>
-      </>
+  // const openChallengesOrMsg = () => {
+  //   const othersChallenges = challenges.filter((c: Game) => c.player_b?.id !== localVillagerUser.userId && c.player_w?.id !== localVillagerUser.userId)
+  //   if (!othersChallenges.length) {
+  //     return (
+  //       <div id="noChallengesMsg">
+  //         There are currently no open challenges
+  //       </div>
+  //     )
+  //   }
+  //   else {
+  //     return <>
+  //       <section id="openChallengesList">
+  //         {
+  //           challenges?.map((c: ChallengeCreated) => {
+  //             const challengingPlayer = c.player_w ? c.player_w : c.player_b
+  //             //TODO: STORY: CHALLENGE TYPE FIX
+  //             if ((challengingPlayer as PlayerRelated).id !== localVillagerUser.userId) {
+  //               return (
+  //                 <div key={c.id} className="challengeListItem">
+  //                   <div>
 
-    }
-  }
+  //                     <div className="openChallengerInfo">
+  //                       <div>
+  //                         Play <span id={c.player_w ? "blackChallengeSpan" : "whiteChallengeSpan"}>{c.player_w ? "black" : "white"}</span> vs <span id={c.player_w ? "whiteChallengeSpan" : "blackChallengeSpan"}>{challengingPlayer.username}</span>
+  //                       </div>
+  //                       <button className="challengeBtn buttonStyleAmbiguous"
+  //                         onClick={() => {
+  //                           const copy = { ...c }
+  //                           c.player_w ? copy.player_b = localVillagerUser.userId : copy.player_w = localVillagerUser.userId
+  //                           c.player_w ? copy.player_w = c.player_w.id : copy.player_b = c.player_b.id
+  //                           copy.accepted = true
+  //                           acceptChallenge(copy)
+  //                             .then(() => resetGames())
+  //                         }}>accept</button>
+  //                     </div>
+  //                   </div>
+  //                 </div>
+  //               )
+  //             }
+  //             return null;
+  //           })
+  //         }
+  //       </section>
+  //     </>
+
+  //   }
+  // }
   return <>
     <main id="homepageContainer">
       {challengeAlertVisible === true ?
@@ -295,14 +306,14 @@ export const HomePage = () => {
               <div id="forumFilterWithHeader">
                 <h5 id="forumFilterHeader" className="setCustomFont">select club</h5>
                 <ul id="communityForumClubFilter">
-                  {/* {!myChessClubs.length ? <div id="noClubsNotificationTab">join or create a club</div> : ""}
-                                    {
-                                        myChessClubs.map(club => {
-                                            return (
-                                                <li key={club.id} className="communityForumFilterTab setCustomFont" onClick={() => setSelectedClub(club.id)}>{club.name}</li>
-                                            )
-                                        })
-                                    } */}
+                  {!myChessClubs.length ? <div id="noClubsNotificationTab">join or create a club</div> : ""}
+                  {
+                    myChessClubs.map((club: ChessClub) => {
+                      return (
+                        <li key={club.id} className="communityForumFilterTab setCustomFont" onClick={() => setSelectedClub(club.id)}>{club.name}</li>
+                      )
+                    })
+                  }
                 </ul>
               </div>
             </div>
@@ -365,7 +376,7 @@ export const HomePage = () => {
           <article key="activeGames" id="activeGamesArticle">
             <section id="myActiveGames">
               <h2 id="activeGamesHeader" className="setCustomFont">My Games</h2>
-              <button id="homepagePlayButton">play</button>
+              {/* <button id="homepagePlayButton">play</button> */}
               <div id="myUnfinishedGamesScrollWindow">
                 <div id="activeGamesUl">
                   {!usersActiveGames.length ? <h3 className="setCustomFont" id="noGamesMsg">you have no active games</h3> : ""}
@@ -377,11 +388,10 @@ export const HomePage = () => {
                         // TODO: FIX THIS USE OF ANY
                         const tournamentObj = Promise.resolve(getTournament(ug.tournament)) as any;
                         if (tournamentObj)
-                        tournament = tournamentObj;
+                          tournament = tournamentObj;
                       }
                       // const opponent = ug.player_w?.id === localVillagerUser ? players.find(p => p.id === ug.player_b?.id) : players.find(p => p.id === ug.player_w?.id)
                       const opponentObj = ug.player_w?.id === localVillagerUser.userId ? ug.player_b : ug.player_w;
-                      let opponent: PlayerRelated;
                       const isTournamentGame = () => {
                         return ug.tournament ? "tournamentActiveGameListItem" : "activeGameListItem"
                       }
@@ -395,7 +405,7 @@ export const HomePage = () => {
                             <div><span id={ug.player_w?.id === localVillagerUser.userId ? "whiteChallengeSpan" : "blackChallengeSpan"}>{ug.player_w?.id === localVillagerUser.userId ? "white" : "black"}</span></div>
                             <div className="activeGameInfo">
                               <div className="opponentSectionForListItem">vs {opponent.username}</div>
-                              <div>{ug.tournament ? <img className="trophyIconHomepage" src={trophyIcon} /> : ""}</div>
+                              <div>{ug.tournament ? <img className="trophyIconHomepage" alt="trophy" src={trophyIcon} /> : ""}</div>
                               <div className="myGamesListLogisticsInfo">
                                 <div>{tournament?.title || ""}</div>
                                 <div>{new Date(ug.date_time).toLocaleDateString('en-us')}</div>

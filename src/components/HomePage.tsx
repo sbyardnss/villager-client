@@ -31,200 +31,200 @@ export const HomePage = () => {
   */
 
 
-    // const localVillager = localStorage.getItem("villager")
-    // const localVillagerObj = JSON.parse(localVillager)
-    // const navigate = useNavigate()
-    // const { players, games, resetGames, selectedGameObj, updateSelectedGameObj, selectedGame, setSelectedGame, puzzles, selectedPuzzle, setSelectedPuzzle, selectedRange, setSelectedRange } = useContext(PlayContext)
-    // const [communityPosts, setCommunityPosts] = useState([])
-    // const [displayedCommunityPosts, setDisplayedCommunityPosts] = useState([])
-    // const [tournaments, setTournaments] = useState([])
-    // const [myTournaments, setMyTournaments] = useState([])
-    // const [challenges, setChallenges] = useState([])
-    // const [myChallenges, setMyChallenges] = useState([])
-    // const [myUnfinishedGames, setMyUnfinishedGames] = useState([])
-    // const [displayedPuzzle, setDisplayedPuzzle] = useState({})
-    // const [myChessClubs, setMyChessClubs] = useState([])
-    // const [selectedClub, setSelectedClub] = useState(0)
-    // const [challengeAlertVisible, setChallengeAlertVisible] = useState(false)
-    // const [newPost, updateNewPost] = useState({
-    //     poster: localVillagerObj.userId,
-    //     message: ""
-    // })
-    // //OLD CHALLENGEFOR API
-    // // const [challengeForApi, updateChallengeForApi] = useState({
-    // //     player_w: 0,
-    // //     player_b: 0,
-    // //     accepted: false,
-    // //     computer_opponent: false
-    // // })
-
+    const localVillager = localStorage.getItem("villager")
+    const localVillagerObj = JSON.parse(localVillager)
+    const navigate = useNavigate()
+    const { players, games, resetGames, selectedGameObj, updateSelectedGameObj, selectedGame, setSelectedGame, puzzles, selectedPuzzle, setSelectedPuzzle, selectedRange, setSelectedRange } = useContext(PlayContext)
+    const [communityPosts, setCommunityPosts] = useState([])
+    const [displayedCommunityPosts, setDisplayedCommunityPosts] = useState([])
+    const [tournaments, setTournaments] = useState([])
+    const [myTournaments, setMyTournaments] = useState([])
+    const [challenges, setChallenges] = useState([])
+    const [myChallenges, setMyChallenges] = useState([])
+    const [myUnfinishedGames, setMyUnfinishedGames] = useState([])
+    const [displayedPuzzle, setDisplayedPuzzle] = useState({})
+    const [myChessClubs, setMyChessClubs] = useState([])
+    const [selectedClub, setSelectedClub] = useState(0)
+    const [challengeAlertVisible, setChallengeAlertVisible] = useState(false)
+    const [newPost, updateNewPost] = useState({
+        poster: localVillagerObj.userId,
+        message: ""
+    })
+    //OLD CHALLENGEFOR API
     // const [challengeForApi, updateChallengeForApi] = useState({
     //     player_w: 0,
-    //     player_w_model_type: 'player',
     //     player_b: 0,
-    //     player_b_model_type: 'player',
     //     accepted: false,
-    //     computer_opponent: false,
-    //     winner: null
+    //     computer_opponent: false
     // })
+
+    const [challengeForApi, updateChallengeForApi] = useState({
+        player_w: 0,
+        player_w_model_type: 'player',
+        player_b: 0,
+        player_b_model_type: 'player',
+        accepted: false,
+        computer_opponent: false,
+        winner: null
+    })
+    useEffect(
+        () => {
+            Promise.all([getAllCommunityPosts(), getMyChessClubs()/*, getAllTournaments()*/]).then(([communityPostData, myClubsData/*, tournamentData*/]) => {
+                setCommunityPosts(communityPostData)
+                setMyChessClubs(myClubsData)
+                // setTournaments(tournamentData)
+            })
+        }, []
+    )
+    useEffect(
+        () => {
+            setSelectedClub(myChessClubs[0]?.id)
+        }, [myChessClubs]
+    )
+    useEffect(
+        () => {
+            if (selectedClub !== 0) {
+                const filteredCommunityPosts = communityPosts.filter(post => {
+                    return post.club === selectedClub
+                })
+                setDisplayedCommunityPosts(filteredCommunityPosts)
+            }
+            else {
+                setDisplayedCommunityPosts(communityPosts)
+            }
+        }, [selectedClub, myChessClubs]
+    )
+    useEffect(
+        () => {
+            // const challengeGames = games?.filter(game => game.accepted === false)
+            const challengeGames = games?.filter(game => {
+                const challengingPlayerId = game.player_b?.id ? game.player_b.id : game.player_w.id
+                const allMembersOfClubs = []
+                myChessClubs.map(club => {
+                    club.members.map(member => member.id !== localVillagerObj.userId ? allMembersOfClubs.push(member.id) : null)
+                })
+                if (game.accepted === false && allMembersOfClubs.find(memberId => memberId === challengingPlayerId)) {
+                    return game
+                }
+            })
+            setChallenges(challengeGames)
+            const myCreatedChallenges = games?.filter(game => {
+                return game.accepted === false && game.player_w?.id === localVillagerObj.userId && !game.player_w?.guest_id || game.accepted === false && game.player_b?.id === localVillagerObj.userId && !game.player_b?.guest_id
+            })
+            setMyChallenges(myCreatedChallenges)
+            const nonGuestGames = games?.filter(game => {
+                return (!game.player_b?.guest_id && !game.player_w?.guest_id)
+            })
+            const unfinishedGames = nonGuestGames?.filter(game => {
+                return (game.player_b?.id === localVillagerObj.userId || game.player_w?.id === localVillagerObj.userId) && game.winner === null && game.win_style === '' && game.accepted === true
+            })
+            setMyUnfinishedGames(unfinishedGames)
+        }, [games]
+    )
     // useEffect(
     //     () => {
-    //         Promise.all([getAllCommunityPosts(), getMyChessClubs()/*, getAllTournaments()*/]).then(([communityPostData, myClubsData/*, tournamentData*/]) => {
-    //             setCommunityPosts(communityPostData)
-    //             setMyChessClubs(myClubsData)
-    //             // setTournaments(tournamentData)
-    //         })
-    //     }, []
-    // )
-    // useEffect(
-    //     () => {
-    //         setSelectedClub(myChessClubs[0]?.id)
-    //     }, [myChessClubs]
-    // )
-    // useEffect(
-    //     () => {
-    //         if (selectedClub !== 0) {
-    //             const filteredCommunityPosts = communityPosts.filter(post => {
-    //                 return post.club === selectedClub
-    //             })
-    //             setDisplayedCommunityPosts(filteredCommunityPosts)
+    //         if (selectedPuzzle.fen !== "") {
+    //             navigate("/play")
     //         }
-    //         else {
-    //             setDisplayedCommunityPosts(communityPosts)
-    //         }
-    //     }, [selectedClub, myChessClubs]
+    //     }, [selectedPuzzle]
     // )
+
+    //update displayed puzzle
     // useEffect(
     //     () => {
-    //         // const challengeGames = games?.filter(game => game.accepted === false)
-    //         const challengeGames = games?.filter(game => {
-    //             const challengingPlayerId = game.player_b?.id ? game.player_b.id : game.player_w.id
-    //             const allMembersOfClubs = []
-    //             myChessClubs.map(club => {
-    //                 club.members.map(member => member.id !== localVillagerObj.userId ? allMembersOfClubs.push(member.id) : null)
-    //             })
-    //             if (game.accepted === false && allMembersOfClubs.find(memberId => memberId === challengingPlayerId)) {
-    //                 return game
-    //             }
-    //         })
-    //         setChallenges(challengeGames)
-    //         const myCreatedChallenges = games?.filter(game => {
-    //             return game.accepted === false && game.player_w?.id === localVillagerObj.userId && !game.player_w?.guest_id || game.accepted === false && game.player_b?.id === localVillagerObj.userId && !game.player_b?.guest_id
-    //         })
-    //         setMyChallenges(myCreatedChallenges)
-    //         const nonGuestGames = games?.filter(game => {
-    //             return (!game.player_b?.guest_id && !game.player_w?.guest_id)
-    //         })
-    //         const unfinishedGames = nonGuestGames?.filter(game => {
-    //             return (game.player_b?.id === localVillagerObj.userId || game.player_w?.id === localVillagerObj.userId) && game.winner === null && game.win_style === '' && game.accepted === true
-    //         })
-    //         setMyUnfinishedGames(unfinishedGames)
-    //     }, [games]
+    //         if (puzzles) {
+
+    //             const firstPuzzle = puzzles.puzzles[0]
+    //             setDisplayedPuzzle(firstPuzzle)
+    //         }
+    //     },[puzzles]
     // )
-    // // useEffect(
-    // //     () => {
-    // //         if (selectedPuzzle.fen !== "") {
-    // //             navigate("/play")
-    // //         }
-    // //     }, [selectedPuzzle]
-    // // )
 
-    // //update displayed puzzle
-    // // useEffect(
-    // //     () => {
-    // //         if (puzzles) {
-
-    // //             const firstPuzzle = puzzles.puzzles[0]
-    // //             setDisplayedPuzzle(firstPuzzle)
-    // //         }
-    // //     },[puzzles]
-    // // )
-
-    // const resetCommunityPosts = () => {
-    //     getAllCommunityPosts()
-    //         .then(data => setCommunityPosts(data))
-    // }
-    // //SCROLL TO BOTTOM FUNCTIONALITY FROM LINKUP
-    // const scrollToBottom = () => {
-    //     const communityPostElement = document.getElementById("communityForumMsgs")
-    //     communityPostElement.scrollTop = communityPostElement.scrollHeight
-    // }
-    // useEffect(() => {
-    //     scrollToBottom()
-    // }, [communityPosts])
+    const resetCommunityPosts = () => {
+        getAllCommunityPosts()
+            .then(data => setCommunityPosts(data))
+    }
+    //SCROLL TO BOTTOM FUNCTIONALITY FROM LINKUP
+    const scrollToBottom = () => {
+        const communityPostElement = document.getElementById("communityForumMsgs")
+        communityPostElement.scrollTop = communityPostElement.scrollHeight
+    }
+    useEffect(() => {
+        scrollToBottom()
+    }, [communityPosts])
 
 
-    // const handleChange = e => {
-    //     const copy = { ...newPost }
-    //     copy.message = e.target.value
-    //     updateNewPost(copy)
-    // }
-    // const handlekeyDown = e => {
-    //     if (e.key === 'Enter') {
-    //         submitNewPostToAPI(newPost).then(() => {
-    //             const copy = { ...newPost }
-    //             copy.message = ""
-    //             updateNewPost(copy)
-    //             resetCommunityPosts()
-    //         })
-    //     }
-    // }
-    // const handleDelete = id => {
-    //     if (window.confirm("are you sure?")) {
-    //         deleteCommunityPost(id)
-    //             .then(() => {
-    //                 resetCommunityPosts()
-    //             })
-    //     }
-    // }
+    const handleChange = e => {
+        const copy = { ...newPost }
+        copy.message = e.target.value
+        updateNewPost(copy)
+    }
+    const handlekeyDown = e => {
+        if (e.key === 'Enter') {
+            submitNewPostToAPI(newPost).then(() => {
+                const copy = { ...newPost }
+                copy.message = ""
+                updateNewPost(copy)
+                resetCommunityPosts()
+            })
+        }
+    }
+    const handleDelete = id => {
+        if (window.confirm("are you sure?")) {
+            deleteCommunityPost(id)
+                .then(() => {
+                    resetCommunityPosts()
+                })
+        }
+    }
 
-    // const openChallengesOrMsg = () => {
-    //     const othersChallenges = challenges.filter(c => c.player_b?.id !== localVillagerObj.userId && c.player_w?.id !== localVillagerObj.userId)
-    //     if (!othersChallenges.length) {
-    //         return (
-    //             <div id="noChallengesMsg">
-    //                 There are currently no open challenges
-    //             </div>
-    //         )
-    //     }
-    //     else {
-    //         return <>
-    //             <section id="openChallengesList">
-    //                 {
-    //                     challenges?.map(c => {
-    //                         const challengingPlayer = c.player_w ? c.player_w : c.player_b
-    //                         if (challengingPlayer.id !== localVillagerObj.userId) {
-    //                             return (
-    //                                 <div key={c.id} className="challengeListItem">
-    //                                     <div>
-    //                                         {/* <div>Challenger:</div> */}
-    //                                         <div className="openChallengerInfo">
-    //                                             <div>
-    //                                                 Play <span id={c.player_w ? "blackChallengeSpan" : "whiteChallengeSpan"}>{c.player_w ? "black" : "white"}</span> vs <span id={c.player_w ? "whiteChallengeSpan" : "blackChallengeSpan"}>{challengingPlayer.username}</span>
-    //                                             </div>
-    //                                             <button className="challengeBtn buttonStyleAmbiguous"
-    //                                                 onClick={() => {
-    //                                                     const copy = { ...c }
-    //                                                     c.player_w ? copy.player_b = localVillagerObj.userId : copy.player_w = localVillagerObj.userId
-    //                                                     c.player_w ? copy.player_w = c.player_w.id : copy.player_b = c.player_b.id
-    //                                                     copy.accepted = true
-    //                                                     acceptChallenge(copy)
-    //                                                         .then(() => resetGames())
-    //                                                 }}>accept</button>
-    //                                         </div>
-    //                                     </div>
-    //                                 </div>
-    //                             )
-    //                         }
-    //                     })
-    //                 }
-    //             </section>
-    //         </>
+    const openChallengesOrMsg = () => {
+        const othersChallenges = challenges.filter(c => c.player_b?.id !== localVillagerObj.userId && c.player_w?.id !== localVillagerObj.userId)
+        if (!othersChallenges.length) {
+            return (
+                <div id="noChallengesMsg">
+                    There are currently no open challenges
+                </div>
+            )
+        }
+        else {
+            return <>
+                <section id="openChallengesList">
+                    {
+                        challenges?.map(c => {
+                            const challengingPlayer = c.player_w ? c.player_w : c.player_b
+                            if (challengingPlayer.id !== localVillagerObj.userId) {
+                                return (
+                                    <div key={c.id} className="challengeListItem">
+                                        <div>
+                                            {/* <div>Challenger:</div> */}
+                                            <div className="openChallengerInfo">
+                                                <div>
+                                                    Play <span id={c.player_w ? "blackChallengeSpan" : "whiteChallengeSpan"}>{c.player_w ? "black" : "white"}</span> vs <span id={c.player_w ? "whiteChallengeSpan" : "blackChallengeSpan"}>{challengingPlayer.username}</span>
+                                                </div>
+                                                <button className="challengeBtn buttonStyleAmbiguous"
+                                                    onClick={() => {
+                                                        const copy = { ...c }
+                                                        c.player_w ? copy.player_b = localVillagerObj.userId : copy.player_w = localVillagerObj.userId
+                                                        c.player_w ? copy.player_w = c.player_w.id : copy.player_b = c.player_b.id
+                                                        copy.accepted = true
+                                                        acceptChallenge(copy)
+                                                            .then(() => resetGames())
+                                                    }}>accept</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                )
+                            }
+                        })
+                    }
+                </section>
+            </>
 
-    //     }
-    // }
+        }
+    }
     return <>
-        {/* <main id="homepageContainer">
+        <main id="homepageContainer">
             {challengeAlertVisible === true ?
                 <div id="challengeCreatedModal">
                     <h2 className="setCustomFont">Challenge Created!</h2>
@@ -308,7 +308,7 @@ export const HomePage = () => {
                     <article key="activeGames" id="activeGamesArticle">
                         <section id="myActiveGames">
                             <h2 id="activeGamesHeader" className="setCustomFont">My Games</h2>
-                            {/* <button id="homepagePlayButton">play</button> */}
+                      <button id="homepagePlayButton">play</button>
                             <div id="myUnfinishedGamesScrollWindow">
                                 <div id="activeGamesUl">
                                     {!myUnfinishedGames.length ? <h3 className="setCustomFont" id="noGamesMsg">you have no active games</h3> : ""}

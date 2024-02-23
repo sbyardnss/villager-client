@@ -1,9 +1,9 @@
 import "../styles/HomePage.css";
 // import { React, useContext, useState, useEffect, useRef, KeyboardEvent, ChangeEventHandler } from "react"
-import { useContext, useState, useEffect, useRef, KeyboardEvent, ChangeEventHandler, ReactNode } from "react"
+import { useContext, useState, useEffect, KeyboardEvent } from "react"
 import { Chessboard } from "react-chessboard"
 // import Chess from "chess.js"
-import { getMyClubsCommunityPosts, getActiveUserGames, getOpenChallenges, acceptChallenge, deleteChallengeGame, deleteCommunityPost, getAllCommunityPosts, getAllGames, getAllPlayers, getAllTournaments, getMyChessClubs, getPuzzles, getTournament, sendNewGame, submitNewPostToAPI } from "../ServerManager"
+import { getMyClubsCommunityPosts, getActiveUserGames, getOpenChallenges, acceptChallenge, deleteChallengeGame, deleteCommunityPost, getAllCommunityPosts, getTournament, sendNewGame, submitNewPostToAPI } from "../ServerManager"
 import { PlayContext } from "../Play/PlayProvider"
 import { useNavigate } from "react-router-dom"
 import trophyIcon from "../images/small_trophy_with_background.png";
@@ -37,9 +37,9 @@ export const HomePage = () => {
   });
 
   //POTENTIALLY TEMPORARY BEGIN
-  const { players, games, resetGames, selectedGameObj, updateSelectedGameObj, selectedGame, setSelectedGame, puzzles, selectedPuzzle, setSelectedPuzzle, selectedRange, setSelectedRange } = useContext(PlayContext);
+  const { games, resetGames, updateSelectedGameObj, selectedGame, setSelectedGame, setSelectedRange, puzzles } = useContext(PlayContext);
 
-  const [myChallenges, setMyChallenges] = useState([]);
+  const [myChallenges, setMyChallenges] = useState<ChallengeCreated[]>([]);
   const [displayedPuzzle, setDisplayedPuzzle] = useState<Puzzle>({
     puzzleid: '',
     fen: '',
@@ -58,6 +58,16 @@ export const HomePage = () => {
     () => {
       Promise.all([getOpenChallenges(), getActiveUserGames()])
         .then(([challengeData, openGameData]) => {
+          const myCreatedChallenges: ChallengeCreated[] = [];
+          const othersChallenges = [];
+          challengeData.map((c: ChallengeCreated) => {
+            if (c.player_w?.id === localVillagerUser.userId || c.player_b?.id === localVillagerUser.userId) {
+              myCreatedChallenges.push(c);
+            } else {
+              othersChallenges.push(c);
+            }
+          })
+          setMyChallenges(myCreatedChallenges);
           setChallenges(challengeData);
           setUsersActiveGames(openGameData);
         })
@@ -193,12 +203,13 @@ export const HomePage = () => {
   //     }, [selectedPuzzle]
   // )
 
-  //update displayed puzzle
+  // update displayed puzzle
   // useEffect(
   //     () => {
   //         if (puzzles) {
 
   //             const firstPuzzle = puzzles.puzzles[0]
+  //             if (firstPuzzle)
   //             setDisplayedPuzzle(firstPuzzle)
   //         }
   //     },[puzzles]

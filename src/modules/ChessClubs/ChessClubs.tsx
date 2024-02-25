@@ -1,6 +1,6 @@
 import "../../styles/ChessClubs.css";
 import { useContext, useEffect, useState } from "react";
-import { addMemberToClub, getAllChessClubs, getClubsUserNotJoined, leaveClub } from "../../ServerManager"
+import { addMemberToClub, getClubsUserNotJoined, leaveClub } from "../../ServerManager"
 import { EditClub } from "./EditClub";
 import { AppContext } from "../../Context/AppProvider";
 import { JoinClubModal } from "./JoinClubModal";

@@ -1,7 +1,6 @@
 import { useRef } from "react";
 import { addMemberToClub } from "../../ServerManager"
 import type { ChessClub } from "../App/types";
-// import { ChessClubEdit } from "./types/ChessClub";
 
 interface JoinClubModalProps {
   clubToJoin: ChessClub;
@@ -30,7 +29,6 @@ export const JoinClubModal: React.FC<JoinClubModalProps> = ({
                   return window.alert('incorrect password')
                 }
                 if (res.status === 201) {
-                  // resetChessClubs()
                   resetter()
                   setJoinClub(0)
                   if (joinClubModal)

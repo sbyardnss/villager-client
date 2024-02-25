@@ -1,14 +1,13 @@
 import { useEffect, useState, useRef, useContext } from "react"
 import { updateClub, deleteChessClub } from "../../ServerManager"
-// import type { ChessClub } from "../App/types";
 import { handleFormChange } from "./actions/handle-form-change";
 import { ChessClub } from "./types/ChessClub";
 import { AppContext } from "../../Context/AppProvider";
 
 interface EditClubProps {
-  clubId: number; // Assuming clubId is a number
-  clubObj: ChessClub; // Assuming clubObj is of type ChessClub
-  setClub: React.Dispatch<React.SetStateAction<number>>; // Assuming setClub is a state setter function for ChessClub
+  clubId: number;
+  clubObj: ChessClub;
+  setClub: React.Dispatch<React.SetStateAction<number>>;
 }
 
 export const EditClub: React.FC<EditClubProps> = ({ clubId, clubObj, setClub }) => {

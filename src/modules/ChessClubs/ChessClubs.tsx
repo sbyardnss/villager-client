@@ -5,10 +5,11 @@ import { EditClub } from "./EditClub";
 import { AppContext } from "../../Context/AppProvider";
 import { JoinClubModal } from "./JoinClubModal";
 import { CreateClubForm } from "./CreateClub";
+
 // import type { ChessClub } from "../App/types";
 import type { ChessClubCreate, ChessClub } from "./types/ChessClub";
 export const ChessClubs = () => {
-  const { localVillagerUser, myChessClubs } = useContext(AppContext);
+  const { localVillagerUser, myChessClubs, resetChessClubs } = useContext(AppContext);
   const [unjoinedChessClubs, setUnjoinedClubs] = useState([]);
   const [selectedClubToEdit, setSelectedClubToEdit] = useState(0)
   const [selectedClubObj, setSelectedClubObj] = useState<ChessClub>({} as ChessClub)
@@ -34,7 +35,7 @@ export const ChessClubs = () => {
     () => {
       getClubsUserNotJoined()
         .then(data => setUnjoinedClubs(data))
-    }, []
+    }, [myChessClubs]
   )
 
   useEffect(
@@ -55,7 +56,6 @@ export const ChessClubs = () => {
     }, [selectedClubToEdit, myChessClubs]
   )
 
-
   useEffect(
     () => {
       const selectedClubToJoin = unjoinedChessClubs.find((club: ChessClub) => club.id === joinClub)
@@ -64,10 +64,7 @@ export const ChessClubs = () => {
     }, [joinClub, unjoinedChessClubs]
   )
 
-  const resetChessClubs = (): Promise<void>  => {
-    return getAllChessClubs()
-      .then(data => setUnjoinedClubs(data))
-  }
+
 
   const editClubForm = () => {
     if (selectedClubToEdit) {

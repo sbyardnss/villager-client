@@ -7,10 +7,10 @@ export const AppContext = createContext(null as any);
 
 interface AppProviderProps extends PropsWithChildren<{}> { };
 
-export function AppProvider({ children}: AppProviderProps) {
+export function AppProvider({ children }: AppProviderProps) {
   const localVillagerUser = GetLoggedInUser();
   const [myChessClubs, setMyChessClubs] = useState([]);
-useEffect(
+  useEffect(
     () => {
       getMyChessClubs()
         .then((clubData) => {
@@ -19,10 +19,14 @@ useEffect(
         })
     }, []
   )
+  const resetChessClubs = () => {
+    return getMyChessClubs()
+      .then(data => setMyChessClubs(data));
+  }
   return (
     <AppContext.Provider value={{
       // Your context value here
-      localVillagerUser, myChessClubs, setMyChessClubs
+      localVillagerUser, myChessClubs, setMyChessClubs, resetChessClubs
     }}>
       {children}
     </AppContext.Provider>

@@ -1,11 +1,11 @@
 import { createNewClub } from "../../ServerManager";
 import { Dispatch, SetStateAction, useRef } from "react";
-import type { ChessClubCreateEdit } from "./types/ChessClub";
+import type { ChessClubCreate } from "./types/ChessClub";
 import { handleFormChange } from "./actions/handle-form-change";
 export interface CreateClubFormProps {
-  newClub: Partial<ChessClubCreateEdit>;
+  newClub: Partial<ChessClubCreate>;
   resetter: () => Promise<void>;
-  updateClub: Dispatch<SetStateAction<Partial<ChessClubCreateEdit>>>;
+  updateClub: Dispatch<SetStateAction<Partial<ChessClubCreate>>>;
   setter: Dispatch<SetStateAction<boolean>>;
 }
 export const CreateClubForm: React.FC<CreateClubFormProps> = ({
@@ -43,7 +43,6 @@ export const CreateClubForm: React.FC<CreateClubFormProps> = ({
               copy.zipcode = copy.zipcode === 0 ? null : copy.zipcode;
               copy.details = copy.details === "" ? null : copy.details;
               copy.city = copy.city === "" ? null : copy.city;
-              // console.log(copy)
               if (setPasswordModal)
                 setPasswordModal.style.display = 'none'
               createNewClub(copy)

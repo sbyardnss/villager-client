@@ -406,7 +406,7 @@ export const endTournament = (tournamentId) => {
         }
     })
 }
-export const updateClub = (clubId, clubObj) => {
+export const updateClub = (clubId, clubObj, oldPassword) => {
     const localVillagerObj = getToken()
     return fetch(`${apiKey}/clubs/${clubId}`, {
         method: "PUT",
@@ -414,7 +414,10 @@ export const updateClub = (clubId, clubObj) => {
             "Authorization": `Token ${localVillagerObj.token}`,
             "Content-Type": "application/json"
         },
-        body: JSON.stringify(clubObj)
+        body: {
+            clubObj: JSON.stringify(clubObj),
+            old_password: oldPassword,
+        }
     })
     // .then(res => {
     //     if (res) {
@@ -561,4 +564,15 @@ export const getClubsUserNotJoined = () => {
         }
     })
         .then(res => res.json())
+}
+
+export const deleteChessClub = (clubId) => {
+    const localVillagerObj = getToken();
+    return fetch(`${apiKey}/clubs/${clubId}/end_club`, {
+        method: "DELETE",
+        headers: {
+            "Authorization": `Token ${localVillagerObj.token}`,
+            "Content-Type": "application/json"
+        }
+    })
 }

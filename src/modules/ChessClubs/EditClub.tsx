@@ -1,7 +1,9 @@
-import { useEffect, useState } from "react"
-import { updateClub } from "../../ServerManager"
+import { useEffect, useState, useRef, useContext } from "react"
+import { updateClub, deleteChessClub } from "../../ServerManager"
 import type { ChessClub } from "../App/types";
 import { handleFormChange } from "./actions/handle-form-change";
+import { ChessClubEdit } from "./types/ChessClub";
+import { AppContext } from "../../Context/AppProvider";
 
 interface EditClubProps {
   clubId: number; // Assuming clubId is a number
@@ -10,22 +12,33 @@ interface EditClubProps {
 }
 
 export const EditClub: React.FC<EditClubProps> = ({ clubId, clubObj, setClub }) => {
-  const [editedClub, updateEditedClub] = useState<Partial<ChessClub>>({
+  const { localVillagerUser } = useContext(AppContext);
+  const [editedClub, updateEditedClub] = useState<ChessClubEdit>({
     name: "",
     address: "",
     city: "",
     state: "",
     zipcode: 0,
     details: "",
-    oldPassword: "",
-    newPassword: ""
+    // oldPassword: "",
+    newPassword: "",
+    has_password: false,
+    date: "",
+    guest_members: [],
+    members: [],
+    manager: {
+      id: 0,
+      username: "",
+      full_name: ""
+    }
   })
+  const oldPassword = useRef<HTMLInputElement>(null);
   useEffect(
     () => {
       updateEditedClub(clubObj)
     }, [clubObj]
   )
-
+  console.log(editedClub);
   const errorModal = document.getElementById("errorModal");
 
   return <>
@@ -41,9 +54,16 @@ export const EditClub: React.FC<EditClubProps> = ({ clubId, clubObj, setClub }) 
           {clubObj?.name}
         </div>
         <div id="editClubBtnBlock">
+          <button className="buttonStyleReject" onClick={() => {
+            if (localVillagerUser.userId === editedClub.manager.id) {
+              if (window.confirm('Are you sure you want to delete your club?'))
+                if (window.confirm('SERIOUSLY. YOU ARE SURE? THIS CANNOT BE UNDONE. YOUR CLUB WILL BE GONE FOREVER'))
+                  deleteChessClub(editedClub.id)
+            }
+          }}>Delete</button>
           <button className="buttonStyleApprove" onClick={() => {
-            if (editedClub.name) {
-              updateClub(clubId, editedClub)
+            if (editedClub.name && oldPassword.current) {
+              updateClub(clubId, editedClub, oldPassword.current.value)
                 .then(res => {
                   if (res) {
                     if (res.status === 400 || res.status === 500) {
@@ -88,7 +108,7 @@ export const EditClub: React.FC<EditClubProps> = ({ clubId, clubObj, setClub }) 
         </div>
         <div className="formInput">
           <label className="setCustomFont newClubFormLabel" >New password</label>
-          <input id="newPassword" type="text" placeholder=" set new password" onChange={(evt) => handleFormChange({stateObject: editedClub, evt: evt, handler: updateEditedClub})} />
+          <input id="newPassword" ref={oldPassword} type="text" placeholder=" set new password" onChange={(evt) => handleFormChange({stateObject: editedClub, evt: evt, handler: updateEditedClub})} />
         </div>
 
       </section>

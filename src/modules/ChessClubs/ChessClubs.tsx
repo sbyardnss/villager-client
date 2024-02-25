@@ -6,7 +6,7 @@ import { AppContext } from "../../Context/AppProvider";
 import { JoinClubModal } from "./JoinClubModal";
 import { CreateClubForm } from "./CreateClub";
 import type { ChessClub } from "../App/types";
-import type { ChessClubCreateEdit } from "./types/ChessClub";
+import type { ChessClubCreate, ChessClubEdit } from "./types/ChessClub";
 export const ChessClubs = () => {
   const { localVillagerUser, myChessClubs } = useContext(AppContext);
   const [unjoinedChessClubs, setUnjoinedClubs] = useState([]);
@@ -16,14 +16,16 @@ export const ChessClubs = () => {
   //TODO: see if this state variable is causing problems
   const [clubToJoin, setClubToJoin] = useState<ChessClub>({} as ChessClub);
   const [createClub, setCreateClub] = useState(false)
-  const [newClub, updateNewClub] = useState<Partial<ChessClubCreateEdit>>({
-    // name: "",
-    // address: "",
-    // city: "",
-    // state: "",
-    // zipcode: 0,
-    // details: "",
-    // password: "",
+  const [newClub, updateNewClub] = useState<Partial<ChessClubCreate | ChessClubEdit>>({
+    name: "",
+    address: "",
+    city: "",
+    state: "",
+    zipcode: 0,
+    details: "",
+    // oldPassword: "",
+    newPassword: "",
+    // has_password: false,
   })
   const editingModal = document.getElementById("editClubModal");
   //NEED MY CLUBS, OTHERS CLUBS, 

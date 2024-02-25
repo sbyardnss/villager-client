@@ -82,7 +82,7 @@ textarea {
 
 #editClubBtnBlock {
     display: flex;
-    width: 7em;
+    width: 12em;
     justify-content: space-between;
 }
 

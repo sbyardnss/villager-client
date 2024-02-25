@@ -19,6 +19,16 @@ export interface ChessClub {
   has_password: boolean;
   [key: string]: string | number | PlayerInClub | PlayerInClub[] | GuestInClub[] | boolean | null;
 }
+
+// export interface CreatingChessClub {
+//   name: string;
+//   address: string | null;
+//   city: string | null;
+//   state: string | null;
+//   zipcode: number | null;
+//   details: string | null;
+//   password: string | null;
+// }
 export interface ChessClubCreate extends ChessClub {
   password: string | null;
 }

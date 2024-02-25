@@ -551,3 +551,14 @@ export const getMyClubsCommunityPosts = (clubIdArr) => {
     })
         .then(res => res.json())
 } 
+
+export const getClubsUserNotJoined = () => {
+    const localVillagerObj = getToken()
+    return fetch(`${apiKey}/clubs/clubs_user_has_not_joined`, {
+        headers: {
+            "Authorization": `Token ${localVillagerObj.token}`,
+            "Content-Type": "application/json"
+        }
+    })
+        .then(res => res.json())
+}

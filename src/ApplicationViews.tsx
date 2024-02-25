@@ -7,7 +7,8 @@ import { Messages } from "./Messages/Messages"
 import { Tournament } from "./Tournament/Tournament"
 // import { TournamentProvider } from "./Tournament/components/TournamentProvider"
 import { PlayProvider } from "./Play/PlayProvider"
-import { ChessClubs } from "./ChessClubs/ChessClubs"
+// import { ChessClubs } from "./ChessClubs/ChessClubs"
+import { ChessClubs } from "./components/ChessClubs"
 import { TournamentProvider } from "./modules/Tournaments/controllers/TournamentProvider";
 import { AppProvider } from "./Context/AppProvider";
 import { HomePage } from "./components/HomePage";
@@ -61,6 +62,7 @@ export const ApplicationViews = () => {
                         </PlayProvider>
                     } />
                 </Route>
+                <Route path="clubs" element={<ChessClubs />} />
             </Routes>
         </AppProvider>
     )

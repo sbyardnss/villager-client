@@ -5,8 +5,8 @@ import { EditClub } from "./EditClub";
 import { AppContext } from "../../Context/AppProvider";
 import { JoinClubModal } from "./JoinClubModal";
 import { CreateClubForm } from "./CreateClub";
-import type { ChessClub } from "../App/types";
-import type { ChessClubCreate, ChessClubEdit } from "./types/ChessClub";
+// import type { ChessClub } from "../App/types";
+import type { ChessClubCreate, ChessClub } from "./types/ChessClub";
 export const ChessClubs = () => {
   const { localVillagerUser, myChessClubs } = useContext(AppContext);
   const [unjoinedChessClubs, setUnjoinedClubs] = useState([]);
@@ -16,7 +16,7 @@ export const ChessClubs = () => {
   //TODO: see if this state variable is causing problems
   const [clubToJoin, setClubToJoin] = useState<ChessClub>({} as ChessClub);
   const [createClub, setCreateClub] = useState(false)
-  const [newClub, updateNewClub] = useState<Partial<ChessClubCreate | ChessClubEdit>>({
+  const [newClub, updateNewClub] = useState<Partial<ChessClubCreate | ChessClub>>({
     name: "",
     address: "",
     city: "",
@@ -101,7 +101,10 @@ export const ChessClubs = () => {
         <section id="editClubModal">
           {editClubForm()}
         </section>
-        {JoinClubModal(clubToJoin, setJoinClub, resetChessClubs)}
+        {<JoinClubModal 
+          clubToJoin={clubToJoin}
+          setJoinClub={setJoinClub}
+          resetter={resetChessClubs} />}
         {createClubForm()}
         <section id="myClubsSection">
           <h4 className="setCustomFont">My Clubs</h4>

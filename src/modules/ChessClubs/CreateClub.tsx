@@ -2,7 +2,7 @@ import { createNewClub } from "../../ServerManager";
 import { Dispatch, SetStateAction, useRef } from "react";
 import type { ChessClubCreate } from "./types/ChessClub";
 import { handleFormChange } from "./actions/handle-form-change";
-export interface CreateClubFormProps {
+interface CreateClubFormProps {
   newClub: Partial<ChessClubCreate>;
   resetter: () => Promise<void>;
   updateClub: Dispatch<SetStateAction<Partial<ChessClubCreate>>>;

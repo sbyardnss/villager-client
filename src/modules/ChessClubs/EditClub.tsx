@@ -1,8 +1,8 @@
 import { useEffect, useState, useRef, useContext } from "react"
 import { updateClub, deleteChessClub } from "../../ServerManager"
-import type { ChessClub } from "../App/types";
+// import type { ChessClub } from "../App/types";
 import { handleFormChange } from "./actions/handle-form-change";
-import { ChessClubEdit } from "./types/ChessClub";
+import { ChessClub } from "./types/ChessClub";
 import { AppContext } from "../../Context/AppProvider";
 
 interface EditClubProps {
@@ -13,7 +13,8 @@ interface EditClubProps {
 
 export const EditClub: React.FC<EditClubProps> = ({ clubId, clubObj, setClub }) => {
   const { localVillagerUser } = useContext(AppContext);
-  const [editedClub, updateEditedClub] = useState<ChessClubEdit>({
+  const [editedClub, updateEditedClub] = useState<ChessClub>({
+    id: 0,
     name: "",
     address: "",
     city: "",
@@ -38,7 +39,7 @@ export const EditClub: React.FC<EditClubProps> = ({ clubId, clubObj, setClub }) 
       updateEditedClub(clubObj)
     }, [clubObj]
   )
-  console.log(editedClub);
+
   const errorModal = document.getElementById("errorModal");
 
   return <>

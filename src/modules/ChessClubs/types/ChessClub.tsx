@@ -7,17 +7,21 @@ export interface ChessClubCreate {
   zipcode: number | null;
   details: string | null;
   password?: string | null;
-  has_password?: boolean;
-  newPassword?: string | null;
+  // has_password?: boolean;
+  // newPassword?: string | null;
   // oldPassword?: string | null;
+  [key: string]: any;
+
 }
 
-export interface ChessClubEdit extends ChessClubCreate {
+export interface ChessClub extends ChessClubCreate {
+  id: number;
   has_password: boolean;
+  newPassword?: string;
   guest_members: GuestInClub[];
   members: PlayerInClub[];
   manager: PlayerInClub;
   date: string;
-  [key: string]: string | number | PlayerInClub | PlayerInClub[] | GuestInClub[] | boolean | null | undefined;
+  [key: string]: any;
 
 }

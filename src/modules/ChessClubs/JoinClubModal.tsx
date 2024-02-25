@@ -1,8 +1,18 @@
 import { useRef } from "react";
 import { addMemberToClub } from "../../ServerManager"
 import type { ChessClub } from "../App/types";
+// import { ChessClubEdit } from "./types/ChessClub";
 
-export const JoinClubModal = (clubToJoin: Partial<ChessClub>, setJoinClub: React.Dispatch<React.SetStateAction<number>>, resetter: () => Promise<void>) => {
+interface JoinClubModalProps {
+  clubToJoin: ChessClub;
+  setJoinClub: React.Dispatch<React.SetStateAction<number>>;
+  resetter: () => Promise<void>;
+}
+export const JoinClubModal: React.FC<JoinClubModalProps> = ({
+  clubToJoin, 
+  setJoinClub,
+  resetter
+}) => {
   const joinRequestPassword = useRef<HTMLInputElement>(null);
   const joinClubModal = document.getElementById('joinClubModal');
 

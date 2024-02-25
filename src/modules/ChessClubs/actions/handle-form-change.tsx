@@ -1,8 +1,8 @@
 import { ChangeEvent } from "react";
-import type { ChessClub } from "../../App/types";
-import type { ChessClubEdit } from "../types/ChessClub";
+// import type { ChessClub } from "../../App/types";
+import type { ChessClub } from "../types/ChessClub";
 interface handlerInput {
-  stateObject: Partial<ChessClub> | ChessClubEdit;
+  stateObject: Partial<ChessClub>;
   handler: React.Dispatch<React.SetStateAction<any>>;
   evt: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>;
 }

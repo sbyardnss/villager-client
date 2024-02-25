@@ -1,27 +1,30 @@
 // import { useNavigate } from "react-router-dom";
-import "../styles/ChessClubs.css";
-import { ChangeEvent, MutableRefObject, useContext, useEffect, useRef, useState } from "react";
-import { addMemberToClub, createNewClub, getAllChessClubs, getClubsUserNotJoined, leaveClub } from "../ServerManager"
+// import "../styles/ChessClubs.css";
+import "../../styles/ChessClubs.css";
+import { useContext, useEffect, useRef, useState } from "react";
+import { addMemberToClub, createNewClub, getAllChessClubs, getClubsUserNotJoined, leaveClub } from "../../ServerManager"
 import { EditClub } from "./EditClub";
-import { AppContext } from "../Context/AppProvider";
-import type { ChessClub, ChessClubCreate } from "../modules/App/types";
+import { AppContext } from "../../Context/AppProvider";
+import { JoinClubModal } from "./JoinClubModal";
+import type { ChessClub, ChessClubCreate } from "../App/types";
+import { handleFormChange } from "./actions/handle-form-change";
 
 export const ChessClubs = () => {
   //need
   //my clubs
   //open clubs
 
-  const { localVillagerUser, myChessClubs, setMyChessClubs } = useContext(AppContext);
-  const [unjoinedChessClubs, setUnjoinedClubs] = useState([])
+  const { localVillagerUser, myChessClubs } = useContext(AppContext);
+  const [unjoinedChessClubs, setUnjoinedClubs] = useState([]);
   // const navigate = useNavigate()
   // const [myChessClubs, setMyChessClubs] = useState([])
   // const [unjoinedChessClubs, setUnjoinedChessClubs] = useState([])
   const [selectedClubToEdit, setSelectedClubToEdit] = useState(0)
   const [selectedClubObj, setSelectedClubObj] = useState<ChessClub>({} as ChessClub)
-  const [joinClub, setJoinClub] = useState(0)
+  const [joinClub, setJoinClub] = useState(0);
   //TODO: see if this state variable is causing problems
   const [clubToJoin, setClubToJoin] = useState<ChessClub>({} as ChessClub);
-  const joinRequestPassword = useRef<HTMLInputElement>(null)
+  // const joinRequestPassword = useRef<HTMLInputElement>(null);
   const [createClub, setCreateClub] = useState(false)
   const [newClub, updateNewClub] = useState<Partial<ChessClubCreate>>({
     name: "",
@@ -67,22 +70,11 @@ export const ChessClubs = () => {
         setClubToJoin(selectedClubToJoin)
     }, [joinClub, unjoinedChessClubs]
   )
-  const handleFormChange = (evt: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const copy: Partial<ChessClub> = { ...newClub }
-    const target = evt.target as HTMLInputElement;
-    if (target?.id === 'zipcode') {
-      copy[target.id] = parseInt(target.value);
-    }
-    else {
-      if (target.value)
-        copy[target.id] = target.value;
-    }
-    updateNewClub(copy)
-  }
+
   const initPassword = useRef<HTMLInputElement>(null);
   const confirmPassword = useRef<HTMLInputElement>(null);
-  const resetChessClubs = () => {
-    getAllChessClubs()
+  const resetChessClubs = (): Promise<void>  => {
+    return getAllChessClubs()
       .then(data => setUnjoinedClubs(data))
   }
   const createClubForm = () => {
@@ -133,27 +125,27 @@ export const ChessClubs = () => {
           </div>
           <div className="formInput">
             <label className="setCustomFont newClubFormLabel">Club Name</label>
-            <input id="name" type="text" placeholder="new club name" onChange={(evt) => handleFormChange(evt)} />
+            <input id="name" type="text" placeholder="new club name" onChange={(evt) => handleFormChange({evt: evt, handler: updateNewClub, stateObject: newClub })} />
           </div>
           <div className="formInput">
             <label className="setCustomFont newClubFormLabel">Address</label>
-            <input id="address" type="text" placeholder="street address (optional)" onChange={(evt) => handleFormChange(evt)} />
+            <input id="address" type="text" placeholder="street address (optional)" onChange={(evt) => handleFormChange({evt: evt, handler: updateNewClub, stateObject: newClub })} />
           </div>
           <div className="formInput">
             <label className="setCustomFont newClubFormLabel">City</label>
-            <input id="city" type="text" placeholder="city (optional)" onChange={(evt) => handleFormChange(evt)} />
+            <input id="city" type="text" placeholder="city (optional)" onChange={(evt) => handleFormChange({evt: evt, handler: updateNewClub, stateObject: newClub })} />
           </div>
           <div className="formInput">
             <label className="setCustomFont newClubFormLabel">State</label>
-            <input id="state" type="text" placeholder="abbreviation (optional)" onChange={(evt) => handleFormChange(evt)} />
+            <input id="state" type="text" placeholder="abbreviation (optional)" onChange={(evt) => handleFormChange({evt: evt, handler: updateNewClub, stateObject: newClub })} />
           </div>
           <div className="formInput">
             <label className="setCustomFont newClubFormLabel">ZipCode</label>
-            <input id="zipcode" type="number" placeholder="zipcode (optional)" onChange={(evt) => handleFormChange(evt)} />
+            <input id="zipcode" type="number" placeholder="zipcode (optional)" onChange={(evt) => handleFormChange({evt: evt, handler: updateNewClub, stateObject: newClub })} />
           </div>
           <div className="formInput">
             <label className="setCustomFont newClubFormLabel">Details</label>
-            <textarea id="details" placeholder="Where do you meet? What time? etc (optional)" onChange={(evt) => handleFormChange(evt)}></textarea>
+            <textarea id="details" placeholder="Where do you meet? What time? etc (optional)" onChange={(evt) => handleFormChange({evt: evt, handler: updateNewClub, stateObject: newClub })}></textarea>
           </div>
           <div id="newClubButtonBlock">
             <button className="buttonStyleApprove" onClick={() => {
@@ -169,7 +161,7 @@ export const ChessClubs = () => {
     else {
       return (
         <button id="createChessClubButton" className="setCustomFont" onClick={() => setCreateClub(true)}>Create Club</button>
-      )
+      );
     }
   }
   const editClubForm = () => {
@@ -179,53 +171,20 @@ export const ChessClubs = () => {
           clubId={selectedClubToEdit}
           clubObj={selectedClubObj}
           setClub={setSelectedClubToEdit} />
-      )
+      );
     }
     else {
-      return
+      return;
     }
   }
-  const joinClubModal = document.getElementById('joinClubModal')
+  const joinClubModal = document.getElementById('joinClubModal');
   return <>
     <main id="chessClubsContainer">
       <article id="myChessClubsArticle">
         <section id="editClubModal">
           {editClubForm()}
         </section>
-        <section id="joinClubModal" className="setCustomFont">
-          <h4>Enter password for {clubToJoin?.name}</h4>
-          <div id="joinClubInputAndBtn">
-            <input type="text" ref={joinRequestPassword} />
-            <button className="buttonStyleReject" onClick={() => {
-              if (joinRequestPassword.current)
-                addMemberToClub(clubToJoin.id, { submittedPassword: joinRequestPassword.current.value })
-                  // .then(res => window.alert(res['message']))
-                  .then(res => {
-                    if (res.status === 400) {
-                      return window.alert('incorrect password')
-                    }
-                    if (res.status === 201) {
-                      resetChessClubs()
-                      setJoinClub(0)
-                      if (joinClubModal)
-                        joinClubModal.style.display = 'none'
-                    }
-                  })
-                  .then(() => {
-                    if (joinRequestPassword.current)
-                      joinRequestPassword.current.value = ""
-                  })
-            }}>submit</button>
-            <button className="buttonStyleReject" onClick={() => {
-              setJoinClub(0)
-              if (joinClubModal)
-                joinClubModal.style.display = 'none'
-              if (joinRequestPassword.current)
-                joinRequestPassword.current.value = ""
-            }}>cancel</button>
-          </div>
-
-        </section>
+        {JoinClubModal(clubToJoin, setJoinClub, resetChessClubs)}
         {createClubForm()}
         <section id="myClubsSection">
           <h4 className="setCustomFont">My Clubs</h4>

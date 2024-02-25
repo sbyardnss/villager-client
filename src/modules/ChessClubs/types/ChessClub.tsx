@@ -17,11 +17,14 @@ export interface ChessClubCreate {
 export interface ChessClub extends ChessClubCreate {
   id: number;
   has_password: boolean;
-  newPassword?: string;
   guest_members: GuestInClub[];
   members: PlayerInClub[];
   manager: PlayerInClub;
   date: string;
   [key: string]: any;
+  
+}
 
+export interface ChessClubEdit extends ChessClub {
+  newPassword: string;
 }

@@ -25,7 +25,7 @@ export const ChessClubs = () => {
     zipcode: 0,
     details: "",
     // oldPassword: "",
-    newPassword: "",
+    // newPassword: "",
     // has_password: false,
   })
   const editingModal = document.getElementById("editClubModal");
@@ -72,7 +72,8 @@ export const ChessClubs = () => {
         <EditClub
           clubId={selectedClubToEdit}
           clubObj={selectedClubObj}
-          setClub={setSelectedClubToEdit} />
+          setClub={setSelectedClubToEdit} 
+          resetter={resetChessClubs} />
       );
     }
     else {

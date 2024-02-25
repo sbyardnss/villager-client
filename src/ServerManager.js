@@ -414,10 +414,10 @@ export const updateClub = (clubId, clubObj, oldPassword) => {
             "Authorization": `Token ${localVillagerObj.token}`,
             "Content-Type": "application/json"
         },
-        body: {
-            clubObj: JSON.stringify(clubObj),
+        body: JSON.stringify({
+            clubObj: clubObj,
             old_password: oldPassword,
-        }
+        }),
     })
     // .then(res => {
     //     if (res) {
@@ -553,7 +553,7 @@ export const getMyClubsCommunityPosts = (clubIdArr) => {
         body: JSON.stringify(clubIdArr)
     })
         .then(res => res.json())
-} 
+}
 
 export const getClubsUserNotJoined = () => {
     const localVillagerObj = getToken()

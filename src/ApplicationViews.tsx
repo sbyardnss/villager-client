@@ -10,7 +10,7 @@ import { PlayProvider } from "./Play/PlayProvider"
 // import { ChessClubs } from "./ChessClubs/ChessClubs"
 import { ChessClubs } from "./modules/ChessClubs/ChessClubs"
 import { TournamentProvider } from "./modules/Tournaments/controllers/TournamentProvider";
-import { AppProvider } from "./Context/AppProvider";
+import { AppProvider } from "./modules/App/AppProvider";
 import { HomePage } from "./components/HomePage";
 
 export const ApplicationViews = () => {

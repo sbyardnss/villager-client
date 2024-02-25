@@ -1,7 +1,7 @@
 import { PropsWithChildren, createContext, useState, useEffect } from "react";
-import { GetLoggedInUser } from "../modules/App/actions/get-current-user";
-import { getMyChessClubs } from "../ServerManager";
-import { AppStateDefaults } from "../modules/App/state";
+import { GetLoggedInUser } from "./actions/get-current-user";
+import { getMyChessClubs } from "../../ServerManager";
+import { AppStateDefaults } from "./state";
 
 export const AppContext = createContext(null as any);
 

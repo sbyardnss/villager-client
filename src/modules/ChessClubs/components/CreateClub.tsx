@@ -1,7 +1,7 @@
-import { createNewClub } from "../../ServerManager";
+import { createNewClub } from "../../../ServerManager";
 import { Dispatch, SetStateAction, useRef } from "react";
-import type { ChessClubCreate } from "./types/ChessClub";
-import { handleFormChange } from "./actions/handle-form-change";
+import type { ChessClubCreate } from "../types/ChessClub";
+import { handleFormChange } from "../actions/handle-form-change";
 interface CreateClubFormProps {
   newClub: Partial<ChessClubCreate>;
   resetter: () => Promise<void>;

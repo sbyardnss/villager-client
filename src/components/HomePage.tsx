@@ -7,7 +7,7 @@ import { getMyClubsCommunityPosts, getActiveUserGames, getOpenChallenges, accept
 import { PlayContext } from "../Play/PlayProvider"
 import { useNavigate } from "react-router-dom"
 import trophyIcon from "../images/small_trophy_with_background.png";
-import { AppContext } from "../Context/AppProvider";
+import { AppContext } from "../modules/App/AppProvider";
 import type { CommunityPost } from "../Types/CommunityPost";
 import type { Game } from "../Types/Game";
 import type { ChessClub } from "../modules/App/types";

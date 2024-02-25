@@ -1,8 +1,8 @@
 import { useEffect, useState, useRef, useContext } from "react"
-import { updateClub, deleteChessClub } from "../../ServerManager"
-import { handleFormChange } from "./actions/handle-form-change";
-import { ChessClub } from "./types/ChessClub";
-import { AppContext } from "../../Context/AppProvider";
+import { updateClub, deleteChessClub } from "../../../ServerManager"
+import { handleFormChange } from "../actions/handle-form-change";
+import { ChessClub } from "../types/ChessClub";
+import { AppContext } from "../../App/AppProvider";
 
 interface EditClubProps {
   clubId: number;

@@ -1,10 +1,10 @@
 import "../../styles/ChessClubs.css";
 import { useContext, useEffect, useState } from "react";
 import { addMemberToClub, getClubsUserNotJoined, leaveClub } from "../../ServerManager"
-import { EditClub } from "./EditClub";
-import { AppContext } from "../../Context/AppProvider";
-import { JoinClubModal } from "./JoinClubModal";
-import { CreateClubForm } from "./CreateClub";
+import { EditClub } from "./components/EditClub";
+import { AppContext } from "../App/AppProvider";
+import { JoinClubModal } from "./components/JoinClubModal";
+import { CreateClubForm } from "./components/CreateClub";
 
 // import type { ChessClub } from "../App/types";
 import type { ChessClubCreate, ChessClub } from "./types/ChessClub";

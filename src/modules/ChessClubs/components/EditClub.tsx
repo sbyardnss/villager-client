@@ -13,6 +13,7 @@ interface EditClubProps {
 
 export const EditClub: React.FC<EditClubProps> = ({ clubId, clubObj, setClub, resetter }) => {
   const { localVillagerUser } = useContext(AppContext);
+  const [addPassword, setAddPassword] = useState(false);
   const [editedClub, updateEditedClub] = useState<ChessClubEdit>({
     id: 0,
     name: "",
@@ -22,7 +23,7 @@ export const EditClub: React.FC<EditClubProps> = ({ clubId, clubObj, setClub, re
     zipcode: 0,
     details: "",
     // oldPassword: "",
-    newPassword: "",
+    newPassword: null,
     has_password: false,
     date: "",
     guest_members: [],
@@ -32,21 +33,22 @@ export const EditClub: React.FC<EditClubProps> = ({ clubId, clubObj, setClub, re
       username: "",
       full_name: ""
     }
-  })
-  const oldPassword = useRef<HTMLInputElement>(null);
+  });
+  const initPassword = useRef<HTMLInputElement>(null);
+  const confirmPassword = useRef<HTMLInputElement>(null);
   useEffect(
     () => {
       const editingClubObj: ChessClubEdit = {
         ...clubObj, // Spread the properties of clubObj
-        newPassword: "", // Explicitly set newPassword
+        newPassword: "", // Explicitly set confirmPassword
       };
       updateEditedClub(editingClubObj)
     }, [clubObj]
   )
   const handleUpdate = () => {
     let passwordValue = "";
-    if (clubObj.has_password === true && oldPassword.current) {
-      passwordValue = oldPassword.current.value;
+    if (clubObj.has_password === true && initPassword.current) {
+      passwordValue = initPassword.current.value;
     }
     updateClub(clubId, editedClub, passwordValue)
       .then(res => {
@@ -118,20 +120,18 @@ export const EditClub: React.FC<EditClubProps> = ({ clubId, clubObj, setClub, re
           <label className="setCustomFont ClubFormLabel">Details</label>
           <textarea id="details" placeholder="Where do you meet? What time? etc (optional)" value={editedClub?.details ?? ''} onChange={(evt) => handleFormChange({ stateObject: editedClub, evt: evt, handler: updateEditedClub })}></textarea>
         </div>
-        {clubObj?.has_password ?
-
+        {clubObj?.has_password || addPassword ?
           <div className="formInput">
-            <label className="setCustomFont newClubFormLabel" >Old password</label>
-            <input id="oldPassword" ref={oldPassword} type="text" placeholder="old password" onChange={(evt) => handleFormChange({ stateObject: editedClub, evt: evt, handler: updateEditedClub })} />
+            <label className="setCustomFont newClubFormLabel" >{ addPassword ? 'New password' : 'Old password'}</label>
+            <input id="oldPassword" ref={initPassword} type="text" placeholder="old password" onChange={(evt) => handleFormChange({ stateObject: editedClub, evt: evt, handler: updateEditedClub })} />
           </div>
           : ""}
-        {clubObj?.has_password ?
+        {clubObj?.has_password || addPassword ?
           <div className="formInput">
-            <label className="setCustomFont newClubFormLabel" >New password</label>
-            <input id="newPassword" type="text" placeholder=" set new password" onChange={(evt) => handleFormChange({ stateObject: editedClub, evt: evt, handler: updateEditedClub })} />
+            <label className="setCustomFont newClubFormLabel" >{ addPassword ? 'Confirm New Password' : 'New password' }</label>
+            <input id="newPassword" ref={confirmPassword} type="text" placeholder=" set new password" onChange={(evt) => handleFormChange({ stateObject: editedClub, evt: evt, handler: updateEditedClub })} />
           </div>
-          : ""}
-
+          : <button className="buttonStyleApprove" onClick={() => setAddPassword(true)}>Add Password</button> }
       </section>
     </article>
   </>

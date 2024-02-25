@@ -26,5 +26,5 @@ export interface ChessClub extends ChessClubCreate {
 }
 
 export interface ChessClubEdit extends ChessClub {
-  newPassword: string;
+  newPassword: string | null;
 }

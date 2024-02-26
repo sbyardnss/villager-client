@@ -1,4 +1,4 @@
-import type { Tournament } from "../Tournaments/types";
+import type { Tournament } from "../Tournament/Types";
 import type { ChessClub, Villager } from "./types";
 
 interface AppState {

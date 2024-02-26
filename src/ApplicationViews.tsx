@@ -9,9 +9,10 @@ import { Tournament } from "./Tournament/Tournament"
 import { PlayProvider } from "./Play/PlayProvider"
 // import { ChessClubs } from "./ChessClubs/ChessClubs"
 import { ChessClubs } from "./modules/ChessClubs/ChessClubs"
-import { TournamentProvider } from "./modules/Tournaments/controllers/TournamentProvider";
+// import { TournamentProvider } from "./modules/Tournaments_old/controllers/TournamentProvider";
 import { AppProvider } from "./modules/App/AppProvider";
 import { HomePage } from "./components/HomePage";
+import { TournamentController } from "./modules/Tournament/Tournament"
 
 export const ApplicationViews = () => {
     // return (
@@ -63,6 +64,9 @@ export const ApplicationViews = () => {
                     } />
                 </Route>
                 <Route path="clubs" element={<ChessClubs />} />
+                <Route path="tournament" element={
+                    <TournamentController />
+                } />
             </Routes>
         </AppProvider>
     )

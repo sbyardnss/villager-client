@@ -12,7 +12,7 @@ import type { CommunityPost } from "../Types/CommunityPost";
 import type { Game } from "../Types/Game";
 import type { ChessClub } from "../modules/App/types";
 import type { PlayerRelated } from "../Types/Player";
-import type { Tournament } from "../modules/Tournaments/types";
+import type { Tournament } from "../modules/Tournament/Types";
 import type { ChallengeCreated, ChallengeEditing, ChallengeNew } from "../Types/Challenge";
 import type { Puzzle } from "../Types/Puzzle";
 

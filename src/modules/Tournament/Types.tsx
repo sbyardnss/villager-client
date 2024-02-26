@@ -1,6 +1,5 @@
-export interface Tournament {
-  id: number;
-  title: string;
+export interface NewTournament {
+title: string;
   creator: number;
   competitors: PlayerOnTournament[];
   guest_competitors: Guest[];
@@ -10,6 +9,12 @@ export interface Tournament {
   pairings: TournamentPairing[];
   club: number;
 }
+
+export interface Tournament extends NewTournament {
+  id: number;
+  date: string;
+}
+
 
 export interface Player {
   id: number;
@@ -36,4 +41,10 @@ export interface TournamentPairing {
   match: number;
   player1: number | string;
   player2: number | string;
+}
+
+export interface TimeSetting {
+  id: number;
+  time_amount: number,
+  increment: number,
 }

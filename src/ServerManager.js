@@ -419,11 +419,7 @@ export const updateClub = (clubId, clubObj, oldPassword) => {
             old_password: oldPassword,
         }),
     })
-    // .then(res => {
-    //     if (res) {
-    //         res = res.json()
-    //     }
-    // })
+        .then(res => res.json());
 }
 
 //DELETE FETCHES

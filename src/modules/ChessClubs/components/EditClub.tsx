@@ -64,6 +64,17 @@ export const EditClub: React.FC<EditClubProps> = ({ clubId, clubObj, setClub, re
       })
   }
 
+  const handleDelete = (password="") => {
+    if (window.confirm('Are you sure you want to delete your club?'))
+        if (window.confirm('SERIOUSLY. YOU ARE SURE? THIS CANNOT BE UNDONE. YOUR CLUB WILL BE GONE FOREVER'))
+          deleteChessClub(editedClub.id, password)
+          .then(data => {
+            showAlertModal(data.message)
+            resetter();
+            setClub(0)
+          });
+  }
+
   const errorModal = document.getElementById("errorModal");
 
   return <>
@@ -81,16 +92,16 @@ export const EditClub: React.FC<EditClubProps> = ({ clubId, clubObj, setClub, re
         <div id="editClubBtnBlock">
           <button className="buttonStyleReject" onClick={() => {
             if (localVillagerUser.userId === editedClub.manager.id) {
-              if (window.confirm('Are you sure you want to delete your club?'))
-                if (window.confirm('SERIOUSLY. YOU ARE SURE? THIS CANNOT BE UNDONE. YOUR CLUB WILL BE GONE FOREVER'))
-                  deleteChessClub(editedClub.id)
+              if (initPassword.current) {
+                handleDelete(initPassword.current.value)
+              } else {
+                handleDelete()
+              }
             }
           }}>Delete</button>
           <button className="buttonStyleApprove" onClick={() => {
             if (editedClub.name) {
               handleUpdate()
-              // setClub(0);
-              // resetter();
 
             }
           }}>submit</button>
@@ -136,7 +147,7 @@ export const EditClub: React.FC<EditClubProps> = ({ clubId, clubObj, setClub, re
           : <button className="buttonStyleApprove" onClick={() => setAddPassword(true)}>Add Password</button>}
         {clubObj?.has_password ?
           <button className="buttonStyleReject m-t-1" onClick={() => {
-            if (confirmPassword.current && initPassword.current && initPassword.current.value === confirmPassword.current.value) {
+            if (initPassword.current) {
               removeClubPassword(clubObj.id, initPassword.current.value)
                 .then((data) => {
                   showAlertModal(data.message)

@@ -562,15 +562,19 @@ export const getClubsUserNotJoined = () => {
         .then(res => res.json())
 }
 
-export const deleteChessClub = (clubId) => {
+export const deleteChessClub = (clubId, inputPassword) => {
     const localVillagerObj = getToken();
     return fetch(`${apiKey}/clubs/${clubId}/end_club`, {
         method: "DELETE",
         headers: {
             "Authorization": `Token ${localVillagerObj.token}`,
             "Content-Type": "application/json"
-        }
+        },
+        body: JSON.stringify({
+            password: inputPassword,
+        })
     })
+        .then(res => res.json())
 }
 
 export const removeClubPassword = (clubId, oldPassword) => {

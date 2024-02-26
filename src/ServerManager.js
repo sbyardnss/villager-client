@@ -576,3 +576,18 @@ export const deleteChessClub = (clubId) => {
         }
     })
 }
+
+export const removeClubPassword = (clubId, oldPassword) => {
+    const localVillagerObj = getToken()
+    return fetch(`${apiKey}/clubs/${clubId}/remove_club_password`, {
+        method: 'PUT',
+        headers: {
+            "Authorization": `Token ${localVillagerObj.token}`,
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            password: oldPassword,
+        })
+    })
+        .then(res => res.json())
+}

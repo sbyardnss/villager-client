@@ -1,8 +1,9 @@
 import { useEffect, useState, useRef, useContext } from "react"
-import { updateClub, deleteChessClub } from "../../../ServerManager"
+import { updateClub, deleteChessClub, removeClubPassword } from "../../../ServerManager"
 import { handleFormChange } from "../actions/handle-form-change";
 import { ChessClub, ChessClubEdit } from "../types/ChessClub";
 import { AppContext } from "../../App/AppProvider";
+import showAlertModal from "../../../shared/AlertModal/alert-modal";
 
 interface EditClubProps {
   clubId: number;
@@ -122,16 +123,26 @@ export const EditClub: React.FC<EditClubProps> = ({ clubId, clubObj, setClub, re
         </div>
         {clubObj?.has_password || addPassword ?
           <div className="formInput">
-            <label className="setCustomFont newClubFormLabel" >{ addPassword ? 'New password' : 'Old password'}</label>
+            <label className="setCustomFont newClubFormLabel" >{addPassword ? 'New password' : 'Old password'}</label>
             <input id="oldPassword" ref={initPassword} type="text" placeholder="old password" onChange={(evt) => handleFormChange({ stateObject: editedClub, evt: evt, handler: updateEditedClub })} />
           </div>
           : ""}
         {clubObj?.has_password || addPassword ?
           <div className="formInput">
-            <label className="setCustomFont newClubFormLabel" >{ addPassword ? 'Confirm New Password' : 'New password' }</label>
+            <label className="setCustomFont newClubFormLabel" >{addPassword ? 'Confirm New Password' : 'New password'}</label>
             <input id="newPassword" ref={confirmPassword} type="text" placeholder=" set new password" onChange={(evt) => handleFormChange({ stateObject: editedClub, evt: evt, handler: updateEditedClub })} />
           </div>
-          : <button className="buttonStyleApprove" onClick={() => setAddPassword(true)}>Add Password</button> }
+          : <button className="buttonStyleApprove" onClick={() => setAddPassword(true)}>Add Password</button>}
+        {clubObj?.has_password ?
+          <button className="buttonStyleReject" onClick={() => {
+            if (confirmPassword.current && initPassword.current && initPassword.current.value === confirmPassword.current.value) {
+              removeClubPassword(clubObj.id, initPassword.current.value)
+                .then((data) => {
+                  showAlertModal(data.message)
+                })
+            }
+          }}>Remove password</button>
+          : null}
       </section>
     </article>
   </>

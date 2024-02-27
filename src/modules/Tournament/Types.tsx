@@ -1,3 +1,4 @@
+import type { Match } from "tournament-pairings/dist/Match";
 export interface NewTournament {
   title: string;
   creator: number;
@@ -6,7 +7,7 @@ export interface NewTournament {
   timeSetting: number;
   rounds: number;
   in_person: boolean;
-  pairings: TournamentPairing[];
+  pairings: Match[];
   club: number;
 }
 
@@ -47,15 +48,49 @@ export interface Guest {
   guest_id: string;
 }
 
-export interface TournamentPairing {
-  round: number;
-  match: number;
-  player1: number | string;
-  player2: number | string;
+
+export interface PlayerPairingArgument {
+  id: number | string;
+  score: number;
 }
+// export interface TournamentPairing {
+//   round: number;
+//   match: number;
+//   player1: number | string;
+//   player2: number | string;
+// }
 
 export interface TimeSetting {
   id: number;
   time_amount: number,
   increment: number,
 }
+
+
+
+// From tournament Pairings:
+
+// export interface Match {
+//   round: number;
+//   match: number;
+//   player1: string | number | null;
+//   player2: string | number | null;
+//   win?: {
+//     round: number;
+//     match: number;
+//   };
+//   loss?: {
+//     round: number;
+//     match: number;
+//   };
+// }
+
+// interface tournPlayer {
+//   id: string | number;
+//   score: number;
+//   pairedUpDown?: boolean;
+//   receivedBye?: boolean;
+//   avoid?: Array<string | number>;
+//   colors?: Array<'w' | 'b'>;
+//   rating?: number | null;
+// }

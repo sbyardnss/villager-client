@@ -1,7 +1,8 @@
-import { getClubMatesAndGuests, getAllTimeSettings, getMyOpenTournaments, getMyPastTournaments } from "../../ServerManager";
+import { getClubMatesAndGuests, getMyOpenTournaments, getMyPastTournaments } from "../../ServerManager";
 import { useEffect, useState, useContext } from "react";
 import { AppContext } from "../App/AppProvider";
-import type { Player, Guest, NewTournament, Tournament, TournamentPairing, TimeSetting } from "./Types";
+import type { Player, Guest, NewTournament, Tournament, TimeSetting } from "./Types";
+import type { Match } from "tournament-pairings/dist/Match";
 import { ActiveTournament } from "./components/ActiveTournament";
 import { TournamentForm } from "./components/TournamentForm";
 import { TournamentList } from "./components/TournamentList";
@@ -18,10 +19,6 @@ export const TournamentController = () => {
   const [selectedTournament, setSelectedTournament] = useState(0);
   const [pastTournaments, setPastTournaments] = useState<Tournament[]>([]);
   const [showPastTournaments, setShowPastTournaments] = useState(false);
-  // const [newGuest, updateNewGuest] = useState({
-  //   full_name: "",
-  //   club: 0,
-  // });
   const [newTournament, updateNewTournament] = useState<NewTournament>({
     title: "",
     creator: localVillagerUser.userId,
@@ -38,32 +35,19 @@ export const TournamentController = () => {
     getMyOpenTournaments()
       .then(data => setMyOpenTournaments(data));
   }
-  const resetNewTournament = () => {
-    updateNewTournament({
-      title: "",
-      creator: localVillagerUser.userId,
-      competitors: [],
-      guest_competitors: [],
-      timeSetting: 0,
-      rounds: 1,
-      in_person: true,
-      pairings: [],
-      club: 0
-    })
-  }
-
-  const handleUpdateTournament = () => {
-
-  }
   useEffect(
     () => {
-      Promise.all([getClubMatesAndGuests(), getAllTimeSettings(), getMyOpenTournaments()])
-        .then(([mateAndGuestData, timeSettingData, openTournamentData]) => {
+      Promise.all([getClubMatesAndGuests(), getMyOpenTournaments()])
+        .then(([mateAndGuestData, openTournamentData]) => {
           setClubMatesAndGuests(mateAndGuestData);
-          setTimeSettings(timeSettingData);
           setMyOpenTournaments(openTournamentData);
         });
     }, []
+  )
+  useEffect(
+    () => {
+      console.log(newTournament)
+    },[newTournament]
   )
   if (selectedTournament) {
     return <>

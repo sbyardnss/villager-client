@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { createNewGuest } from "../../../ServerManager";
 import type { ChessClub } from "../../App/types";
 import { chessClubDefaults } from "../../App/types";
+
 interface PlayerSelectionProps {
   players: PlayerOnTournament[];
   guests: Guest[];
@@ -29,8 +30,8 @@ export const PlayerSelection: React.FC<PlayerSelectionProps> = ({
 }) => {
   const [showGuests, setShowGuests] = useState(false);
   const [search, setSearch] = useState("");
-  const [availableCompetitors, setAvailableCompetitors] = useState<(PlayerOnTournament |Guest)[]>([]);
-  const [displayedCompetitors, setDisplayedCompetitors] = useState<(PlayerOnTournament |Guest)[]>([]);
+  const [availableCompetitors, setAvailableCompetitors] = useState<(PlayerOnTournament | Guest)[]>([]);
+  const [displayedCompetitors, setDisplayedCompetitors] = useState<(PlayerOnTournament | Guest)[]>([]);
   const [newGuest, updateNewGuest] = useState({
     full_name: "",
     club: selectedClub.id,
@@ -41,9 +42,12 @@ export const PlayerSelection: React.FC<PlayerSelectionProps> = ({
       if (players) {
         const filteredPlayers = players.filter(player => !tournamentObj.competitors.find(c => c.id === player.id));
         const filteredGuests = guests.filter(guest => !tournamentObj.guest_competitors.find(c => c.id === guest.id));
+        if (showGuests)
         setAvailableCompetitors(filteredPlayers.concat(filteredGuests));
+        else
+        setAvailableCompetitors(filteredPlayers);
       }
-    }, [players, guests, tournamentObj, tournamentObj.competitors, tournamentObj.guest_competitors]
+    }, [players, guests, showGuests, tournamentObj, tournamentObj.competitors, tournamentObj.guest_competitors]
   )
   useEffect(
     () => {
@@ -69,8 +73,6 @@ export const PlayerSelection: React.FC<PlayerSelectionProps> = ({
             guest_competitors: [],
           };
           updateTournamentObj(tournamentDefaults);
-          setDisplayedCompetitors([]);
-          setAvailableCompetitors([]);
         }}>cancel</button>
       </div>
       <div id="tournamentPlayerSelectionSection">
@@ -181,7 +183,10 @@ export const PlayerSelection: React.FC<PlayerSelectionProps> = ({
       <div className="controlSpread">
 
         <button className="buttonStyleApprove" onClick={() => setShowGuests(!showGuests)}>toggle guests</button>
-        <button className="buttonStyleReject" onClick={() => updatePlayersSelected(true)}>confirm</button>
+        <button className="buttonStyleReject" onClick={() => {
+          setShowGuests(false)
+          updatePlayersSelected(true)
+        }}>confirm</button>
       </div>
     </section>
   )

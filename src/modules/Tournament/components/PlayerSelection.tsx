@@ -1,4 +1,4 @@
-import type { Player, Guest, PlayerOnTournament, NewTournament } from "../Types"
+import type { Guest, PlayerOnTournament, NewTournament } from "../Types"
 import { isPlayerOrGuest } from "../../../utils/is-player-or-guest";
 import { getPlayerType } from "../../../utils/player-guest-typing";
 import { useEffect, useState } from "react";
@@ -33,7 +33,7 @@ export const PlayerSelection: React.FC<PlayerSelectionProps> = ({
   const [displayedCompetitors, setDisplayedCompetitors] = useState<(PlayerOnTournament |Guest)[]>([]);
   const [newGuest, updateNewGuest] = useState({
     full_name: "",
-    club: 0,
+    club: selectedClub.id,
   });
 
   useEffect(
@@ -63,6 +63,14 @@ export const PlayerSelection: React.FC<PlayerSelectionProps> = ({
         <button className="buttonStyleReject" onClick={() => {
           setCreate(false)
           selectClub(chessClubDefaults);
+          const tournamentDefaults = {
+            ...tournamentObj,
+            competitors: [],
+            guest_competitors: [],
+          };
+          updateTournamentObj(tournamentDefaults);
+          setDisplayedCompetitors([]);
+          setAvailableCompetitors([]);
         }}>cancel</button>
       </div>
       <div id="tournamentPlayerSelectionSection">
@@ -76,9 +84,6 @@ export const PlayerSelection: React.FC<PlayerSelectionProps> = ({
                   <li key={!isPlayerOrGuest(p) ? (p as Guest).guest_id + '-- potentialCompetitor' : p.id + '-- potentialCompetitor'}
                     className="newTournamentPlayerListItem"
                     onClick={() => {
-                      // const copy = [...potentialCompetitors]
-                      // copy.splice(index, 1)
-                      // setDisplayedCompetitors(copy)
                       const tournamentCopy = { ...tournamentObj }
                       if (playerType === 'Guest') {
                         tournamentCopy.guest_competitors.push(p as Guest);
@@ -116,7 +121,6 @@ export const PlayerSelection: React.FC<PlayerSelectionProps> = ({
             }
             {
               tournamentObj.guest_competitors.map((competitor, index) => {
-                // const player = playersAndGuests.find(p => p.guest_id === competitor.guest_id)
                 return (
                   <li key={competitor.guest_id + '-- competitor'}
                     className="newTournamentPlayerListItem"
@@ -124,9 +128,6 @@ export const PlayerSelection: React.FC<PlayerSelectionProps> = ({
                       const tournamentCopy = { ...tournamentObj }
                       tournamentCopy.guest_competitors.splice(index, 1)
                       updateTournamentObj(tournamentCopy)
-                      // const copy = [...potentialCompetitors]
-                      // copy.push(competitor)
-                      // setPotentialCompetitors(copy)
                     }}>
                     {competitor?.full_name}
                   </li>
@@ -181,10 +182,6 @@ export const PlayerSelection: React.FC<PlayerSelectionProps> = ({
 
         <button className="buttonStyleApprove" onClick={() => setShowGuests(!showGuests)}>toggle guests</button>
         <button className="buttonStyleReject" onClick={() => updatePlayersSelected(true)}>confirm</button>
-        {/* <button className="buttonStyleReject" onClick={() => {
-                    setCreateTournament(false)
-                    setSelectedClub(false)
-                }}>cancel</button> */}
       </div>
     </section>
   )

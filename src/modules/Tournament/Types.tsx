@@ -1,5 +1,5 @@
 export interface NewTournament {
-title: string;
+  title: string;
   creator: number;
   competitors: PlayerOnTournament[];
   guest_competitors: Guest[];
@@ -10,6 +10,17 @@ title: string;
   club: number;
 }
 
+export const newTournamentDefaults: NewTournament = {
+  title: "",
+  creator: 0,
+  competitors: [],
+  guest_competitors: [],
+  timeSetting: 0,
+  rounds: 0,
+  in_person: true,
+  pairings: [],
+  club: 0,
+}
 export interface Tournament extends NewTournament {
   id: number;
   date: string;

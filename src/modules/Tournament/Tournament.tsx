@@ -6,6 +6,7 @@ import { ActiveTournament } from "./components/ActiveTournament";
 import { TournamentForm } from "./components/TournamentForm";
 import { TournamentList } from "./components/TournamentList";
 import "../../styles/Tournament.css";
+import { ChessClub } from "../App/types";
 
 export const TournamentController = () => {
   const { localVillagerUser, myChessClubs } = useContext(AppContext);
@@ -13,7 +14,7 @@ export const TournamentController = () => {
   const [timeSettings, setTimeSettings] = useState<TimeSetting[]>([]);
   const [myOpenTournaments, setMyOpenTournaments] = useState<Tournament[]>([]);
   const [createNewTournament, setCreateNewTournament] = useState(false);
-  const [selectedClub, setSelectedClub] = useState(0);
+  const [selectedClub, setSelectedClub] = useState<ChessClub>({} as ChessClub);
   const [selectedTournament, setSelectedTournament] = useState(0);
   const [pastTournaments, setPastTournaments] = useState<Tournament[]>([]);
   const [showPastTournaments, setShowPastTournaments] = useState(false);

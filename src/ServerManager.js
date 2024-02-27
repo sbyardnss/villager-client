@@ -591,3 +591,14 @@ export const removeClubPassword = (clubId, oldPassword) => {
     })
         .then(res => res.json())
 }
+
+export const getClubsGuests = (clubId) => {
+    const localVillagerObj = getToken()
+    return fetch(`${apiKey}/clubs/${clubId}/get_club_guests`, {
+        headers: {
+            "Authorization": `Token ${localVillagerObj.token}`,
+            "Content-Type": "application/json"
+        },
+    })
+        .then(res => res.json())
+}

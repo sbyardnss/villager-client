@@ -3,7 +3,8 @@ import { isPlayerOrGuest } from "../../../utils/is-player-or-guest";
 import { getPlayerType } from "../../../utils/player-guest-typing";
 import { useEffect, useState } from "react";
 import { createNewGuest } from "../../../ServerManager";
-
+import type { ChessClub } from "../../App/types";
+import { chessClubDefaults } from "../../App/types";
 interface PlayerSelectionProps {
   players: PlayerOnTournament[];
   guests: Guest[];
@@ -11,8 +12,9 @@ interface PlayerSelectionProps {
   tournamentObj: NewTournament;
   updateTournamentObj: React.Dispatch<React.SetStateAction<NewTournament>>;
   setCreate: React.Dispatch<React.SetStateAction<boolean>>;
-  selectClub: React.Dispatch<React.SetStateAction<number>>;
-  selectedClub:
+  selectClub: React.Dispatch<React.SetStateAction<ChessClub>>;
+  selectedClub: ChessClub;
+  resetGuests: () => void;
 }
 export const PlayerSelection: React.FC<PlayerSelectionProps> = ({
   players,
@@ -23,6 +25,7 @@ export const PlayerSelection: React.FC<PlayerSelectionProps> = ({
   setCreate,
   selectClub,
   selectedClub,
+  resetGuests,
 }) => {
   const [showGuests, setShowGuests] = useState(false);
   const [search, setSearch] = useState("");
@@ -35,9 +38,11 @@ export const PlayerSelection: React.FC<PlayerSelectionProps> = ({
 
   useEffect(
     () => {
-      const filteredPlayers = players.filter(player => !tournamentObj.competitors.find(c => c.id === player.id));
-      const filteredGuests = guests.filter(guest => !tournamentObj.guest_competitors.find(c => c.id === guest.id));
-      setAvailableCompetitors(filteredPlayers.concat(filteredGuests));
+      if (players) {
+        const filteredPlayers = players.filter(player => !tournamentObj.competitors.find(c => c.id === player.id));
+        const filteredGuests = guests.filter(guest => !tournamentObj.guest_competitors.find(c => c.id === guest.id));
+        setAvailableCompetitors(filteredPlayers.concat(filteredGuests));
+      }
     }, [players, guests, tournamentObj, tournamentObj.competitors, tournamentObj.guest_competitors]
   )
   useEffect(
@@ -57,7 +62,7 @@ export const PlayerSelection: React.FC<PlayerSelectionProps> = ({
         <h3 className="setTournamentFontSize setColor">select players</h3>
         <button className="buttonStyleReject" onClick={() => {
           setCreate(false)
-          selectClub(0);
+          selectClub(chessClubDefaults);
         }}>cancel</button>
       </div>
       <div id="tournamentPlayerSelectionSection">
@@ -167,7 +172,7 @@ export const PlayerSelection: React.FC<PlayerSelectionProps> = ({
             if (newGuest.full_name !== "" && selectedClub) {
               createNewGuest(newGuest)
                 .then(() => resetGuests())
-              updateNewGuest({ full_name: "", club: selectedClub })
+              updateNewGuest({ full_name: "", club: selectedClub.id })
             }
           }}
         >Create Guest</button>

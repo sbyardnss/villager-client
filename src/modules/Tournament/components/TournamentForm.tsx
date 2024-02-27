@@ -4,11 +4,12 @@ import type { ChessClub } from "../../App/types";
 import type { Player, PlayerOnTournament, Guest, NewTournament } from "../Types";
 // import { isPlayerOrGuest } from "../../../utils/is-player-or-guest";
 import { PlayerSelection } from "./PlayerSelection";
+import { getClubsGuests } from "../../../ServerManager";
 
 interface TournamentFormProps {
   clubs: ChessClub[];
-  selectedClub: number;
-  selectClub: React.Dispatch<React.SetStateAction<number>>;
+  selectedClub: ChessClub;
+  selectClub: React.Dispatch<React.SetStateAction<ChessClub>>;
   // playersAndGuests: (Player | Guest)[];
   resetTourneys: () => void;
   createTournament: boolean;
@@ -35,17 +36,19 @@ export const TournamentForm: React.FC<TournamentFormProps> = ({
 
   useEffect(
     () => {
-      const club = clubs.find((club: ChessClub) => club.id === selectedClub);
-      if (club) {
-        setClubObj(club);
-        setClubGuests(club.guest_members);
-        setClubPlayers(club.members);
-      }
-    }, [selectedClub, clubs]
+      setClubObj(selectedClub);
+      setClubGuests(selectedClub.guest_members);
+      setClubPlayers(selectedClub.members);
+    }, [selectedClub]
   )
-
+  const resetGuests = () => {
+    getClubsGuests(selectedClub.id) 
+      .then(data => {
+        setClubGuests(data);
+      })
+  }
   if (createTournament) {
-    if (!selectedClub) {
+    if (!selectedClub.id) {
       return (
         <section id="newTournamentForm">
           <section id="clubSelectionSection">
@@ -74,8 +77,7 @@ export const TournamentForm: React.FC<TournamentFormProps> = ({
                       key={club.id}
                       className="clubSelectionTabItem"
                       onClick={() => {
-                        console.log(club)
-                        selectClub(club.id)
+                        selectClub(club)
                       }}
                     >{club.name}</div>
                   )
@@ -99,7 +101,9 @@ export const TournamentForm: React.FC<TournamentFormProps> = ({
               tournamentObj={tournamentObj}
               updateTournamentObj={updater}
               setCreate={setCreateTournament}
-              selectClub={selectClub} />
+              selectClub={selectClub}
+              selectedClub={selectedClub} 
+              resetGuests={resetGuests} />
           : ""}
         </section>
       );

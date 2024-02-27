@@ -20,6 +20,24 @@ export interface ChessClub {
   [key: string]: string | number | PlayerInClub | PlayerInClub[] | GuestInClub[] | boolean | null;
 }
 
+export const chessClubDefaults: ChessClub = {
+  id: 0,
+  name: "",
+  manager: {
+    id: 0,
+    full_name: "",
+    username: "",
+  },
+  date: "",
+  address: "",
+  city: "",
+  state: "",
+  zipcode: 0,
+  details: "",
+  members: [],
+  guest_members: [],
+  has_password: false,
+}
 // export interface CreatingChessClub {
 //   name: string;
 //   address: string | null;

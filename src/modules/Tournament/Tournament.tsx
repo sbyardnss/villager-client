@@ -16,7 +16,7 @@ export const TournamentController = () => {
   const [myOpenTournaments, setMyOpenTournaments] = useState<Tournament[]>([]);
   const [createNewTournament, setCreateNewTournament] = useState(false);
   const [selectedClub, setSelectedClub] = useState<ChessClub>({} as ChessClub);
-  const [selectedTournament, setSelectedTournament] = useState(0);
+  const [selectedTournament, setSelectedTournament] = useState<Tournament>({} as Tournament);
   const [pastTournaments, setPastTournaments] = useState<Tournament[]>([]);
   const [showPastTournaments, setShowPastTournaments] = useState(false);
   const [newTournament, updateNewTournament] = useState<NewTournament>({
@@ -49,9 +49,12 @@ export const TournamentController = () => {
       console.log(newTournament)
     },[newTournament]
   )
-  if (selectedTournament) {
+  if (selectedTournament.id) {
     return <>
-      <ActiveTournament />
+      <ActiveTournament 
+        selectedTournament={selectedTournament} 
+        selectClub={setSelectedClub} 
+        selectedClub={selectedClub} />
     </>
   } else {
     return <>

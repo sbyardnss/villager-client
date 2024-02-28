@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 interface TournamentListProps {
   tournaments: Tournament[],
   currentOrPast: 'current' | 'past',
-  selectTournament: React.Dispatch<React.SetStateAction<number>>;
+  selectTournament: React.Dispatch<React.SetStateAction<Tournament>>;
 }
 export const TournamentList: React.FC<TournamentListProps> = ({
   tournaments,
@@ -35,7 +35,7 @@ export const TournamentList: React.FC<TournamentListProps> = ({
                 className="tournamentListItem"
                 value={t.id}
                 onClick={(e) => {
-
+                  selectTournament(t);
                 }}>
                 {t.title}
                 {currentOrPast === 'current'

@@ -1,35 +1,36 @@
 import type { Game } from "../../../Types/Game";
 import type { Match } from "tournament-pairings/dist/Match";
+import { findIdentifier } from "./find-identifier";
+import { updatePlayerOppRefObj } from "./update-player-opp-ref";
+import { updateBlackWhiteTally } from "./update-black-white-tally";
+import { SetStateAction } from "react";
+import { updateTieBreakAndScoreCardData } from "./update-tie-break-score-card-data";
 
-interface tournamentAnalysisProps {
-  games: Game[];
-  currentMatchups: Match[];
-}
 
-type ScoreObjType = {
+export type ScoreObjType = {
   [key: string]: number; // This part covers the string keys
 } & {
   [key: number]: number; // This part covers the number key
 };
 
-type TieBreakObject = {
+export type TieBreakObject = {
   white: number | string;
-  black: number | string;
+  black: number | string | null;
   winner: number | string;
   win_style: string | null;
   round: number;
 }
 
 //might need to be changed
-type BlackWhiteTallyType = {
+export type BlackWhiteTallyType = {
   [key: string]: string[];
 };
 //might need to be changed
-type PlayerOppRefObjType = {
+export type PlayerOppRefObjType = {
   [key: string]: (string | number)[];
 };
 
-type ScoreCardType = {
+export type ScoreCardType = {
   [key: string]: Array<string | number>;
 } & {
   [key: number]: Array<string | number>;
@@ -45,25 +46,69 @@ interface tournamentAnalysisOutput {
 
 type TournamentAnalysisFunction = (
   games: Game[],
-  currentMatchups: Match[]
+  currentMatchups: Match[],
+  currentMatchupsSetter: React.Dispatch<SetStateAction<Match[]>>,
 ) => tournamentAnalysisOutput;
 
 export const tournamentAnalysis: TournamentAnalysisFunction = (
   games,
   currentMatchups,
+  currentMatchupsSetter,
 ) => {
-  console.log('hello', games)
-  const playerOppObj: PlayerOppRefObjType = {};
-  const scoreCard: ScoreCardType = {};
-  const tieBreakInfo: TieBreakObject[] = [];
-  const blackWhite: BlackWhiteTallyType = {};
-  const scoreObj: ScoreObjType = {};
+  const playerOppObjForOutput: PlayerOppRefObjType = {};
+  const scoreCardForOutput: ScoreCardType = {};
+  const tieBreakDataForOutput: TieBreakObject[] = [];
+  const blackWhiteForOutput: BlackWhiteTallyType = {};
+  const scoreObjForOutput: ScoreObjType = {};
   for (const game of games) {
+    let whitePlayerIdentifier: string | number = 0;
+    let blackPlayerIdentifier: string | number = 0;
+    const gameResult: TieBreakObject = {} as TieBreakObject;
+    if (game.player_w) {
+      const identifier = findIdentifier(game.player_w);
+      whitePlayerIdentifier = identifier;
+      gameResult.white = identifier;
+    }
+    if (game.player_b){
+      const identifier = findIdentifier(game.player_b);
+      blackPlayerIdentifier = identifier;
+      gameResult.black = identifier;
+    } else {
+      gameResult.black = null;
+    }
+    updateTieBreakAndScoreCardData(game, gameResult, scoreCardForOutput, scoreObjForOutput, whitePlayerIdentifier, blackPlayerIdentifier);
+    tieBreakDataForOutput.push(gameResult);
+    updatePlayerOppRefObj(playerOppObjForOutput, whitePlayerIdentifier, blackPlayerIdentifier);
 
+    //CHECKING IF TWO PLAYERS ON GAME FOR BWTALLY
+    if (blackPlayerIdentifier && whitePlayerIdentifier) {
+      updateBlackWhiteTally(blackWhiteForOutput, whitePlayerIdentifier, blackPlayerIdentifier);
+    }
   }
 
 
-  return ({} as tournamentAnalysisOutput);
+
+  //CURRENT ROUND FOR PLAYEROBJ
+  let currentRoundMatchupsOutput: Match[] = [];
+  for (const match of currentMatchups) {
+    if (match.player1 === null) {
+      match.player1 = match.player2;
+      match.player2 = null;
+    };
+    currentRoundMatchupsOutput.push(match);
+    if (match.player1) {
+      updatePlayerOppRefObj(playerOppObjForOutput, match.player1, match.player2);
+    }
+  }
+  currentMatchupsSetter(currentRoundMatchupsOutput);
+  console.log(scoreObjForOutput)
+  return ({
+    playerOppRefObj: playerOppObjForOutput,
+    scoreCard: scoreCardForOutput,
+    scoreObj: scoreObjForOutput,
+    tieBreakData: tieBreakDataForOutput,
+    blackWhiteTally: blackWhiteForOutput,
+  });
 }
 
 //output needs
@@ -96,12 +141,12 @@ export const tournamentAnalysis: TournamentAnalysisFunction = (
 //needs game object to complete
 // [
 //   { 
-      //   white: 'g1',
-      //   black: 1,
-      //   winner: 1,
-      //   win_style: 'checkmate',
-      //   round: 1
-      // },
+//   white: 'g1',
+//   black: 1,
+//   winner: 1,
+//   win_style: 'checkmate',
+//   round: 1
+// },
 // ]
 
 
@@ -125,6 +170,6 @@ export const tournamentAnalysis: TournamentAnalysisFunction = (
 //made from games
 
 // {
-//   1: ['bye', 'none', .5, 1, 1, 0],
+//   1: ['bye', .5, 1, 1, 0, 'none',],
 //   g1: ['bye', 'none', .5, 1, 1, 0]
 // }

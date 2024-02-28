@@ -23,6 +23,7 @@ export const ActiveTournament: React.FC<ActiveTournamentProps> = ({
   const [activeTournamentPlayers, setActiveTournamentPlayers] = useState<(PlayerOnTournament | Guest)[]>([])
   const [tournamentGames, setTournamentGames] = useState<Game[]>([]);
   const [currentRoundMatchups, setCurrentRoundMatchups] = useState<Match[]>([]);
+  const currentRoundMatchupsRef = useRef(currentRoundMatchups);
   const [currentRound, setCurrentRound] = useState(0);
   const [mode, setMode] = useState<'scoring' | 'editing'>("scoring");
   const [viewTable, setViewTable] = useState(false);
@@ -86,23 +87,23 @@ export const ActiveTournament: React.FC<ActiveTournamentProps> = ({
     }, [localVillagerUser.userId]
   )
 
-  useEffect(
-    () => {
-      if (selectedTournament.pairings) {
-        const opponentObj = createPlayerOpponentReferenceObject(selectedTournament.pairings);
+  // useEffect(
+  //   () => {
+  //     if (selectedTournament.pairings) {
+  //       const opponentObj = createPlayerOpponentReferenceObject(selectedTournament.pairings);
 
 
-        const currentRoundPairings = selectedTournament.pairings.filter(p => p.round === currentRound);
-        currentRoundPairings.map(pairing => {
-          if (pairing.player1 === null) {
-            pairing.player1 = pairing.player2
-            pairing.player2 = null
-          };
-        });
-        setCurrentRoundMatchups(currentRoundPairings)
-      }
-    }, [selectedTournament.pairings, currentRound]
-  )
+  //       const currentRoundPairings = selectedTournament.pairings.filter(p => p.round === currentRound);
+  //       currentRoundPairings.map(pairing => {
+  //         if (pairing.player1 === null) {
+  //           pairing.player1 = pairing.player2
+  //           pairing.player2 = null
+  //         };
+  //       });
+  //       setCurrentRoundMatchups(currentRoundPairings)
+  //     }
+  //   }, [selectedTournament.pairings, currentRound]
+  // )
   // useEffect(
   //   () => {
   //     const copy = {...gameForApi};
@@ -143,9 +144,16 @@ export const ActiveTournament: React.FC<ActiveTournamentProps> = ({
   )
   useEffect(
     () => {
-      if (tournamentGames && currentRoundMatchups)
-        tournamentAnalysis(tournamentGames, currentRoundMatchups)
-    }, [tournamentGames, currentRoundMatchups]
+      currentRoundMatchupsRef.current = currentRoundMatchups;
+    }, [currentRoundMatchups]
+  )
+  useEffect(
+    () => {
+      // if (tournamentGames && currentRoundMatchups)
+      if (tournamentGames)
+        console.log('hitting useEffect conditional')
+        tournamentAnalysis(tournamentGames, currentRoundMatchupsRef.current, setCurrentRoundMatchups);
+    }, [tournamentGames]
   )
   return <>
     <main id="tournamentContainer">

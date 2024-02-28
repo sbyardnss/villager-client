@@ -1,7 +1,7 @@
 import type { Match } from "tournament-pairings/dist/Match";
 export interface NewTournament {
   title: string;
-  creator: number;
+  // creator: number;
   competitors: PlayerOnTournament[];
   guest_competitors: Guest[];
   timeSetting: number;
@@ -13,7 +13,7 @@ export interface NewTournament {
 
 export const newTournamentDefaults: NewTournament = {
   title: "",
-  creator: 0,
+  // creator: 0,
   competitors: [],
   guest_competitors: [],
   timeSetting: 0,
@@ -25,8 +25,27 @@ export const newTournamentDefaults: NewTournament = {
 export interface Tournament extends NewTournament {
   id: number;
   date: string;
+  complete: boolean,
+  creator: PlayerOnTournament;
 }
 
+export const selectedTournamentDefaults: Tournament = {
+  id: 0,
+  title: "",
+  creator: {
+    id: 0,
+    full_name: "",
+  },
+  competitors: [],
+  guest_competitors: [],
+  timeSetting: 0,
+  rounds: 0,
+  in_person: true,
+  pairings: [],
+  club: 0,
+  date: "",
+  complete: false,
+}
 
 export interface Player {
   id: number;

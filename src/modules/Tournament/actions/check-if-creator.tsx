@@ -1,7 +1,8 @@
-import type { Villager } from "../../App/types";
+import { GetLoggedInUser } from "../../App/actions/get-current-user";
 
-export const checkIfUserIsAppCreator = (user: Villager) => {
-  if (user.userId === 1) {
+export const checkIfUserIsAppCreator = () => {
+  const loggedInUser = GetLoggedInUser();
+  if (loggedInUser.userId === 1) {
     return true;
   } else {
     return false;

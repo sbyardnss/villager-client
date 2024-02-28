@@ -4,34 +4,48 @@ import { AppContext } from "../../App/AppProvider"
 import { checkIfUserIsAppCreator } from "../actions/check-if-creator"
 import type { Game } from "../../../Types/Game";
 import type { Match } from "tournament-pairings/dist/Match";
-import { getTournamentGames } from "../../../ServerManager";
+import { getTournamentGames, updateTournament } from "../../../ServerManager";
 import { ChessClub } from "../../App/types";
-import { createPlayerOpponentReferenceObject } from "../actions/create-player-opp-reference";
 import { tournamentAnalysis } from "../actions/matchup-game-analysis";
-
+import { ResultsModal } from "./ResultsModal";
+import { EndTournamentModal } from "./EndTournamentModal";
+import { EditPlayersModal } from "./EditPlayersModal";
+import { Scoring } from "./Scoring";
+import { EditScores } from "./EditScores";
+import { TournamentTable } from "./TournamentTable";
+import { selectedTournamentDefaults } from "../Types";
 interface ActiveTournamentProps {
   selectedTournament: Tournament;
+  selectTournament: React.Dispatch<SetStateAction<Tournament>>;
   selectClub: React.Dispatch<SetStateAction<ChessClub>>;
   selectedClub: ChessClub;
+  resetTourneys: () => void;
 }
 export const ActiveTournament: React.FC<ActiveTournamentProps> = ({
   selectedTournament,
+  selectTournament,
+  selectClub,
+  selectedClub,
+  resetTourneys,
 }) => {
-  const { localVillagerUser, myChessClubs } = useContext(AppContext);
+  const { localVillagerUser } = useContext(AppContext);
 
   // const [activeTournament, setActiveTournament] = useState<Tournament>({} as Tournament);
   const [activeTournamentPlayers, setActiveTournamentPlayers] = useState<(PlayerOnTournament | Guest)[]>([])
+  const [tournamentCreatorBool, setTournamentCreatorBool] = useState(false);
   const [tournamentGames, setTournamentGames] = useState<Game[]>([]);
   const [currentRoundMatchups, setCurrentRoundMatchups] = useState<Match[]>([]);
   const currentRoundMatchupsRef = useRef(currentRoundMatchups);
   const [currentRound, setCurrentRound] = useState(0);
   const [mode, setMode] = useState<'scoring' | 'editing'>("scoring");
-  const [viewTable, setViewTable] = useState(false);
-  const [showResults, setShowResults] = useState(false);
-  const [showEndTournament, setShowEndTournament] = useState(false);
+  const [modalMode, setModalMode] = useState<'none' | 'results' | 'edit-players' | 'end-tournament'>('none');
+  // const [viewTable, setViewTable] = useState(false);
+  // const [showResults, setShowResults] = useState(false);
+  // const [showEndTournament, setShowEndTournament] = useState(false);
+  const [tournamentAnalysisObj, setTournamentAnalysisObj] = useState({});
   //TODO: ADJUST SERVER TO ACCEPT PLAYERRELATED TYPE FOR WINNER AND PLAYER_W/B
   const [gameForApi, updateGameForApi] = useState<Game | any>({
-    player_w: 0,
+    player_w: {} as Guest | PlayerOnTournament,
     player_w_model_type: "",
     player_b: 0,
     player_b_model_type: "",
@@ -40,7 +54,7 @@ export const ActiveTournament: React.FC<ActiveTournamentProps> = ({
     win_style: "",
     accepted: true,
     tournament_round: 0,
-    winner: 0,
+    winner: {} as Guest | PlayerOnTournament,
     winner_model_type: "",
     bye: false
   });
@@ -60,8 +74,7 @@ export const ActiveTournament: React.FC<ActiveTournamentProps> = ({
   const byeGameRef = useRef(byeGame);
 
   // TODO: CAN WE GET RID OF ANY OF THESE STATE VARIABLES?
-  const [playerOpponentsReferenceObj, updatePlayerOpponentsReferenceObj] = useState({})
-  const [tournamentCreatorBool, setTournamentCreatorBool] = useState(false)
+  // const [playerOpponentsReferenceObj, updatePlayerOpponentsReferenceObj] = useState({})
 
 
 
@@ -71,17 +84,20 @@ export const ActiveTournament: React.FC<ActiveTournamentProps> = ({
         .then(data => setTournamentGames(data));
       setCurrentRound(selectedTournament.rounds);
       setActiveTournamentPlayers(selectedTournament.competitors.concat(selectedTournament.guest_competitors));
-    }, [selectedTournament]
+      if (selectedTournament.creator.id === localVillagerUser.userId) {
+        setTournamentCreatorBool(true);
+      }
+    }, [selectedTournament, localVillagerUser.userId]
   )
   useEffect(
     () => {
       console.log(tournamentGames)
-    },[tournamentGames]
+    }, [tournamentGames]
   )
   useEffect(
     () => {
 
-      if (checkIfUserIsAppCreator(localVillagerUser.userId)) {
+      if (checkIfUserIsAppCreator()) {
         setTournamentCreatorBool(true);
       }
     }, [localVillagerUser.userId]
@@ -149,14 +165,65 @@ export const ActiveTournament: React.FC<ActiveTournamentProps> = ({
   )
   useEffect(
     () => {
-      // if (tournamentGames && currentRoundMatchups)
       if (tournamentGames) {
         const analysis = tournamentAnalysis(tournamentGames, currentRoundMatchupsRef.current, setCurrentRoundMatchups, currentRound);
+        setTournamentAnalysisObj(analysis);
       }
     }, [tournamentGames, currentRound]
   )
+  const resetTournamentGames = () => {
+    getTournamentGames(selectedTournament)
+      .then(data => setTournamentGames(data))
+  }
   return <>
     <main id="tournamentContainer">
+      {modalMode === 'results' ?
+        <ResultsModal />
+        : modalMode === 'edit-players' ?
+          <EditPlayersModal />
+          : modalMode === 'end-tournament' ?
+            <EndTournamentModal />
+            : ""}
+      <div id="tournamentHeader">
+        <div id="activeTournamentTitle" className="setColor setTournamentFontSize">{selectedTournament.title}</div>
+        <button
+          className="progressionControlBtn buttonStyleReject"
+          onClick={() => {
+            setModalMode('none');
+            selectTournament(selectedTournamentDefaults);
+            setTournamentAnalysisObj({});
+          }}>exit</button>
+        <button
+          className="progressionControlBtn controlBtnApprove"
+          onClick={() => {
+            setModalMode('results');
+          }}>Results</button>
+      </div>
+      <div id="tournamentProgressionControls">
+        {/* {selectedTournament.complete === false && (tournamentCreatorBool || checkIfUserIsAppCreator()) ?
+          <button
+            className="progressionControlBtn controlBtnApprove"
+            onClick={() => {
+              if (window.confirm("create round?")) {
+                if (byePlayer && byeGame.player_w) {
+                  sendNewGame(byeGame)
+                }
+                const tournamentCopy = { ...activeTournament }
+                const newPairings = createPairings('new', activeTournamentPlayers, playerOpponentsReferenceObj, currentRound, scoreObj, scoreCard, byeGame.player_w, blackWhiteTally)
+                tournamentCopy.pairings = tournamentCopy.pairings.concat(newPairings)
+                tournamentCopy.rounds++
+                tournamentCopy.competitors = tournamentCopy.competitors.map(c => { return c.id })
+                tournamentCopy.guest_competitors = tournamentCopy.guest_competitors.map(gc => { return gc.id })
+                updateTournament(tournamentCopy)
+                  .then(() => {
+                    resetTourneys();
+                    resetTournamentGames();
+                  })
+                setModalMode('none');
+              }
+            }}>New Round</button>
+      :""} */}
+      </div>
     </main>
   </>
 }

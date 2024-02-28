@@ -21,7 +21,7 @@ export const TournamentController = () => {
   const [showPastTournaments, setShowPastTournaments] = useState(false);
   const [newTournament, updateNewTournament] = useState<NewTournament>({
     title: "",
-    creator: localVillagerUser.userId,
+    // creator: localVillagerUser.userId,
     competitors: [],
     guest_competitors: [],
     timeSetting: 0,
@@ -53,8 +53,10 @@ export const TournamentController = () => {
     return <>
       <ActiveTournament 
         selectedTournament={selectedTournament} 
+        selectTournament={setSelectedTournament}
         selectClub={setSelectedClub} 
-        selectedClub={selectedClub} />
+        selectedClub={selectedClub} 
+        resetTourneys={resetTournaments}/>
     </>
   } else {
     return <>

@@ -8,6 +8,7 @@ export const updateTieBreakAndScoreCardData = (
   gameResult: TieBreakObject,
   scoreCardForOutput: ScoreCardType,
   scoreObj: ScoreObjType,
+  iterationRound: number,
   wIdentifier: number | string,
   bIdentifier?: number | string | undefined,
 ) => {
@@ -18,15 +19,15 @@ export const updateTieBreakAndScoreCardData = (
     gameResult.win_style = game.win_style;
     gameResult.round = game.tournament_round;
     if (game.bye) {
-      updateScoreCard(scoreCardForOutput, scoreObj, winnerIdentifier, 'bye');
+      updateScoreCard(iterationRound, scoreCardForOutput, scoreObj, winnerIdentifier, 'bye');
     } else {
-      updateScoreCard(scoreCardForOutput, scoreObj, winnerIdentifier, 1);
+      updateScoreCard(iterationRound, scoreCardForOutput, scoreObj, winnerIdentifier, 1);
     }
     if (loserIdentifier) {
-      updateScoreCard(scoreCardForOutput, scoreObj, loserIdentifier, 0);
+      updateScoreCard(iterationRound, scoreCardForOutput, scoreObj, loserIdentifier, 0);
     }
   } else if (game.win_style === 'draw') {
-    updateScoreCard(scoreCardForOutput, scoreObj, wIdentifier, .5);
-    updateScoreCard(scoreCardForOutput, scoreObj, bIdentifier, .5);
+    updateScoreCard(iterationRound, scoreCardForOutput, scoreObj, wIdentifier, .5);
+    updateScoreCard(iterationRound, scoreCardForOutput, scoreObj, bIdentifier, .5);
   }
 }

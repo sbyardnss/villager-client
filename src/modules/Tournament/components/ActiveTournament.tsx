@@ -150,10 +150,10 @@ export const ActiveTournament: React.FC<ActiveTournamentProps> = ({
   useEffect(
     () => {
       // if (tournamentGames && currentRoundMatchups)
-      if (tournamentGames)
-        console.log('hitting useEffect conditional')
-        tournamentAnalysis(tournamentGames, currentRoundMatchupsRef.current, setCurrentRoundMatchups);
-    }, [tournamentGames]
+      if (tournamentGames) {
+        const analysis = tournamentAnalysis(tournamentGames, currentRoundMatchupsRef.current, setCurrentRoundMatchups, currentRound);
+      }
+    }, [tournamentGames, currentRound]
   )
   return <>
     <main id="tournamentContainer">

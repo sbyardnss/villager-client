@@ -48,12 +48,14 @@ type TournamentAnalysisFunction = (
   games: Game[],
   currentMatchups: Match[],
   currentMatchupsSetter: React.Dispatch<SetStateAction<Match[]>>,
+  currentRound: number,
 ) => tournamentAnalysisOutput;
 
 export const tournamentAnalysis: TournamentAnalysisFunction = (
   games,
   currentMatchups,
   currentMatchupsSetter,
+  currentRound,
 ) => {
   const playerOppObjForOutput: PlayerOppRefObjType = {};
   const scoreCardForOutput: ScoreCardType = {};
@@ -61,6 +63,7 @@ export const tournamentAnalysis: TournamentAnalysisFunction = (
   const blackWhiteForOutput: BlackWhiteTallyType = {};
   const scoreObjForOutput: ScoreObjType = {};
   for (const game of games) {
+    const gameRound = game.tournament_round;
     let whitePlayerIdentifier: string | number = 0;
     let blackPlayerIdentifier: string | number = 0;
     const gameResult: TieBreakObject = {} as TieBreakObject;
@@ -76,7 +79,7 @@ export const tournamentAnalysis: TournamentAnalysisFunction = (
     } else {
       gameResult.black = null;
     }
-    updateTieBreakAndScoreCardData(game, gameResult, scoreCardForOutput, scoreObjForOutput, whitePlayerIdentifier, blackPlayerIdentifier);
+    updateTieBreakAndScoreCardData(game, gameResult, scoreCardForOutput, scoreObjForOutput, gameRound, whitePlayerIdentifier);
     tieBreakDataForOutput.push(gameResult);
     updatePlayerOppRefObj(playerOppObjForOutput, whitePlayerIdentifier, blackPlayerIdentifier);
 
@@ -101,7 +104,7 @@ export const tournamentAnalysis: TournamentAnalysisFunction = (
     }
   }
   currentMatchupsSetter(currentRoundMatchupsOutput);
-  console.log(scoreObjForOutput)
+
   return ({
     playerOppRefObj: playerOppObjForOutput,
     scoreCard: scoreCardForOutput,

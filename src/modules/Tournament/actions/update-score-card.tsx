@@ -1,6 +1,8 @@
 import type { ScoreCardType, ScoreObjType } from "./matchup-game-analysis"
+import { updateScoreCardNones } from "./update-score-card-none";
 
 export const updateScoreCard = (
+  currentRound: number,
   scoreCardObj: ScoreCardType,
   totalScoreObj: ScoreObjType,
   identifier: string | number | undefined,
@@ -8,10 +10,13 @@ export const updateScoreCard = (
 ) => {
   if (identifier) {
     if (scoreCardObj[identifier]) {
+      updateScoreCardNones(scoreCardObj[identifier], currentRound);
       scoreCardObj[identifier].push(score);
       totalScoreObj[identifier] += scoreFromString(score);
     } else {
-      scoreCardObj[identifier] = [score];
+      scoreCardObj[identifier] = [];
+      updateScoreCardNones(scoreCardObj[identifier], currentRound);
+      scoreCardObj[identifier].push(score);
       totalScoreObj[identifier] = scoreFromString(score);
     }
     // if (totalScoreObj[identifier]) {

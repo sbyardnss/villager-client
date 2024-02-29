@@ -15,12 +15,10 @@ type PlayerArgCreatorFunction = (
   activeTourneyPlayers: (PlayerOnTournament | Guest)[],
 ) => PlayerArg | undefined;
 export const playerArgCreator: PlayerArgCreatorFunction = (identifier, analysisObj, activeTourneyPlayers) => {
-  // let identifier = null
   let isActive = true
   let playerArg: PlayerArg = {} as PlayerArg;
   //check if player is active and get identifier
   if (typeof identifier === 'string') {
-    // identifier = playerOppRef
     //TODO: IS THIS AN ISSUE USING ONLY GUEST TYPING HERE
     if (!activeTourneyPlayers.find((ap: PlayerOnTournament | Guest) => (ap as Guest).guest_id === identifier)) {
       isActive = false

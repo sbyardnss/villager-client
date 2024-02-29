@@ -3,7 +3,6 @@ import type { Match } from "tournament-pairings/dist/Match";
 import { findIdentifier } from "./find-identifier";
 import { updatePlayerOppRefObj } from "./update-player-opp-ref";
 import { updateBlackWhiteTally } from "./update-black-white-tally";
-import { SetStateAction } from "react";
 import { updateTieBreakAndScoreCardData } from "./update-tie-break-score-card-data";
 
 

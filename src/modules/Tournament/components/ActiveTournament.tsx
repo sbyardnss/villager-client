@@ -191,9 +191,26 @@ export const ActiveTournament: React.FC<ActiveTournamentProps> = ({
   )
 
   const resetTournamentGames = () => {
-    getTournamentGames(selectedTournament)
+    getTournamentGames(selectedTournament.id)
       .then(data => setTournamentGames(data))
   }
+  const resetGameForApi = () => {
+    updateGameForApi({
+      player_w: {} as Guest | PlayerOnTournament,
+      player_w_model_type: "",
+      player_b: 0,
+      player_b_model_type: "",
+      tournament: 0,
+      time_setting: 0,
+      win_style: "",
+      accepted: true,
+      tournament_round: 0,
+      winner: {} as Guest | PlayerOnTournament,
+      winner_model_type: "",
+      bye: false,
+    });
+  }
+
   return <>
     <main id="tournamentContainer">
       {modalMode === 'results' ?
@@ -248,6 +265,7 @@ export const ActiveTournament: React.FC<ActiveTournamentProps> = ({
       </div> */}
       <TournamentControls
         tournamentResetter={resetTourneys}
+
         tournamentGamesResetter={resetTournamentGames}
         modalMode={modalMode}
         modalModeSetter={setModalMode}
@@ -261,9 +279,30 @@ export const ActiveTournament: React.FC<ActiveTournamentProps> = ({
         activePlayers={activeTournamentPlayers}
         currentRound={currentRound}
         analysis={tournamentAnalysisObj}
-        roundComplete={roundOver}
-
-      />
+        roundComplete={roundOver} />
+      <div className="setColor setTournamentFontSize">
+        Round {currentRound}
+      </div>
+      <section id="matchupsContainer">
+        {scoreMode === 'scoring' ?
+          <Scoring
+            tournamentObj={selectedTournament}
+            tourneyGames={tournamentGames}
+            currentMatches={currentRoundMatchups}
+            byeGame={byeGameRef}
+            resetGame={resetGameForApi}
+            resetTourneyGames={resetTournamentGames}
+            isTourneyCreator={tournamentCreatorBool}
+            round={currentRound}
+            activePlayers={activeTournamentPlayers} 
+            analysis={tournamentAnalysisObj}
+            gameForApi={gameForApi} />
+          : scoreMode === 'editing' ?
+            <EditScores />
+            : scoreMode === 'table' ?
+              <TournamentTable />
+              : null}
+      </section>
     </main>
   </>
 }

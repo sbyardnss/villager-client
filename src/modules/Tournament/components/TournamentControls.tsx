@@ -103,12 +103,13 @@ export const TournamentControls: React.FC<TournamentControlsProps> = ({
               console.log('tournamentCopy', tournamentCopy)
               // tournamentCopy.competitors = tournamentCopy.competitors.map(c => { return c.id })
               // tournamentCopy.guest_competitors = tournamentCopy.guest_competitors.map(gc => { return gc.id })
+              console.log(tournamentCopy)
               // updateTournament(tournamentCopy)
               //   .then(() => {
-              //     resetTourneys();
-              //     resetTournamentGames();
+              //     tournamentResetter();
+              //     tournamentGamesResetter();
               //   })
-              // setModalMode('none');
+              // modalModeSetter('none');
             }
           }}>
           New Round

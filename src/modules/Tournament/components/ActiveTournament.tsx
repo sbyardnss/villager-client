@@ -219,6 +219,7 @@ export const ActiveTournament: React.FC<ActiveTournamentProps> = ({
                 const tournamentCopy = { ...selectedTournament }
                 // const newPairings = createPairings('new', activeTournamentPlayers, playerOpponentsReferenceObj, currentRound, scoreObj, scoreCard, byeGame.player_w, blackWhiteTally)
                 const newPairings = createPairings('new', activeTournamentPlayers, currentRound, findIdentifier(byeGameRef.current.player_w), tournamentAnalysisObj)
+                console.log('newPairings', newPairings)
                 tournamentCopy.pairings = tournamentCopy.pairings.concat(newPairings)
                 tournamentCopy.rounds++
                     // tournamentCopy.competitors = tournamentCopy.competitors.map(c => { return c.id })

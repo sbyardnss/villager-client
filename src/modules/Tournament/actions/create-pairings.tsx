@@ -134,26 +134,28 @@ export const createPairings: CreatePairingsFunction = (
 
   }
   else {
-    // for (const player of tournamentPlayers) {
-    //   const identifier = findIdentifier(player)
-    //   // let playerBWTally = []
-    //   // if (bWTally[parseInt(identifier)] || bWTally[identifier]) {
-    //   //     playerBWTally = bWTally[parseInt(identifier)] || bWTally[identifier]
-    //   // }
+    for (const player of tournamentPlayers) {
+      const identifier = findIdentifier(player)
+      // let playerBWTally = []
+      // if (bWTally[parseInt(identifier)] || bWTally[identifier]) {
+      //     playerBWTally = bWTally[parseInt(identifier)] || bWTally[identifier]
+      // }
 
-    //   const playerBWTally = analysisObj.blackWhiteTally[identifier] || []
-    //   // const playerArgObj = playerArgCreator(identifier, opponentReferenceObj, scoreObject, tournamentPlayers, playerBWTally)
-    //   const playerArgObj = playerArgCreator(identifier, tournamentPlayers, analysisObj)
-    //   playerArgs.push(playerArgObj)
-    // }
-    // const pairings = Swiss(playerArgs, targetRound, false, true)
-    // if (pairings) {
-    //   return pairings
-    // }
-    // else {
-    //   window.alert('unable to create more pairings') */
-    //   return null
-    // }
-    return null
+      const playerBWTally = analysisObj.blackWhiteTally[identifier] || []
+      // const playerArgObj = playerArgCreator(identifier, opponentReferenceObj, scoreObject, tournamentPlayers, playerBWTally)
+      const playerArgObj = playerArgCreator(identifier, analysisObj, tournamentPlayers)
+      playerArgs.push(playerArgObj)
+    }
+    if (playerArgs) {
+      const pairings = Swiss(playerArgs, targetRound, false, true)
+      if (pairings) {
+        return pairings
+      }
+
+    }
+    else {
+      window.alert('unable to create more pairings') * /
+      return null
+    }
   }
 }

@@ -4,7 +4,7 @@ import { AppContext } from "../../App/AppProvider"
 import { checkIfUserIsAppCreator } from "../actions/check-if-creator"
 import type { Game } from "../../../Types/Game";
 import type { Match } from "tournament-pairings/dist/Match";
-import { getTournamentGames, updateTournament } from "../../../ServerManager";
+import { getTournamentGames, updateTournament, sendNewGame } from "../../../ServerManager";
 import { ChessClub } from "../../App/types";
 import { tournamentAnalysis } from "../actions/matchup-game-analysis";
 import { ResultsModal } from "./ResultsModal";
@@ -13,7 +13,11 @@ import { EditPlayersModal } from "./EditPlayersModal";
 import { Scoring } from "./Scoring";
 import { EditScores } from "./EditScores";
 import { TournamentTable } from "./TournamentTable";
+import { createPairings } from "../actions/create-pairings";
 import { selectedTournamentDefaults } from "../Types";
+import type { tournamentAnalysisOutput } from "../actions/matchup-game-analysis";
+import { findIdentifier } from "../actions/find-identifier";
+
 interface ActiveTournamentProps {
   selectedTournament: Tournament;
   selectTournament: React.Dispatch<SetStateAction<Tournament>>;
@@ -42,7 +46,7 @@ export const ActiveTournament: React.FC<ActiveTournamentProps> = ({
   // const [viewTable, setViewTable] = useState(false);
   // const [showResults, setShowResults] = useState(false);
   // const [showEndTournament, setShowEndTournament] = useState(false);
-  const [tournamentAnalysisObj, setTournamentAnalysisObj] = useState({});
+  const [tournamentAnalysisObj, setTournamentAnalysisObj] = useState<tournamentAnalysisOutput>({} as tournamentAnalysisOutput);
   //TODO: ADJUST SERVER TO ACCEPT PLAYERRELATED TYPE FOR WINNER AND PLAYER_W/B
   const [gameForApi, updateGameForApi] = useState<Game | any>({
     player_w: {} as Guest | PlayerOnTournament,
@@ -87,6 +91,7 @@ export const ActiveTournament: React.FC<ActiveTournamentProps> = ({
       if (selectedTournament.creator.id === localVillagerUser.userId) {
         setTournamentCreatorBool(true);
       }
+      console.log(selectedTournament.id)
     }, [selectedTournament, localVillagerUser.userId]
   )
   useEffect(
@@ -103,23 +108,25 @@ export const ActiveTournament: React.FC<ActiveTournamentProps> = ({
     }, [localVillagerUser.userId]
   )
 
-  // useEffect(
-  //   () => {
-  //     if (selectedTournament.pairings) {
-  //       const opponentObj = createPlayerOpponentReferenceObject(selectedTournament.pairings);
+  useEffect(
+    () => {
+      if (selectedTournament.pairings) {
+        // const opponentObj = createPlayerOpponentReferenceObject(selectedTournament.pairings);
 
 
-  //       const currentRoundPairings = selectedTournament.pairings.filter(p => p.round === currentRound);
-  //       currentRoundPairings.map(pairing => {
-  //         if (pairing.player1 === null) {
-  //           pairing.player1 = pairing.player2
-  //           pairing.player2 = null
-  //         };
-  //       });
-  //       setCurrentRoundMatchups(currentRoundPairings)
-  //     }
-  //   }, [selectedTournament.pairings, currentRound]
-  // )
+        const currentRoundPairings = selectedTournament.pairings.filter(p => p.round === currentRound);
+        currentRoundPairings.forEach(pairing => {
+          if (pairing.player1 === null) {
+            pairing.player1 = pairing.player2
+            pairing.player2 = null
+          };
+        });
+        setCurrentRoundMatchups(currentRoundPairings)
+        
+      }
+    }, [selectedTournament.pairings, currentRound]
+    )
+
   // useEffect(
   //   () => {
   //     const copy = {...gameForApi};
@@ -127,6 +134,14 @@ export const ActiveTournament: React.FC<ActiveTournamentProps> = ({
   //     updateGameForApi(copy);
   //   }, [currentRound]
   // )
+  useEffect(
+    () => {
+      // if (tournamentGames) {
+      const analysis = tournamentAnalysis(tournamentGames, currentRoundMatchupsRef.current, currentRound);
+      setTournamentAnalysisObj(analysis);
+      // }
+    }, [tournamentGames, currentRound, selectedTournament]
+  )
   useEffect(
     () => {
       const byePairing = currentRoundMatchups.find(pairing => pairing.player2 === null);
@@ -156,21 +171,14 @@ export const ActiveTournament: React.FC<ActiveTournamentProps> = ({
         // setByeGame(byeCopy)
         byeGameRef.current = byeCopy;
       }
-    }, [currentRoundMatchups, activeTournamentPlayers, byeGame]
+    }, [currentRoundMatchups, activeTournamentPlayers, byeGame, tournamentAnalysisObj]
   )
   useEffect(
     () => {
       currentRoundMatchupsRef.current = currentRoundMatchups;
     }, [currentRoundMatchups]
   )
-  useEffect(
-    () => {
-      if (tournamentGames) {
-        const analysis = tournamentAnalysis(tournamentGames, currentRoundMatchupsRef.current, setCurrentRoundMatchups, currentRound);
-        setTournamentAnalysisObj(analysis);
-      }
-    }, [tournamentGames, currentRound]
-  )
+
   const resetTournamentGames = () => {
     getTournamentGames(selectedTournament)
       .then(data => setTournamentGames(data))
@@ -191,7 +199,7 @@ export const ActiveTournament: React.FC<ActiveTournamentProps> = ({
           onClick={() => {
             setModalMode('none');
             selectTournament(selectedTournamentDefaults);
-            setTournamentAnalysisObj({});
+            setTournamentAnalysisObj({} as tournamentAnalysisOutput);
           }}>exit</button>
         <button
           className="progressionControlBtn controlBtnApprove"
@@ -200,29 +208,30 @@ export const ActiveTournament: React.FC<ActiveTournamentProps> = ({
           }}>Results</button>
       </div>
       <div id="tournamentProgressionControls">
-        {/* {selectedTournament.complete === false && (tournamentCreatorBool || checkIfUserIsAppCreator()) ?
+        {selectedTournament.complete === false && (tournamentCreatorBool || checkIfUserIsAppCreator()) ?
           <button
             className="progressionControlBtn controlBtnApprove"
             onClick={() => {
               if (window.confirm("create round?")) {
-                if (byePlayer && byeGame.player_w) {
-                  sendNewGame(byeGame)
-                }
-                const tournamentCopy = { ...activeTournament }
-                const newPairings = createPairings('new', activeTournamentPlayers, playerOpponentsReferenceObj, currentRound, scoreObj, scoreCard, byeGame.player_w, blackWhiteTally)
+                // if (byeGame.player_w.id) {
+                //   sendNewGame(byeGame)
+                // }
+                const tournamentCopy = { ...selectedTournament }
+                // const newPairings = createPairings('new', activeTournamentPlayers, playerOpponentsReferenceObj, currentRound, scoreObj, scoreCard, byeGame.player_w, blackWhiteTally)
+                const newPairings = createPairings('new', activeTournamentPlayers, currentRound, findIdentifier(byeGameRef.current.player_w), tournamentAnalysisObj)
                 tournamentCopy.pairings = tournamentCopy.pairings.concat(newPairings)
                 tournamentCopy.rounds++
-                tournamentCopy.competitors = tournamentCopy.competitors.map(c => { return c.id })
-                tournamentCopy.guest_competitors = tournamentCopy.guest_competitors.map(gc => { return gc.id })
-                updateTournament(tournamentCopy)
-                  .then(() => {
-                    resetTourneys();
-                    resetTournamentGames();
-                  })
-                setModalMode('none');
+                    // tournamentCopy.competitors = tournamentCopy.competitors.map(c => { return c.id })
+                    // tournamentCopy.guest_competitors = tournamentCopy.guest_competitors.map(gc => { return gc.id })
+                // updateTournament(tournamentCopy)
+                //   .then(() => {
+                //     resetTourneys();
+                //     resetTournamentGames();
+                //   })
+                // setModalMode('none');
               }
             }}>New Round</button>
-      :""} */}
+      :""}
       </div>
     </main>
   </>

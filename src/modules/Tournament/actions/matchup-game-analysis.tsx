@@ -23,7 +23,9 @@ export type TieBreakObject = {
 
 //might need to be changed
 export type BlackWhiteTallyType = {
-  [key: string]: string[];
+  // [key: string]: string[];
+  [key: string]: ('w' | 'b')[];
+
 };
 //might need to be changed
 export type PlayerOppRefObjType = {
@@ -31,12 +33,13 @@ export type PlayerOppRefObjType = {
 };
 
 export type ScoreCardType = {
-  [key: string]: Array<string | number>;
+  [key: string]: (string | number)[];
+  // [key: string]: Array<string | number>;
 } & {
-  [key: number]: Array<string | number>;
+  [key: number]: (string | number)[];
 };
 
-interface tournamentAnalysisOutput {
+export interface tournamentAnalysisOutput {
   scoreCard: ScoreCardType;
   scoreObj: ScoreObjType;
   tieBreakData: TieBreakObject[];
@@ -47,14 +50,14 @@ interface tournamentAnalysisOutput {
 type TournamentAnalysisFunction = (
   games: Game[],
   currentMatchups: Match[],
-  currentMatchupsSetter: React.Dispatch<SetStateAction<Match[]>>,
+  // currentMatchupsSetter: React.Dispatch<SetStateAction<Match[]>>,
   currentRound: number,
 ) => tournamentAnalysisOutput;
 
 export const tournamentAnalysis: TournamentAnalysisFunction = (
   games,
   currentMatchups,
-  currentMatchupsSetter,
+  // currentMatchupsSetter,
   currentRound,
 ) => {
   const playerOppObjForOutput: PlayerOppRefObjType = {};
@@ -103,8 +106,8 @@ export const tournamentAnalysis: TournamentAnalysisFunction = (
       updatePlayerOppRefObj(playerOppObjForOutput, match.player1, match.player2);
     }
   }
-  currentMatchupsSetter(currentRoundMatchupsOutput);
-
+  
+  // currentMatchupsSetter(currentRoundMatchupsOutput);
   return ({
     playerOppRefObj: playerOppObjForOutput,
     scoreCard: scoreCardForOutput,

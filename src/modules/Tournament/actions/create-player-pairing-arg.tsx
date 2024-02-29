@@ -3,11 +3,11 @@ import type { Guest, PlayerOnTournament } from "../Types";
 export interface PlayerArg {
   id: string | number;
   score: number;
-  // pairedUpDown?: boolean;
+  pairedUpDown?: boolean;
   receivedBye?: boolean;
   avoid?: Array<string | number>;
   colors?: Array<'w' | 'b'>;
-  // rating?: number | null;
+  rating?: number | null;
 }
 type PlayerArgCreatorFunction = (
   identifier: number | string,

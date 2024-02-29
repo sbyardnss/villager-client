@@ -415,7 +415,7 @@ export const HomePage = () => {
                           <div key={ug.id} className={isTournamentGame()} id={isSelected()}>
                             <div><span id={ug.player_w?.id === localVillagerUser.userId ? "whiteChallengeSpan" : "blackChallengeSpan"}>{ug.player_w?.id === localVillagerUser.userId ? "white" : "black"}</span></div>
                             <div className="activeGameInfo">
-                              <div className="opponentSectionForListItem">vs {opponent.username}</div>
+                              <div className="opponentSectionForListItem">vs {opponent.full_name}</div>
                               <div>{ug.tournament ? <img className="trophyIconHomepage" alt="trophy" src={trophyIcon} /> : ""}</div>
                               <div className="myGamesListLogisticsInfo">
                                 <div>{tournament?.title || ""}</div>

@@ -40,7 +40,6 @@ export const createPairings: CreatePairingsFunction = (
       console.log(potentialByeIdentifier)
       for (const playerId of playerIdentifierArr) {
         if (parseInt(playerId) !== potentialByeIdentifier && playerId !== potentialByeIdentifier) {
-          const playerBWTally = analysisObj.blackWhiteTally[playerId];
           const playerArgObj: PlayerArg | undefined = playerArgCreator(playerId, analysisObj, tournamentPlayers);
           if (playerArgObj)
             playerArgs.push(playerArgObj);

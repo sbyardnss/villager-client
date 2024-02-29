@@ -17,6 +17,7 @@ import { createPairings } from "../actions/create-pairings";
 import { selectedTournamentDefaults } from "../Types";
 import type { tournamentAnalysisOutput } from "../actions/matchup-game-analysis";
 import { findIdentifier } from "../actions/find-identifier";
+import { TournamentControls } from "./TournamentControls";
 
 interface ActiveTournamentProps {
   selectedTournament: Tournament;
@@ -41,12 +42,13 @@ export const ActiveTournament: React.FC<ActiveTournamentProps> = ({
   const [currentRoundMatchups, setCurrentRoundMatchups] = useState<Match[]>([]);
   const currentRoundMatchupsRef = useRef(currentRoundMatchups);
   const [currentRound, setCurrentRound] = useState(0);
-  const [mode, setMode] = useState<'scoring' | 'editing'>("scoring");
+  const [scoreMode, setScoreMode] = useState<'scoring' | 'editing' | 'table'>("scoring");
   const [modalMode, setModalMode] = useState<'none' | 'results' | 'edit-players' | 'end-tournament'>('none');
   // const [viewTable, setViewTable] = useState(false);
   // const [showResults, setShowResults] = useState(false);
   // const [showEndTournament, setShowEndTournament] = useState(false);
   const [tournamentAnalysisObj, setTournamentAnalysisObj] = useState<tournamentAnalysisOutput>({} as tournamentAnalysisOutput);
+  const [roundOver, setRoundOver] = useState(false);
   //TODO: ADJUST SERVER TO ACCEPT PLAYERRELATED TYPE FOR WINNER AND PLAYER_W/B
   const [gameForApi, updateGameForApi] = useState<Game | any>({
     player_w: {} as Guest | PlayerOnTournament,
@@ -96,8 +98,17 @@ export const ActiveTournament: React.FC<ActiveTournamentProps> = ({
   )
   useEffect(
     () => {
-      console.log(tournamentGames)
-    }, [tournamentGames]
+      //TODO: CAN WE CHANGE THIS TO SIMPLY LOOK FOR NUMBER OF GAMES AGAINST COMPETITORS? MAYBE NOT IF WE ARE ADDING COMPETITORS
+      const currentRoundGames = tournamentGames.filter(g => g.tournament_round === currentRound);
+      if ((currentRoundGames.length === currentRoundMatchups.length
+        && !currentRoundMatchups.find(p => p.player2 === null))
+        || (currentRoundGames.length === currentRoundMatchups.length - 1
+          && currentRoundMatchups.find(p => p.player2 === null))) {
+        setRoundOver(true);
+      } else {
+        setRoundOver(false);
+      }
+    }, [tournamentGames, currentRound, currentRoundMatchups]
   )
   useEffect(
     () => {
@@ -122,10 +133,10 @@ export const ActiveTournament: React.FC<ActiveTournamentProps> = ({
           };
         });
         setCurrentRoundMatchups(currentRoundPairings)
-        
+
       }
     }, [selectedTournament.pairings, currentRound]
-    )
+  )
 
   // useEffect(
   //   () => {
@@ -207,7 +218,7 @@ export const ActiveTournament: React.FC<ActiveTournamentProps> = ({
             setModalMode('results');
           }}>Results</button>
       </div>
-      <div id="tournamentProgressionControls">
+      {/* <div id="tournamentProgressionControls">
         {selectedTournament.complete === false && (tournamentCreatorBool || checkIfUserIsAppCreator()) ?
           <button
             className="progressionControlBtn controlBtnApprove"
@@ -222,8 +233,9 @@ export const ActiveTournament: React.FC<ActiveTournamentProps> = ({
                 console.log('newPairings', newPairings)
                 tournamentCopy.pairings = tournamentCopy.pairings.concat(newPairings)
                 tournamentCopy.rounds++
-                    // tournamentCopy.competitors = tournamentCopy.competitors.map(c => { return c.id })
-                    // tournamentCopy.guest_competitors = tournamentCopy.guest_competitors.map(gc => { return gc.id })
+                console.log('tournamentCopy', tournamentCopy)
+                // tournamentCopy.competitors = tournamentCopy.competitors.map(c => { return c.id })
+                // tournamentCopy.guest_competitors = tournamentCopy.guest_competitors.map(gc => { return gc.id })
                 // updateTournament(tournamentCopy)
                 //   .then(() => {
                 //     resetTourneys();
@@ -232,8 +244,26 @@ export const ActiveTournament: React.FC<ActiveTournamentProps> = ({
                 // setModalMode('none');
               }
             }}>New Round</button>
-      :""}
-      </div>
+          : ""}
+      </div> */}
+      <TournamentControls
+        tournamentResetter={resetTourneys}
+        tournamentGamesResetter={resetTournamentGames}
+        modalMode={modalMode}
+        modalModeSetter={setModalMode}
+        scoringMode={scoreMode}
+        scoringModeSetter={setScoreMode}
+        tournamentObj={selectedTournament}
+        currentMatchups={currentRoundMatchups}
+        gameForApi={gameForApi}
+        byeGame={byeGameRef}
+        userIsCreator={tournamentCreatorBool}
+        activePlayers={activeTournamentPlayers}
+        currentRound={currentRound}
+        analysis={tournamentAnalysisObj}
+        roundComplete={roundOver}
+
+      />
     </main>
   </>
 }

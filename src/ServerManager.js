@@ -602,3 +602,14 @@ export const getClubsGuests = (clubId) => {
     })
         .then(res => res.json())
 }
+
+export const reopenTournament = (tournamentId) => {
+    const localVillagerObj = getToken()
+    return fetch(`${apiKey}/tournaments/${tournamentId}/reopen_tournament`, {
+        method: 'PUT',
+        headers: {
+            "Authorization": `Token ${localVillagerObj.token}`,
+            "Content-Type": "application/json"
+        },
+    })
+}

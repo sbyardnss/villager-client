@@ -127,7 +127,7 @@ export const TournamentForm: React.FC<TournamentFormProps> = ({
                       window.alert('No guest competitors on digtal tournament')
                     }
                     else {
-                      if (tournamentObj.competitors && tournamentObj.timeSetting && tournamentObj.title) {
+                      if (tournamentObj.competitors && tournamentObj.time_setting && tournamentObj.title) {
                         if (window.confirm("Everybody ready?")) {
                           const copy = { ...tournamentObj };
                           const competitorPairing: number[] = []

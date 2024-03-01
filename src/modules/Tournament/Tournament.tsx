@@ -27,7 +27,7 @@ export const TournamentController = () => {
     // creator: localVillagerUser.userId,
     competitors: [],
     guest_competitors: [],
-    timeSetting: 0,
+    time_setting: 0,
     rounds: 1,
     in_person: true,
     pairings: [],

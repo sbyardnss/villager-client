@@ -7,6 +7,6 @@ export const getPlayerType = (player: Player | PlayerRelated | Guest) => {
   } else if ('my_clubs' in player) {
     return 'Player';
   } else {
-    return 'PlayerOnTournament';
+    return 'PlayerRelated';
   }
 }

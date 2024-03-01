@@ -45,7 +45,7 @@ export const TournamentParameters: React.FC<TournamentParametersProps> = ({
             className="tournamentFormDropdownSelection"
             onChange={(e) => {
               const copy = { ...tournamentObj }
-              copy.timeSetting = parseInt(e.target.value)//WHY DO I HAVE TO PARSEINT HERE?
+              copy.time_setting = parseInt(e.target.value)//WHY DO I HAVE TO PARSEINT HERE?
               updateTournamentObj(copy)
             }}>
             <option key={0} className="timeSelectOption" value={0}>time setting</option>

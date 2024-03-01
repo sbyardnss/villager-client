@@ -12,10 +12,11 @@ import { TournamentTable } from "./TournamentTable";
 import { createPairings } from "../actions/create-pairings";
 import { findIdentifier } from "../actions/find-identifier";
 import { TournamentControls } from "./TournamentControls";
+import { getPlayerType } from "../../../utils/player-guest-typing";
 import { type Tournament, selectedTournamentDefaults } from "../../../Types/Tournament";
 import type { PlayerRelated } from "../../../Types/Player";
 import type { Guest } from "../../../Types/Guest";
-import type { Game, NewGame } from "../../../Types/Game";
+import type { Game, OutgoingGame } from "../../../Types/Game";
 import type { Match } from "tournament-pairings/dist/Match";
 import type { ChessClub } from "../../../Types/ChessClub";
 import type { tournamentAnalysisOutput } from "../actions/matchup-game-analysis";
@@ -50,8 +51,7 @@ export const ActiveTournament: React.FC<ActiveTournamentProps> = ({
   // const [showEndTournament, setShowEndTournament] = useState(false);
   const [tournamentAnalysisObj, setTournamentAnalysisObj] = useState<tournamentAnalysisOutput>({} as tournamentAnalysisOutput);
   const [roundOver, setRoundOver] = useState(false);
-  //TODO: ADJUST SERVER TO ACCEPT PLAYERRELATED TYPE FOR WINNER AND PLAYER_W/B
-  const [gameForApi, updateGameForApi] = useState<NewGame>({
+  const [gameForApi, updateGameForApi] = useState<OutgoingGame | Game>({
     id: undefined,
     player_w: {} as Guest | PlayerRelated,
     player_w_model_type: "",
@@ -66,7 +66,7 @@ export const ActiveTournament: React.FC<ActiveTournamentProps> = ({
     winner_model_type: "",
     bye: false
   });
-  const [byeGame, setByeGame] = useState<NewGame>({
+  const [byeGame, setByeGame] = useState<OutgoingGame>({
     player_w: {} as Guest | PlayerRelated,
     player_w_model_type: "",
     player_b: undefined,
@@ -81,11 +81,6 @@ export const ActiveTournament: React.FC<ActiveTournamentProps> = ({
     bye: true
   });
   const byeGameRef = useRef(byeGame);
-
-  // TODO: CAN WE GET RID OF ANY OF THESE STATE VARIABLES?
-  // const [playerOpponentsReferenceObj, updatePlayerOpponentsReferenceObj] = useState({})
-
-
 
   useEffect(
     () => {
@@ -156,6 +151,7 @@ export const ActiveTournament: React.FC<ActiveTournamentProps> = ({
       // }
     }, [tournamentGames, currentRound, selectedTournament]
   )
+  //TODO: THIS USEEFFECT CAN BE MORE EFFICIENT
   useEffect(
     () => {
       const byePairing = currentRoundMatchups.find(pairing => pairing.player2 === null);
@@ -165,10 +161,12 @@ export const ActiveTournament: React.FC<ActiveTournamentProps> = ({
         byeCopy.bye = true;
         byeCopy.win_style = "";
         if (typeof byePairing.player1 === 'string') {
-          byeCopy.winner_model_type = 'guestplayer'
-          byeCopy.player_w_model_type = 'guestplayer'
           const guestPlayer = activeTournamentPlayers.find(p => (p as Guest).guest_id === byePairing.player1)
+          // byeCopy.winner_model_type = 'guestplayer';
+          console.log(byeCopy)
           if (guestPlayer) {
+            byeCopy.player_w_model_type = 'guestplayer';
+            byeCopy.winner_model_type = getModelTypeForApi(guestPlayer);
             byeCopy.player_w = guestPlayer;
             byeCopy.winner = guestPlayer;
           }
@@ -213,11 +211,52 @@ export const ActiveTournament: React.FC<ActiveTournamentProps> = ({
       bye: false,
     });
   }
-  const handleGameForApiUpdate = (winner: PlayerRelated | Guest, loser: PlayerRelated | Guest, pastGame: boolean, isDraw: boolean) => {
-    //update winner, round, 
-    const copy = {...gameForApi};
+  const getModelTypeForApi = (obj: PlayerRelated | Guest): string => {
+    if ('guest_id' in obj) {
+      return 'guestplayer';
+    } else {
+      return 'player'
+    }
+  }
 
-    updateGameForApi(copy);
+  //TODO: need to have the same data going out as coming in for Games. Currently causing some complexity
+  const handleGameForApiUpdate = (
+    whitePlayer: PlayerRelated | Guest,
+    blackPlayer: PlayerRelated | Guest,
+    winner?: PlayerRelated | Guest,
+    pastGame?: Game,
+  ) => {
+    //update winner, round, 
+    let copy: OutgoingGame | Game = {} as OutgoingGame | Game;
+    if (!pastGame) {
+      copy = { ...gameForApi } as OutgoingGame;
+      copy.tournament = selectedTournament.id;
+      copy.tournament_round = currentRound;
+      copy.time_setting = selectedTournament.time_setting;
+      copy.player_w = whitePlayer;
+      copy.player_w_model_type = getModelTypeForApi(whitePlayer);
+      copy.player_b = blackPlayer;
+      copy.player_b_model_type = getModelTypeForApi(blackPlayer);
+    } else {
+      if (pastGame) {
+        copy = { ...pastGame };
+      }
+    }
+    if (winner) {
+      copy = copy as OutgoingGame;
+      copy.winner = winner;
+      copy.winner_model_type = getModelTypeForApi(winner);
+      copy.win_style = 'checkmate';
+    } else {
+      copy = copy as OutgoingGame;
+      copy.winner = undefined;
+      copy.winner_model_type = undefined;
+      copy.win_style = 'draw';
+    }
+
+    if (copy) {
+      updateGameForApi(copy);
+    }
   }
   return <>
     <main id="tournamentContainer">
@@ -243,37 +282,8 @@ export const ActiveTournament: React.FC<ActiveTournamentProps> = ({
             setModalMode('results');
           }}>Results</button>
       </div>
-      {/* <div id="tournamentProgressionControls">
-        {selectedTournament.complete === false && (tournamentCreatorBool || checkIfUserIsAppCreator()) ?
-          <button
-            className="progressionControlBtn controlBtnApprove"
-            onClick={() => {
-              if (window.confirm("create round?")) {
-                // if (byeGame.player_w.id) {
-                //   sendNewGame(byeGame)
-                // }
-                const tournamentCopy = { ...selectedTournament }
-                // const newPairings = createPairings('new', activeTournamentPlayers, playerOpponentsReferenceObj, currentRound, scoreObj, scoreCard, byeGame.player_w, blackWhiteTally)
-                const newPairings = createPairings('new', activeTournamentPlayers, currentRound, findIdentifier(byeGameRef.current.player_w), tournamentAnalysisObj)
-                console.log('newPairings', newPairings)
-                tournamentCopy.pairings = tournamentCopy.pairings.concat(newPairings)
-                tournamentCopy.rounds++
-                console.log('tournamentCopy', tournamentCopy)
-                // tournamentCopy.competitors = tournamentCopy.competitors.map(c => { return c.id })
-                // tournamentCopy.guest_competitors = tournamentCopy.guest_competitors.map(gc => { return gc.id })
-                // updateTournament(tournamentCopy)
-                //   .then(() => {
-                //     resetTourneys();
-                //     resetTournamentGames();
-                //   })
-                // setModalMode('none');
-              }
-            }}>New Round</button>
-          : ""}
-      </div> */}
       <TournamentControls
         tournamentResetter={resetTourneys}
-
         tournamentGamesResetter={resetTournamentGames}
         modalMode={modalMode}
         modalModeSetter={setModalMode}
@@ -302,9 +312,9 @@ export const ActiveTournament: React.FC<ActiveTournamentProps> = ({
             resetTourneyGames={resetTournamentGames}
             isTourneyCreator={tournamentCreatorBool}
             round={currentRound}
-            activePlayers={activeTournamentPlayers} 
+            activePlayers={activeTournamentPlayers}
             analysis={tournamentAnalysisObj}
-            gameForApi={gameForApi} 
+            gameForApi={gameForApi as OutgoingGame}
             handleUpdate={handleGameForApiUpdate} />
           : scoreMode === 'editing' ?
             <EditScores />

@@ -8,7 +8,7 @@ import type { PlayerRelated } from "../../../Types/Player";
 import type { Guest } from "../../../Types/Guest";
 import type { Tournament } from "../../../Types/Tournament";
 import type { Match } from "tournament-pairings/dist/Match";
-import type { NewGame, Game } from "../../../Types/Game";
+import type { OutgoingGame, Game } from "../../../Types/Game";
 
 interface ScoringProps {
   tournamentObj: Tournament;
@@ -23,8 +23,13 @@ interface ScoringProps {
   activePlayers: (PlayerRelated | Guest)[];
   analysis: tournamentAnalysisOutput;
   //TODO: FIX PLAYERRELATEDISSUE
-  gameForApi: NewGame;
-  handleUpdate: (winner: PlayerRelated | Guest, loser: PlayerRelated | Guest, pastGame: boolean, isDraw: boolean) => void;
+  gameForApi: OutgoingGame;
+  handleUpdate: (
+    whitePlayer: PlayerRelated | Guest,
+    blackPlayer: PlayerRelated | Guest,
+    winner?: PlayerRelated | Guest | undefined,
+    pastGame?: Game
+  ) => void;
 }
 
 export const Scoring: React.FC<ScoringProps> = ({
@@ -54,11 +59,7 @@ export const Scoring: React.FC<ScoringProps> = ({
           currentMatches.map((matchup, index) => {
             const whitePlayer = activePlayers.find(player => findIdentifier(player) === matchup.player1);
             const blackPlayer = activePlayers.find(player => findIdentifier(player) === matchup.player2);
-            console.log('whitePlayer', whitePlayer)
-            console.log('blackPlayer', blackPlayer)
             const matchingGame = tourneyGames.find(tg => tg.player_w === whitePlayer && tg.player_b === blackPlayer && tg.tournament_round === round && tg.tournament === tournamentObj.id);
-            console.log('matchingGame', matchingGame)
-            console.log(tourneyGames)
             if (whitePlayer && blackPlayer && !matchingGame?.winner && matchingGame?.win_style !== 'draw' && analysis.playerOppRefObj[findIdentifier(whitePlayer)]?.indexOf(findIdentifier(blackPlayer)) !== analysis.playerOppRefObj[findIdentifier(whitePlayer)]?.length + 1) {
               return (
                 <div key={`${matchup.round} -- ${matchup.match} -- ${index}`}
@@ -66,32 +67,30 @@ export const Scoring: React.FC<ScoringProps> = ({
                   <div
                     className={gameForApi.id === undefined && gameForApi.winner === whitePlayer ? "selectedWhitePiecesMatchup" : "whitePiecesMatchup"}
                     id="whitePieces"
-                    onClick={() => { 
-                      // handleGameForApiUpdate(evt.target.id, white, black)
-                      // handleUpdate(whitePlayer, )
+                    onClick={() => {
+                      handleUpdate(whitePlayer, blackPlayer, whitePlayer);
                     }}>{whitePlayer.full_name}
-                    {/* }}>{white?.guest_id ? white.full_name : white?.username} */}
                   </div>
                   <div
                     className={gameForApi.id === undefined && gameForApi.player_w === whitePlayer && gameForApi.player_b === blackPlayer && gameForApi.win_style === "draw" ? "selectedDrawMatchupButton" : "drawMatchupButton"}
                     id="drawUpdate"
-                    onClick={(evt) => {
-                      // handleGameForApiUpdate(evt.target.id, white, black)
+                    onClick={() => {
+                      handleUpdate(whitePlayer, blackPlayer);
                     }}>Draw
                   </div>
                   <div
                     className={gameForApi.id === undefined && gameForApi.winner === blackPlayer ? "selectedBlackPiecesMatchup" : "blackPiecesMatchup"}
                     id="blackPieces"
-                    onClick={(evt) => {
-                      // handleGameForApiUpdate(evt.target.id, white, black)
-                      // }}>{black?.guest_id ? black.full_name : black?.username}
+                    onClick={() => {
+                      handleUpdate(whitePlayer, blackPlayer, blackPlayer);
                     }}>{blackPlayer.full_name}
                   </div>
                   <button
                     id="scoringSubmit"
                     className="buttonStyleReject"
                     onClick={() => {
-                      if (gameForApi.winner && gameForApi.win_style) {
+                      if (gameForApi.win_style) {
+                        console.log(gameForApi);
                         // sendNewGame(gameForApi)
                         //   .then(() => resetTournamentGames())
                         // resetGameForApi()
@@ -103,7 +102,7 @@ export const Scoring: React.FC<ScoringProps> = ({
               )
             }
             return (
-              <div>
+              <div key={`${matchup.round} -- ${matchup.match} -- ${index}`}>
                 {matchup.player1}
               </div>
             )

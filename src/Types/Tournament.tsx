@@ -7,7 +7,7 @@ export interface NewTournament {
   // creator: number;
   competitors: PlayerRelated[];
   guest_competitors: Guest[];
-  timeSetting: number;
+  time_setting: number;
   rounds: number;
   in_person: boolean;
   pairings: Match[];
@@ -19,7 +19,7 @@ export const newTournamentDefaults: NewTournament = {
   // creator: 0,
   competitors: [],
   guest_competitors: [],
-  timeSetting: 0,
+  time_setting: 0,
   rounds: 0,
   in_person: true,
   pairings: [],
@@ -41,7 +41,7 @@ export const selectedTournamentDefaults: Tournament = {
   },
   competitors: [],
   guest_competitors: [],
-  timeSetting: 0,
+  time_setting: 0,
   rounds: 0,
   in_person: true,
   pairings: [],

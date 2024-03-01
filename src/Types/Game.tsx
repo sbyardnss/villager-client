@@ -19,7 +19,7 @@ export interface Game {
   target_player_w_ct: number
 }
 
-export interface NewGame {
+export interface OutgoingGame {
   player_w: Guest | PlayerRelated,
   player_w_model_type: string,
   player_b: Guest | PlayerRelated | undefined,
@@ -28,9 +28,9 @@ export interface NewGame {
   time_setting: number,
   win_style: string,
   accepted: true,
-  tournament_round: 0,
-  winner: Guest | PlayerRelated,
-  winner_model_type: string,
+  tournament_round: number,
+  winner?: Guest | PlayerRelated,
+  winner_model_type?: string,
   bye: boolean,
   id?: number,
 }

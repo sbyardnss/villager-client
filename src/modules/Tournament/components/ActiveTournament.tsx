@@ -15,7 +15,7 @@ import { TournamentControls } from "./TournamentControls";
 import { type Tournament, selectedTournamentDefaults } from "../../../Types/Tournament";
 import type { PlayerRelated } from "../../../Types/Player";
 import type { Guest } from "../../../Types/Guest";
-import type { Game } from "../../../Types/Game";
+import type { Game, NewGame } from "../../../Types/Game";
 import type { Match } from "tournament-pairings/dist/Match";
 import type { ChessClub } from "../../../Types/ChessClub";
 import type { tournamentAnalysisOutput } from "../actions/matchup-game-analysis";
@@ -51,10 +51,11 @@ export const ActiveTournament: React.FC<ActiveTournamentProps> = ({
   const [tournamentAnalysisObj, setTournamentAnalysisObj] = useState<tournamentAnalysisOutput>({} as tournamentAnalysisOutput);
   const [roundOver, setRoundOver] = useState(false);
   //TODO: ADJUST SERVER TO ACCEPT PLAYERRELATED TYPE FOR WINNER AND PLAYER_W/B
-  const [gameForApi, updateGameForApi] = useState<Game | any>({
+  const [gameForApi, updateGameForApi] = useState<NewGame>({
+    id: undefined,
     player_w: {} as Guest | PlayerRelated,
     player_w_model_type: "",
-    player_b: 0,
+    player_b: {} as Guest | PlayerRelated,
     player_b_model_type: "",
     tournament: 0,
     time_setting: 0,
@@ -65,10 +66,11 @@ export const ActiveTournament: React.FC<ActiveTournamentProps> = ({
     winner_model_type: "",
     bye: false
   });
-  const [byeGame, setByeGame] = useState({
+  const [byeGame, setByeGame] = useState<NewGame>({
     player_w: {} as Guest | PlayerRelated,
     player_w_model_type: "",
-    player_b: null,
+    player_b: undefined,
+    player_b_model_type: "",
     tournament: 0,
     time_setting: 0,
     win_style: "",
@@ -159,7 +161,7 @@ export const ActiveTournament: React.FC<ActiveTournamentProps> = ({
       const byePairing = currentRoundMatchups.find(pairing => pairing.player2 === null);
       if (byePairing) {
         const byeCopy = { ...byeGame };
-        byeCopy.player_b = null;
+        byeCopy.player_b = undefined;
         byeCopy.bye = true;
         byeCopy.win_style = "";
         if (typeof byePairing.player1 === 'string') {
@@ -199,7 +201,7 @@ export const ActiveTournament: React.FC<ActiveTournamentProps> = ({
     updateGameForApi({
       player_w: {} as Guest | PlayerRelated,
       player_w_model_type: "",
-      player_b: 0,
+      player_b: {} as Guest | PlayerRelated,
       player_b_model_type: "",
       tournament: 0,
       time_setting: 0,

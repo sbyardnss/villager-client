@@ -8,7 +8,7 @@ import type { PlayerRelated } from "../../../Types/Player";
 import type { Guest } from "../../../Types/Guest";
 import type { Tournament } from "../../../Types/Tournament";
 import type { Match } from "tournament-pairings/dist/Match";
-import type { Game } from "../../../Types/Game";
+import type { NewGame, Game } from "../../../Types/Game";
 
 interface ScoringProps {
   tournamentObj: Tournament;
@@ -23,7 +23,7 @@ interface ScoringProps {
   activePlayers: (PlayerRelated | Guest)[];
   analysis: tournamentAnalysisOutput;
   //TODO: FIX PLAYERRELATEDISSUE
-  gameForApi: Game | any;
+  gameForApi: NewGame;
   handleUpdate: (winner: PlayerRelated | Guest, loser: PlayerRelated | Guest, pastGame: boolean, isDraw: boolean) => void;
 }
 
@@ -91,7 +91,7 @@ export const Scoring: React.FC<ScoringProps> = ({
                     id="scoringSubmit"
                     className="buttonStyleReject"
                     onClick={() => {
-                      if (gameForApi.winner !== 0) {
+                      if (gameForApi.winner && gameForApi.win_style) {
                         // sendNewGame(gameForApi)
                         //   .then(() => resetTournamentGames())
                         // resetGameForApi()

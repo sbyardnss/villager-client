@@ -18,3 +18,19 @@ export interface Game {
   target_player_b_ct: number,
   target_player_w_ct: number
 }
+
+export interface NewGame {
+  player_w: Guest | PlayerRelated,
+  player_w_model_type: string,
+  player_b: Guest | PlayerRelated | undefined,
+  player_b_model_type: string,
+  tournament: number,
+  time_setting: number,
+  win_style: string,
+  accepted: true,
+  tournament_round: 0,
+  winner: Guest | PlayerRelated,
+  winner_model_type: string,
+  bye: boolean,
+  id?: number,
+}

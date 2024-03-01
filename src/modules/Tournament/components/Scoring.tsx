@@ -2,7 +2,7 @@ import { useContext } from "react";
 import { AppContext } from "../../App/AppProvider";
 import { checkIfUserIsAppCreator } from "../actions/check-if-creator";
 import { findIdentifier } from "../actions/find-identifier";
-import { sendNewGame } from "../../../ServerManager";
+// import { sendNewGame } from "../../../ServerManager";
 import type { tournamentAnalysisOutput } from "../actions/matchup-game-analysis";
 import type { PlayerRelated } from "../../../Types/Player";
 import type { Guest } from "../../../Types/Guest";
@@ -46,7 +46,7 @@ export const Scoring: React.FC<ScoringProps> = ({
   gameForApi,
   handleUpdate,
 }) => {
-  const { localVillagerUser } = useContext(AppContext);
+  // const { localVillagerUser } = useContext(AppContext);
   if (tournamentObj.in_person && (isTourneyCreator || checkIfUserIsAppCreator())) {
     return (
       <section id="tournamentScoringSection">
@@ -112,7 +112,13 @@ export const Scoring: React.FC<ScoringProps> = ({
     )
   } else {
     return (
-      <div></div>
+      <section id="tournamentScoringSection">
+        {byeGame.current ?
+          <div key={`${byeGame.current.round} -- ${byeGame.current.match} -- bye`} className="setColor setCustomFont">
+            {byeGame.current.player_w.full_name} has bye
+          </div>
+          : ""}
+      </section>
     )
   }
 }

@@ -9,10 +9,10 @@ import { EditPlayersModal } from "./EditPlayersModal";
 import { Scoring } from "./Scoring";
 import { EditScores } from "./EditScores";
 import { TournamentTable } from "./TournamentTable";
-import { createPairings } from "../actions/create-pairings";
-import { findIdentifier } from "../actions/find-identifier";
+// import { createPairings } from "../actions/create-pairings";
+// import { findIdentifier } from "../actions/find-identifier";
 import { TournamentControls } from "./TournamentControls";
-import { getPlayerType } from "../../../utils/player-guest-typing";
+// import { getPlayerType } from "../../../utils/player-guest-typing";
 import { type Tournament, selectedTournamentDefaults } from "../../../Types/Tournament";
 import type { PlayerRelated } from "../../../Types/Player";
 import type { Guest } from "../../../Types/Guest";
@@ -27,6 +27,7 @@ interface ActiveTournamentProps {
   selectClub: React.Dispatch<SetStateAction<ChessClub>>;
   selectedClub: ChessClub;
   resetTourneys: () => void;
+  allClubMates: (PlayerRelated | Guest)[];
 }
 export const ActiveTournament: React.FC<ActiveTournamentProps> = ({
   selectedTournament,
@@ -34,8 +35,9 @@ export const ActiveTournament: React.FC<ActiveTournamentProps> = ({
   selectClub,
   selectedClub,
   resetTourneys,
+  allClubMates
 }) => {
-  const { localVillagerUser } = useContext(AppContext);
+  const { localVillagerUser, myChessClubs } = useContext(AppContext);
 
   // const [activeTournament, setActiveTournament] = useState<Tournament>({} as Tournament);
   const [activeTournamentPlayers, setActiveTournamentPlayers] = useState<(PlayerRelated | Guest)[]>([])
@@ -43,6 +45,7 @@ export const ActiveTournament: React.FC<ActiveTournamentProps> = ({
   const [tournamentGames, setTournamentGames] = useState<Game[]>([]);
   const [currentRoundMatchups, setCurrentRoundMatchups] = useState<Match[]>([]);
   const currentRoundMatchupsRef = useRef(currentRoundMatchups);
+  const [selectedClubMates, setSelectedClubMates] = useState<(PlayerRelated | Guest)[]>([]);
   const [currentRound, setCurrentRound] = useState(0);
   const [scoreMode, setScoreMode] = useState<'scoring' | 'editing' | 'table'>("scoring");
   const [modalMode, setModalMode] = useState<'none' | 'results' | 'edit-players' | 'end-tournament'>('none');
@@ -66,6 +69,7 @@ export const ActiveTournament: React.FC<ActiveTournamentProps> = ({
     winner_model_type: "",
     bye: false
   });
+  //TODO: FIGURE OUT HOW TO RECONCILE THIS
   const [byeGame, setByeGame] = useState<OutgoingGame>({
     player_w: {} as Guest | PlayerRelated,
     player_w_model_type: "",
@@ -91,8 +95,23 @@ export const ActiveTournament: React.FC<ActiveTournamentProps> = ({
       if (selectedTournament.creator.id === localVillagerUser.userId) {
         setTournamentCreatorBool(true);
       }
-      console.log(selectedTournament.id)
-    }, [selectedTournament, localVillagerUser.userId]
+      const chosenClub = myChessClubs.find((club: ChessClub) => club.id === selectedTournament.club);
+      selectClub(chosenClub)
+      console.log(selectedTournament)
+    }, [selectedTournament, selectClub, myChessClubs, localVillagerUser.userId]
+  )
+  useEffect(
+    () => {
+      const selectedClubMembers = selectedClub.members;
+      const selectedClubGuests = selectedClub.guest_members;
+      let allSelectedClubCompetitors = [];
+      if (selectedClubGuests) {
+        allSelectedClubCompetitors = selectedClubMembers.concat(selectedClubGuests);
+      } else {
+        allSelectedClubCompetitors = selectedClubMembers;
+      }
+      setSelectedClubMates(allSelectedClubCompetitors);
+    }, [selectedClub]
   )
   useEffect(
     () => {
@@ -249,8 +268,8 @@ export const ActiveTournament: React.FC<ActiveTournamentProps> = ({
       copy.win_style = 'checkmate';
     } else {
       copy = copy as OutgoingGame;
-      copy.winner = undefined;
-      copy.winner_model_type = undefined;
+      copy.winner = null;
+      copy.winner_model_type = null;
       copy.win_style = 'draw';
     }
 
@@ -317,7 +336,13 @@ export const ActiveTournament: React.FC<ActiveTournamentProps> = ({
             gameForApi={gameForApi as OutgoingGame}
             handleUpdate={handleGameForApiUpdate} />
           : scoreMode === 'editing' ?
-            <EditScores />
+            <EditScores
+              tourneyGames={tournamentGames}
+              resetGame={resetGameForApi}
+              resetTourneyGames={resetTournamentGames}
+              gameForApi={gameForApi}
+              handleUpdate={handleGameForApiUpdate}
+              allClubMates={selectedClubMates} />
             : scoreMode === 'table' ?
               <TournamentTable />
               : null}

@@ -1,7 +1,6 @@
 import type { PlayerRelated } from "./Player";
 import type { Match } from "tournament-pairings/dist/Match";
 import type { Guest } from "./Guest";
-
 export interface NewTournament {
   title: string;
   // creator: number;

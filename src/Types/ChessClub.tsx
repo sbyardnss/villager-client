@@ -2,6 +2,7 @@
 import type { PlayerRelated } from "./Player";
 import type { Guest } from "./Guest";
 
+
 export interface ChessClubCreate {
   name: string;
   address: string | null;

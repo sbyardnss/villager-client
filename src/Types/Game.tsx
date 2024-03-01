@@ -29,8 +29,8 @@ export interface OutgoingGame {
   win_style: string,
   accepted: true,
   tournament_round: number,
-  winner?: Guest | PlayerRelated,
-  winner_model_type?: string,
+  winner?: Guest | PlayerRelated | null,
+  winner_model_type?: string | null,
   bye: boolean,
   id?: number,
 }

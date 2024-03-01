@@ -15,7 +15,7 @@ import type { Tournament, NewTournament } from "../../Types/Tournament";
 export const TournamentController = () => {
   const { localVillagerUser, myChessClubs } = useContext(AppContext);
   const [clubMatesAndGuests, setClubMatesAndGuests] = useState<(PlayerRelated | Guest)[]>([]);
-  const [timeSettings, setTimeSettings] = useState<TimeSetting[]>([]);
+  // const [timeSettings, setTimeSettings] = useState<TimeSetting[]>([]);
   const [myOpenTournaments, setMyOpenTournaments] = useState<Tournament[]>([]);
   const [createNewTournament, setCreateNewTournament] = useState(false);
   const [selectedClub, setSelectedClub] = useState<ChessClub>({} as ChessClub);
@@ -59,7 +59,8 @@ export const TournamentController = () => {
         selectTournament={setSelectedTournament}
         selectClub={setSelectedClub} 
         selectedClub={selectedClub} 
-        resetTourneys={resetTournaments}/>
+        resetTourneys={resetTournaments}
+        allClubMates={clubMatesAndGuests} />
     </>
   } else {
     return <>

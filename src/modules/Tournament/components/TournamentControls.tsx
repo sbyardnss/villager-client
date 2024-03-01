@@ -87,9 +87,10 @@ export const TournamentControls: React.FC<TournamentControlsProps> = ({
     }
 
   }
-  if (!tournamentObj.complete && (userIsCreator || checkIfUserIsAppCreator())) {
-    return (
-      <div id="tournamentProgressionControls">
+  // if (!tournamentObj.complete && (userIsCreator || checkIfUserIsAppCreator())) {
+  return (
+    <div id="tournamentProgressionControls">
+      {!tournamentObj.complete && (userIsCreator || checkIfUserIsAppCreator()) ?
         <button
           className="progressionControlBtn controlBtnApprove"
           onClick={() => {
@@ -116,6 +117,8 @@ export const TournamentControls: React.FC<TournamentControlsProps> = ({
           }}>
           New Round
         </button>
+        : ""}
+      {!tournamentObj.complete && (userIsCreator || checkIfUserIsAppCreator()) ?
         <button
           className="progressionControlBtn controlBtnApprove"
           onClick={() => {
@@ -123,6 +126,8 @@ export const TournamentControls: React.FC<TournamentControlsProps> = ({
           }}>
           scoring
         </button>
+        : ""}
+      {!tournamentObj.complete && (userIsCreator || checkIfUserIsAppCreator()) ?
         <button
           className="progressionControlBtn controlBtnApprove"
           onClick={() => {
@@ -130,7 +135,11 @@ export const TournamentControls: React.FC<TournamentControlsProps> = ({
           }}>
           edit scores
         </button>
-        {newRoundButtonDigitalTournament()}
+        : ""}
+      {!tournamentObj.complete && (userIsCreator || checkIfUserIsAppCreator()) ?
+        newRoundButtonDigitalTournament()
+        : ""}
+      {!tournamentObj.complete && (userIsCreator || checkIfUserIsAppCreator()) ?
         <button className="progressionControlBtn controlBtnApprove" onClick={() => {
           if (roundComplete) {
             window.alert('This round seems to be over. Start new round before adding players')
@@ -140,17 +149,25 @@ export const TournamentControls: React.FC<TournamentControlsProps> = ({
             modalModeSetter('edit-players');
           }
         }}>edit players</button>
-      </div>
-    )
-  } else {
-    return (
-      <div id="tournamentProgressionControls">
-        <button
-          className="progressionControlBtn controlBtnApprove"
-          onClick={() => reopenTournament(tournamentObj.id)}>
+        : ""}
+      {!tournamentObj.complete ?
+        <button className="progressionControlBtn controlBtnApprove" onClick={() => {
+          scoringModeSetter('table');
+        }}>View Table</button>
+        : ""}
+      {tournamentObj.complete && (userIsCreator || checkIfUserIsAppCreator()) ?
+        <div id="tournamentProgressionControls">
+          <button
+            className="progressionControlBtn controlBtnApprove"
+            onClick={() => reopenTournament(tournamentObj.id)}>
             Reopen Tourney
-        </button>
-      </div>
-    )
-  }
+          </button>
+        </div>
+        : ""}
+    </div>
+  )
+  // } else {
+  //   return (
+  //   )
+  // }
 }

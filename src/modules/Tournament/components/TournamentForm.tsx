@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { Swiss } from "tournament-pairings";
-import type { ChessClub } from "../../App/types";
-import type { PlayerOnTournament, Guest, NewTournament, PlayerPairingArgument } from "../Types";
 import { PlayerSelection } from "./PlayerSelection";
 import { getClubsGuests, sendNewTournament } from "../../../ServerManager";
 import { TournamentParameters } from "./Parameters";
-import { chessClubDefaults } from "../../App/types";
+import { type ChessClub, chessClubDefaults } from "../../../Types/ChessClub";
+import type { PlayerRelated, PlayerPairingArgument } from "../../../Types/Player";
+import type { Guest } from "../../../Types/Guest";
+import type { NewTournament } from "../../../Types/Tournament";
 
 interface TournamentFormProps {
   clubs: ChessClub[];
@@ -29,7 +30,7 @@ export const TournamentForm: React.FC<TournamentFormProps> = ({
   tournamentObj,
 }) => {
   const [clubObj, setClubObj] = useState<ChessClub>({} as ChessClub);
-  const [clubPlayers, setClubPlayers] = useState<PlayerOnTournament[]>([]);
+  const [clubPlayers, setClubPlayers] = useState<PlayerRelated[]>([]);
   const [clubGuests, setClubGuests] = useState<Guest[]>([]);
   const [playersSelected, setPlayersSelected] = useState(false);
 

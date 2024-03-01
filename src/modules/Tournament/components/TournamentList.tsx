@@ -1,4 +1,4 @@
-import type { Tournament } from "../Types";
+import type { Tournament } from "../../../Types/Tournament";
 import { useEffect, useState } from "react";
 
 interface TournamentListProps {

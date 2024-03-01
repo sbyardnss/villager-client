@@ -1,5 +1,6 @@
 import type { tournamentAnalysisOutput } from "./matchup-game-analysis"
-import type { Guest, PlayerOnTournament } from "../Types";
+import type { Guest } from "../../../Types/Guest";
+import type { PlayerRelated } from "../../../Types/Player";
 export interface PlayerArg {
   id: string | number;
   score: number;
@@ -12,7 +13,7 @@ export interface PlayerArg {
 type PlayerArgCreatorFunction = (
   identifier: number | string,
   analysisObj: tournamentAnalysisOutput,
-  activeTourneyPlayers: (PlayerOnTournament | Guest)[],
+  activeTourneyPlayers: (PlayerRelated | Guest)[],
 ) => PlayerArg | undefined;
 export const playerArgCreator: PlayerArgCreatorFunction = (identifier, analysisObj, activeTourneyPlayers) => {
   let isActive = true
@@ -20,12 +21,12 @@ export const playerArgCreator: PlayerArgCreatorFunction = (identifier, analysisO
   //check if player is active and get identifier
   if (typeof identifier === 'string') {
     //TODO: IS THIS AN ISSUE USING ONLY GUEST TYPING HERE
-    if (!activeTourneyPlayers.find((ap: PlayerOnTournament | Guest) => (ap as Guest).guest_id === identifier)) {
+    if (!activeTourneyPlayers.find((ap: PlayerRelated | Guest) => (ap as Guest).guest_id === identifier)) {
       isActive = false
     }
   }
   else {
-    if (!activeTourneyPlayers.find((ap: PlayerOnTournament | Guest) => ap.id === identifier)) {
+    if (!activeTourneyPlayers.find((ap: PlayerRelated | Guest) => ap.id === identifier)) {
       isActive = false;
     }
   }

@@ -1,6 +1,8 @@
 import { SetStateAction, useEffect, useState } from "react";
 import { getAllTimeSettings } from "../../../ServerManager";
-import type { TimeSetting, NewTournament } from "../Types";
+import type { TimeSetting } from "../../../Types/TimeSetting";
+import type { NewTournament } from "../../../Types/Tournament";
+
 interface TournamentParametersProps {
   editOrNew: 'new' | 'edit';
   tournamentObj: NewTournament;

@@ -1,12 +1,14 @@
-import type { Guest, PlayerOnTournament, Tournament } from "../Types"
-import type { Match } from "tournament-pairings/dist/Match";
 import { useContext } from "react";
 import { AppContext } from "../../App/AppProvider";
 import { checkIfUserIsAppCreator } from "../actions/check-if-creator";
 import { findIdentifier } from "../actions/find-identifier";
 import { sendNewGame } from "../../../ServerManager";
-import { Game } from "../../../Types/Game";
-import { tournamentAnalysisOutput } from "../actions/matchup-game-analysis";
+import type { tournamentAnalysisOutput } from "../actions/matchup-game-analysis";
+import type { PlayerRelated } from "../../../Types/Player";
+import type { Guest } from "../../../Types/Guest";
+import type { Tournament } from "../../../Types/Tournament";
+import type { Match } from "tournament-pairings/dist/Match";
+import type { Game } from "../../../Types/Game";
 
 interface ScoringProps {
   tournamentObj: Tournament;
@@ -18,7 +20,7 @@ interface ScoringProps {
   resetTourneyGames: () => void;
   isTourneyCreator: boolean;
   round: number;
-  activePlayers: (PlayerOnTournament | Guest)[];
+  activePlayers: (PlayerRelated | Guest)[];
   analysis: tournamentAnalysisOutput;
   //TODO: FIX PLAYERRELATEDISSUE
   gameForApi: Game | any;

@@ -1,12 +1,14 @@
 import { SetStateAction } from "react";
-import type { Guest, PlayerOnTournament, Tournament } from "../Types";
 import { updateTournament, sendNewGame, reopenTournament } from "../../../ServerManager";
 import { createPairings } from "../actions/create-pairings";
-import type { Match } from "tournament-pairings/dist/Match";
-import { Game } from "../../../Types/Game";
 import { findIdentifier } from "../actions/find-identifier";
 import { tournamentAnalysisOutput } from "../actions/matchup-game-analysis";
 import { checkIfUserIsAppCreator } from "../actions/check-if-creator";
+import type { PlayerRelated } from "../../../Types/Player";
+import type { Guest } from "../../../Types/Guest";
+import type { Tournament } from "../../../Types/Tournament";
+import type { Match } from "tournament-pairings/dist/Match";
+import type { Game } from "../../../Types/Game";
 
 interface TournamentControlsProps {
   // updater: React.Dispatch<SetStateAction<Tournament>>;
@@ -23,7 +25,7 @@ interface TournamentControlsProps {
   //TODO: FIX PLAYERRELATEDISSUE
   byeGame: any;
   userIsCreator: boolean;
-  activePlayers: (PlayerOnTournament | Guest)[];
+  activePlayers: (PlayerRelated | Guest)[];
   currentRound: number;
   analysis: tournamentAnalysisOutput;
   roundComplete: boolean;

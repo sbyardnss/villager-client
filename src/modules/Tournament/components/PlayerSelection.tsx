@@ -1,13 +1,14 @@
-import type { Guest, PlayerOnTournament, NewTournament } from "../Types"
 import { isPlayerOrGuest } from "../../../utils/is-player-or-guest";
 import { getPlayerType } from "../../../utils/player-guest-typing";
 import { useEffect, useState } from "react";
 import { createNewGuest } from "../../../ServerManager";
-import type { ChessClub } from "../../App/types";
-import { chessClubDefaults } from "../../App/types";
+import type { PlayerRelated } from "../../../Types/Player";
+import type { Guest } from "../../../Types/Guest";
+import type { NewTournament } from "../../../Types/Tournament";
+import { type ChessClub, chessClubDefaults } from "../../../Types/ChessClub";
 
 interface PlayerSelectionProps {
-  players: PlayerOnTournament[];
+  players: PlayerRelated[];
   guests: Guest[];
   updatePlayersSelected: React.Dispatch<React.SetStateAction<boolean>>;
   tournamentObj: NewTournament;
@@ -30,8 +31,8 @@ export const PlayerSelection: React.FC<PlayerSelectionProps> = ({
 }) => {
   const [showGuests, setShowGuests] = useState(false);
   const [search, setSearch] = useState("");
-  const [availableCompetitors, setAvailableCompetitors] = useState<(PlayerOnTournament | Guest)[]>([]);
-  const [displayedCompetitors, setDisplayedCompetitors] = useState<(PlayerOnTournament | Guest)[]>([]);
+  const [availableCompetitors, setAvailableCompetitors] = useState<(PlayerRelated | Guest)[]>([]);
+  const [displayedCompetitors, setDisplayedCompetitors] = useState<(PlayerRelated | Guest)[]>([]);
   const [newGuest, updateNewGuest] = useState({
     full_name: "",
     club: selectedClub.id,
@@ -80,7 +81,7 @@ export const PlayerSelection: React.FC<PlayerSelectionProps> = ({
           <div id="potentialLabel" className="setColor setCustomFont">Potential:</div>
           <div id="tournamentPotentialCompetitorSelection">
             {
-              displayedCompetitors.map((p: (PlayerOnTournament | Guest), index) => {
+              displayedCompetitors.map((p: (PlayerRelated | Guest), index) => {
                 const playerType = getPlayerType(p);
                 return (
                   <li key={!isPlayerOrGuest(p) ? (p as Guest).guest_id + '-- potentialCompetitor' : p.id + '-- potentialCompetitor'}
@@ -91,7 +92,7 @@ export const PlayerSelection: React.FC<PlayerSelectionProps> = ({
                         tournamentCopy.guest_competitors.push(p as Guest);
                       }
                       else {
-                        tournamentCopy.competitors.push(p as PlayerOnTournament);
+                        tournamentCopy.competitors.push(p as PlayerRelated);
                       }
                       updateTournamentObj(tournamentCopy)
                       setSearch("");

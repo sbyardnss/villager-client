@@ -1,11 +1,7 @@
 import { useState, useContext, useEffect, SetStateAction, useRef } from "react"
-import { Guest, PlayerOnTournament, type Tournament } from "../Types"
 import { AppContext } from "../../App/AppProvider"
 import { checkIfUserIsAppCreator } from "../actions/check-if-creator"
-import type { Game } from "../../../Types/Game";
-import type { Match } from "tournament-pairings/dist/Match";
 import { getTournamentGames, updateTournament, sendNewGame } from "../../../ServerManager";
-import { ChessClub } from "../../App/types";
 import { tournamentAnalysis } from "../actions/matchup-game-analysis";
 import { ResultsModal } from "./ResultsModal";
 import { EndTournamentModal } from "./EndTournamentModal";
@@ -14,10 +10,15 @@ import { Scoring } from "./Scoring";
 import { EditScores } from "./EditScores";
 import { TournamentTable } from "./TournamentTable";
 import { createPairings } from "../actions/create-pairings";
-import { selectedTournamentDefaults } from "../Types";
-import type { tournamentAnalysisOutput } from "../actions/matchup-game-analysis";
 import { findIdentifier } from "../actions/find-identifier";
 import { TournamentControls } from "./TournamentControls";
+import { type Tournament, selectedTournamentDefaults } from "../../../Types/Tournament";
+import type { PlayerRelated } from "../../../Types/Player";
+import type { Guest } from "../../../Types/Guest";
+import type { Game } from "../../../Types/Game";
+import type { Match } from "tournament-pairings/dist/Match";
+import type { ChessClub } from "../../../Types/ChessClub";
+import type { tournamentAnalysisOutput } from "../actions/matchup-game-analysis";
 
 interface ActiveTournamentProps {
   selectedTournament: Tournament;
@@ -36,7 +37,7 @@ export const ActiveTournament: React.FC<ActiveTournamentProps> = ({
   const { localVillagerUser } = useContext(AppContext);
 
   // const [activeTournament, setActiveTournament] = useState<Tournament>({} as Tournament);
-  const [activeTournamentPlayers, setActiveTournamentPlayers] = useState<(PlayerOnTournament | Guest)[]>([])
+  const [activeTournamentPlayers, setActiveTournamentPlayers] = useState<(PlayerRelated | Guest)[]>([])
   const [tournamentCreatorBool, setTournamentCreatorBool] = useState(false);
   const [tournamentGames, setTournamentGames] = useState<Game[]>([]);
   const [currentRoundMatchups, setCurrentRoundMatchups] = useState<Match[]>([]);
@@ -51,7 +52,7 @@ export const ActiveTournament: React.FC<ActiveTournamentProps> = ({
   const [roundOver, setRoundOver] = useState(false);
   //TODO: ADJUST SERVER TO ACCEPT PLAYERRELATED TYPE FOR WINNER AND PLAYER_W/B
   const [gameForApi, updateGameForApi] = useState<Game | any>({
-    player_w: {} as Guest | PlayerOnTournament,
+    player_w: {} as Guest | PlayerRelated,
     player_w_model_type: "",
     player_b: 0,
     player_b_model_type: "",
@@ -60,12 +61,12 @@ export const ActiveTournament: React.FC<ActiveTournamentProps> = ({
     win_style: "",
     accepted: true,
     tournament_round: 0,
-    winner: {} as Guest | PlayerOnTournament,
+    winner: {} as Guest | PlayerRelated,
     winner_model_type: "",
     bye: false
   });
   const [byeGame, setByeGame] = useState({
-    player_w: {} as Guest | PlayerOnTournament,
+    player_w: {} as Guest | PlayerRelated,
     player_w_model_type: "",
     player_b: null,
     tournament: 0,
@@ -73,7 +74,7 @@ export const ActiveTournament: React.FC<ActiveTournamentProps> = ({
     win_style: "",
     accepted: true,
     tournament_round: 0,
-    winner: {} as Guest | PlayerOnTournament,
+    winner: {} as Guest | PlayerRelated,
     winner_model_type: "",
     bye: true
   });
@@ -196,7 +197,7 @@ export const ActiveTournament: React.FC<ActiveTournamentProps> = ({
   }
   const resetGameForApi = () => {
     updateGameForApi({
-      player_w: {} as Guest | PlayerOnTournament,
+      player_w: {} as Guest | PlayerRelated,
       player_w_model_type: "",
       player_b: 0,
       player_b_model_type: "",
@@ -205,7 +206,7 @@ export const ActiveTournament: React.FC<ActiveTournamentProps> = ({
       win_style: "",
       accepted: true,
       tournament_round: 0,
-      winner: {} as Guest | PlayerOnTournament,
+      winner: {} as Guest | PlayerRelated,
       winner_model_type: "",
       bye: false,
     });

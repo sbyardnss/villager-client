@@ -1,6 +1,6 @@
 import { useRef } from "react";
 import { addMemberToClub } from "../../../ServerManager"
-import type { ChessClub } from "../../App/types";
+import type { ChessClub } from "../../../Types/ChessClub";
 
 interface JoinClubModalProps {
   clubToJoin: ChessClub;

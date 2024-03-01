@@ -1,12 +1,13 @@
 import { findIdentifier } from "./find-identifier";
 import { PlayerArg, playerArgCreator } from "./create-player-pairing-arg";
 import { Swiss } from "tournament-pairings";
-import type { PlayerOnTournament, Guest } from "../Types";
+import type { PlayerRelated } from "../../../Types/Player";
+import type { Guest } from "../../../Types/Guest";
 import type { tournamentAnalysisOutput } from "./matchup-game-analysis";
 
 type CreatePairingsFunction = (
   editOrNew: string,
-  tournamentPlayers: (PlayerOnTournament | Guest)[],
+  tournamentPlayers: (PlayerRelated | Guest)[],
   curRound: number,
   currentByePlayer: number | string,
   analysisObj: tournamentAnalysisOutput,

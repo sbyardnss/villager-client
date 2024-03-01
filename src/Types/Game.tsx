@@ -1,5 +1,6 @@
 import type { PlayerRelated } from "./Player"
-import type { Guest } from "../modules/Tournament/Types"
+import type { Guest } from "./Guest"
+
 export interface Game {
   id: number,
   player_w?: PlayerRelated | Guest,

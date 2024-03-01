@@ -1,7 +1,7 @@
-import { PlayerRelated } from "../../../Types/Player";
-import { Guest, Player, PlayerOnTournament } from "../Types"
+import type { PlayerRelated, Player } from "../../../Types/Player";
+import type { Guest } from "../../../Types/Guest";
 
-export const findIdentifier = (playerObj: Player | Guest | PlayerRelated | PlayerOnTournament): number | string => {
+export const findIdentifier = (playerObj: Player | Guest | PlayerRelated): number | string => {
   if ('guest_id' in playerObj) {
     return playerObj['guest_id'];
   } else {

@@ -1,5 +1,5 @@
-import type { Guest, Player, PlayerOnTournament } from "../modules/Tournament/Types"
-
-export const isPlayerOrGuest = (playerOrGuestObj: Player | Guest | PlayerOnTournament): boolean => {
+import type { Player, PlayerRelated } from "../Types/Player";
+import type { Guest } from "../Types/Guest";
+export const isPlayerOrGuest = (playerOrGuestObj: Player | Guest | PlayerRelated): boolean => {
   return !('guest_id' in playerOrGuestObj);
 }

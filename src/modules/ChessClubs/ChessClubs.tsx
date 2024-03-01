@@ -7,7 +7,7 @@ import { JoinClubModal } from "./components/JoinClubModal";
 import { CreateClubForm } from "./components/CreateClub";
 
 // import type { ChessClub } from "../App/types";
-import type { ChessClubCreate, ChessClub } from "./types/ChessClub";
+import type { ChessClubCreate, ChessClub } from "../../Types/ChessClub";
 export const ChessClubs = () => {
   const { localVillagerUser, myChessClubs, resetChessClubs } = useContext(AppContext);
   const [unjoinedChessClubs, setUnjoinedClubs] = useState([]);

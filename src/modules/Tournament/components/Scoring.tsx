@@ -24,6 +24,7 @@ interface ScoringProps {
   analysis: tournamentAnalysisOutput;
   //TODO: FIX PLAYERRELATEDISSUE
   gameForApi: Game | any;
+  handleUpdate: (winner: PlayerRelated | Guest, loser: PlayerRelated | Guest, pastGame: boolean, isDraw: boolean) => void;
 }
 
 export const Scoring: React.FC<ScoringProps> = ({
@@ -38,6 +39,7 @@ export const Scoring: React.FC<ScoringProps> = ({
   activePlayers,
   analysis,
   gameForApi,
+  handleUpdate,
 }) => {
   const { localVillagerUser } = useContext(AppContext);
   if (tournamentObj.in_person && (isTourneyCreator || checkIfUserIsAppCreator())) {
@@ -64,8 +66,9 @@ export const Scoring: React.FC<ScoringProps> = ({
                   <div
                     className={gameForApi.id === undefined && gameForApi.winner === whitePlayer ? "selectedWhitePiecesMatchup" : "whitePiecesMatchup"}
                     id="whitePieces"
-                    onClick={(evt) => {
+                    onClick={() => { 
                       // handleGameForApiUpdate(evt.target.id, white, black)
+                      // handleUpdate(whitePlayer, )
                     }}>{whitePlayer.full_name}
                     {/* }}>{white?.guest_id ? white.full_name : white?.username} */}
                   </div>

@@ -211,7 +211,12 @@ export const ActiveTournament: React.FC<ActiveTournamentProps> = ({
       bye: false,
     });
   }
+  const handleGameForApiUpdate = (winner: PlayerRelated | Guest, loser: PlayerRelated | Guest, pastGame: boolean, isDraw: boolean) => {
+    //update winner, round, 
+    const copy = {...gameForApi};
 
+    updateGameForApi(copy);
+  }
   return <>
     <main id="tournamentContainer">
       {modalMode === 'results' ?
@@ -297,7 +302,8 @@ export const ActiveTournament: React.FC<ActiveTournamentProps> = ({
             round={currentRound}
             activePlayers={activeTournamentPlayers} 
             analysis={tournamentAnalysisObj}
-            gameForApi={gameForApi} />
+            gameForApi={gameForApi} 
+            handleUpdate={handleGameForApiUpdate} />
           : scoreMode === 'editing' ?
             <EditScores />
             : scoreMode === 'table' ?

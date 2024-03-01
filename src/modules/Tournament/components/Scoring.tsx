@@ -7,6 +7,7 @@ import type { Guest } from "../../../Types/Guest";
 import type { Tournament } from "../../../Types/Tournament";
 import type { Match } from "tournament-pairings/dist/Match";
 import type { OutgoingGame, Game } from "../../../Types/Game";
+import { sendNewGame } from "../../../ServerManager";
 
 interface ScoringProps {
   tournamentObj: Tournament;
@@ -56,51 +57,64 @@ export const Scoring: React.FC<ScoringProps> = ({
             {byeGame.current.player_w.full_name} has bye
           </div>
           : ""}
+        {byeMatchup !== undefined && tourneyGames.filter(tg => tg.tournament_round === round).length + 1 === currentMatches.length ?
+          <div className="setCustomFont">Round complete. Start new round.</div> :
+          byeMatchup === undefined && tourneyGames.filter(tg => tg.tournament_round === round).length === currentMatches.length ?
+            <div className="setCustomFont">Round complete. Start new round.</div> :
+            ""}
         {
           currentMatches.map((matchup, index) => {
             const whitePlayer = activePlayers.find(player => findIdentifier(player) === matchup.player1);
             const blackPlayer = activePlayers.find(player => findIdentifier(player) === matchup.player2);
-            const matchingGame = tourneyGames.find(tg => tg.player_w === whitePlayer && tg.player_b === blackPlayer && tg.tournament_round === round && tg.tournament === tournamentObj.id);
-            if (whitePlayer && blackPlayer && !matchingGame?.winner && matchingGame?.win_style !== 'draw' && analysis.playerOppRefObj[findIdentifier(whitePlayer)]?.indexOf(findIdentifier(blackPlayer)) !== analysis.playerOppRefObj[findIdentifier(whitePlayer)]?.length + 1) {
-              return (
-                <div key={`${matchup.round} -- ${matchup.match} -- ${index}`}
-                  className="tournamentScoringMatchup">
-                  <div
-                    className={gameForApi.id === undefined && gameForApi.winner === whitePlayer ? "selectedWhitePiecesMatchup" : "whitePiecesMatchup"}
-                    id="whitePieces"
-                    onClick={() => {
-                      handleUpdate(whitePlayer, blackPlayer, whitePlayer);
-                    }}>{whitePlayer.full_name}
+            if (whitePlayer && blackPlayer && matchup.player1 && matchup.player2) {
+              const matchingGame = tourneyGames.find(tg => {
+                if (tg.player_w && tg.player_b) {
+                  return findIdentifier(tg.player_w) === findIdentifier(whitePlayer) && findIdentifier(tg.player_b) === findIdentifier(blackPlayer) && tg.tournament_round === round && tg.tournament === tournamentObj.id
+                } else {
+                  return undefined;
+                }
+              });
+              if (!matchingGame && analysis.playerOppRefObj[findIdentifier(whitePlayer)]?.indexOf(findIdentifier(blackPlayer)) !== analysis.playerOppRefObj[findIdentifier(whitePlayer)]?.length + 1) {
+                return (
+                  <div key={`${matchup.round} -- ${matchup.match} -- ${index}`}
+                    className="tournamentScoringMatchup">
+                    <div
+                      className={gameForApi.id === undefined && gameForApi.winner === whitePlayer ? "selectedWhitePiecesMatchup" : "whitePiecesMatchup"}
+                      id="whitePieces"
+                      onClick={() => {
+                        handleUpdate(whitePlayer, blackPlayer, whitePlayer);
+                      }}>{whitePlayer.full_name}
+                    </div>
+                    <div
+                      className={gameForApi.id === undefined && gameForApi.player_w === whitePlayer && gameForApi.player_b === blackPlayer && gameForApi.win_style === "draw" ? "selectedDrawMatchupButton" : "drawMatchupButton"}
+                      id="drawUpdate"
+                      onClick={() => {
+                        handleUpdate(whitePlayer, blackPlayer);
+                      }}>Draw
+                    </div>
+                    <div
+                      className={gameForApi.id === undefined && gameForApi.winner === blackPlayer ? "selectedBlackPiecesMatchup" : "blackPiecesMatchup"}
+                      id="blackPieces"
+                      onClick={() => {
+                        handleUpdate(whitePlayer, blackPlayer, blackPlayer);
+                      }}>{blackPlayer.full_name}
+                    </div>
+                    <button
+                      id="scoringSubmit"
+                      className="buttonStyleReject"
+                      onClick={() => {
+                        if (gameForApi.win_style) {
+                          console.log(gameForApi);
+                          sendNewGame(gameForApi)
+                            .then(() => resetTourneyGames());
+                          resetGame();
+                        }
+                      }}>
+                      submit
+                    </button>
                   </div>
-                  <div
-                    className={gameForApi.id === undefined && gameForApi.player_w === whitePlayer && gameForApi.player_b === blackPlayer && gameForApi.win_style === "draw" ? "selectedDrawMatchupButton" : "drawMatchupButton"}
-                    id="drawUpdate"
-                    onClick={() => {
-                      handleUpdate(whitePlayer, blackPlayer);
-                    }}>Draw
-                  </div>
-                  <div
-                    className={gameForApi.id === undefined && gameForApi.winner === blackPlayer ? "selectedBlackPiecesMatchup" : "blackPiecesMatchup"}
-                    id="blackPieces"
-                    onClick={() => {
-                      handleUpdate(whitePlayer, blackPlayer, blackPlayer);
-                    }}>{blackPlayer.full_name}
-                  </div>
-                  <button
-                    id="scoringSubmit"
-                    className="buttonStyleReject"
-                    onClick={() => {
-                      if (gameForApi.win_style) {
-                        console.log(gameForApi);
-                        // sendNewGame(gameForApi)
-                        //   .then(() => resetTournamentGames())
-                        // resetGameForApi()
-                      }
-                    }}>
-                    submit
-                  </button>
-                </div>
-              )
+                )
+              }
             }
             return (
               <div key={`${matchup.round} -- ${matchup.match} -- ${index}`}>

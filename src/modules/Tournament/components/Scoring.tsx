@@ -1,5 +1,3 @@
-import { useContext } from "react";
-import { AppContext } from "../../App/AppProvider";
 import { checkIfUserIsAppCreator } from "../actions/check-if-creator";
 import { findIdentifier } from "../actions/find-identifier";
 // import { sendNewGame } from "../../../ServerManager";
@@ -47,6 +45,9 @@ export const Scoring: React.FC<ScoringProps> = ({
   handleUpdate,
 }) => {
   // const { localVillagerUser } = useContext(AppContext);
+  const byeMatchup = currentMatches?.find(matchup => matchup.player1 === null || matchup.player2 === null);
+  const whiteBye = byeGame.current.player_w.full_name;
+
   if (tournamentObj.in_person && (isTourneyCreator || checkIfUserIsAppCreator())) {
     return (
       <section id="tournamentScoringSection">
@@ -113,11 +114,39 @@ export const Scoring: React.FC<ScoringProps> = ({
   } else {
     return (
       <section id="tournamentScoringSection">
-        {byeGame.current ?
-          <div key={`${byeGame.current.round} -- ${byeGame.current.match} -- bye`} className="setColor setCustomFont">
-            {byeGame.current.player_w.full_name} has bye
+        {byeMatchup ?
+          <div key={`${byeMatchup.round} -- ${byeMatchup.match} -- bye`} className="setColor setCustomFont">
+            {whiteBye?.full_name} has bye
           </div>
           : ""}
+        {
+          currentMatches.map(matchup => {
+            const white = activePlayers.find((player: PlayerRelated | Guest) => player.id === matchup.player1 || (player as Guest).guest_id === matchup.player1)
+            const black = activePlayers.find((player: PlayerRelated | Guest) => player.id === matchup.player2 || (player as Guest).guest_id === matchup.player2)
+            if (black !== undefined) {
+              return (
+                <div key={`${matchup.round} -- ${matchup.match}`}
+                  className="tournamentScoringMatchup">
+                  <div
+                    className="whitePiecesMatchup"
+                    id="whitePieces">
+                    {white?.full_name}
+                  </div>
+                  <div className="setCustomFont">
+                    Vs
+                  </div>
+                  <div
+                    className="blackPiecesMatchup"
+                    id="blackPieces">
+                    {black.full_name}
+                  </div>
+                </div>
+              )
+            } else {
+              return null;
+            }
+          })
+        }
       </section>
     )
   }

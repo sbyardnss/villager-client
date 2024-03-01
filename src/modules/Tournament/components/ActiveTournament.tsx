@@ -344,7 +344,12 @@ export const ActiveTournament: React.FC<ActiveTournamentProps> = ({
               handleUpdate={handleGameForApiUpdate}
               allClubMates={selectedClubMates} />
             : scoreMode === 'table' ?
-              <TournamentTable />
+              <TournamentTable
+                analysis={tournamentAnalysisObj}
+                allClubMates={selectedClubMates}
+                round={currentRound}
+                tournamentObj={selectedTournament} 
+                byeGame={byeGameRef} />
               : null}
       </section>
     </main>

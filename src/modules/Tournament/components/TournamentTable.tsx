@@ -1,7 +1,7 @@
 import { findIdentifier } from "../actions/find-identifier";
 import type { Guest } from "../../../Types/Guest";
 import type { PlayerRelated } from "../../../Types/Player";
-import type { tournamentAnalysisOutput } from "../actions/matchup-game-analysis"
+import { ScoreCardType, type tournamentAnalysisOutput } from "../actions/matchup-game-analysis"
 import { Tournament } from "../../../Types/Tournament";
 import { findByIdentifier } from "../../../Tournament/actions/find-by-identifier";
 import { OutgoingGame } from "../../../Types/Game";
@@ -21,22 +21,35 @@ export const TournamentTable: React.FC<TournamentTableProps> = ({
   tournamentObj,
   byeGame,
 }) => {
-  const [byePlayerIdentifier, setByePlayerIdentifier] = useState<string| number>();
+  const [byePlayerIdentifier, setByePlayerIdentifier] = useState<string | number>();
+  const [scoreCardForDisplay, setScoreCardForDisplay] = useState<ScoreCardType>({});
   useEffect(
     () => {
       if (byeGame.current) {
         setByePlayerIdentifier(findIdentifier(byeGame.current.player_w));
       }
-    },[byeGame.current]
+    }, [byeGame]
   )
-  console.log(byePlayerIdentifier)
-  const sortAllPlayersArr = (playersArr: (PlayerRelated | Guest)[]) => {
-    return playersArr.sort((a: PlayerRelated | Guest, b: PlayerRelated | Guest) => {
-      const aIdentifier = findIdentifier(a);
-      const bIdentifier = findIdentifier(b);
-      return analysis.scoreObj[bIdentifier] - analysis.scoreObj[aIdentifier];
-    });
-  };
+  useEffect(
+    () => {
+      const scoreCardCopy = {...analysis.scoreCard};
+      for (const identifier in scoreCardCopy) {
+        if (scoreCardCopy[identifier].length < round) {
+          while (scoreCardCopy[identifier].length < round) {
+            scoreCardCopy[identifier].push('none');
+          }
+        }
+      }
+      setScoreCardForDisplay(scoreCardCopy);
+    }, [analysis.scoreCard, round]
+  )
+  // const sortAllPlayersArr = (playersArr: (PlayerRelated | Guest)[]) => {
+  //   return playersArr.sort((a: PlayerRelated | Guest, b: PlayerRelated | Guest) => {
+  //     const aIdentifier = findIdentifier(a);
+  //     const bIdentifier = findIdentifier(b);
+  //     return analysis.scoreObj[bIdentifier] - analysis.scoreObj[aIdentifier];
+  //   });
+  // };
   const roundPopulation = () => {
     let roundNumber = tournamentObj.rounds;
 
@@ -54,6 +67,7 @@ export const TournamentTable: React.FC<TournamentTableProps> = ({
     return tableHtml.reverse()
   }
   const roundHtml = roundPopulation()
+
   return (
     <section id="tournamentTableContainer">
       <table id="tournamentTable">
@@ -70,59 +84,14 @@ export const TournamentTable: React.FC<TournamentTableProps> = ({
           </tr>
         </thead>
         <tbody>
-          {/* {
-            sortAllPlayersArr(allClubMates).map(p => {
-              let score = 0
-              const guestIdOrId = p.guest_id ? p.guest_id : p.id
-              const tourneyPlayerScores = scoreCard[guestIdOrId]
-              return (
-                <tr key={guestIdOrId} id={guestIdOrId + "--tourneyRow"} className="tablePlayerRow">
-                  <td key={p.full_name + '--row'} className="tablePlayerCell sticky-col first-col">{p.full_name}</td>
-                  {
-                    tourneyPlayerScores?.map((s, index) => {
-                      if (typeof s === 'number') {
-                        score += s
-                      }
-                      if (s === 'bye') {
-                        score += 1
-
-                      }
-                      if (s !== 'none') {
-                        return (
-                          <td key={guestIdOrId + '--' + index + '--' + p.full_name} className="scoreCell">{s}</td>
-                        )
-                      }
-                      else if (s === 'none' && byePlayer === guestIdOrId && index + 1 === round) {
-                        return (
-                          <td key={guestIdOrId + '--' + index + '--' + p.full_name} className="scoreCell">bye</td>
-                        )
-                      }
-                      else {
-                        return (
-                          <td key={guestIdOrId + '--' + index + '--' + p.full_name} className="scoreCell">0</td>
-                        )
-                      }
-                    })
-                  }
-                  {!tourneyPlayerScores ? <td key={guestIdOrId + '-- noGameYet' + '--' + p.full_name} className="scoreCell">0</td> : ""}
-                  {round < 6 ? <td className="scoreCell"></td> : ""}
-                  <td key={guestIdOrId + "-- score" + p.full_name} id={guestIdOrId + "-- score"} className="totalScoreCell" value={analysis.scoreObj[guestIdOrId]}>
-                    {score}
-                  </td>
-                </tr>
-              )
-            })
-          } */}
           {
-            Object.keys(analysis.scoreCard).map((identifier: number | string) => {
+            Object.keys(scoreCardForDisplay).map((identifier: number | string) => {
               const player = findByIdentifier(identifier, allClubMates);
-              console.log(analysis.scoreCard[identifier])
               return (
                 <tr key={identifier} id={identifier + "--tourneyRow"} className="tablePlayerRow">
                   <td key={player.full_name + '--row'} className="tablePlayerCell sticky-col first-col">{player.full_name}</td>
                   {
-                    analysis.scoreCard[identifier].map((score, index) => {
-
+                    scoreCardForDisplay[identifier].map((score, index) => {
                       if (score !== 'none') {
                         return (
                           <td key={identifier + '--' + index + '--' + player.full_name} className="scoreCell">{score}</td>
@@ -140,12 +109,16 @@ export const TournamentTable: React.FC<TournamentTableProps> = ({
                       }
                     })
                   }
+                  {round < 6 ? <td className="scoreCell"></td> : ""}
+                  <td key={identifier + "-- score" + player.full_name} id={identifier + "-- score"} className="totalScoreCell">
+                    {analysis.scoreObj[identifier]}
+                  </td>
                 </tr>
               )
             })
           }
         </tbody>
-        </table>
+      </table>
     </section>
   )
 }

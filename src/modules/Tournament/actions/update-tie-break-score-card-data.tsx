@@ -9,6 +9,7 @@ export const updateTieBreakAndScoreCardData = (
   scoreCardForOutput: ScoreCardType,
   scoreObj: ScoreObjType,
   iterationRound: number,
+  currentRound: number,
   wIdentifier: number | string,
   bIdentifier?: number | string | undefined,
 ) => {

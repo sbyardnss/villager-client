@@ -87,7 +87,7 @@ export const tournamentAnalysis: TournamentAnalysisFunction = (
     } else {
       gameResult.black = null;
     }
-    updateTieBreakAndScoreCardData(game, gameResult, scoreCardForOutput, scoreObjForOutput, gameRound, whitePlayerIdentifier, blackPlayerIdentifier);
+    updateTieBreakAndScoreCardData(game, gameResult, scoreCardForOutput, scoreObjForOutput, gameRound, currentRound, whitePlayerIdentifier, blackPlayerIdentifier);
     tieBreakDataForOutput.push(gameResult);
     updatePlayerOppRefObj(playerOppObjForOutput, whitePlayerIdentifier, blackPlayerIdentifier);
 

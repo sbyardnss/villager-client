@@ -1,7 +1,7 @@
 import { useState, useContext, useEffect, SetStateAction, useRef } from "react"
 import { AppContext } from "../../App/AppProvider"
 import { checkIfUserIsAppCreator } from "../actions/check-if-creator"
-import { getTournamentGames, updateTournament, sendNewGame, getTournament } from "../../../ServerManager";
+import { getTournamentGames, getTournament } from "../../../ServerManager";
 import { tournamentAnalysis } from "../actions/matchup-game-analysis";
 import { ResultsModal } from "./ResultsModal";
 import { EndTournamentModal } from "./EndTournamentModal";
@@ -70,7 +70,7 @@ export const ActiveTournament: React.FC<ActiveTournamentProps> = ({
     bye: false
   });
   //TODO: FIGURE OUT HOW TO RECONCILE THIS
-  const [byeGame, setByeGame] = useState<OutgoingGame>({
+  const [byeGame] = useState<OutgoingGame>({
     player_w: {} as Guest | PlayerRelated,
     player_w_model_type: "",
     player_b: {} as Guest | PlayerRelated,

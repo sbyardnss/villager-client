@@ -1,7 +1,7 @@
 import { useState, useContext, useEffect, SetStateAction, useRef } from "react"
 import { AppContext } from "../../App/AppProvider"
 import { checkIfUserIsAppCreator } from "../actions/check-if-creator"
-import { getTournamentGames, updateTournament, sendNewGame } from "../../../ServerManager";
+import { getTournamentGames, updateTournament, sendNewGame, getTournament } from "../../../ServerManager";
 import { tournamentAnalysis } from "../actions/matchup-game-analysis";
 import { ResultsModal } from "./ResultsModal";
 import { EndTournamentModal } from "./EndTournamentModal";
@@ -246,6 +246,10 @@ export const ActiveTournament: React.FC<ActiveTournamentProps> = ({
       bye: false,
     });
   }
+  const resetActiveTournament = () => {
+    getTournament(selectedTournament.id)
+      .then(data => selectTournament(data));
+  }
   const getModelTypeForApi = (obj: PlayerRelated | Guest): string => {
     if ('guest_id' in obj) {
       return 'guestplayer';
@@ -320,6 +324,7 @@ export const ActiveTournament: React.FC<ActiveTournamentProps> = ({
       <TournamentControls
         tournamentResetter={resetTourneys}
         tournamentGamesResetter={resetTournamentGames}
+        activeTournamentResetter={resetActiveTournament}
         modalMode={modalMode}
         modalModeSetter={setModalMode}
         scoringMode={scoreMode}

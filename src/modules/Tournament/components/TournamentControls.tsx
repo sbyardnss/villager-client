@@ -14,6 +14,7 @@ interface TournamentControlsProps {
   // updater: React.Dispatch<SetStateAction<Tournament>>;
   tournamentResetter: () => void;
   tournamentGamesResetter: () => void;
+  activeTournamentResetter: () => void;
   modalMode: 'none' | 'results' | 'edit-players' | 'end-tournament';
   modalModeSetter: React.Dispatch<SetStateAction<'none' | 'results' | 'edit-players' | 'end-tournament'>>;
   scoringMode: 'scoring' | 'editing' | 'table';
@@ -34,6 +35,7 @@ export const TournamentControls: React.FC<TournamentControlsProps> = ({
   // updater,
   tournamentResetter,
   tournamentGamesResetter,
+  activeTournamentResetter,
   modalMode,
   modalModeSetter,
   scoringMode,
@@ -104,7 +106,8 @@ export const TournamentControls: React.FC<TournamentControlsProps> = ({
               // tournamentCopy.guest_competitors = tournamentCopy.guest_competitors.map(gc => { return gc.id })
               updateTournament(tournamentCopy)
                 .then(() => {
-                  tournamentResetter();
+                  // tournamentResetter();
+                  activeTournamentResetter();
                   tournamentGamesResetter();
                 });
               if (byeGame.current.player_w.id) {

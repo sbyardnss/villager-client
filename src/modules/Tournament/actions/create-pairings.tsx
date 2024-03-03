@@ -9,7 +9,7 @@ type CreatePairingsFunction = (
   editOrNew: string,
   tournamentPlayers: (PlayerRelated | Guest)[],
   curRound: number,
-  currentByePlayer: number | string,
+  // currentByePlayer: number | string,
   analysisObj: tournamentAnalysisOutput,
 ) => any;
 
@@ -17,7 +17,7 @@ export const createPairings: CreatePairingsFunction = (
   editOrNew,
   tournamentPlayers,
   curRound,
-  currentByePlayer,
+  // currentByeGameRef,
   analysisObj,
 ) => {
   //check whether odd or even number of players
@@ -38,7 +38,6 @@ export const createPairings: CreatePairingsFunction = (
 
     for (const playerScore in potentialByePlayersScoreCard) {
       const potentialByeIdentifier = parseInt(potentialByePlayersScoreCard[playerScore][0]) || potentialByePlayersScoreCard[playerScore][0];
-      console.log(potentialByeIdentifier)
       for (const playerId of playerIdentifierArr) {
         if (parseInt(playerId) !== potentialByeIdentifier && playerId !== potentialByeIdentifier) {
           const playerArgObj: PlayerArg | undefined = playerArgCreator(playerId, analysisObj, tournamentPlayers);

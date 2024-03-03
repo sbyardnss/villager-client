@@ -1,10 +1,10 @@
 import type { ScoreCardType, ScoreObjType, TieBreakObject } from "./matchup-game-analysis";
-import type { Game } from "../../../Types/Game";
+import type { Game, OutgoingGame } from "../../../Types/Game";
 import { findIdentifier } from "./find-identifier";
 import { updateScoreCard } from "./update-score-card";
 
 export const updateTieBreakAndScoreCardData = (
-  game: Game,
+  game: Game | OutgoingGame,
   gameResult: TieBreakObject,
   scoreCardForOutput: ScoreCardType,
   scoreObj: ScoreObjType,

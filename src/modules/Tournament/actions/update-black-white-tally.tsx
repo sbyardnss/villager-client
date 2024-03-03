@@ -11,9 +11,11 @@ export const updateBlackWhiteTally = (
     bwTallyObj[wIdentifier] = ['w'];
   }
   //BLACK bwTallyObjTALLY
-  if (bwTallyObj[bIdentifier]) {
-    bwTallyObj[bIdentifier].push('b');
-  } else {
-    bwTallyObj[bIdentifier] = ['b'];
+  if (bIdentifier) {
+    if (bwTallyObj[bIdentifier]) {
+      bwTallyObj[bIdentifier].push('b');
+    } else {
+      bwTallyObj[bIdentifier] = ['b'];
+    }
   }
 }

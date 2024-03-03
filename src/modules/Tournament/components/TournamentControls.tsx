@@ -95,24 +95,22 @@ export const TournamentControls: React.FC<TournamentControlsProps> = ({
           className="progressionControlBtn controlBtnApprove"
           onClick={() => {
             if (window.confirm("create round?")) {
-              // if (byeGame.player_w.id) {
-              //   sendNewGame(byeGame)
-              // }
               const tournamentCopy = { ...tournamentObj }
               // const newPairings = createPairings('new', activeTournamentPlayers, playerOpponentsReferenceObj, currentRound, scoreObj, scoreCard, byeGame.player_w, blackWhiteTally)
-              const newPairings = createPairings('new', activePlayers, currentRound, findIdentifier(byeGame.current.player_w), analysis)
+              const newPairings = createPairings('new', activePlayers, currentRound, /*byeGame.current, */analysis)
               tournamentCopy.pairings = tournamentCopy.pairings.concat(newPairings)
               tournamentCopy.rounds++
-              console.log('tournamentCopy', tournamentCopy)
               // tournamentCopy.competitors = tournamentCopy.competitors.map(c => { return c.id })
               // tournamentCopy.guest_competitors = tournamentCopy.guest_competitors.map(gc => { return gc.id })
-              console.log(tournamentCopy)
-              // updateTournament(tournamentCopy)
-              //   .then(() => {
-              //     tournamentResetter();
-              //     tournamentGamesResetter();
-              //   })
-              // modalModeSetter('none');
+              updateTournament(tournamentCopy)
+                .then(() => {
+                  tournamentResetter();
+                  tournamentGamesResetter();
+                });
+              if (byeGame.current.player_w.id) {
+                sendNewGame(byeGame.current)
+              }
+              modalModeSetter('none');
             }
           }}>
           New Round

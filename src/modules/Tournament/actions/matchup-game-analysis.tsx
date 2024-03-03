@@ -1,4 +1,4 @@
-import type { Game } from "../../../Types/Game";
+import type { Game, OutgoingGame } from "../../../Types/Game";
 import type { Match } from "tournament-pairings/dist/Match";
 import { findIdentifier } from "./find-identifier";
 import { updatePlayerOppRefObj } from "./update-player-opp-ref";
@@ -51,6 +51,7 @@ type TournamentAnalysisFunction = (
   currentMatchups: Match[],
   // currentMatchupsSetter: React.Dispatch<SetStateAction<Match[]>>,
   currentRound: number,
+  byeGame: React.RefObject<OutgoingGame>,
 ) => tournamentAnalysisOutput;
 
 export const tournamentAnalysis: TournamentAnalysisFunction = (
@@ -58,13 +59,18 @@ export const tournamentAnalysis: TournamentAnalysisFunction = (
   currentMatchups,
   // currentMatchupsSetter,
   currentRound,
+  byeGame,
 ) => {
-  const playerOppObjForOutput: PlayerOppRefObjType = {};
-  const scoreCardForOutput: ScoreCardType = {};
-  const tieBreakDataForOutput: TieBreakObject[] = [];
-  const blackWhiteForOutput: BlackWhiteTallyType = {};
-  const scoreObjForOutput: ScoreObjType = {};
-  for (const game of games) {
+  const playerOppObjForOutput: PlayerOppRefObjType = {}; // check
+  const scoreCardForOutput: ScoreCardType = {}; // check
+  const tieBreakDataForOutput: TieBreakObject[] = []; // check
+  const blackWhiteForOutput: BlackWhiteTallyType = {}; // check
+  const scoreObjForOutput: ScoreObjType = {}; // check
+  let gamesToIterate: (OutgoingGame | Game)[] = [];
+  if (byeGame.current) {
+    gamesToIterate = (games as (OutgoingGame | Game)[]).concat(byeGame.current);
+  }
+  for (const game of gamesToIterate) {
     const gameRound = game.tournament_round;
     let whitePlayerIdentifier: string | number = 0;
     let blackPlayerIdentifier: string | number = 0;
@@ -81,14 +87,14 @@ export const tournamentAnalysis: TournamentAnalysisFunction = (
     } else {
       gameResult.black = null;
     }
-    updateTieBreakAndScoreCardData(game, gameResult, scoreCardForOutput, scoreObjForOutput, gameRound, whitePlayerIdentifier);
+    updateTieBreakAndScoreCardData(game, gameResult, scoreCardForOutput, scoreObjForOutput, gameRound, whitePlayerIdentifier, blackPlayerIdentifier);
     tieBreakDataForOutput.push(gameResult);
     updatePlayerOppRefObj(playerOppObjForOutput, whitePlayerIdentifier, blackPlayerIdentifier);
 
     //CHECKING IF TWO PLAYERS ON GAME FOR BWTALLY
-    if (blackPlayerIdentifier && whitePlayerIdentifier) {
-      updateBlackWhiteTally(blackWhiteForOutput, whitePlayerIdentifier, blackPlayerIdentifier);
-    }
+    // if (blackPlayerIdentifier && whitePlayerIdentifier) {
+    updateBlackWhiteTally(blackWhiteForOutput, whitePlayerIdentifier, blackPlayerIdentifier);
+    // }
   }
 
 

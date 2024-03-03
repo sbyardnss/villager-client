@@ -73,7 +73,7 @@ export const ActiveTournament: React.FC<ActiveTournamentProps> = ({
   const [byeGame, setByeGame] = useState<OutgoingGame>({
     player_w: {} as Guest | PlayerRelated,
     player_w_model_type: "",
-    player_b: undefined,
+    player_b: {} as Guest | PlayerRelated,
     player_b_model_type: "",
     tournament: 0,
     time_setting: 0,
@@ -84,7 +84,20 @@ export const ActiveTournament: React.FC<ActiveTournamentProps> = ({
     winner_model_type: "",
     bye: true
   });
-  const byeGameRef = useRef(byeGame);
+  const byeGameRef = useRef<OutgoingGame>({
+    player_w: {} as Guest | PlayerRelated,
+    player_w_model_type: "",
+    player_b: {} as Guest | PlayerRelated,
+    player_b_model_type: "",
+    tournament: 0,
+    time_setting: 0,
+    win_style: "",
+    accepted: true,
+    tournament_round: 0,
+    winner: {} as Guest | PlayerRelated,
+    winner_model_type: "",
+    bye: true
+  });
 
   useEffect(
     () => {
@@ -165,7 +178,7 @@ export const ActiveTournament: React.FC<ActiveTournamentProps> = ({
   useEffect(
     () => {
       // if (tournamentGames) {
-      const analysis = tournamentAnalysis(tournamentGames, currentRoundMatchupsRef.current, currentRound);
+      const analysis = tournamentAnalysis(tournamentGames, currentRoundMatchupsRef.current, currentRound, byeGameRef);
       setTournamentAnalysisObj(analysis);
       // }
     }, [tournamentGames, currentRound, selectedTournament]
@@ -176,9 +189,12 @@ export const ActiveTournament: React.FC<ActiveTournamentProps> = ({
       const byePairing = currentRoundMatchups.find(pairing => pairing.player2 === null);
       if (byePairing) {
         const byeCopy = { ...byeGame };
-        byeCopy.player_b = undefined;
+        byeCopy.player_b = {} as PlayerRelated | Guest;
         byeCopy.bye = true;
         byeCopy.win_style = "";
+        byeCopy.time_setting = selectedTournament.time_setting;
+        byeCopy.tournament = selectedTournament.id;
+        byeCopy.tournament_round = currentRound;
         if (typeof byePairing.player1 === 'string') {
           const guestPlayer = activeTournamentPlayers.find(p => (p as Guest).guest_id === byePairing.player1)
           // byeCopy.winner_model_type = 'guestplayer';
@@ -202,7 +218,7 @@ export const ActiveTournament: React.FC<ActiveTournamentProps> = ({
         // setByeGame(byeCopy)
         byeGameRef.current = byeCopy;
       }
-    }, [currentRoundMatchups, activeTournamentPlayers, byeGame, tournamentAnalysisObj]
+    }, [currentRoundMatchups, activeTournamentPlayers, byeGame, tournamentAnalysisObj, currentRound, selectedTournament.id, selectedTournament.time_setting]
   )
   useEffect(
     () => {

@@ -103,15 +103,16 @@ export const TournamentForm: React.FC<TournamentFormProps> = ({
           <div id="newTournamentClubNameHeader" className="setCustomFont">Club: {clubObj?.name}</div>
           {!playersSelected ?
             <PlayerSelection
+              editOrNew={"new"}
               players={clubPlayers}
               guests={clubGuests}
               updatePlayersSelected={setPlayersSelected}
               tournamentObj={tournamentObj}
               updateTournamentObj={updater}
-              setCreate={setCreateTournament}
               selectClub={selectClub}
               selectedClub={selectedClub}
-              resetGuests={resetGuests} />
+              resetGuests={resetGuests}
+              setCreate={setCreateTournament} />
             :
             <section id="tournamentParameters">
               <TournamentParameters

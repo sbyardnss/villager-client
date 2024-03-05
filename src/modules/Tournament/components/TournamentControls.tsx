@@ -140,7 +140,7 @@ export const TournamentControls: React.FC<TournamentControlsProps> = ({
       {!tournamentObj.complete && (userIsCreator || checkIfUserIsAppCreator()) ?
         newRoundButtonDigitalTournament()
         : ""}
-      {!tournamentObj.complete && (userIsCreator || checkIfUserIsAppCreator()) ?
+      {tournamentObj.in_person === true && !tournamentObj.complete && (userIsCreator || checkIfUserIsAppCreator()) ?
         <button className="progressionControlBtn controlBtnApprove" onClick={() => {
           if (roundComplete) {
             window.alert('This round seems to be over. Start new round before adding players')

@@ -1,14 +1,14 @@
 import { SetStateAction, useEffect, useState } from "react";
 import { getAllTimeSettings } from "../../../ServerManager";
 import type { TimeSetting } from "../../../Types/TimeSetting";
-import type { NewTournament } from "../../../Types/Tournament";
+import type { NewTournament, Tournament } from "../../../Types/Tournament";
 
 interface TournamentParametersProps {
   editOrNew: 'new' | 'edit';
   tournamentObj: NewTournament;
-  updateTournamentObj: React.Dispatch<SetStateAction<NewTournament>>;
+  updateTournamentObj: React.Dispatch<SetStateAction<NewTournament | Tournament>>;
   gamesStarted?: boolean; // Mark as optional
-  setGamesStarted?: React.Dispatch<React.SetStateAction<boolean>>; //
+  setGamesStarted?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 export const TournamentParameters: React.FC<TournamentParametersProps> = ({
   editOrNew,
@@ -37,7 +37,7 @@ export const TournamentParameters: React.FC<TournamentParametersProps> = ({
           onChange={(e) => {
             const copy = { ...tournamentObj }
             copy.title = e.target.value
-            updateTournamentObj(copy)
+            updateTournamentObj(copy);
           }}
         />
         <div id="tournamentTimeSettingSelection">

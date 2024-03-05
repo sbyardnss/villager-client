@@ -302,7 +302,15 @@ export const ActiveTournament: React.FC<ActiveTournamentProps> = ({
       {modalMode === 'results' ?
         <ResultsModal />
         : modalMode === 'edit-players' ?
-          <EditPlayersModal />
+          <EditPlayersModal
+            tournamentObj={selectedTournament}
+            modalModeSetter={setModalMode}
+            activeTournamentResetter={resetActiveTournament}
+            byeGame={byeGameRef}
+            rounds={currentRound}
+            analysis={tournamentAnalysisObj}
+            tourneyGames={tournamentGames} 
+            tournamentClub={selectedClub} />
           : modalMode === 'end-tournament' ?
             <EndTournamentModal />
             : ""}
@@ -369,7 +377,7 @@ export const ActiveTournament: React.FC<ActiveTournamentProps> = ({
                 analysis={tournamentAnalysisObj}
                 allClubMates={selectedClubMates}
                 round={currentRound}
-                tournamentObj={selectedTournament} 
+                tournamentObj={selectedTournament}
                 byeGame={byeGameRef} />
               : null}
       </section>

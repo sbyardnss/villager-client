@@ -52,7 +52,7 @@ export const Scoring: React.FC<ScoringProps> = ({
   if (tournamentObj.in_person && (isTourneyCreator || checkIfUserIsAppCreator())) {
     return (
       <section id="tournamentScoringSection">
-        {byeGame.current ?
+        {byeGame.current.player_w.id ?
           <div key={`${byeGame.current.round} -- ${byeGame.current.match} -- bye`} className="setColor setCustomFont">
             {byeGame.current.player_w.full_name} has bye
           </div>

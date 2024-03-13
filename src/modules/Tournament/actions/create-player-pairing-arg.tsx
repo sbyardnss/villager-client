@@ -35,11 +35,18 @@ export const playerArgCreator: PlayerArgCreatorFunction = (identifier, analysisO
       id: identifier,
       score: analysisObj.scoreObj[identifier] || 0,
       colors: analysisObj.blackWhiteTally[identifier] || [],
-      avoid: analysisObj.playerOppRefObj[identifier] ? analysisObj.playerOppRefObj[identifier].filter(ref => ref !== 'bye') : []
+      avoid: analysisObj.playerOppRefObj[identifier] ? analysisObj.playerOppRefObj[identifier].filter(ref => ref !== 'bye') : [],
+      receivedBye: false,
     }
     if (analysisObj.playerOppRefObj[identifier]) {
-      if (analysisObj.playerOppRefObj[identifier].includes('bye') && playerArg.score > .5) {
-        playerArg.score--
+      // if (analysisObj.playerOppRefObj[identifier].includes('bye') && playerArg.score > .5) {
+      //   playerArg.score--
+      // }
+      if (analysisObj.playerOppRefObj[identifier].includes('bye')) {
+        playerArg.receivedBye = true;
+        if (playerArg.score > .5) {
+          playerArg.score--;
+        }
       }
     }
     return playerArg

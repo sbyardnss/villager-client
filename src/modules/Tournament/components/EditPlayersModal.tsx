@@ -24,6 +24,7 @@ interface EditPlayersModalProps {
   analysis: tournamentAnalysisOutput;
   tourneyGames: Game[];
   tournamentClub: ChessClub;
+  resetTournaments: () => void;
 }
 
 export const EditPlayersModal: React.FC<EditPlayersModalProps> = ({
@@ -35,6 +36,7 @@ export const EditPlayersModal: React.FC<EditPlayersModalProps> = ({
   analysis,
   tourneyGames,
   tournamentClub,
+  resetTournaments,
 }) => {
   // const { localVillagerUser } = useContext(AppContext);
   const [playersSelected, setPlayersSelected] = useState(false);
@@ -257,6 +259,7 @@ export const EditPlayersModal: React.FC<EditPlayersModalProps> = ({
                     .then(() => {
                       activeTournamentResetter();
                       modalModeSetter('none');
+                      resetTournaments();
                     })
                 }
               }

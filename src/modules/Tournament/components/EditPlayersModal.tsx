@@ -187,7 +187,7 @@ export const EditPlayersModal: React.FC<EditPlayersModalProps> = ({
                     //GAMES STARTED
                     // CANNOT SEND ONE PLAYER TO CREATE PAIRINGS. THAT IS THE REASON FOR IF ELSES BELOW
 
-                    if (unmatchedCompetitors.length < 2) {
+                    if (unmatchedCompetitors.length === 1) {
                       //ONE UNMATCHED PLAYER. SIMPLY CREATING BYE
                       const byeMatchup = { round: rounds, match: lastMatchNumFromCurrentPairings, player1: findIdentifier(unmatchedCompetitors[0]), player2: null };
                       //TODO-QUESTION: WHY DOES THIS NEED TO BE CONCAT AND NOT PUSH?
@@ -210,7 +210,7 @@ export const EditPlayersModal: React.FC<EditPlayersModalProps> = ({
                       //   window.alert('adding and removing players may result in duplicate matches')
                       // }
                     } else {
-                      //MORE THAN TWO UNMATCHED PLAYERS.
+                      //ZERO OR MORE THAN TWO UNMATCHED PLAYERS.
                       //CREATING PAIRINGS FOR UNMATCHED PLAYERS AND APPENDING
                       /*
                       TODO: DO WE NEED THIS ZOMBIE CODE. IS PART OF THE ORIGINAL
@@ -241,7 +241,10 @@ export const EditPlayersModal: React.FC<EditPlayersModalProps> = ({
                         })
                       }
                       */
-                      const newlyCreatedPairings = createPairings('edit', unmatchedCompetitors, rounds, analysis);
+                      let newlyCreatedPairings = [];
+                      if (unmatchedCompetitors.length) {
+                        newlyCreatedPairings = createPairings('edit', unmatchedCompetitors, rounds, analysis);
+                      }
                       newPairings = filteredPairings.concat(newlyCreatedPairings);
                     }
                   }

@@ -50,52 +50,52 @@ export const TournamentController = () => {
   useEffect(
     () => {
       console.log(newTournament)
-    },[newTournament]
+    }, [newTournament]
   )
   if (selectedTournament.id) {
     return <>
-      <ActiveTournament 
-        selectedTournament={selectedTournament} 
+      <ActiveTournament
+        selectedTournament={selectedTournament}
         selectTournament={setSelectedTournament}
-        selectClub={setSelectedClub} 
-        selectedClub={selectedClub} 
+        selectClub={setSelectedClub}
+        selectedClub={selectedClub}
         resetTourneys={resetTournaments}
         allClubMates={clubMatesAndGuests} />
     </>
   } else {
     return <>
       <main id="tournamentContainer">
-          <TournamentForm
-            clubs={myChessClubs}
-            selectedClub={selectedClub}
-            selectClub={setSelectedClub}
-            // playersAndGuests={clubMatesAndGuests}
-            resetTourneys={resetTournaments}
-            createTournament={createNewTournament}
-            setCreateTournament={setCreateNewTournament}
-            updater={updateNewTournament}
-            tournamentObj={newTournament} />
-          <article key="activeTournaments" id="activeTournamentsSection">
-            <h3 id="activeTournamentsHeader">my active tournaments</h3>
-            <TournamentList
-              tournaments={myOpenTournaments}
-              currentOrPast={'current'}
-              selectTournament={setSelectedTournament} />
-            <button className="pastTournamentsBtn setCustomFont" onClick={() => {
-              setShowPastTournaments(!showPastTournaments);
-              getMyPastTournaments()
-                .then(data => setPastTournaments(data))
-            }}>toggle past tournaments</button>
-            {
-              showPastTournaments
-                ?
-                <TournamentList
-                  tournaments={pastTournaments}
-                  currentOrPast={'past'}
-                  selectTournament={setSelectedTournament} />
-                : ""
-            }
-          </article>
+        <TournamentForm
+          clubs={myChessClubs}
+          selectedClub={selectedClub}
+          selectClub={setSelectedClub}
+          // playersAndGuests={clubMatesAndGuests}
+          resetTourneys={resetTournaments}
+          createTournament={createNewTournament}
+          setCreateTournament={setCreateNewTournament}
+          updater={updateNewTournament}
+          tournamentObj={newTournament} />
+        <article key="activeTournaments" id="activeTournamentsSection">
+          <h3 id="activeTournamentsHeader">my active tournaments</h3>
+          <TournamentList
+            tournaments={myOpenTournaments}
+            currentOrPast={'current'}
+            selectTournament={setSelectedTournament} />
+          <button className="pastTournamentsBtn setCustomFont" onClick={() => {
+            setShowPastTournaments(!showPastTournaments);
+            getMyPastTournaments()
+              .then(data => setPastTournaments(data))
+          }}>toggle past tournaments</button>
+          {
+            showPastTournaments
+              ?
+              <TournamentList
+                tournaments={pastTournaments}
+                currentOrPast={'past'}
+                selectTournament={setSelectedTournament} />
+              : ""
+          }
+        </article>
       </main>
     </>
   }

@@ -116,11 +116,11 @@ export const Scoring: React.FC<ScoringProps> = ({
                 )
               }
             }
-            return (
-              <div key={`${matchup.round} -- ${matchup.match} -- ${index}`}>
-                {matchup.player1}
-              </div>
-            )
+            // return (
+            //   <div key={`${matchup.round} -- ${matchup.match} -- ${index}`}>
+            //     {matchup.player1}
+            //   </div>
+            // )
           })
         }
       </section>

@@ -187,8 +187,8 @@ export const ActiveTournament: React.FC<ActiveTournamentProps> = ({
   useEffect(
     () => {
       const byePairing = currentRoundMatchups.find(pairing => pairing.player2 === null);
+      const byeCopy = { ...byeGame };
       if (byePairing) {
-        const byeCopy = { ...byeGame };
         byeCopy.player_b = {} as PlayerRelated | Guest;
         byeCopy.bye = true;
         byeCopy.win_style = "";
@@ -216,8 +216,8 @@ export const ActiveTournament: React.FC<ActiveTournamentProps> = ({
           }
         }
         // setByeGame(byeCopy)
-        byeGameRef.current = byeCopy;
       }
+      byeGameRef.current = byeCopy;
     }, [currentRoundMatchups, activeTournamentPlayers, byeGame, tournamentAnalysisObj, currentRound, selectedTournament.id, selectedTournament.time_setting]
   )
   useEffect(
@@ -309,7 +309,7 @@ export const ActiveTournament: React.FC<ActiveTournamentProps> = ({
             byeGame={byeGameRef}
             rounds={currentRound}
             analysis={tournamentAnalysisObj}
-            tourneyGames={tournamentGames} 
+            tourneyGames={tournamentGames}
             tournamentClub={selectedClub} />
           : modalMode === 'end-tournament' ?
             <EndTournamentModal />
@@ -346,9 +346,11 @@ export const ActiveTournament: React.FC<ActiveTournamentProps> = ({
         currentRound={currentRound}
         analysis={tournamentAnalysisObj}
         roundComplete={roundOver} />
-      <div className="setColor setTournamentFontSize">
-        Round {currentRound}
-      </div>
+      {currentRound ?
+        <div className="setColor setTournamentFontSize">
+          Round {currentRound}
+        </div>
+        : ""}
       <section id="matchupsContainer">
         {scoreMode === 'scoring' ?
           <Scoring

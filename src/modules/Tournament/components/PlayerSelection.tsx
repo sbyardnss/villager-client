@@ -6,6 +6,7 @@ import type { PlayerRelated } from "../../../Types/Player";
 import type { Guest } from "../../../Types/Guest";
 import type { NewTournament, Tournament } from "../../../Types/Tournament";
 import { type ChessClub, chessClubDefaults } from "../../../Types/ChessClub";
+import { findIdentifier } from "../actions/find-identifier";
 
 interface PlayerSelectionProps {
   editOrNew: 'new' | 'edit';
@@ -104,7 +105,8 @@ export const PlayerSelection: React.FC<PlayerSelectionProps> = ({
                       updateTournamentObj(tournamentCopy)
                       setSearch("");
                     }}>
-                    {p.full_name}
+                    {/* TODO: REMOVE FINDIDENTIFIER HERE */}
+                    {p.full_name} {findIdentifier(p)}
                   </li>
                 )
               })
@@ -124,7 +126,7 @@ export const PlayerSelection: React.FC<PlayerSelectionProps> = ({
                       tournamentCopy.competitors.splice(index, 1)
                       updateTournamentObj(tournamentCopy)
                     }}>
-                    {competitor?.full_name}
+                    {competitor?.full_name}  {findIdentifier(competitor)}
                   </li>
                 )
               })
@@ -139,7 +141,7 @@ export const PlayerSelection: React.FC<PlayerSelectionProps> = ({
                       tournamentCopy.guest_competitors.splice(index, 1)
                       updateTournamentObj(tournamentCopy)
                     }}>
-                    {competitor?.full_name}
+                    {competitor?.full_name}  {findIdentifier(competitor)}
                   </li>
                 )
               })

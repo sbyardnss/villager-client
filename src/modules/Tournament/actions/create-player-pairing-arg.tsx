@@ -22,7 +22,7 @@ export const playerArgCreator: PlayerArgCreatorFunction = (identifier, analysisO
   if (typeof identifier === 'string') {
     //TODO: IS THIS AN ISSUE USING ONLY GUEST TYPING HERE
     if (!activeTourneyPlayers.find((ap: PlayerRelated | Guest) => (ap as Guest).guest_id === identifier)) {
-      isActive = false
+      isActive = false;
     }
   }
   else {
@@ -34,7 +34,7 @@ export const playerArgCreator: PlayerArgCreatorFunction = (identifier, analysisO
     playerArg = {
       id: identifier,
       score: analysisObj.scoreObj[identifier] || 0,
-      colors: analysisObj.blackWhiteTally[identifier],
+      colors: analysisObj.blackWhiteTally[identifier] || [],
       avoid: analysisObj.playerOppRefObj[identifier] ? analysisObj.playerOppRefObj[identifier].filter(ref => ref !== 'bye') : []
     }
     if (analysisObj.playerOppRefObj[identifier]) {

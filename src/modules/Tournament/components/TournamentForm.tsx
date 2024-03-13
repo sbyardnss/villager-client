@@ -143,8 +143,10 @@ export const TournamentForm: React.FC<TournamentFormProps> = ({
                           });
                           const allCompetitorsPairing = playerPairingIds.concat(guestPairingIds);
                           const firstRoundPairings = Swiss(allCompetitorsPairing, 1)
+                          console.log(firstRoundPairings)
                           copy.pairings = firstRoundPairings;
                           copy.club = selectedClub.id;
+                          console.log(copy)
                           sendNewTournament(copy)
                             .then(() => {
                               resetTourneys();

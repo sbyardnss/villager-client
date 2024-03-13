@@ -35,7 +35,7 @@ export const ActiveTournament: React.FC<ActiveTournamentProps> = ({
   selectClub,
   selectedClub,
   resetTourneys,
-  allClubMates
+  allClubMates,
 }) => {
   const { localVillagerUser, myChessClubs } = useContext(AppContext);
 

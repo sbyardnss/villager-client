@@ -2,18 +2,18 @@ import { getClubMatesAndGuests, getMyOpenTournaments, getMyPastTournaments } fro
 import { useEffect, useState, useContext } from "react";
 import { AppContext } from "../App/AppProvider";
 import type { Guest } from "../../Types/Guest";
-import type { Match } from "tournament-pairings/dist/Match";
+// import type { Match } from "tournament-pairings/dist/Match";
 import { ActiveTournament } from "./components/ActiveTournament";
 import { TournamentForm } from "./components/TournamentForm";
 import { TournamentList } from "./components/TournamentList";
 import "../../styles/Tournament.css";
 import type { ChessClub } from "../../Types/ChessClub";
 import type { PlayerRelated } from "../../Types/Player";
-import type { TimeSetting } from "../../Types/TimeSetting";
+// import type { TimeSetting } from "../../Types/TimeSetting";
 import type { Tournament, NewTournament } from "../../Types/Tournament";
 
 export const TournamentController = () => {
-  const { localVillagerUser, myChessClubs } = useContext(AppContext);
+  const { myChessClubs } = useContext(AppContext);
   const [clubMatesAndGuests, setClubMatesAndGuests] = useState<(PlayerRelated | Guest)[]>([]);
   // const [timeSettings, setTimeSettings] = useState<TimeSetting[]>([]);
   const [myOpenTournaments, setMyOpenTournaments] = useState<Tournament[]>([]);

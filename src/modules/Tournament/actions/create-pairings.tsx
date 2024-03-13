@@ -45,7 +45,7 @@ export const createPairings: CreatePairingsFunction = (
             playerArgs.push(playerArgObj);
         }
       }
-
+      console.log('playerArgs', playerArgs)
       const newMatchupsSansBye = Swiss(playerArgs, targetRound, false, true)
       if (newMatchupsSansBye && !newMatchupsSansBye.filter(m => m.player2 === null).length) {
         const byePairing = { round: targetRound, match: tournamentPlayers.length / 2 + .5, player1: potentialByeIdentifier, player2: null };
@@ -71,6 +71,8 @@ export const createPairings: CreatePairingsFunction = (
         playerArgs.push(playerArgObj)
     }
     if (playerArgs) {
+      console.log('playerArgs', playerArgs)
+
       const pairings = Swiss(playerArgs, targetRound, false, true)
       if (pairings) {
         return pairings

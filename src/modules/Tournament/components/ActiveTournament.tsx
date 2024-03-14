@@ -310,10 +310,14 @@ export const ActiveTournament: React.FC<ActiveTournamentProps> = ({
             rounds={currentRound}
             analysis={tournamentAnalysisObj}
             tourneyGames={tournamentGames}
-            tournamentClub={selectedClub} 
+            tournamentClub={selectedClub}
             resetTournaments={resetTourneys} />
           : modalMode === 'end-tournament' ?
-            <EndTournamentModal />
+            <EndTournamentModal
+              resetTourneys={resetTourneys}
+              modalModeSetter={setModalMode}
+              selectTournament={selectTournament} 
+              selectedTournament={selectedTournament} />
             : ""}
       <div id="tournamentHeader">
         <div id="activeTournamentTitle" className="setColor setTournamentFontSize">{selectedTournament.title}</div>

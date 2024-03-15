@@ -2,25 +2,17 @@ import { SetStateAction } from "react";
 import { Guest } from "../../../Types/Guest";
 import { PlayerRelated } from "../../../Types/Player";
 import { checkIfUserIsAppCreator } from "../actions/check-if-creator";
-import { ScoreObjType, tournamentAnalysisOutput } from "../actions/matchup-game-analysis";
+import { tournamentAnalysisOutput } from "../actions/matchup-game-analysis";
 import { Tournament } from "../../../Types/Tournament";
-import { OutgoingGame } from "../../../Types/Game";
-import { findIdentifier } from "../actions/find-identifier";
 import { findByIdentifier } from "../actions/find-by-identifier";
 import { TieBreakDisplay } from "./TieBreakDisplay";
 
-// import type { ScoreObjType } from "../actions/matchup-game-analysis";
-/*
-arr input for tiebreaks:  [playerFullName, parseFloat(scoreObj[player], identifier)][]
-
-*/
 interface ResultsModalProps {
   allClubMates: (PlayerRelated | Guest)[];
   analysis: tournamentAnalysisOutput;
   modalModeSetter: React.Dispatch<SetStateAction<'none' | 'results' | 'edit-players' | 'end-tournament'>>;
   creatorBool: boolean;
   tournamentObj: Tournament;
-  // currentByeGame: React.RefObject<OutgoingGame>,
 }
 
 export const ResultsModal: React.FC<ResultsModalProps> = ({
@@ -29,7 +21,6 @@ export const ResultsModal: React.FC<ResultsModalProps> = ({
   modalModeSetter,
   creatorBool,
   tournamentObj,
-  // currentByeGame,
 }) => {
   // const isNewOrPastRound = () => {
   //   if (tournamentGames.find(tGame => tGame.tournament_round === currentRound)) {
@@ -72,7 +63,6 @@ export const ResultsModal: React.FC<ResultsModalProps> = ({
             })
           }
         </div>
-        {/* {tieBreakDisplay(arrForTieBreakers)} */}
         <TieBreakDisplay
           analysis={analysis}
           playerScores={resultArr} 
@@ -83,8 +73,6 @@ export const ResultsModal: React.FC<ResultsModalProps> = ({
           <button
             className="buttonStyleApprove"
             onClick={() => {
-              // setShowEndTournament(true)
-              // setShowResults(false)
               modalModeSetter('end-tournament');
             }}>End Tournament</button>
           : ""}
@@ -92,7 +80,6 @@ export const ResultsModal: React.FC<ResultsModalProps> = ({
           className="buttonStyleReject"
           onClick={() => {
             modalModeSetter('none');
-            // setShowResults(false)
           }}>cancel</button>
       </div>
     </div>

@@ -17,14 +17,20 @@ export type ScoreObjType = {
 //   [key: number]: number; // This part covers the number key
 // };
 
-export type TieBreakObject = {
+export type GameResult = {
   white: number | string;
   black: number | string | null;
-  winner: number | string;
+  winner: number | string | null;
   win_style: string | null;
   round: number;
 }
 
+// export type TieBreakObject = {
+//   [key: string | number]: {
+//     solkoff: number,
+//     cumulative: number,
+//   };
+// }
 //might need to be changed
 export type BlackWhiteTallyType = {
   // [key: string]: string[];
@@ -46,7 +52,7 @@ export type ScoreCardType = {
 export interface tournamentAnalysisOutput {
   scoreCard: ScoreCardType;
   scoreObj: ScoreObjType;
-  tieBreakData: TieBreakObject[];
+  tieBreakData: GameResult[];
   blackWhiteTally: BlackWhiteTallyType;
   playerOppRefObj: PlayerOppRefObjType;
 }
@@ -68,7 +74,8 @@ export const tournamentAnalysis: TournamentAnalysisFunction = (
 ) => {
   const playerOppObjForOutput: PlayerOppRefObjType = {}; // check
   const scoreCardForOutput: ScoreCardType = {}; // check
-  const tieBreakDataForOutput: TieBreakObject[] = []; // check
+  const tieBreakDataForOutput: GameResult[] = []; // check
+  // const tieBreakDataForOutput: TieBreakObject = {}; // check
   const blackWhiteForOutput: BlackWhiteTallyType = {}; // check
   const scoreObjForOutput: ScoreObjType = {}; // check
   // let gamesToIterate: (OutgoingGame | Game)[] = [];
@@ -83,7 +90,7 @@ export const tournamentAnalysis: TournamentAnalysisFunction = (
     const gameRound = game.tournament_round;
     let whitePlayerIdentifier: string | number = 0;
     let blackPlayerIdentifier: string | number = 0;
-    const gameResult: TieBreakObject = {} as TieBreakObject;
+    const gameResult: GameResult = {} as GameResult;
     if (game.player_w) {
       const identifier = findIdentifier(game.player_w);
       whitePlayerIdentifier = identifier;

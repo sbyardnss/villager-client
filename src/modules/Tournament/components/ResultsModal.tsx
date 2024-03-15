@@ -7,6 +7,7 @@ import { Tournament } from "../../../Types/Tournament";
 import { OutgoingGame } from "../../../Types/Game";
 import { findIdentifier } from "../actions/find-identifier";
 import { findByIdentifier } from "../actions/find-by-identifier";
+import { TieBreakDisplay } from "./TieBreakDisplay";
 
 // import type { ScoreObjType } from "../actions/matchup-game-analysis";
 /*
@@ -40,11 +41,11 @@ export const ResultsModal: React.FC<ResultsModalProps> = ({
   //   console.log('key', key)
   //   console.log('value', value)
   // })
-  console.log(analysis)
+  // console.log(analysis)
   const resultArr: [string, number, string][] =
     Object.entries(analysis.scoreObj).map(([key, value]): [string, number, string] => {
       const player = findByIdentifier(key, tournamentPlayers);
-      if (player){
+      if (player) {
         return [player.full_name, value, key];
       } else {
         return ['unknown', value, key];
@@ -52,7 +53,7 @@ export const ResultsModal: React.FC<ResultsModalProps> = ({
     }).sort((a: [string, number, string], b: [string, number, string]) => {
       return b[1] - a[1];
     });
-    console.log(resultArr)
+  console.log(resultArr)
   return (
     <div id="resultsModal">
       Results
@@ -72,6 +73,9 @@ export const ResultsModal: React.FC<ResultsModalProps> = ({
           }
         </div>
         {/* {tieBreakDisplay(arrForTieBreakers)} */}
+        <TieBreakDisplay
+          analysis={analysis}
+          results={resultArr} />
       </section>
       <div id="modalBtns">
         {tournamentObj?.complete === false && (creatorBool || checkIfUserIsAppCreator()) ?

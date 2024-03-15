@@ -15,7 +15,7 @@ arr input for tiebreaks:  [playerFullName, parseFloat(scoreObj[player], identifi
 
 */
 interface ResultsModalProps {
-  tournamentPlayers: (PlayerRelated | Guest)[];
+  allClubMates: (PlayerRelated | Guest)[];
   analysis: tournamentAnalysisOutput;
   modalModeSetter: React.Dispatch<SetStateAction<'none' | 'results' | 'edit-players' | 'end-tournament'>>;
   creatorBool: boolean;
@@ -24,7 +24,7 @@ interface ResultsModalProps {
 }
 
 export const ResultsModal: React.FC<ResultsModalProps> = ({
-  tournamentPlayers,
+  allClubMates,
   analysis,
   modalModeSetter,
   creatorBool,
@@ -44,7 +44,7 @@ export const ResultsModal: React.FC<ResultsModalProps> = ({
   // console.log(analysis)
   const resultArr: [string, number, string][] =
     Object.entries(analysis.scoreObj).map(([key, value]): [string, number, string] => {
-      const player = findByIdentifier(key, tournamentPlayers);
+      const player = findByIdentifier(key, allClubMates);
       if (player) {
         return [player.full_name, value, key];
       } else {
@@ -75,7 +75,8 @@ export const ResultsModal: React.FC<ResultsModalProps> = ({
         {/* {tieBreakDisplay(arrForTieBreakers)} */}
         <TieBreakDisplay
           analysis={analysis}
-          playerScores={resultArr} />
+          playerScores={resultArr} 
+          allClubMates={allClubMates}/>
       </section>
       <div id="modalBtns">
         {tournamentObj?.complete === false && (creatorBool || checkIfUserIsAppCreator()) ?

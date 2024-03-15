@@ -2,44 +2,43 @@ import { useEffect, useState } from "react";
 import type { Guest } from "../../../Types/Guest";
 import type { PlayerRelated } from "../../../Types/Player";
 import type { tournamentAnalysisOutput } from "../actions/matchup-game-analysis";
-import { tieBreakers, type TieBreakObject } from "../actions/tie-breakers";
-
-/*
-arr input for tiebreaks:  [playerFullName, parseFloat(scoreObj[player], identifier)][]
-
-*/
+import { tieBreakers } from "../actions/tie-breakers";
+import { findByIdentifier } from "../actions/find-by-identifier";
 
 interface TieBreakDisplayProps {
-  // tournamentPlayers: (PlayerRelated | Guest)[];
+  allClubMates: (PlayerRelated | Guest)[];
   analysis: tournamentAnalysisOutput;
   playerScores: [string, number, string][];
 }
 
 export const TieBreakDisplay: React.FC<TieBreakDisplayProps> = ({
-  // tournamentPlayers,
+  allClubMates,
   analysis,
   playerScores,
 }) => {
-  const [tieBreaks, setTieBreaks] = useState<TieBreakObject>({ solkoff: {}, cumulative: {} });
+  const [solkoff, setSolkoff] = useState<[string, number][]>([]);
+  const [cumulative, setCumulative] = useState<[string, number][]>([]);
 
   useEffect(
     () => {
       const tieBreakData = tieBreakers(analysis, playerScores);
-      setTieBreaks(tieBreakData);
+      const solkoffEntries = Object.entries(tieBreakData.solkoff).sort((a, b) => b[1] - a[1]);
+      const cumulativeEntries = Object.entries(tieBreakData.cumulative).sort((a, b) => b[1] - a[1]);
+      //TODO: WHY WOULDN'T THIS WORK?
+      // const sortedSolkoff = Object.fromEntries(Object.entries(tieBreakData.solkoff).sort((a, b) => b[1] - a[1]));
+      setSolkoff(solkoffEntries);
+      setCumulative(cumulativeEntries);
     }, [analysis, playerScores]
   )
-  // const solkoffResultsArr = solkoffTieBreaker(analysis);
-  // console.log('tiebreaks', tieBreakers(analysis, results))
-  console.log('state variable', tieBreaks);
+
   return (
     <div id="tieBreakResults">
       <div id="fullResults">
         <div className="resultsHeader">solkoff</div>
         <div id="solkoffResults">
-          {/* {
-            solkoffResultsArr.map(playerResult => {
-              const player = typeof playerResult[0] === 'string' ? allPlayersArr.find(player => player.guest_id === playerResult[0])
-                : allPlayersArr.find(player => player.id === playerResult[0])
+          {
+            solkoff.map(playerResult => {
+              const player = findByIdentifier(playerResult[0], allClubMates);
               return (
                 <div key={playerResult[0] + '--' + playerResult[1]} className="resultsModalListItem">
                   <div>{player?.full_name}: </div>
@@ -47,21 +46,15 @@ export const TieBreakDisplay: React.FC<TieBreakDisplayProps> = ({
                 </div>
               )
             })
-          } */}
-          {/* {
-            Object.keys(tieBreaks.solkoff).forEach(player => {
-
-            })
-          } */}
+          }
         </div>
       </div>
       <div id="fullResults">
         <div className="resultsHeader">cumulative</div>
         <div id="cumulativeResults">
-          {/* {
-            cumulativeResultsArr.map(playerResult => {
-              const player = typeof playerResult[0] === 'string' ? allPlayersArr.find(player => player.guest_id === playerResult[0])
-                : allPlayersArr.find(player => player.id === playerResult[0])
+          {
+            cumulative.map(playerResult => {
+              const player = findByIdentifier(playerResult[0], allClubMates);
               return (
                 <div key={playerResult[0] + '--' + playerResult[1]} className="resultsModalListItem">
                   <div>{player?.full_name}: </div>
@@ -69,7 +62,7 @@ export const TieBreakDisplay: React.FC<TieBreakDisplayProps> = ({
                 </div>
               )
             })
-          } */}
+          }
         </div>
       </div>
     </div>

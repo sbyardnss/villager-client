@@ -1,4 +1,4 @@
-import type { PlayerRelated, Player } from "../../../Types/Player";
+import type { PlayerRelated } from "../../../Types/Player";
 import type { Guest } from "../../../Types/Guest";
 
 export const findIdentifier = (playerObj: Guest | PlayerRelated): number | string => {

@@ -300,7 +300,7 @@ export const ActiveTournament: React.FC<ActiveTournamentProps> = ({
     <main id="tournamentContainer">
       {modalMode === 'results' ?
         <ResultsModal
-          tournamentPlayers={allClubMates}
+          allClubMates={allClubMates}
           modalModeSetter={setModalMode}
           analysis={tournamentAnalysisObj}
           creatorBool={tournamentCreatorBool}

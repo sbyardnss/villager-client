@@ -110,7 +110,7 @@ export const ActiveTournament: React.FC<ActiveTournamentProps> = ({
       }
       const chosenClub = myChessClubs.find((club: ChessClub) => club.id === selectedTournament.club);
       selectClub(chosenClub)
-      console.log(selectedTournament)
+      // console.log(selectedTournament)
     }, [selectedTournament, selectClub, myChessClubs, localVillagerUser.userId]
   )
   useEffect(
@@ -198,7 +198,6 @@ export const ActiveTournament: React.FC<ActiveTournamentProps> = ({
         if (typeof byePairing.player1 === 'string') {
           const guestPlayer = activeTournamentPlayers.find(p => (p as Guest).guest_id === byePairing.player1)
           // byeCopy.winner_model_type = 'guestplayer';
-          console.log(byeCopy)
           if (guestPlayer) {
             byeCopy.player_w_model_type = 'guestplayer';
             byeCopy.winner_model_type = getModelTypeForApi(guestPlayer);

@@ -1,7 +1,8 @@
+import { useEffect, useState } from "react";
 import type { Guest } from "../../../Types/Guest";
 import type { PlayerRelated } from "../../../Types/Player";
 import type { tournamentAnalysisOutput } from "../actions/matchup-game-analysis";
-import { tieBreakers } from "../actions/tie-breakers";
+import { tieBreakers, type TieBreakObject } from "../actions/tie-breakers";
 
 /*
 arr input for tiebreaks:  [playerFullName, parseFloat(scoreObj[player], identifier)][]
@@ -19,15 +20,23 @@ export const TieBreakDisplay: React.FC<TieBreakDisplayProps> = ({
   analysis,
   results,
 }) => {
+  const [tieBreaks, setTieBreaks] = useState<TieBreakObject>({});
+
+  useEffect(
+    () => {
+      const tieBreakData = tieBreakers(analysis);
+      setTieBreaks(tieBreakData);
+    },[analysis, results]
+  )
   // const solkoffResultsArr = solkoffTieBreaker(analysis);
-  console.log('tiebreaks', tieBreakers(analysis))
+  // console.log('tiebreaks', tieBreakers(analysis, results))
+  console.log('state variable', tieBreaks);
   return (
     <div id="tieBreakResults">
-      {/* {solkoffTieBreaker(analysis)} */}
-      {/* <div id="fullResults">
+      <div id="fullResults">
         <div className="resultsHeader">solkoff</div>
         <div id="solkoffResults">
-          {
+          {/* {
             solkoffResultsArr.map(playerResult => {
               const player = typeof playerResult[0] === 'string' ? allPlayersArr.find(player => player.guest_id === playerResult[0])
                 : allPlayersArr.find(player => player.id === playerResult[0])
@@ -38,13 +47,18 @@ export const TieBreakDisplay: React.FC<TieBreakDisplayProps> = ({
                 </div>
               )
             })
-          }
+          } */}
+          {/* {
+            Object.keys(tieBreaks.solkoff).forEach(player => {
+
+            })
+          } */}
         </div>
       </div>
       <div id="fullResults">
         <div className="resultsHeader">cumulative</div>
         <div id="cumulativeResults">
-          {
+          {/* {
             cumulativeResultsArr.map(playerResult => {
               const player = typeof playerResult[0] === 'string' ? allPlayersArr.find(player => player.guest_id === playerResult[0])
                 : allPlayersArr.find(player => player.id === playerResult[0])
@@ -55,9 +69,9 @@ export const TieBreakDisplay: React.FC<TieBreakDisplayProps> = ({
                 </div>
               )
             })
-          }
+          } */}
         </div>
-      </div> */}
+      </div>
     </div>
   )
 }

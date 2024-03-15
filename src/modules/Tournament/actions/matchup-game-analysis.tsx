@@ -7,9 +7,9 @@ import { updateTieBreakAndScoreCardData } from "./update-tie-break-score-card-da
 
 
 export type ScoreObjType = {
-  [key: string]: number; // This part covers the string keys
-} & {
-  [key: number]: number; // This part covers the number key
+  [key: string | number]: number; // This part covers the string keys
+// } & {
+//   [key: number]: number; // This part covers the number key
 };
 // export type ScoreObjType = {
 //   [key: string]: number; // This part covers the string keys

@@ -1,13 +1,24 @@
-import type { tournamentAnalysisOutput } from "./matchup-game-analysis";
+import type { ScoreObjType, tournamentAnalysisOutput } from "./matchup-game-analysis";
 
+export type TieBreakObject = {
+  [key: string | number]: {
+    // name: string,
+    solkoff: number,
+    cumulative: number,
+  };
+}
 
+const tieBreakPlayerDefaults = {
+  solkoff: 0,
+  cumulative: 0,
+}
 
 
 
 type TieBreakerFunction = (
   analysis: tournamentAnalysisOutput,
   // playerArr: [string, number, string][],
-) => any;
+) => TieBreakObject;
 
 // type cumulativeTieBreakerFunction = (
 
@@ -17,65 +28,56 @@ export const tieBreakers: TieBreakerFunction = (
   analysis,
   // playerArr,
 ) => {
-  // const solkoffTieBreakArr = [];
-  console.log(analysis);
-  // console.log(playerArr)
-  const solkoffTieBreakObj: { [key: string | number]: number } = {};
-  const cumulativeTieBreakObj: { [key: string | number]: number } = {};
 
+  const tieBreaksForOutput: TieBreakObject = {};
   for (const gameResult of analysis.tieBreakData) {
-    console.log(gameResult)
-    const whiteIdentifier = gameResult.white;
-    const blackIdentifier = gameResult.black;
-    // if (!solkoffTieBreakObj[gameResult.white]) {
-    //   solkoffTieBreakObj[gameResult.white] = 0;
-    // } else {
-    //   if (gameResult.winner === gameResult.white) {
+    if (gameResult.black) {
+      if (gameResult.winner) {
+        const winnerKey = gameResult.winner;
+        const loserKey = gameResult.winner === gameResult.white ? gameResult.black : gameResult.white;
 
-    //   }
-    // }
+        //if winner of normal game
+        if (!tieBreaksForOutput[winnerKey]) {
+          tieBreaksForOutput[winnerKey] = { ...tieBreakPlayerDefaults, solkoff: analysis.scoreObj[loserKey], cumulative: 1 };
+        } else {
+          tieBreaksForOutput[winnerKey].solkoff += analysis.scoreObj[loserKey];
+          tieBreaksForOutput[winnerKey].cumulative += (tieBreaksForOutput[winnerKey].cumulative + 1);
+        }
+        //loser of normal game
+        if (!tieBreaksForOutput[loserKey]) {
+          tieBreaksForOutput[loserKey] = { ...tieBreakPlayerDefaults, solkoff: analysis.scoreObj[winnerKey], cumulative: 0 };
+        } else {
+          tieBreaksForOutput[loserKey].solkoff += analysis.scoreObj[winnerKey];
+          tieBreaksForOutput[loserKey].cumulative += (tieBreaksForOutput[loserKey].cumulative);
+        }
+      }
 
-    // if (gameResult.black && !solkoffTieBreakObj[gameResult.black]) {
-    //   solkoffTieBreakObj[gameResult.black] = 0;
-    // }
+      //draw game
+      if (gameResult.win_style === 'draw') {
 
-    // if (!cumulativeTieBreakObj[gameResult.white]) {
-    //   cumulativeTieBreakObj[gameResult.white] = 0;
-    // }
+        //white
+        if (!tieBreaksForOutput[gameResult.white]) {
+          tieBreaksForOutput[gameResult.white] = { ...tieBreakPlayerDefaults, solkoff: analysis.scoreObj[gameResult.black], cumulative: .5 };
+        } else {
+          tieBreaksForOutput[gameResult.white].solkoff += analysis.scoreObj[gameResult.black];
+          tieBreaksForOutput[gameResult.white].cumulative += (tieBreaksForOutput[gameResult.white].cumulative + .5);
+        }
+        //black
+        if (!tieBreaksForOutput[gameResult.black]) {
+          tieBreaksForOutput[gameResult.black] = { ...tieBreakPlayerDefaults, solkoff: analysis.scoreObj[gameResult.white], cumulative: .5 };
+        } else {
+          tieBreaksForOutput[gameResult.black].cumulative += (tieBreaksForOutput[gameResult.black].cumulative + .5);
+        }
+      }
+    } else {
 
-    // if (gameResult.black && !cumulativeTieBreakObj[gameResult.black]) {
-    //   cumulativeTieBreakObj[gameResult.black] = 0;
-    // }
-
-    //NEED AN OBJECT WITH IDENTIFIER AS KEY AND NUMBER AS SCORE
-    //NEED 0 FOR ANY PLAYER THAT HAS NO SCORE
-    if (!gameResult.winner)
-      console.log(gameResult)
-    if (blackIdentifier) {
-      // console.log(gameResult)
-      // console.log(typeof analysis.scoreObj[blackIdentifier])
-      // if (solkoffTieBreakObj[gameResult.winner]) {
-      //   solkoffTieBreakObj[gameResult.winner] += analysis.scoreObj[blackIdentifier];
-      // } else {
-      //   solkoffTieBreakObj[gameResult.winner] = analysis.scoreObj[blackIdentifier];
-      // }
-      // if (!solkoffTieBreakObj[gameResult.winner]) {
-      //   solkoffTieBreakObj[gameResult.winner] = 0;
-      // }
-      // solkoffTieBreakObj[gameResult.winner] = analysis.scoreObj[blackIdentifier];
+      //bye
+      if (!tieBreaksForOutput[gameResult.white]) {
+        tieBreaksForOutput[gameResult.white] = { ...tieBreakPlayerDefaults, solkoff: 0, cumulative: .5 };
+      } else {
+        tieBreaksForOutput[gameResult.white].cumulative += tieBreaksForOutput[gameResult.white].cumulative;
+      }
     }
-    // if (gameResult.winner === gameResult.white) {
-    //   solkoffTieBreakObj[gameResult]
-    // }
   }
-
-  return [solkoffTieBreakObj, cumulativeTieBreakObj];
+  return tieBreaksForOutput;
 }
-
-
-
-
-
-// export const cumulativeTieBreaker: cumulativeTieBreakerFunction = () => {
-
-// }

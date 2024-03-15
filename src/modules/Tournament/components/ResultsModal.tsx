@@ -75,7 +75,7 @@ export const ResultsModal: React.FC<ResultsModalProps> = ({
         {/* {tieBreakDisplay(arrForTieBreakers)} */}
         <TieBreakDisplay
           analysis={analysis}
-          results={resultArr} />
+          playerScores={resultArr} />
       </section>
       <div id="modalBtns">
         {tournamentObj?.complete === false && (creatorBool || checkIfUserIsAppCreator()) ?

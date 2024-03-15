@@ -12,21 +12,21 @@ arr input for tiebreaks:  [playerFullName, parseFloat(scoreObj[player], identifi
 interface TieBreakDisplayProps {
   // tournamentPlayers: (PlayerRelated | Guest)[];
   analysis: tournamentAnalysisOutput;
-  results: [string, number, string][];
+  playerScores: [string, number, string][];
 }
 
 export const TieBreakDisplay: React.FC<TieBreakDisplayProps> = ({
   // tournamentPlayers,
   analysis,
-  results,
+  playerScores,
 }) => {
-  const [tieBreaks, setTieBreaks] = useState<TieBreakObject>({});
+  const [tieBreaks, setTieBreaks] = useState<TieBreakObject>({ solkoff: {}, cumulative: {} });
 
   useEffect(
     () => {
-      const tieBreakData = tieBreakers(analysis);
+      const tieBreakData = tieBreakers(analysis, playerScores);
       setTieBreaks(tieBreakData);
-    },[analysis, results]
+    }, [analysis, playerScores]
   )
   // const solkoffResultsArr = solkoffTieBreaker(analysis);
   // console.log('tiebreaks', tieBreakers(analysis, results))

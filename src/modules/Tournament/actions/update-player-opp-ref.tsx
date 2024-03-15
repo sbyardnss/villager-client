@@ -6,7 +6,8 @@ export const updatePlayerOppRefObj = (
   bIdentifier?: string | number | null,
 ) => {
   const byeOrBlackIdentifier = bIdentifier ? bIdentifier : 'bye';
-
+  //TODO: CHECK IF BIDENTIFIER UNCONTROLLED WHEN SHIFTING BETWEEN BYE GAMES. LOOK AT LOG AND SEE NULLS AND UNDEFINED
+  // console.log('bIdentifier', bIdentifier)
   if (refObj[wIdentifier]) {
     refObj[wIdentifier].push(byeOrBlackIdentifier);
   } else {

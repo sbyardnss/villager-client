@@ -11,6 +11,11 @@ export type ScoreObjType = {
 } & {
   [key: number]: number; // This part covers the number key
 };
+// export type ScoreObjType = {
+//   [key: string]: number; // This part covers the string keys
+// } & {
+//   [key: number]: number; // This part covers the number key
+// };
 
 export type TieBreakObject = {
   white: number | string;
@@ -66,11 +71,15 @@ export const tournamentAnalysis: TournamentAnalysisFunction = (
   const tieBreakDataForOutput: TieBreakObject[] = []; // check
   const blackWhiteForOutput: BlackWhiteTallyType = {}; // check
   const scoreObjForOutput: ScoreObjType = {}; // check
-  let gamesToIterate: (OutgoingGame | Game)[] = [];
-  if (byeGame.current) {
-    gamesToIterate = (games as (OutgoingGame | Game)[]).concat(byeGame.current);
-  }
-  for (const game of gamesToIterate) {
+  // let gamesToIterate: (OutgoingGame | Game)[] = [];
+  // if (byeGame.current?.player_w.id) {
+  //   gamesToIterate = (games as (OutgoingGame | Game)[]).concat(byeGame.current);
+  // } else {
+  //   gamesToIterate = games;
+  // }
+  // gamesToIterate = games;
+  // console.log(games)
+  for (const game of games) {
     const gameRound = game.tournament_round;
     let whitePlayerIdentifier: string | number = 0;
     let blackPlayerIdentifier: string | number = 0;
@@ -80,7 +89,7 @@ export const tournamentAnalysis: TournamentAnalysisFunction = (
       whitePlayerIdentifier = identifier;
       gameResult.white = identifier;
     }
-    if (game.player_b){
+    if (game.player_b && game.player_b.id){
       const identifier = findIdentifier(game.player_b);
       blackPlayerIdentifier = identifier;
       gameResult.black = identifier;

@@ -9,61 +9,70 @@ import { Tournament } from "./Tournament/Tournament"
 import { PlayProvider } from "./Play/PlayProvider"
 // import { ChessClubs } from "./ChessClubs/ChessClubs"
 import { ChessClubs } from "./modules/ChessClubs/ChessClubs"
-import { TournamentProvider } from "./modules/Tournaments/controllers/TournamentProvider";
+// import { TournamentProvider } from "./modules/Tournaments_old/controllers/TournamentProvider";
 import { AppProvider } from "./modules/App/AppProvider";
 import { HomePage } from "./components/HomePage";
+import { TournamentController } from "./modules/Tournament/Tournament"
 
 export const ApplicationViews = () => {
-    // return (
-    //     <Routes>
-    //         <Route path="/" element={
-    //             <>
-    //                 <Outlet />
-    //             </>
-    //         }>
-    //             <Route path="" element={
-    //                 <PlayProvider>
-    //                     <HomePage />
-    //                 </PlayProvider>
-    //             } />
-    //             {/* <Route path="userList" element={<UserList />} /> */}
-    //             <Route path="play" element={
-    //                 <PlayProvider>
-    //                     <Play />
-    //                 </PlayProvider>
-    //             } />
+  // return (
+  //     <Routes>
+  //         <Route path="/" element={
+  //             <>
+  //                 <Outlet />
+  //             </>
+  //         }>
+  //             <Route path="" element={
+  //                 <PlayProvider>
+  //                     <HomePage />
+  //                 </PlayProvider>
+  //             } />
+  //             {/* <Route path="userList" element={<UserList />} /> */}
+  //             <Route path="play" element={
+  //                 <PlayProvider>
+  //                     <Play />
+  //                 </PlayProvider>
+  //             } />
 
-    //             <Route path="profile" element={
-    //                 <PlayProvider>
-    //                     <Profile />
-    //                 </PlayProvider>
-    //             } />
-    //             <Route path="messages" element={<Messages />} />
-    //             <Route path="tournament" element={
-    //                 <TournamentProvider>
-    //                     <Tournament />
-    //                 </TournamentProvider>
-    //             } />
-    //             <Route path="clubs" element={<ChessClubs />} />
-    //         </Route>
-    //     </Routes>
-    // )
-    return (
-        <AppProvider>
-            <Routes>
-                <Route path="/" element={
-                    <>
-                        <Outlet />
-                    </>
-                }>
-                    <Route path="" element={
-                        <PlayProvider>
-                            <HomePage />
-                        </PlayProvider>
-                    } />
-                </Route>
-                <Route path="clubs" element={<ChessClubs />} />
-            </Routes>
-        </AppProvider>
-    )
+  //             <Route path="profile" element={
+  //                 <PlayProvider>
+  //                     <Profile />
+  //                 </PlayProvider>
+  //             } />
+  //             <Route path="messages" element={<Messages />} />
+  //             <Route path="tournament" element={
+  //                 <TournamentProvider>
+  //                     <Tournament />
+  //                 </TournamentProvider>
+  //             } />
+  //             <Route path="clubs" element={<ChessClubs />} />
+  //         </Route>
+  //     </Routes>
+  // )
+  return (
+    <AppProvider>
+      <Routes>
+        <Route path="/" element={
+          <>
+            <Outlet />
+          </>
+        }>
+          <Route path="" element={
+            <PlayProvider>
+              <HomePage />
+            </PlayProvider>
+          } />
+          <Route path="play" element={
+            <PlayProvider>
+              <Play />
+            </PlayProvider>
+          } />
+        </Route>
+        <Route path="clubs" element={<ChessClubs />} />
+        <Route path="tournament" element={
+          <TournamentController />
+        } />
+      </Routes>
+    </AppProvider>
+  )
 }

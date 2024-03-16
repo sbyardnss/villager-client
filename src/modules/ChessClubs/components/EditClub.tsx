@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef, useContext } from "react"
 import { updateClub, deleteChessClub, removeClubPassword } from "../../../ServerManager"
 import { handleFormChange } from "../actions/handle-form-change";
-import { ChessClub, ChessClubEdit } from "../types/ChessClub";
+import { ChessClub, ChessClubEdit } from "../../../Types/ChessClub";
 import { AppContext } from "../../App/AppProvider";
 import { showAlertModal } from "../../../shared/AlertModal/alert-modal";
 
@@ -31,7 +31,7 @@ export const EditClub: React.FC<EditClubProps> = ({ clubId, clubObj, setClub, re
     members: [],
     manager: {
       id: 0,
-      username: "",
+      // username: "",
       full_name: ""
     }
   });

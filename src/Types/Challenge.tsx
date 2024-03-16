@@ -9,7 +9,7 @@ export interface ChallengeNew {
   computer_opponent: boolean;
   winner: number | null;
 }
-
+//TODO: ADJUST POST FOR CHALLENGE TO ACCEPT FULL PLAYER OBJECT SO THAT WE MAY CONSOLIDATE TYPES
 export interface ChallengeCreated {
   id: number,
   player_w: PlayerRelated | null;

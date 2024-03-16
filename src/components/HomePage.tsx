@@ -10,9 +10,10 @@ import trophyIcon from "../images/small_trophy_with_background.png";
 import { AppContext } from "../modules/App/AppProvider";
 import type { CommunityPost } from "../Types/CommunityPost";
 import type { Game } from "../Types/Game";
-import type { ChessClub } from "../modules/App/types";
+import type { ChessClub } from "../Types/ChessClub";
+
 import type { PlayerRelated } from "../Types/Player";
-import type { Tournament } from "../modules/Tournaments/types";
+import type { Tournament } from "../Types/Tournament";
 import type { ChallengeCreated, ChallengeEditing, ChallengeNew } from "../Types/Challenge";
 import type { Puzzle } from "../Types/Puzzle";
 
@@ -60,7 +61,7 @@ export const HomePage = () => {
         .then(([challengeData, openGameData]) => {
           const myCreatedChallenges: ChallengeCreated[] = [];
           const othersChallenges = [];
-          challengeData.map((c: ChallengeCreated) => {
+          challengeData.forEach((c: ChallengeCreated) => {
             if (c.player_w?.id === localVillagerUser.userId || c.player_b?.id === localVillagerUser.userId) {
               myCreatedChallenges.push(c);
             } else {
@@ -71,7 +72,7 @@ export const HomePage = () => {
           setChallenges(challengeData);
           setUsersActiveGames(openGameData);
         })
-    }, []
+    }, [localVillagerUser.userId]
   )
   useEffect(
     () => {
@@ -339,7 +340,7 @@ export const HomePage = () => {
                     return (
                       <li key={post.id} className="communityPost">
                         <h3>
-                          {post.poster?.username}
+                          {post.poster?.full_name}
                         </h3>
                         <h5>{date} {time}</h5>
                         <div className="communityPostWithDelete">
@@ -353,7 +354,7 @@ export const HomePage = () => {
                     return (
                       <li key={post.id} className="communityPost">
                         <h3>
-                          {post.poster?.username}
+                          {post.poster?.full_name}
                         </h3>
                         <h5>{date} {time}</h5>
                         {post.message}</li>
@@ -415,7 +416,7 @@ export const HomePage = () => {
                           <div key={ug.id} className={isTournamentGame()} id={isSelected()}>
                             <div><span id={ug.player_w?.id === localVillagerUser.userId ? "whiteChallengeSpan" : "blackChallengeSpan"}>{ug.player_w?.id === localVillagerUser.userId ? "white" : "black"}</span></div>
                             <div className="activeGameInfo">
-                              <div className="opponentSectionForListItem">vs {opponent.username}</div>
+                              <div className="opponentSectionForListItem">vs {opponent.full_name}</div>
                               <div>{ug.tournament ? <img className="trophyIconHomepage" alt="trophy" src={trophyIcon} /> : ""}</div>
                               <div className="myGamesListLogisticsInfo">
                                 <div>{tournament?.title || ""}</div>
@@ -431,6 +432,8 @@ export const HomePage = () => {
                               }}>select</button>
                           </div>
                         )
+                      } else {
+                        return null;
                       }
                     })
                   }
@@ -531,7 +534,7 @@ export const HomePage = () => {
                           {/* <div>Challenger:</div> */}
                           <div className="challengerInfo">
                             <div>
-                              Play as <span id={c.player_w ? "blackChallengeSpan" : "whiteChallengeSpan"}>{c.player_w ? "black" : "white"}</span> vs <span id={c.player_w ? "whiteChallengeSpan" : "blackChallengeSpan"}>{challengingPlayer.username}</span>
+                              Play as <span id={c.player_w ? "blackChallengeSpan" : "whiteChallengeSpan"}>{c.player_w ? "black" : "white"}</span> vs <span id={c.player_w ? "whiteChallengeSpan" : "blackChallengeSpan"}>{challengingPlayer.full_name}</span>
                             </div>
                             <button className="challengeBtn buttonStyleAmbiguous"
                               onClick={() => {
@@ -548,6 +551,8 @@ export const HomePage = () => {
                         </div>
                       </div>
                     )
+                  } else {
+                    return null;
                   }
                 })
               }

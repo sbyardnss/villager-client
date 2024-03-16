@@ -1,9 +1,9 @@
-import React, { useState, useRef } from "react"
+import { useRef } from "react"
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom"
 import "./Auth.css"
 import { loginUser } from "../ServerManager";
-import graffiti from "../images/villager_graffiti.png"
+// import graffiti from "../images/villager_graffiti.png"
 import skellyHand from "../images/Copy of The Villager Skull Hand.png"
 export const Login = () => {
     const username = useRef()
@@ -41,7 +41,7 @@ export const Login = () => {
             <section id="loginBox">
                 <form className="form--login" onSubmit={handleLogin}>
                     <h1>{window.innerWidth > 630 ? "ONLY STYLED FOR MOBILE BEYOND THIS POINT": ""}</h1> 
-            <img id="skellyHand" src={skellyHand}></img>
+            <img id="skellyHand" src={skellyHand} alt="skeleton_hand"></img>
             {/* <h4>currently down for maintenance</h4>
                     <h4>will be back up Wednesday 7/19</h4> */}
                     <fieldset id="centerItems">

@@ -20,6 +20,12 @@ export function setupTournaments() {
 
   cy.intercept(
     'GET',
+    '*/players/club_mates',
+    { fixture: 'tournaments/load-all-guests.json' }
+  ).as('loadClubMates')
+
+  cy.intercept(
+    'GET',
     '/timesettings',
     { fixture: 'tournaments/load-all-time-settings.json' }
   ).as('loadAllTimes')
@@ -29,6 +35,7 @@ export function setupTournaments() {
     '/tournaments/my_open_tournaments',
     { fixture: 'tournaments/load-my-tournaments.json' }
   ).as('loadMyTournaments')
+
   cy.intercept(
     'GET',
     '/games/1/get_selected_tournament_games',

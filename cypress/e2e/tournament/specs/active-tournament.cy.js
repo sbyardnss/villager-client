@@ -1,5 +1,5 @@
 import { setupTournaments } from "../actions/setup-tournaments";
-
+//npm run cypress:open
 describe('Active Tournament Functionality', () => {
   beforeEach(() => {
     // cy.login();
@@ -14,8 +14,8 @@ describe('Active Tournament Functionality', () => {
   it('User can select tournament to load', () => {
     cy.visit('/tournament');
     cy.wait('@loadChessClubs');
-    cy.wait('@loadAllPlayers');
-    cy.wait('@loadAllGuests');
+    // cy.wait('@loadAllPlayers');
+    // cy.wait('@loadAllGuests');
     cy.wait('@loadMyTournaments');
     // cy.wait(2000);
     cy.get('[data-cy="tournament--1"]')

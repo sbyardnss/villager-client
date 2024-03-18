@@ -1,13 +1,13 @@
 import "../../styles/HomePage.css"
 // import { React, useContext, useState, useEffect, useRef, KeyboardEvent, ChangeEventHandler } from "react"
-import { useContext, useState, useEffect, KeyboardEvent } from "react"
+import { useState, useEffect, KeyboardEvent } from "react"
 import { Chessboard } from "react-chessboard"
 // import Chess from "chess.js"
-import { getMyClubsCommunityPosts, getActiveUserGames, getOpenChallenges, acceptChallenge, deleteChallengeGame, deleteCommunityPost, getAllCommunityPosts, getTournament, sendNewGame, submitNewPostToAPI } from "../../ServerManager"
-import { PlayContext } from "../../Play/PlayProvider"
+import { getMyClubsCommunityPosts, getOpenChallenges, acceptChallenge, deleteChallengeGame, deleteCommunityPost, getAllCommunityPosts, getTournament, sendNewGame, submitNewPostToAPI } from "../../ServerManager"
+// import { PlayContext } from "../../Play/PlayProvider"
 import { useNavigate } from "react-router-dom"
 import trophyIcon from "../../images/small_trophy_with_background.png";
-import { AppContext, useAppContext } from "../App/AppProvider";
+import { useAppContext } from "../App/AppProvider";
 import type { CommunityPost } from "../../Types/CommunityPost";
 import type { Game } from "../../Types/Game";
 import type { ChessClub } from "../../Types/ChessClub";
@@ -39,7 +39,7 @@ export const HomePage = () => {
 
   //POTENTIALLY TEMPORARY BEGIN
   // const { games, resetGames, updateSelectedGameObj, selectedGame, setSelectedGame, setSelectedRange, puzzles } = usePlayContext();
-  const { selectedGame, updateSelectedGame, usersActiveGames, setUsersActiveGames, resetUserGames, selectedRange, setSelectedRange } = usePlayContext();
+  const { selectedGame, updateSelectedGame, usersActiveGames, resetUserGames, selectedRange, setSelectedRange } = usePlayContext();
   const [myChallenges, setMyChallenges] = useState<ChallengeCreated[]>([]);
   const [displayedPuzzle, setDisplayedPuzzle] = useState<Puzzle>({
     puzzleid: '',
@@ -55,13 +55,32 @@ export const HomePage = () => {
 
   //POTENTIALLY TEMPORARY END
 
+  // useEffect(
+  //   () => {
+  //     Promise.all([getOpenChallenges(), getActiveUserGames()])
+  //       .then(([challengeData, openGameData]) => {
+  //         const myCreatedChallenges: ChallengeCreated[] = [];
+  //         const othersChallenges = [];
+  //         console.log(challengeData);
+  //         challengeData.forEach((c: ChallengeCreated) => {
+  //           if (c.player_w?.id === localVillagerUser.userId || c.player_b?.id === localVillagerUser.userId) {
+  //             myCreatedChallenges.push(c);
+  //           } else {
+  //             othersChallenges.push(c);
+  //           }
+  //         })
+  //         setMyChallenges(myCreatedChallenges);
+  //         setChallenges(challengeData);
+  //         setUsersActiveGames(openGameData);
+  //       })
+  //   }, [localVillagerUser.userId]
+  // )
   useEffect(
     () => {
-      Promise.all([getOpenChallenges(), getActiveUserGames()])
-        .then(([challengeData, openGameData]) => {
-          const myCreatedChallenges: ChallengeCreated[] = [];
-          const othersChallenges = [];
-          console.log(challengeData);
+      const myCreatedChallenges: ChallengeCreated[] = [];
+      const othersChallenges = [];
+      getOpenChallenges()
+        .then(challengeData => {
           challengeData.forEach((c: ChallengeCreated) => {
             if (c.player_w?.id === localVillagerUser.userId || c.player_b?.id === localVillagerUser.userId) {
               myCreatedChallenges.push(c);
@@ -71,7 +90,6 @@ export const HomePage = () => {
           })
           setMyChallenges(myCreatedChallenges);
           setChallenges(challengeData);
-          setUsersActiveGames(openGameData);
         })
     }, [localVillagerUser.userId]
   )

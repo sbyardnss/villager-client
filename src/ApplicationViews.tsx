@@ -1,7 +1,8 @@
 import { Outlet, Route, Routes } from "react-router-dom"
 // import { HomePage } from "./HomePage/HomePage"
 // import { UserList } from "./UserList/UserList"
-import { Play } from "./Play/Play"
+// import { Play } from "./Play/Play"
+import { Play } from "./modules/Play/components/Play";
 import { Profile } from "./Profile/Profile"
 import { Messages } from "./Messages/Messages"
 import { Tournament } from "./Tournament/Tournament"
@@ -13,7 +14,7 @@ import { ChessClubs } from "./modules/ChessClubs/ChessClubs"
 import { AppProvider } from "./modules/App/AppProvider";
 import { HomePage } from "./modules/HomePage/HomePage";
 import { TournamentController } from "./modules/Tournament/Tournament"
-import { PlayController } from "./modules/Play/Play"
+import { PlayController } from "./modules/Play/PlayController"
 export const ApplicationViews = () => {
   // return (
   //     <Routes>

@@ -22,7 +22,7 @@ export const Play = () => {
     const [moveSquares, setMoveSquares] = useState({});
     const [optionSquares, setOptionSquares] = useState({});
     const [reviewPgn, setReviewPgn] = useState([])
-    const [reviewLength, setReviewLength] = useState(0)
+    const [reviewLength, setReviewLength] = useState(0);
     const [strPgn, setStrPgn] = useState("")
     const [matchReady, setMatchReady] = useState(false)
     const [turn, setTurn] = useState("w")

@@ -1,7 +1,7 @@
 import { SetStateAction, createContext, useContext, useEffect, useState } from "react";
 import { useAppContext } from "../App/AppProvider";
 import { getActiveUserGames } from "../../ServerManager";
-import { Game } from "../../Types/Game";
+import { Game, OutgoingGame } from "../../Types/Game";
 import { findIdentifier } from "../Tournament/actions/find-identifier";
 interface PlayContextType {
   // localVillagerUser: any; // Replace 'any' with the actual type of localVillagerUser
@@ -10,8 +10,8 @@ interface PlayContextType {
   // resetChessClubs: () => Promise<void>; // Adjust the return type as necessary
   usersActiveGames: Game[];
   setUsersActiveGames: React.Dispatch<SetStateAction<Game[]>>;
-  selectedGame: Game;
-  updateSelectedGame: React.Dispatch<SetStateAction<Game>>;
+  selectedGame: Game | OutgoingGame;
+  updateSelectedGame: React.Dispatch<SetStateAction<Game | OutgoingGame>>;
   resetUserGames: () => void;
   selectedRange: string;
   setSelectedRange: React.Dispatch<SetStateAction<string>>;
@@ -32,7 +32,7 @@ export function usePlayContext() {
 export const PlayController = (props: any) => {
   const { localVillagerUser } = useAppContext();
 
-  const [selectedGame, updateSelectedGame] = useState<Game>({} as Game);
+  const [selectedGame, updateSelectedGame] = useState<Game | OutgoingGame>({} as OutgoingGame);
   const [orientation, setOrientation] = useState<'black' | 'white'>('white');
   // const [puzzles, setPuzzles] = useState([]);
   const [selectedRange, setSelectedRange] = useState('');

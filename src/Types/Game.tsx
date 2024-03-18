@@ -1,6 +1,6 @@
 import type { PlayerRelated } from "./Player"
 import type { Guest } from "./Guest"
-
+//TODO: ADJUST SO THAT WE CAN USE ONE INTERFACE FOR BOTH
 export interface Game {
   id: number,
   player_w?: PlayerRelated | Guest,
@@ -33,4 +33,6 @@ export interface OutgoingGame {
   winner_model_type?: string | null,
   bye: boolean,
   id?: number,
+  computer_opponent?: boolean,
+  pgn?: string,
 }

@@ -9,14 +9,14 @@ import { useNavigate } from "react-router-dom"
 import trophyIcon from "../../images/small_trophy_with_background.png";
 import { useAppContext } from "../App/AppProvider";
 import type { CommunityPost } from "../../Types/CommunityPost";
-import type { Game } from "../../Types/Game";
+import type { Game, OutgoingGame } from "../../Types/Game";
 import type { ChessClub } from "../../Types/ChessClub";
 
 import type { PlayerRelated } from "../../Types/Player";
 import type { Tournament } from "../../Types/Tournament";
 import type { ChallengeCreated, ChallengeEditing, ChallengeNew } from "../../Types/Challenge";
 import type { Puzzle } from "../../Types/Puzzle";
-import { usePlayContext } from "../Play/Play";
+import { usePlayContext } from "../Play/PlayController";
 export const HomePage = () => {
   const { localVillagerUser, myChessClubs } = useAppContext();
   const [communityPosts, setCommunityPosts] = useState([]);
@@ -445,7 +445,7 @@ export const HomePage = () => {
                             <button className="challengeBtn buttonStyleApprove"
                               onClick={() => {
                                 // setSelectedGame(ug.id)
-                                const gameObjForPlay = usersActiveGames.find((g: Game) => g.id === ug.id);
+                                const gameObjForPlay = usersActiveGames.find((g: Game | OutgoingGame) => g.id === ug.id);
                                 if (gameObjForPlay)
                                   updateSelectedGame(gameObjForPlay)
                                 navigate("/play")

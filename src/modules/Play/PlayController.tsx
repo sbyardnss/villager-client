@@ -1,22 +1,24 @@
 import { SetStateAction, createContext, useContext, useEffect, useState } from "react";
 import { useAppContext } from "../App/AppProvider";
 import { getActiveUserGames } from "../../ServerManager";
-import { Game, OutgoingGame } from "../../Types/Game";
+import { DigitalGame, Game, OutgoingGame } from "../../Types/Game";
 import { findIdentifier } from "../Tournament/actions/find-identifier";
 interface PlayContextType {
   // localVillagerUser: any; // Replace 'any' with the actual type of localVillagerUser
   // myChessClubs: ChessClub[];
   // setMyChessClubs: React.Dispatch<React.SetStateAction<ChessClub[]>>;
   // resetChessClubs: () => Promise<void>; // Adjust the return type as necessary
-  usersActiveGames: Game[];
-  setUsersActiveGames: React.Dispatch<SetStateAction<Game[]>>;
-  selectedGame: Game | OutgoingGame;
-  updateSelectedGame: React.Dispatch<SetStateAction<Game | OutgoingGame>>;
+  usersActiveGames: DigitalGame[];
+  setUsersActiveGames: React.Dispatch<SetStateAction<DigitalGame[]>>;
+  selectedGame: DigitalGame;
+  updateSelectedGame: React.Dispatch<SetStateAction<DigitalGame>>;
   resetUserGames: () => void;
   selectedRange: string;
   setSelectedRange: React.Dispatch<SetStateAction<string>>;
   orientation: 'black' | 'white';
   setOrientation: React.Dispatch<SetStateAction<'black' | 'white'>>;
+  review: boolean;
+  setReview: React.Dispatch<SetStateAction<boolean>>;
 }
 
 export const PlayContext = createContext<PlayContextType | null>(null);
@@ -32,11 +34,12 @@ export function usePlayContext() {
 export const PlayController = (props: any) => {
   const { localVillagerUser } = useAppContext();
 
-  const [selectedGame, updateSelectedGame] = useState<Game | OutgoingGame>({} as OutgoingGame);
+  const [selectedGame, updateSelectedGame] = useState<DigitalGame>({} as DigitalGame);
   const [orientation, setOrientation] = useState<'black' | 'white'>('white');
+  const [review, setReview] = useState(false);
   // const [puzzles, setPuzzles] = useState([]);
   const [selectedRange, setSelectedRange] = useState('');
-  const [usersActiveGames, setUsersActiveGames] = useState<Game[]>([]);
+  const [usersActiveGames, setUsersActiveGames] = useState<DigitalGame[]>([]);
 
   useEffect(
     () => {
@@ -75,7 +78,7 @@ export const PlayController = (props: any) => {
   return (
     <PlayContext.Provider value={{
       selectedGame, updateSelectedGame, usersActiveGames, setUsersActiveGames, resetUserGames,
-      selectedRange, setSelectedRange, orientation, setOrientation
+      selectedRange, setSelectedRange, orientation, setOrientation, review, setReview
     }}>
       {props.children}
     </PlayContext.Provider>

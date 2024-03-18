@@ -13,8 +13,8 @@ import type { PlayerRelated } from "../../Types/Player";
 import type { Tournament, NewTournament } from "../../Types/Tournament";
 
 export const TournamentController = () => {
-  const { myChessClubs } = useAppContext();
-  const [clubMatesAndGuests, setClubMatesAndGuests] = useState<(PlayerRelated | Guest)[]>([]);
+  const { myChessClubs, clubMatesAndGuests } = useAppContext();
+  // const [clubMatesAndGuests, setClubMatesAndGuests] = useState<(PlayerRelated | Guest)[]>([]);
   // const [timeSettings, setTimeSettings] = useState<TimeSetting[]>([]);
   const [myOpenTournaments, setMyOpenTournaments] = useState<Tournament[]>([]);
   const [createNewTournament, setCreateNewTournament] = useState(false);
@@ -38,13 +38,11 @@ export const TournamentController = () => {
     getMyOpenTournaments()
       .then(data => setMyOpenTournaments(data));
   }
+
   useEffect(
     () => {
-      Promise.all([getClubMatesAndGuests(), getMyOpenTournaments()])
-        .then(([mateAndGuestData, openTournamentData]) => {
-          setClubMatesAndGuests(mateAndGuestData);
-          setMyOpenTournaments(openTournamentData);
-        });
+      getMyOpenTournaments()
+        .then(data => setMyOpenTournaments(data));
     }, []
   )
   useEffect(

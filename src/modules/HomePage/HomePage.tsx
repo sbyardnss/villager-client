@@ -9,7 +9,7 @@ import { useNavigate } from "react-router-dom"
 import trophyIcon from "../../images/small_trophy_with_background.png";
 import { useAppContext } from "../App/AppProvider";
 import type { CommunityPost } from "../../Types/CommunityPost";
-import type { Game, OutgoingGame } from "../../Types/Game";
+import type { DigitalGame, Game, OutgoingGame } from "../../Types/Game";
 import type { ChessClub } from "../../Types/ChessClub";
 
 import type { PlayerRelated } from "../../Types/Player";
@@ -412,7 +412,7 @@ export const HomePage = () => {
                 <div id="activeGamesUl">
                   {!usersActiveGames.length ? <h3 className="setCustomFont" id="noGamesMsg">you have no active games</h3> : ""}
                   {
-                    usersActiveGames?.map((ug: Game) => {
+                    usersActiveGames?.map((ug: DigitalGame) => {
                       // const opponent = ug.player_w?.id === localVillagerObj.userId ? ug.player_b : ug.player_w
                       let tournament: Partial<Tournament> = {}
                       if (ug.tournament) {
@@ -445,9 +445,9 @@ export const HomePage = () => {
                             <button className="challengeBtn buttonStyleApprove"
                               onClick={() => {
                                 // setSelectedGame(ug.id)
-                                const gameObjForPlay = usersActiveGames.find((g: Game | OutgoingGame) => g.id === ug.id);
+                                const gameObjForPlay = usersActiveGames.find((g: DigitalGame) => g.id === ug.id);
                                 if (gameObjForPlay)
-                                  updateSelectedGame(gameObjForPlay)
+                                  updateSelectedGame(gameObjForPlay as DigitalGame)
                                 navigate("/play")
                               }}>select</button>
                           </div>

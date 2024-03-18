@@ -1,10 +1,25 @@
-import { PropsWithChildren, createContext, useState, useEffect } from "react";
+import { PropsWithChildren, createContext, useState, useEffect, useContext } from "react";
 import { GetLoggedInUser } from "./actions/get-current-user";
 import { getMyChessClubs } from "../../ServerManager";
 import { AppStateDefaults } from "./state";
 import type { ChessClub } from "../../Types/ChessClub";
 
-export const AppContext = createContext(null as any);
+interface AppContextType {
+  localVillagerUser: any; // Replace 'any' with the actual type of localVillagerUser
+  myChessClubs: ChessClub[];
+  setMyChessClubs: React.Dispatch<React.SetStateAction<ChessClub[]>>;
+  resetChessClubs: () => Promise<void>; // Adjust the return type as necessary
+}
+
+export const AppContext = createContext<AppContextType | null>(null);
+
+export function useAppContext() {
+  const context = useContext(AppContext);
+  if (context === null) {
+    throw new Error("useAppContext must be within AppProvider");
+  }
+  return context;
+}
 
 interface AppProviderProps extends PropsWithChildren<{}> { };
 

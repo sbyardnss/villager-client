@@ -1,3 +1,4 @@
+import "../../../styles/Play.css";
 import { usePlayContext } from "../PlayController";
 import { useAppContext } from "../../App/AppProvider";
 import { alterGame, getAIMove, sendNewGame } from "../../../ServerManager";
@@ -9,10 +10,11 @@ import { useNavigate } from "react-router-dom";
 import { findByIdentifier } from "../../Tournament/actions/find-by-identifier";
 import { getMovesFromPGN } from "../actions/get-moves-from-pgn";
 import { pgnStringBuilder } from "../actions/pgn-string-builder";
+import { getMoveOptions } from "../actions/get-move-options";
 
 export const Play = () => {
   const { localVillagerUser, clubMatesAndGuests } = useAppContext();
-  const { selectedGame, updateSelectedGame, orientation, review, setReview } = usePlayContext();
+  const { selectedGame, updateSelectedGame, orientation, review, setReview, resetUserGames } = usePlayContext();
   const navigate = useNavigate();
   const [game, setGame] = useState(new Chess());
   const [matchReady, setMatchReady] = useState(false);
@@ -20,6 +22,9 @@ export const Play = () => {
   const [reviewLength, setReviewLength] = useState(0);
   const [stringPgn, setStringPgn] = useState<string>("");
   const [gameForApi, updateGameForApi] = useState<DigitalGame>(digitalGameDefaults);
+  const [moveFrom, setMoveFrom] = useState("");
+  const [optionSquares, setOptionSquares] = useState({});
+  const [moveSquares, setMoveSquares] = useState({});
 
   useEffect(
     () => {
@@ -103,7 +108,85 @@ export const Play = () => {
       }
     }, [reviewLength, reviewPgn, game]
   )
+  //  TODO: DO WE NEED THIS?
+  const safeGameMutate = (modify: any) => {
+    console.log('modify', modify)
+    setGame((g: any) => {
+      console.log('g', g)
+      const update = { ...g };
+      modify(update);
+      return update;
+    });
+  }
+  const onSquareClick = (square: any) => {
+    console.log('square', square)
+    // setRightClickedSquares({});
+    function resetFirstMove(square: any) {
+      const hasOptions = getMoveOptions(square, game);
+      if (hasOptions) setMoveFrom(square);
+    }
+    // from square
+    if (!moveFrom) {
+      resetFirstMove(square);
+      return;
+    }
+    // attempt to make move
+    const gameCopy = { ...game };
+    const move = gameCopy.move({
+      from: moveFrom,
+      to: square,
+      promotion: "q", // TODO: CURRENTLY PROMOTING TO QUEEN ONLY. always promote to a queen for example simplicity
+    });
 
+    setGame(gameCopy);
+    // if invalid, setMoveFrom and getMoveOptions
+    if (move === null) {
+      resetFirstMove(square);
+      return;
+    }
+    setMoveFrom("");
+    setOptionSquares({});
+  }
+  const resetOrStartGame = () => {
+    if (!selectedGame.id) {
+      if (matchReady) {
+        return (
+          <div>
+            <button
+              className="buttonStyleApprove playBtns"
+              onClick={() => {
+                safeGameMutate((game: any) => {
+                  game.reset();
+                });
+                setMoveSquares({});
+              }}
+            >reset</button>
+          </div>
+        )
+      }
+      else {
+        return null
+      }
+    }
+    else {
+      if (review === true) {
+        return (
+          <div>
+            <button className="reviewButtons"
+              onClick={() => {
+                setReviewLength(reviewLength - 1)
+              }}>&lt;</button>
+            <button className="reviewButtons"
+              onClick={() => {
+                if (reviewLength < reviewPgn.length) {
+                  setReviewLength(reviewLength + 1)
+                }
+              }}>&gt;</button>
+          </div>
+        )
+      }
+    }
+  }
   const leaveGame = (e: Event) => {
     if (e.target) {
       const target = e.target as HTMLElement;
@@ -126,6 +209,83 @@ export const Play = () => {
     }
   }
   document.addEventListener('click', leaveGame);
+  console.log('selectedGame', selectedGame)
+  return (
+    <main id="playContainer">
+      {!selectedGame.id && !matchReady ?
+        <div id="clickStartPrompt"
+          onClick={() => setMatchReady(true)}>
+          <div>Start Game</div>
+        </div>
+        : ""}
+      {!selectedGame.id ?
+        game.in_check() ?
+          <div>check</div> :
+          game.game_over() && game.in_checkmate() ?
+            <div id="checkmatePrompt">
+              <div>checkmate</div>
+              <button onClick={() => {
+                updateSelectedGame(digitalGameDefaults);
+                navigate("/");
+              }}>
+                exit game
+              </button>
+            </div>
+            : ""
+        : ""}
+      <div id="boardInterface">
+        <Chessboard
+          id="ClickToMove"
+          animationDuration={200}
+          arePiecesDraggable={false}
+          boardOrientation={orientation}
+          position={game.fen()}
+          onSquareClick={(evt) => {
+            if (matchReady) {
+              onSquareClick(evt)
+              if (selectedGame.id) {
+                const gameCopy = { ...selectedGame }
+                const newPgn = game.pgn();
+                gameCopy.pgn = newPgn;
+                alterGame(gameCopy)
+                  .then(() => resetUserGames());
+              }
+            }
+          }}
+          customBoardStyle={{
+            borderRadius: "4px",
+            boxShadow: "0 2px 10px rgba(0, 0, 0, 0.5)",
+          }}
+          customSquareStyles={{
+            ...moveSquares,
+            ...optionSquares,
+          }}
+        />
+        <div id="playControls" >
+          {resetOrStartGame()}
+          <button
+            className="buttonStyleApprove playBtns"
+            onClick={() => {
+              safeGameMutate((game: any) => {
+                game.undo();
 
-  return <></>
+              });
+              setMoveSquares({});
+            }}
+          >
+            undo
+          </button>
+          <button
+
+            className="buttonStyleReject playBtns"
+            onClick={() => {
+              updateSelectedGame(digitalGameDefaults)
+              navigate(-1)
+            }}>
+            exit game
+          </button>
+        </div>
+      </div>
+    </main>
+  )
 }

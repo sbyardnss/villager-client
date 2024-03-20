@@ -447,8 +447,8 @@ export const HomePage = () => {
                                 // setSelectedGame(ug.id)
                                 const gameObjForPlay = usersActiveGames.find((g: DigitalGame) => g.id === ug.id);
                                 if (gameObjForPlay)
-                                  updateSelectedGame(gameObjForPlay as DigitalGame)
-                                navigate("/play")
+                                  updateSelectedGame(gameObjForPlay as DigitalGame);
+                                navigate("/play");
                               }}>select</button>
                           </div>
                         )

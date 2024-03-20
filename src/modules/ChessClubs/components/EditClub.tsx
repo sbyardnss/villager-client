@@ -2,7 +2,7 @@ import { useEffect, useState, useRef, useContext } from "react"
 import { updateClub, deleteChessClub, removeClubPassword } from "../../../ServerManager"
 import { handleFormChange } from "../actions/handle-form-change";
 import { ChessClub, ChessClubEdit } from "../../../Types/ChessClub";
-import { AppContext } from "../../App/AppProvider";
+import { AppContext, useAppContext } from "../../App/AppProvider";
 import { showAlertModal } from "../../../shared/AlertModal/alert-modal";
 
 interface EditClubProps {
@@ -13,7 +13,7 @@ interface EditClubProps {
 }
 
 export const EditClub: React.FC<EditClubProps> = ({ clubId, clubObj, setClub, resetter }) => {
-  const { localVillagerUser } = useContext(AppContext);
+  const { localVillagerUser } = useAppContext();
   const [addPassword, setAddPassword] = useState(false);
   const [editedClub, updateEditedClub] = useState<ChessClubEdit>({
     id: 0,

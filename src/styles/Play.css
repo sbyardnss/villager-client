@@ -1,0 +1,158 @@
+@media screen and (min-width: 641px) {
+    #playContainer {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-top: 100px;
+        max-width: 960px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    #boardInterface {
+        width: 80%;
+        max-width: 40em;
+        margin: 1em;
+
+    }
+
+    #clickStartPrompt {
+        font-size: x-large;
+        z-index: 99;
+        position: absolute;
+        left: 50%;
+        margin-left: -4.35em;
+        top: 50%;
+        margin-top: -70px;
+        margin-bottom: auto;
+        background-color: whitesmoke;
+        width: 200px;
+        height: 3em;
+        border: 4px solid rgb(52, 52, 52);
+        border-radius: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+
+    }
+
+    #clickStartPrompt:hover {
+        transition: color .13s ease-in-out, background .13s ease-in-out, opacity .13s ease-in-out, box-shadow .13s ease-in-out;
+        box-shadow: rgba(255, 255, 255, 0.26) 0 1px 2px inset;
+        background-color: rgb(111, 178, 229);
+    }
+
+    #checkmatePrompt {
+        font-size: x-large;
+        z-index: 99;
+        position: absolute;
+        left: 50%;
+        margin-left: -10.25em;
+        top: 50%;
+        margin-top: -45px;
+        margin-bottom: auto;
+        background-color: whitesmoke;
+        width: 20em;
+        height: 5em;
+        border: 4px solid rgb(52, 52, 52);
+        border-radius: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+    }
+
+    #playControls {
+        display: flex;
+        margin-top: .5em;
+    }
+
+    .reviewButtons {
+        font-size: larger;
+    }
+
+    .playBtns {
+        margin-right: .5em;
+    }
+}
+
+@media screen and (min-width: 320px) and (max-width: 640px) {
+    #playContainer {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        margin-top: 100px;
+        /* max-width: 960px; */
+        height: 80vh;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    #boardInterface {
+        width: 100%;
+        max-width: 40em;
+        margin: 1em;
+    }
+
+    #clickStartPrompt {
+        font-size: x-large;
+        z-index: 1;
+        position: absolute;
+        left: 50%;
+        margin-left: -4.35em;
+        top: 57%;
+        margin-top: -70px;
+        margin-bottom: auto;
+        background-color: whitesmoke;
+        width: 200px;
+        height: 3em;
+        border: 4px solid rgb(52, 52, 52);
+        border-radius: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+
+    }
+
+    #clickStartPrompt:hover {
+        transition: color .13s ease-in-out, background .13s ease-in-out, opacity .13s ease-in-out, box-shadow .13s ease-in-out;
+        box-shadow: rgba(255, 255, 255, 0.26) 0 1px 2px inset;
+        background-color: rgb(111, 178, 229);
+    }
+
+    #checkmatePrompt {
+        font-size: x-large;
+        z-index: 99;
+        position: absolute;
+        left: 50%;
+        margin-left: -10.25em;
+        top: 50%;
+        margin-top: -45px;
+        margin-bottom: auto;
+        background-color: whitesmoke;
+        width: 20em;
+        height: 5em;
+        border: 4px solid rgb(52, 52, 52);
+        border-radius: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+    }
+
+    #playControls {
+        display: flex;
+        margin-top: .5em;
+    }
+
+    .reviewButtons {
+        font-size: larger;
+    }
+
+    .playBtns {
+        margin-right: .5em;
+    }
+}

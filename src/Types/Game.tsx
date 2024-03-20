@@ -1,6 +1,6 @@
 import type { PlayerRelated } from "./Player"
 import type { Guest } from "./Guest"
-
+//TODO: ADJUST SO THAT WE CAN USE ONE INTERFACE FOR BOTH
 export interface Game {
   id: number,
   player_w?: PlayerRelated | Guest,
@@ -22,7 +22,7 @@ export interface Game {
 export interface OutgoingGame {
   player_w: Guest | PlayerRelated,
   player_w_model_type: string,
-  player_b: Guest | PlayerRelated | undefined,
+  player_b: Guest | PlayerRelated | null,
   player_b_model_type: string,
   tournament: number,
   time_setting: number,
@@ -32,5 +32,43 @@ export interface OutgoingGame {
   winner?: Guest | PlayerRelated | null,
   winner_model_type?: string | null,
   bye: boolean,
-  id?: number,
+  id?: number | undefined,
+}
+
+export interface DigitalGame {
+  player_w: PlayerRelated | null,
+  player_w_model_type: 'player',
+  player_b: PlayerRelated | null,
+  player_b_model_type: 'player',
+  tournament: number | null,
+  date_time: string,
+  time_setting: number,
+  win_style: 'checkmate' | 'draw' | '',
+  accepted: boolean,
+  tournament_round: number | null,
+  winner?: PlayerRelated | null,
+  winner_model_type?: 'player' | null,
+  bye: boolean,
+  id?: number | undefined,
+  // computer_opponent?: boolean,
+  pgn?: string,
+}
+
+export const digitalGameDefaults: DigitalGame = {
+  id: undefined,
+  player_w: {} as PlayerRelated,
+  player_w_model_type: 'player',
+  player_b: {} as PlayerRelated,
+  player_b_model_type: 'player',
+  tournament: null,
+  time_setting: 1,
+  win_style: '',
+  accepted: true,
+  tournament_round: null,
+  winner: {} as PlayerRelated,
+  winner_model_type: null,
+  bye: false,
+  // computer_opponent: true,
+  pgn: "",
+  date_time: "",
 }

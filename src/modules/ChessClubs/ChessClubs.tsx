@@ -2,14 +2,14 @@ import "../../styles/ChessClubs.css";
 import { useContext, useEffect, useState } from "react";
 import { addMemberToClub, getClubsUserNotJoined, leaveClub } from "../../ServerManager"
 import { EditClub } from "./components/EditClub";
-import { AppContext } from "../App/AppProvider";
+import { AppContext, useAppContext } from "../App/AppProvider";
 import { JoinClubModal } from "./components/JoinClubModal";
 import { CreateClubForm } from "./components/CreateClub";
 
 // import type { ChessClub } from "../App/types";
 import type { ChessClubCreate, ChessClub } from "../../Types/ChessClub";
 export const ChessClubs = () => {
-  const { localVillagerUser, myChessClubs, resetChessClubs } = useContext(AppContext);
+  const { localVillagerUser, myChessClubs, resetChessClubs } = useAppContext();
   const [unjoinedChessClubs, setUnjoinedClubs] = useState([]);
   const [selectedClubToEdit, setSelectedClubToEdit] = useState(0)
   const [selectedClubObj, setSelectedClubObj] = useState<ChessClub>({} as ChessClub)
@@ -34,14 +34,14 @@ export const ChessClubs = () => {
   useEffect(
     () => {
       getClubsUserNotJoined()
-        .then(data => setUnjoinedClubs(data))
+        .then(data => setUnjoinedClubs(data));
     }, [myChessClubs]
   )
 
   useEffect(
     () => {
       if (selectedClubToEdit && editingModal) {
-        editingModal.style.display = "block"
+        editingModal.style.display = "block";
       }
       //not working
       // else {
@@ -52,7 +52,8 @@ export const ChessClubs = () => {
   useEffect(
     () => {
       const selectedClub = myChessClubs.find((club: ChessClub) => club.id === selectedClubToEdit)
-      setSelectedClubObj(selectedClub)
+      if (selectedClub)
+        setSelectedClubObj(selectedClub);
     }, [selectedClubToEdit, myChessClubs]
   )
 
@@ -60,7 +61,7 @@ export const ChessClubs = () => {
     () => {
       const selectedClubToJoin = unjoinedChessClubs.find((club: ChessClub) => club.id === joinClub)
       if (selectedClubToJoin)
-        setClubToJoin(selectedClubToJoin)
+        setClubToJoin(selectedClubToJoin);
     }, [joinClub, unjoinedChessClubs]
   )
 
@@ -89,7 +90,7 @@ export const ChessClubs = () => {
                 setter={setCreateClub} 
                 />
     } else {
-      return <button id="createChessClubButton" className="setCustomFont" onClick={() => setCreateClub(true)}>Create Club</button>
+      return <button id="createChessClubButton" className="setCustomFont" onClick={() => setCreateClub(true)}>Create Club</button>;
     }
   }
   const joinClubModal = document.getElementById('joinClubModal');

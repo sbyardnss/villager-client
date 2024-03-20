@@ -17,8 +17,12 @@ import type { Tournament } from "../../Types/Tournament";
 import type { ChallengeCreated, ChallengeEditing, ChallengeNew } from "../../Types/Challenge";
 import type { Puzzle } from "../../Types/Puzzle";
 import { usePlayContext } from "../Play/PlayController";
+import { showAlertModal } from "../../shared/AlertModal/alert-modal"
+import { findByIdentifier } from "../Tournament/actions/find-by-identifier"
+
+//TODO: MY CHALLENGES NOT SHOWING
 export const HomePage = () => {
-  const { localVillagerUser, myChessClubs } = useAppContext();
+  const { localVillagerUser, myChessClubs, clubMatesAndGuests } = useAppContext();
   const [communityPosts, setCommunityPosts] = useState([]);
   const [challenges, setChallenges] = useState([]);
   // const [usersActiveGames, setUsersActiveGames] = useState([]);
@@ -27,15 +31,25 @@ export const HomePage = () => {
     poster: localVillagerUser,
     message: ""
   });
-  const [challengeForApi, updateChallengeForApi] = useState<ChallengeNew>({
-    player_w: 0,
-    player_w_model_type: 'player',
-    player_b: 0,
-    player_b_model_type: 'player',
+
+  const [challengeForApi, updateChallengeForApi] = useState<DigitalGame>({
+    id: undefined,
+    player_w: null,
+    player_w_model_type: "player",
+    player_b: null,
+    player_b_model_type: "player",
+    tournament: null,
+    time_setting: 1,
+    date_time: "",
+    win_style: '',
     accepted: false,
-    computer_opponent: false,
-    winner: null
+    tournament_round: null,
+    winner: null,
+    winner_model_type: null,
+    bye: false,
+    pgn: "",
   });
+  const [activeUserPlayerObject, setActiveUserPlayerObject] = useState<PlayerRelated>({} as PlayerRelated);
 
   //POTENTIALLY TEMPORARY BEGIN
   // const { games, resetGames, updateSelectedGameObj, selectedGame, setSelectedGame, setSelectedRange, puzzles } = usePlayContext();
@@ -55,26 +69,6 @@ export const HomePage = () => {
 
   //POTENTIALLY TEMPORARY END
 
-  // useEffect(
-  //   () => {
-  //     Promise.all([getOpenChallenges(), getActiveUserGames()])
-  //       .then(([challengeData, openGameData]) => {
-  //         const myCreatedChallenges: ChallengeCreated[] = [];
-  //         const othersChallenges = [];
-  //         console.log(challengeData);
-  //         challengeData.forEach((c: ChallengeCreated) => {
-  //           if (c.player_w?.id === localVillagerUser.userId || c.player_b?.id === localVillagerUser.userId) {
-  //             myCreatedChallenges.push(c);
-  //           } else {
-  //             othersChallenges.push(c);
-  //           }
-  //         })
-  //         setMyChallenges(myCreatedChallenges);
-  //         setChallenges(challengeData);
-  //         setUsersActiveGames(openGameData);
-  //       })
-  //   }, [localVillagerUser.userId]
-  // )
   useEffect(
     () => {
       const myCreatedChallenges: ChallengeCreated[] = [];
@@ -91,7 +85,7 @@ export const HomePage = () => {
           setMyChallenges(myCreatedChallenges);
           setChallenges(challengeData);
         })
-    }, [localVillagerUser.userId]
+    }, [localVillagerUser]
   )
   useEffect(
     () => {
@@ -101,7 +95,7 @@ export const HomePage = () => {
           setCommunityPosts(postData);
         })
 
-    }, [myChessClubs]
+      }, [myChessClubs]
   )
 
   useEffect(
@@ -109,12 +103,19 @@ export const HomePage = () => {
       setSelectedClub(myChessClubs[0]?.id);
     }, [myChessClubs]
   )
-
+  
   useEffect(
     () => {
       const postsForSelectedClub = communityPosts.filter((post: CommunityPost) => post.club === selectedClub);
       setDisplayedCommunityPosts(postsForSelectedClub);
     }, [selectedClub, myChessClubs, communityPosts]
+  )
+  useEffect(
+    () => {
+      const playerObject = findByIdentifier(localVillagerUser.userId, clubMatesAndGuests);
+      if (playerObject)
+        setActiveUserPlayerObject(playerObject);
+    }, [clubMatesAndGuests, localVillagerUser.userId]
   )
   /*
   community posts
@@ -238,6 +239,22 @@ export const HomePage = () => {
   const resetCommunityPosts = () => {
     getAllCommunityPosts()
       .then(data => setCommunityPosts(data))
+  }
+  const resetChallenges = () => {
+    const myCreatedChallenges: ChallengeCreated[] = [];
+    const othersChallenges = [];
+    getOpenChallenges()
+      .then(challengeData => {
+        challengeData.forEach((c: ChallengeCreated) => {
+          if (c.player_w?.id === localVillagerUser.userId || c.player_b?.id === localVillagerUser.userId) {
+            myCreatedChallenges.push(c);
+          } else {
+            othersChallenges.push(c);
+          }
+        })
+        setMyChallenges(myCreatedChallenges);
+        setChallenges(challengeData);
+      })
   }
   //SCROLL TO BOTTOM FUNCTIONALITY FROM LINKUP
   const scrollToBottom = () => {
@@ -471,13 +488,13 @@ export const HomePage = () => {
                 <div id="piecesSelectionContainer">
                   <div id="whitePiecesSelect" onClick={() => {
                     const challengeCopy = { ...challengeForApi }
-                    challengeCopy.player_w = localVillagerUser.userId;
+                    challengeCopy.player_w = activeUserPlayerObject;
                     challengeCopy.player_b = null
                     updateChallengeForApi(challengeCopy)
                   }}>white</div>
                   <div id="blackPiecesSelect" onClick={() => {
                     const challengeCopy = { ...challengeForApi }
-                    challengeCopy.player_b = localVillagerUser.userId;
+                    challengeCopy.player_b = activeUserPlayerObject;
                     challengeCopy.player_w = null
                     updateChallengeForApi(challengeCopy)
                   }}>black</div>
@@ -485,11 +502,11 @@ export const HomePage = () => {
                     const challengeCopy = { ...challengeForApi }
                     const randomNumber = Math.floor(Math.random() * 2)
                     if (randomNumber === 1) {
-                      challengeCopy.player_w = localVillagerUser.userId;
+                      challengeCopy.player_w = activeUserPlayerObject;
                       challengeCopy.player_b = null
                     }
                     else {
-                      challengeCopy.player_b = localVillagerUser.userId;
+                      challengeCopy.player_b = activeUserPlayerObject;
                       challengeCopy.player_w = null
                     }
                     updateChallengeForApi(challengeCopy)
@@ -502,11 +519,13 @@ export const HomePage = () => {
                 onClick={() => {
                   if (window.confirm("create open challenge?")) {
                     sendNewGame(challengeForApi)
-                      .then(() => resetUserGames())
-                    setChallengeAlertVisible(true)
+                      .then(() => {
+                        resetChallenges();
+                        setChallengeAlertVisible(true);
+                      })
 
                     setTimeout(() => {
-                      setChallengeAlertVisible(false)
+                      setChallengeAlertVisible(false);
                     }, 2000)
                   }
                 }}>create</button>

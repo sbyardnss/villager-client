@@ -25,11 +25,7 @@ export const Play = () => {
   const [moveFrom, setMoveFrom] = useState("");
   const [optionSquares, setOptionSquares] = useState({});
   const [moveSquares, setMoveSquares] = useState({});
-  // useEffect(
-  //   () => {
-  //     console.log(game.turn())
-  //   }, [game]
-  // )
+
   useEffect(
     () => {
       if (selectedGame) {
@@ -82,12 +78,14 @@ export const Play = () => {
             updateGameForApi(copy);
             if (selectedGame.id) {
               //TODO-COMMENT
-              // alterGame(copy);
+              console.log('game over useEffect', selectedGame)
+              alterGame(copy)
+                .then(() => resetUserGames());
             }
           }
         }
       }
-    }, [game, selectedGame]
+    }, [game, selectedGame, resetUserGames]
   )
 
   useEffect(

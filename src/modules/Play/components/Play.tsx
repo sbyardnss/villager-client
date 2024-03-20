@@ -2,7 +2,7 @@ import "../../../styles/Play.css";
 import { usePlayContext } from "../PlayController";
 import { useAppContext } from "../../App/AppProvider";
 import { alterGame, getAIMove, sendNewGame } from "../../../ServerManager";
-import { useContext, useState, useEffect, MouseEvent } from "react";
+import { useState, useEffect } from "react";
 import { Chessboard } from "react-chessboard";
 import Chess from "chess.js";
 import { type DigitalGame, digitalGameDefaults } from "../../../Types/Game";
@@ -25,7 +25,11 @@ export const Play = () => {
   const [moveFrom, setMoveFrom] = useState("");
   const [optionSquares, setOptionSquares] = useState({});
   const [moveSquares, setMoveSquares] = useState({});
-
+  // useEffect(
+  //   () => {
+  //     console.log(game.turn())
+  //   }, [game]
+  // )
   useEffect(
     () => {
       if (selectedGame) {
@@ -119,26 +123,42 @@ export const Play = () => {
     });
   }
   const onSquareClick = (square: any) => {
-    console.log('square', square)
+    // console.log('square', square)
     // setRightClickedSquares({});
     function resetFirstMove(square: any) {
-      const hasOptions = getMoveOptions(square, game);
+      // console.log('within move reset')
+      const hasOptions: { hasOptions: boolean, newSquares: any } = getMoveOptions(square, game) ;
+      setOptionSquares(hasOptions.newSquares);
+      console.log('gamemoves in component', game.moves({
+        square,
+        verbose: true,
+      }))
+      console.log('hasOptions', hasOptions)
       if (hasOptions) setMoveFrom(square);
     }
     // from square
     if (!moveFrom) {
+      // console.log('in !moveFrom')
       resetFirstMove(square);
       return;
     }
     // attempt to make move
-    const gameCopy = { ...game };
-    const move = gameCopy.move({
+    // const gameCopy = { ...game };
+    // const move = gameCopy.move({
+    //   from: moveFrom,
+    //   to: square,
+    //   promotion: "q", // TODO: CURRENTLY PROMOTING TO QUEEN ONLY. always promote to a queen for example simplicity
+    // });
+    // const gameCopy = { ...game };
+    const move = game.move({
       from: moveFrom,
       to: square,
       promotion: "q", // TODO: CURRENTLY PROMOTING TO QUEEN ONLY. always promote to a queen for example simplicity
     });
-
-    setGame(gameCopy);
+    // console.log('move', move)
+    // console.log('gameCopy', gameCopy)
+    // console.log('gameCopy.moves()', gameCopy.moves())
+    // setGame(gameCopy);
     // if invalid, setMoveFrom and getMoveOptions
     if (move === null) {
       resetFirstMove(square);
@@ -146,6 +166,8 @@ export const Play = () => {
     }
     setMoveFrom("");
     setOptionSquares({});
+    const newGame = new Chess(game.pgn());
+    setGame(newGame);
   }
   const resetOrStartGame = () => {
     if (!selectedGame.id) {
@@ -209,7 +231,7 @@ export const Play = () => {
     }
   }
   document.addEventListener('click', leaveGame);
-  console.log('selectedGame', selectedGame)
+
   return (
     <main id="playContainer">
       {!selectedGame.id && !matchReady ?
@@ -235,6 +257,7 @@ export const Play = () => {
         : ""}
       <div id="boardInterface">
         <Chessboard
+          // key={game.fen()}
           id="ClickToMove"
           animationDuration={200}
           arePiecesDraggable={false}

@@ -1,5 +1,5 @@
 import { useState, useContext, useEffect, SetStateAction, useRef } from "react"
-import { AppContext } from "../../App/AppProvider"
+import { AppContext, useAppContext } from "../../App/AppProvider"
 import { checkIfUserIsAppCreator } from "../actions/check-if-creator"
 import { getTournamentGames, getTournament } from "../../../ServerManager";
 import { tournamentAnalysis } from "../actions/matchup-game-analysis";
@@ -37,7 +37,7 @@ export const ActiveTournament: React.FC<ActiveTournamentProps> = ({
   resetTourneys,
   allClubMates,
 }) => {
-  const { localVillagerUser, myChessClubs } = useContext(AppContext);
+  const { localVillagerUser, myChessClubs } = useAppContext();
 
   // const [activeTournament, setActiveTournament] = useState<Tournament>({} as Tournament);
   const [activeTournamentPlayers, setActiveTournamentPlayers] = useState<(PlayerRelated | Guest)[]>([])
@@ -109,7 +109,8 @@ export const ActiveTournament: React.FC<ActiveTournamentProps> = ({
         setTournamentCreatorBool(true);
       }
       const chosenClub = myChessClubs.find((club: ChessClub) => club.id === selectedTournament.club);
-      selectClub(chosenClub)
+      if (chosenClub)
+        selectClub(chosenClub)
       // console.log(selectedTournament)
     }, [selectedTournament, selectClub, myChessClubs, localVillagerUser.userId]
   )

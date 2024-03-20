@@ -125,7 +125,9 @@ export const Play = () => {
   const onSquareClick = (square: any) => {
     // console.log('square', square)
     // setRightClickedSquares({});
+    console.log('outer square', square)
     function resetFirstMove(square: any) {
+      console.log('square', square)
       // console.log('within move reset')
       const hasOptions: { hasOptions: boolean, newSquares: any } = getMoveOptions(square, game) ;
       setOptionSquares(hasOptions.newSquares);
@@ -134,7 +136,7 @@ export const Play = () => {
         verbose: true,
       }))
       console.log('hasOptions', hasOptions)
-      if (hasOptions) setMoveFrom(square);
+      if (hasOptions.hasOptions) setMoveFrom(square);
     }
     // from square
     if (!moveFrom) {
@@ -264,9 +266,12 @@ export const Play = () => {
           boardOrientation={orientation}
           position={game.fen()}
           onSquareClick={(evt) => {
+            console.log('hitting')
+            console.log('evt', evt)
             if (matchReady) {
               onSquareClick(evt)
               if (selectedGame.id) {
+                console.log('getting past if')
                 const gameCopy = { ...selectedGame }
                 const newPgn = game.pgn();
                 gameCopy.pgn = newPgn;

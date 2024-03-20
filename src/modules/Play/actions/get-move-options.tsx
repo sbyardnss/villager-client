@@ -1,6 +1,6 @@
 export const getMoveOptions = (square: string, game: any) => {
   //TODO-ANY
-  
+
   const moves = game.moves({
     square,
     verbose: true,
@@ -10,16 +10,30 @@ export const getMoveOptions = (square: string, game: any) => {
     return { hasOptions: false, newSquares: {} };
   }
   const newSquares = {};
-  moves.map((move: any) => {
+  const updatedMoves = moves.map((move: any) => {
+    return {
+      ...move,
+    };
+  });
+  updatedMoves.forEach((move: any) => {
     (newSquares as any)[move.to] = {
-      background:
-        game.get(move.to) && game.get(move.to).color !== game.get(square).color
-          ? "radial-gradient(circle, rgba(0,0,0,.1) 85%, transparent 85%)"
-          : "radial-gradient(circle, rgba(0,0,0,.1) 25%, transparent 25%)",
+      background: game.get(move.to) && game.get(move.to).color !== game.get(square).color
+        ? "radial-gradient(circle, rgba(0,0,0,.1) 85%, transparent 85%)"
+        : "radial-gradient(circle, rgba(0,0,0,.1) 25%, transparent 25%)",
       borderRadius: "50%",
     };
-    return move;
   });
+  // moves.map((move: any) => {
+  //   (newSquares as any)[move.to] = {
+  //     background:
+  //       game.get(move.to) && game.get(move.to).color !== game.get(square).color
+  //         ? "radial-gradient(circle, rgba(0,0,0,.1) 85%, transparent 85%)"
+  //         : "radial-gradient(circle, rgba(0,0,0,.1) 25%, transparent 25%)",
+  //     borderRadius: "50%",
+  //   };
+  //   console.log(move)
+  //   return move;
+  // });
   (newSquares as any)[square] = {
     background: "rgba(255, 255, 0, 0.4)",
   };

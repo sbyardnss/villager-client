@@ -47,9 +47,18 @@ export const PlayController = (props: any) => {
         .then(gameData => {
           setUsersActiveGames(gameData);
         })
-    },[]
+    }, []
   )
-
+  useEffect(
+    () => {
+      if (selectedGame.id) {
+        const updatedGame = usersActiveGames.find((game: DigitalGame) => game.id === selectedGame.id);
+        if (updatedGame) {
+          updateSelectedGame(updatedGame);
+        }
+      }
+    }, [usersActiveGames, selectedGame.id]
+  )
   useEffect(
     () => {
       if (selectedGame.id && selectedGame.player_w && selectedGame.player_b) {

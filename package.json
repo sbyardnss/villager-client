@@ -18,8 +18,12 @@
   "scripts": {
     "start": "GENERATE_SOURCEMAP=false react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "test": "jest",
+    "eject": "react-scripts eject",
+    "tsc:check": "tsc --noEmit",
+    "tsc:check-app": "tsc --noEmit --project \"./tsconfig.json\"",
+    "tsc:check-cypress": "tsc --noEmit --project \"./cypress/tsconfig.json\"",
+    "lint": "eslint \"./{src, cypress}/**/*.{js, jsx, ts, tsx, json}\""
   },
   "eslintConfig": {
     "extends": [
@@ -38,5 +42,9 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@babel/preset-react": "^7.24.1",
+    "cypress": "^13.7.0"
   }
 }

@@ -1,0 +1,17 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "types": ["cypress", "node"],
+    "isolatedModules": false,
+  },
+  // "include": ["../node_modules/cypress", "./**/*.ts"], //VERSION GIVEN IN VIDEO
+  "include": [
+    "../node_modules/cypress", 
+    "./**/*.ts", //"./**/*.ts" references index.ts PHIND SAYS IT WILL ACTUALLY REFERENCE ALL TS FILES IN THE CYPRESS DIRECTORY
+    // "./integrations/specs/tournament.spec.ts" //should reference specs within integrations?
+  ], 
+
+}
+//cypress/integrations/specs/tournament.spec.ts
+//cypress/tsconfig.json

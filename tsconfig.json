@@ -22,9 +22,9 @@
   ],
   "exclude": [
     "node_modules",
-    "**/*.spec.ts",
-    "**/*.test.ts",
-    "**/*.spec.tsx",
-    "**/*.test.tsx"
+    // "**/*.spec.ts",
+    // "**/*.test.ts",
+    // "**/*.spec.tsx",
+    // "**/*.test.tsx"
   ]
 }

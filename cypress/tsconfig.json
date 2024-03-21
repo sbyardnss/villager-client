@@ -4,7 +4,7 @@
     "noEmit": true,
     "types": ["cypress", "node"],
     "isolatedModules": false,
-    "baseUrl": ".",
+    "baseUrl": "http://localhost:3000",
   },
   // "include": ["../node_modules/cypress", "./**/*.ts"], //VERSION GIVEN IN VIDEO
   "include": [

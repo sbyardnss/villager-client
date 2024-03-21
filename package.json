@@ -23,7 +23,6 @@
     "tsc:check": "tsc --noEmit",
     "tsc:check-app": "tsc --noEmit --project \"./tsconfig.json\"",
     "tsc:check-cypress": "tsc --noEmit --project \"./cypress/tsconfig.json\"",
-    "test:e2e": "cypress run --headed",
     "lint": "eslint \"./{src, cypress}/**/*.{js, jsx, ts, tsx, json}\"",
     "cypress:open": "npx cypress open --config-file cypress/cypress.config.ts"
   },

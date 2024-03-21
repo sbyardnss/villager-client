@@ -24,7 +24,8 @@
     "tsc:check-app": "tsc --noEmit --project \"./tsconfig.json\"",
     "tsc:check-cypress": "tsc --noEmit --project \"./cypress/tsconfig.json\"",
     "lint": "eslint \"./{src, cypress}/**/*.{js, jsx, ts, tsx, json}\"",
-    "cypress:open": "npx cypress open --config-file cypress/cypress.config.ts"
+    "cypress:open": "npx cypress open --config-file cypress/cypress.config.ts",
+    "cypress:run": "npx cypress run --config-file cypress/cypress.config.ts"
   },
   "eslintConfig": {
     "extends": [

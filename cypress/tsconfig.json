@@ -4,6 +4,7 @@
     "noEmit": true,
     "types": ["cypress", "node"],
     "isolatedModules": false,
+    "baseUrl": ".",
   },
   // "include": ["../node_modules/cypress", "./**/*.ts"], //VERSION GIVEN IN VIDEO
   "include": [

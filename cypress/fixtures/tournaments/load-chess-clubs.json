@@ -1,0 +1,16 @@
+[
+  {
+    "id": 1,
+    "name": "The one and only",
+    "date": "2020-07-01",
+    "manager": 1,
+    "address": " 1719 21st Ave S",
+    "city": "Nashville",
+    "state": "TN",
+    "zipcode": 37212,
+    "details": "Wednesdays from 7 til whenever. Weekly tournament. All guests welcome!",
+    "password": "gumboTime",
+    "members": [1, 2],
+    "guest_members": [1]
+  }
+]

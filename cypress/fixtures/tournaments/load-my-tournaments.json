@@ -1,29 +1,144 @@
 [
   {
-    "id": 1,
-    "title": "first tournament",
-    "creator": 1,
-    "date": "2023-06-01",
+    "id": 153,
+    "title": "cypress",
+    "creator": {
+      "id": 1,
+      "full_name": "stephen byard"
+    },
+    "games": [1648, 1649, 1650, 1651, 1652, 1653, 1654],
     "time_setting": 1,
     "complete": false,
-    "competitors": [1, 2],
-    "guest_competitors": [1],
-    "rounds": 1,
-    "in_person": false,
+    "competitors": [
+      {
+        "id": 1,
+        "full_name": "stephen byard"
+      },
+      {
+        "id": 2,
+        "full_name": "tiger woods"
+      },
+      {
+        "id": 3,
+        "full_name": "josh ryner"
+      },
+      {
+        "id": 4,
+        "full_name": "josh whiteman"
+      },
+      {
+        "id": 5,
+        "full_name": "jim jimothy"
+      },
+      {
+        "id": 6,
+        "full_name": "bill johnson"
+      }
+    ],
+    "guest_competitors": [
+      {
+        "id": 1,
+        "full_name": "Bob Ross",
+        "guest_id": "g1"
+      },
+      {
+        "id": 5,
+        "full_name": "phil",
+        "guest_id": "g5"
+      },
+      {
+        "id": 7,
+        "full_name": "mark",
+        "guest_id": "g7"
+      },
+      {
+        "id": 8,
+        "full_name": "john johnson",
+        "guest_id": "g8"
+      },
+      {
+        "id": 59,
+        "full_name": "Barbie",
+        "guest_id": "g59"
+      }
+    ],
+    "rounds": 2,
     "pairings": [
       {
         "round": 1,
         "match": 1,
-        "player1": 1,
-        "player2": 2
+        "player1": 6,
+        "player2": "g5"
       },
       {
         "round": 1,
         "match": 2,
         "player1": "g1",
+        "player2": "g59"
+      },
+      {
+        "round": 1,
+        "match": 3,
+        "player1": 1,
+        "player2": "g7"
+      },
+      {
+        "round": 1,
+        "match": 4,
+        "player1": 2,
+        "player2": 4
+      },
+      {
+        "round": 1,
+        "match": 5,
+        "player1": 5,
+        "player2": 3
+      },
+      {
+        "round": 1,
+        "match": 6,
+        "player1": "g8",
+        "player2": null
+      },
+      {
+        "round": 2,
+        "match": 1,
+        "player1": "g7",
+        "player2": 5
+      },
+      {
+        "round": 2,
+        "match": 2,
+        "player1": "g59",
+        "player2": "g8"
+      },
+      {
+        "round": 2,
+        "match": 3,
+        "player1": "g5",
+        "player2": "g1"
+      },
+      {
+        "round": 2,
+        "match": 4,
+        "player1": 1,
+        "player2": 2
+      },
+      {
+        "round": 2,
+        "match": 5,
+        "player1": 3,
+        "player2": 6
+      },
+      {
+        "round": 2,
+        "match": 6,
+        "player1": 4,
         "player2": null
       }
     ],
-    "club": 1
+    "in_person": true,
+    "club": 1,
+    "date": "2024-03-22"
   }
 ]

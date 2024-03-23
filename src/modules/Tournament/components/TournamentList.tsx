@@ -33,6 +33,7 @@ export const TournamentList: React.FC<TournamentListProps> = ({
             return (
               <li key={t.id}
                 className="tournamentListItem"
+                data-cy={`select-tournament--${t.id}`}
                 value={t.id}
                 onClick={(e) => {
                   selectTournament(t);

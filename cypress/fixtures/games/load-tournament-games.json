@@ -1,0 +1,158 @@
+[
+  {
+    "id": 1648,
+    "player_w": {
+      "id": 6,
+      "full_name": "bill johnson"
+    },
+    "player_b": {
+      "id": 5,
+      "full_name": "phil",
+      "guest_id": "g5"
+    },
+    "date_time": "2024-03-22T20:30:03.683736Z",
+    "tournament": 153,
+    "tournament_round": 1,
+    "time_setting": 1,
+    "winner": {
+      "id": 6,
+      "full_name": "bill johnson"
+    },
+    "pgn": null,
+    "bye": false,
+    "accepted": true,
+    "win_style": "checkmate",
+    "target_winner_ct": 11,
+    "target_player_b_ct": 15,
+    "target_player_w_ct": 11
+  },
+  {
+    "id": 1649,
+    "player_w": {
+      "id": 1,
+      "full_name": "Bob Ross",
+      "guest_id": "g1"
+    },
+    "player_b": {
+      "id": 59,
+      "full_name": "Barbie",
+      "guest_id": "g59"
+    },
+    "date_time": "2024-03-22T20:30:05.412388Z",
+    "tournament": 153,
+    "tournament_round": 1,
+    "time_setting": 1,
+    "winner": null,
+    "pgn": null,
+    "bye": false,
+    "accepted": true,
+    "win_style": "draw",
+    "target_winner_ct": null,
+    "target_player_b_ct": 15,
+    "target_player_w_ct": 15
+  },
+  {
+    "id": 1650,
+    "player_w": {
+      "id": 1,
+      "full_name": "stephen byard"
+    },
+    "player_b": {
+      "id": 7,
+      "full_name": "mark",
+      "guest_id": "g7"
+    },
+    "date_time": "2024-03-22T20:30:07.001688Z",
+    "tournament": 153,
+    "tournament_round": 1,
+    "time_setting": 1,
+    "winner": {
+      "id": 1,
+      "full_name": "stephen byard"
+    },
+    "pgn": null,
+    "bye": false,
+    "accepted": true,
+    "win_style": "checkmate",
+    "target_winner_ct": 11,
+    "target_player_b_ct": 15,
+    "target_player_w_ct": 11
+  },
+  {
+    "id": 1651,
+    "player_w": {
+      "id": 2,
+      "full_name": "tiger woods"
+    },
+    "player_b": {
+      "id": 4,
+      "full_name": "josh whiteman"
+    },
+    "date_time": "2024-03-22T20:30:09.025845Z",
+    "tournament": 153,
+    "tournament_round": 1,
+    "time_setting": 1,
+    "winner": {
+      "id": 2,
+      "full_name": "tiger woods"
+    },
+    "pgn": null,
+    "bye": false,
+    "accepted": true,
+    "win_style": "checkmate",
+    "target_winner_ct": 11,
+    "target_player_b_ct": 11,
+    "target_player_w_ct": 11
+  },
+  {
+    "id": 1652,
+    "player_w": {
+      "id": 5,
+      "full_name": "jim jimothy"
+    },
+    "player_b": {
+      "id": 3,
+      "full_name": "josh ryner"
+    },
+    "date_time": "2024-03-22T20:30:10.381219Z",
+    "tournament": 153,
+    "tournament_round": 1,
+    "time_setting": 1,
+    "winner": {
+      "id": 3,
+      "full_name": "josh ryner"
+    },
+    "pgn": null,
+    "bye": false,
+    "accepted": true,
+    "win_style": "checkmate",
+    "target_winner_ct": 11,
+    "target_player_b_ct": 11,
+    "target_player_w_ct": 11
+  },
+  {
+    "id": 1653,
+    "player_w": {
+      "id": 8,
+      "full_name": "john johnson",
+      "guest_id": "g8"
+    },
+    "player_b": null,
+    "date_time": "2024-03-22T20:30:12.516086Z",
+    "tournament": 153,
+    "tournament_round": 1,
+    "time_setting": 1,
+    "winner": {
+      "id": 8,
+      "full_name": "john johnson",
+      "guest_id": "g8"
+    },
+    "pgn": null,
+    "bye": true,
+    "accepted": true,
+    "win_style": "",
+    "target_winner_ct": 15,
+    "target_player_b_ct": null,
+    "target_player_w_ct": 15
+  }
+]

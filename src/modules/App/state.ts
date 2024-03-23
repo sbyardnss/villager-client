@@ -1,7 +1,7 @@
 import type { Tournament } from "../../Types/Tournament";
 import type { Villager } from "./types";
 import type { ChessClub } from "../../Types/ChessClub";
-
+//TODO: DO WE NEED THIS STATE AT ALL
 interface AppState {
   user: Villager,
   clubs: ChessClub[],

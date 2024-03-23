@@ -1,46 +1,50 @@
-import cy from 'cypress';
-
 export function setupTournaments() {
-  cy.login();
-  cy.intercept(
-    'GET',
-    '/clubs/my_clubs',
-    { fixture: 'tournaments/load-chess-clubs.json' },
-  ).as('loadChessClubs');
+  // cy.login();
+  // cy.intercept(
+  //   'GET',
+  //   '**/clubs/my_clubs',
+  //   { fixture: 'tournaments/load-chess-clubs.json' },
+  // ).as('loadChessClubs');
 
   cy.intercept(
     'GET',
     '/players',
-    { fixture: 'tournaments/load-all-players.json' },
-  ).as('loadAllPlayers')
+    { fixture: 'playersAndGuests/load-all-players.json' },
+  ).as('loadAllPlayers');
 
   cy.intercept(
     'GET',
     '/guests',
-    { fixture: 'tournaments/load-all-guests.json' }
-  ).as('loadAllGuests')
+    { fixture: 'playersAndGuests/load-all-guests.json' }
+  ).as('loadAllGuests');
 
   cy.intercept(
     'GET',
-    '*/players/club_mates',
-    { fixture: 'tournaments/load-all-guests.json' }
-  ).as('loadClubMates')
+    '/players/club_mates',
+    { fixture: 'playersAndGuests/load-club-mates.json' }
+  ).as('loadClubMates');
 
   cy.intercept(
     'GET',
     '/timesettings',
-    { fixture: 'tournaments/load-all-time-settings.json' }
-  ).as('loadAllTimes')
+    { fixture: 'timeSettings/load-all-time-settings.json' }
+  ).as('loadAllTimes');
 
   cy.intercept(
     'GET',
-    '/tournaments/my_open_tournaments',
+    'tournaments/my_open_tournaments',
     { fixture: 'tournaments/load-my-tournaments.json' }
-  ).as('loadMyTournaments')
+  ).as('loadMyTournaments');
 
   cy.intercept(
     'GET',
-    '/games/1/get_selected_tournament_games',
-    { fixture: 'tournaments/load-tournament-games.json' }
-  ).as('loadTournamentGames')
+    '/games/153/get_selected_tournament_games',
+    { fixture: 'games/load-tournament-games.json' }
+  ).as('loadTournamentGames');
+
+  cy.intercept(
+    'GET',
+    '/games/get_active_user_games',
+    { fixture: 'games/load-user-active-games.json' }
+  ).as('loadUserActiveGames');
 }

@@ -5,11 +5,11 @@ import { updatePlayerOppRefObj } from "./update-player-opp-ref";
 import { updateBlackWhiteTally } from "./update-black-white-tally";
 import { updateTieBreakAndScoreCardData } from "./update-tie-break-score-card-data";
 
-
+//TODO: COULD ADD hadBye PROPERTY TO THIS TO MAKE CREATING PAIRINGS EASIER. check createPairings for 'BYE ON SCORE WOULD BE EASIER'
 export type ScoreObjType = {
   [key: string | number]: number; // This part covers the string keys
-// } & {
-//   [key: number]: number; // This part covers the number key
+  // } & {
+  //   [key: number]: number; // This part covers the number key
 };
 // export type ScoreObjType = {
 //   [key: string]: number; // This part covers the string keys
@@ -96,7 +96,7 @@ export const tournamentAnalysis: TournamentAnalysisFunction = (
       whitePlayerIdentifier = identifier;
       gameResult.white = identifier;
     }
-    if (game.player_b && game.player_b.id){
+    if (game.player_b && game.player_b.id) {
       const identifier = findIdentifier(game.player_b);
       blackPlayerIdentifier = identifier;
       gameResult.black = identifier;
@@ -107,10 +107,21 @@ export const tournamentAnalysis: TournamentAnalysisFunction = (
     tieBreakDataForOutput.push(gameResult);
     updatePlayerOppRefObj(playerOppObjForOutput, whitePlayerIdentifier, blackPlayerIdentifier);
 
-    //CHECKING IF TWO PLAYERS ON GAME FOR BWTALLY
-    // if (blackPlayerIdentifier && whitePlayerIdentifier) {
-    updateBlackWhiteTally(blackWhiteForOutput, whitePlayerIdentifier, blackPlayerIdentifier);
-    // }
+    //CHECKING IF TWO PLAYERS ON GAME FOR BWTALLY SO THAT WE DON'T INCLUDE BYE GAMES
+    if (blackPlayerIdentifier && whitePlayerIdentifier) {
+      updateBlackWhiteTally(blackWhiteForOutput, whitePlayerIdentifier, blackPlayerIdentifier);
+    }
+  }
+  //THIS IS FOR ADDING THE CURRENT BYE PLAYER TO THE ANALYSIS SINCE WE DON'T WANT TO SEND THE BYE GAME UNTIL THE ROUND IS OVER
+  if (byeGame.current?.player_w.id) {
+    const byePlayerIdentifier = findIdentifier(byeGame.current?.player_w);
+    const byeGameResult: GameResult = { 
+      white: byePlayerIdentifier, 
+      black: null, 
+      winner: byePlayerIdentifier, 
+      win_style: null, 
+      round: currentRound };
+    updateTieBreakAndScoreCardData(byeGame.current, byeGameResult, scoreCardForOutput, scoreObjForOutput, currentRound, currentRound, byePlayerIdentifier, undefined)
   }
 
 
@@ -123,11 +134,12 @@ export const tournamentAnalysis: TournamentAnalysisFunction = (
       match.player2 = null;
     };
     currentRoundMatchupsOutput.push(match);
-    if (match.player1) {
-      updatePlayerOppRefObj(playerOppObjForOutput, match.player1, match.player2);
-    }
+    // if (match.player1) {
+    //   console.log('hitting this also')
+    //   updatePlayerOppRefObj(playerOppObjForOutput, match.player1, match.player2);
+    // }
   }
-  
+
   // currentMatchupsSetter(currentRoundMatchupsOutput);
   return ({
     playerOppRefObj: playerOppObjForOutput,

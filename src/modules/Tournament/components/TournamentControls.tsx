@@ -79,10 +79,10 @@ export const TournamentControls: React.FC<TournamentControlsProps> = ({
                 // THIS WORKS HERE BUT THERE MUST BE A BETTER WAY
                 .then(() => tournamentGamesResetter());
             }
-            else {
-              sendNewGame(byeGame.current)
-                .then(() => tournamentGamesResetter());
-            }
+            // else {
+            //   sendNewGame(byeGame.current)
+            //     .then(() => tournamentGamesResetter());
+            // }
           })
         }}>create round games</button>
       )
@@ -99,20 +99,22 @@ export const TournamentControls: React.FC<TournamentControlsProps> = ({
             if (window.confirm("create round?")) {
               const tournamentCopy = { ...tournamentObj }
               // const newPairings = createPairings('new', activeTournamentPlayers, playerOpponentsReferenceObj, currentRound, scoreObj, scoreCard, byeGame.player_w, blackWhiteTally)
-              const newPairings = createPairings('new', activePlayers, currentRound, /*byeGame.current, */analysis)
+              const newPairings = createPairings('new', activePlayers, currentRound, analysis, byeGame.current)
               tournamentCopy.pairings = tournamentCopy.pairings.concat(newPairings)
               tournamentCopy.rounds++
+              // console.log('newPairings', newPairings)
+              // console.log('tournamentCopy', tournamentCopy)
               // tournamentCopy.competitors = tournamentCopy.competitors.map(c => { return c.id })
               // tournamentCopy.guest_competitors = tournamentCopy.guest_competitors.map(gc => { return gc.id })
+              if (byeGame.player_w.id) {
+                sendNewGame(byeGame)
+              }
               updateTournament(tournamentCopy)
                 .then(() => {
                   // tournamentResetter();
                   activeTournamentResetter();
                   tournamentGamesResetter();
                 });
-              if (byeGame.current.player_w.id) {
-                sendNewGame(byeGame.current)
-              }
               modalModeSetter('none');
             }
           }}>

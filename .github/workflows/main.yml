@@ -1,6 +1,6 @@
 name: Run Cypress Tests
 
-on: [push]
+on: [push, pull_request]
 
 jobs:
   install:
@@ -36,3 +36,6 @@ jobs:
 #       **/*Catalog.cy.ts
 #   env:
 #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+# Remember, this setup will run the workflow for every push and pull request across all branches. 
+# If you need to exclude certain branches or run the workflow only on specific branches, 
+# you can use the branches or branches-ignore filters under the on section

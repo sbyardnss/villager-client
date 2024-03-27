@@ -12,7 +12,7 @@ jobs:
         run: npm ci
       - name: Cypress run
         # uses: cypress-io/github-action@v2 #changed from v3 but did not work
-        uses: cypress-io/github-action@v3
+        uses: cypress-io/github-action@v6
         with:
           # config-file: cypress.config.ts
           config-file: cypress/cypress.config.ts

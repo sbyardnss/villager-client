@@ -20,7 +20,7 @@ describe('Tournament Components', () => {
     cy.wait('@loadTournamentGames').its('response.body').its('length').should('equal', 6);
   });
 
-  it.only('User should be able to create a new tournament', () => {
+  it('User should be able to create a new tournament', () => {
     const selectors = [
       'select-player--stephen byard--1',
       'select-player--tiger woods--2',

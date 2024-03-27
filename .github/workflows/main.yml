@@ -21,6 +21,18 @@ jobs:
           start: npm start
           wait-on: http://localhost:3000
           spec: cypress/integrations/**/*.spec.ts
+      - name: Upload videos
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: cypress-videos
+          path: cypress/videos
+      - name: Upload screenshots
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: cypress-screenshots
+          path: cypress/screenshots
         # env:
         #   REACT_APP_API: https://villager-chess-server-acc4f0b418c8.herokuapp.com
           # project: ./site

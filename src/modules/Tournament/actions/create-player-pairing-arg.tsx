@@ -1,6 +1,7 @@
 import type { tournamentAnalysisOutput } from "./matchup-game-analysis"
 import type { Guest } from "../../../Types/Guest";
 import type { PlayerRelated } from "../../../Types/Player";
+import { findIdentifier } from "./find-identifier";
 export interface PlayerArg {
   id: string | number;
   score: number;
@@ -14,8 +15,9 @@ type PlayerArgCreatorFunction = (
   identifier: number | string,
   analysisObj: tournamentAnalysisOutput,
   activeTourneyPlayers: (PlayerRelated | Guest)[],
+  currentByeGameRef?: any,//TODO - ANY
 ) => PlayerArg | undefined;
-export const playerArgCreator: PlayerArgCreatorFunction = (identifier, analysisObj, activeTourneyPlayers) => {
+export const playerArgCreator: PlayerArgCreatorFunction = (identifier, analysisObj, activeTourneyPlayers, currentByeGameRef?) => {
   let isActive = true
   let playerArg: PlayerArg = {} as PlayerArg;
   //check if player is active and get identifier
@@ -31,12 +33,23 @@ export const playerArgCreator: PlayerArgCreatorFunction = (identifier, analysisO
     }
   }
   if (isActive) {
-    playerArg = {
-      id: identifier,
-      score: analysisObj.scoreObj[identifier] || 0,
-      colors: analysisObj.blackWhiteTally[identifier] || [],
-      avoid: analysisObj.playerOppRefObj[identifier] ? analysisObj.playerOppRefObj[identifier].filter(ref => ref !== 'bye') : [],
-      receivedBye: false,
+    if (currentByeGameRef?.player_w?.id) {
+      playerArg = {
+        id: identifier,
+        score: analysisObj.scoreObj[identifier] || 0,
+        colors: analysisObj.blackWhiteTally[identifier] || [],
+        avoid: analysisObj.playerOppRefObj[identifier] ? analysisObj.playerOppRefObj[identifier].filter(ref => ref !== 'bye') : [],
+        // receivedBye: false,
+        receivedBye: findIdentifier(currentByeGameRef?.player_w) === identifier ? true : false,
+      }
+    } else {
+      playerArg = {
+        id: identifier,
+        score: analysisObj.scoreObj[identifier] || 0,
+        colors: analysisObj.blackWhiteTally[identifier] || [],
+        avoid: analysisObj.playerOppRefObj[identifier] ? analysisObj.playerOppRefObj[identifier].filter(ref => ref !== 'bye') : [],
+        receivedBye: false,
+      }
     }
     if (analysisObj.playerOppRefObj[identifier]) {
       // if (analysisObj.playerOppRefObj[identifier].includes('bye') && playerArg.score > .5) {

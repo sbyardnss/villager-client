@@ -1,0 +1,57 @@
+name: Run Cypress Tests
+
+on: [push, pull_request]
+
+jobs:
+  install:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        # uses: actions/checkout@v2
+      - name: Install modules
+        run: npm ci
+      - name: Cypress run
+        # uses: cypress-io/github-action@v2 #changed from v3 but did not work
+        uses: cypress-io/github-action@v6
+        with:
+          # config-file: cypress.config.ts
+          config-file: cypress/cypress.config.ts
+          browser: chrome
+          # headless: true
+          start: npm start
+          wait-on: http://localhost:3000
+          spec: cypress/integrations/**/*.spec.ts
+      - name: Upload videos
+        uses: actions/upload-artifact@v4
+        # uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: cypress-videos
+          path: cypress/videos
+      - name: Upload screenshots
+        uses: actions/upload-artifact@v4
+        # uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: cypress-screenshots
+          path: cypress/screenshots
+        # env:
+        #   REACT_APP_API: https://villager-chess-server-acc4f0b418c8.herokuapp.com
+          # project: ./site
+          # browser: chrome
+          # build: npm build
+          # start: npm start
+          # wait-on: "http://localhost:3000"
+# name: Cypress run
+#   uses: cypress-io/github-action@v6
+#   with:
+#     config-file: cypress.config.ts
+#     spec: |
+#       **/*Catalog.cy.js
+#       **/*Catalog.cy.ts
+#   env:
+#     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+# Remember, this setup will run the workflow for every push and pull request across all branches. 
+# If you need to exclude certain branches or run the workflow only on specific branches, 
+# you can use the branches or branches-ignore filters under the on section

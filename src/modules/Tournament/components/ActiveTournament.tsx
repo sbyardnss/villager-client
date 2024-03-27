@@ -85,7 +85,7 @@ export const ActiveTournament: React.FC<ActiveTournamentProps> = ({
     bye: true
   });
   const byeGameRef = useRef<OutgoingGame>({
-    player_w: {} as Guest | PlayerRelated,
+    player_w: {} as Guest | PlayerRelated, //TODO: INITIALIZE THIS WITH UNDEFINED OR NULL
     player_w_model_type: "",
     player_b: {} as Guest | PlayerRelated,
     player_b_model_type: "",
@@ -351,7 +351,7 @@ export const ActiveTournament: React.FC<ActiveTournamentProps> = ({
         tournamentObj={selectedTournament}
         currentMatchups={currentRoundMatchups}
         gameForApi={gameForApi}
-        byeGame={byeGameRef}
+        byeGame={byeGameRef.current}
         userIsCreator={tournamentCreatorBool}
         activePlayers={activeTournamentPlayers}
         currentRound={currentRound}

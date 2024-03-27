@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
     "target": "es5",
+    // "target": "ES2015",
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
@@ -22,9 +23,9 @@
   ],
   "exclude": [
     "node_modules",
-    "**/*.spec.ts",
-    "**/*.test.ts",
-    "**/*.spec.tsx",
-    "**/*.test.tsx"
+    // "**/*.spec.ts",
+    // "**/*.test.ts",
+    // "**/*.spec.tsx",
+    // "**/*.test.tsx"
   ]
 }

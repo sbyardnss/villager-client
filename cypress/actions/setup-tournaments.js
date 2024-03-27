@@ -1,11 +1,4 @@
 export function setupTournaments() {
-  // cy.login();
-  // cy.intercept(
-  //   'GET',
-  //   '**/clubs/my_clubs',
-  //   { fixture: 'tournaments/load-chess-clubs.json' },
-  // ).as('loadChessClubs');
-
   cy.intercept(
     'GET',
     '**/players',
@@ -42,9 +35,16 @@ export function setupTournaments() {
     { fixture: 'games/load-tournament-games.json' }
   ).as('loadTournamentGames');
 
-  // cy.intercept(
-  //   'GET',
-  //   '**/games/get_active_user_games',
-  //   { fixture: 'games/load-user-active-games.json' }
-  // ).as('loadUserActiveGames');
+  cy.intercept(
+    'POST',
+    '**/tournaments',
+    {
+      statusCode: 200, // or the appropriate status code
+      body: {
+        // Mock response body
+        // You can use a fixture or define the response directly here
+        fixture: 'tournaments/creation-response.json'
+      }
+    },
+  ).as('CreateTournament');
 }

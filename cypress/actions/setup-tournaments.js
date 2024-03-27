@@ -1,11 +1,4 @@
 export function setupTournaments() {
-  // cy.login();
-  // cy.intercept(
-  //   'GET',
-  //   '**/clubs/my_clubs',
-  //   { fixture: 'tournaments/load-chess-clubs.json' },
-  // ).as('loadChessClubs');
-
   cy.intercept(
     'GET',
     '**/players',
@@ -41,10 +34,4 @@ export function setupTournaments() {
     '**/games/153/get_selected_tournament_games',
     { fixture: 'games/load-tournament-games.json' }
   ).as('loadTournamentGames');
-
-  // cy.intercept(
-  //   'GET',
-  //   '**/games/get_active_user_games',
-  //   { fixture: 'games/load-user-active-games.json' }
-  // ).as('loadUserActiveGames');
 }

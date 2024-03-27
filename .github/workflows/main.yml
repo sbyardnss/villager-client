@@ -17,7 +17,7 @@ jobs:
           # config-file: cypress.config.ts
           config-file: cypress/cypress.config.ts
           browser: chrome
-          headless: true
+          # headless: true
           start: npm start
           wait-on: http://localhost:3000
           spec: cypress/integrations/**/*.spec.ts

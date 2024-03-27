@@ -8,12 +8,12 @@ export function setupHomepage() {
 
   cy.intercept(
     'GET',
-    '/games/get_active_user_games',
+    '**/games/get_active_user_games',
     { fixture: 'games/load-user-active-games.json' }
   ).as('loadUserActiveGames');
   cy.intercept(
     'GET',
-    '/games/get_open_challenges',
+    '**/games/get_open_challenges',
     { fixture: 'games/load-open-challenges.json' }
   ).as('loadUserActiveGames');
 

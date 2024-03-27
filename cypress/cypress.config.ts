@@ -11,5 +11,8 @@ export default defineConfig({
     video: true,
     videoCompression: true, // Enables video compression
     videosFolder: 'cypress/videos', // Specifies the folder where videos are stored
+    env: {
+      REACT_APP_API: "http://localhost:8000"
+    },
   },
 });

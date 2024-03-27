@@ -8,13 +8,13 @@ export function setupTournaments() {
 
   cy.intercept(
     'GET',
-    '/players',
+    '**/players',
     { fixture: 'playersAndGuests/load-all-players.json' },
   ).as('loadAllPlayers');
 
   cy.intercept(
     'GET',
-    '/guests',
+    '**/guests',
     { fixture: 'playersAndGuests/load-all-guests.json' }
   ).as('loadAllGuests');
 
@@ -26,7 +26,7 @@ export function setupTournaments() {
 
   cy.intercept(
     'GET',
-    '/timesettings',
+    '**/timesettings',
     { fixture: 'timeSettings/load-all-time-settings.json' }
   ).as('loadAllTimes');
 
@@ -38,13 +38,13 @@ export function setupTournaments() {
 
   cy.intercept(
     'GET',
-    '/games/153/get_selected_tournament_games',
+    '**/games/153/get_selected_tournament_games',
     { fixture: 'games/load-tournament-games.json' }
   ).as('loadTournamentGames');
 
-  cy.intercept(
-    'GET',
-    '/games/get_active_user_games',
-    { fixture: 'games/load-user-active-games.json' }
-  ).as('loadUserActiveGames');
+  // cy.intercept(
+  //   'GET',
+  //   '**/games/get_active_user_games',
+  //   { fixture: 'games/load-user-active-games.json' }
+  // ).as('loadUserActiveGames');
 }

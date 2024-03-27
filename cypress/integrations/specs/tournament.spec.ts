@@ -14,6 +14,7 @@ describe('Tournament Components', () => {
     cy.visit('/tournament');
   });
   it('When user selects a tournament, the tournament and its games should be loaded', () => {
+    cy.wait('@loadMyTournaments');
     cy.get('[data-cy="select-tournament--153"]')
       .should('be.visible')
       .click();

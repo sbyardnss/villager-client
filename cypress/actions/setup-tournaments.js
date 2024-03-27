@@ -34,4 +34,17 @@ export function setupTournaments() {
     '**/games/153/get_selected_tournament_games',
     { fixture: 'games/load-tournament-games.json' }
   ).as('loadTournamentGames');
+
+  cy.intercept(
+    'POST',
+    '**/tournaments',
+    {
+      statusCode: 200, // or the appropriate status code
+      body: {
+        // Mock response body
+        // You can use a fixture or define the response directly here
+        fixture: 'tournaments/creation-response.json'
+      }
+    },
+  ).as('CreateTournament');
 }

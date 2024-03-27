@@ -82,6 +82,7 @@ export const TournamentForm: React.FC<TournamentFormProps> = ({
                   else {
                     return (
                       <div
+                        data-cy={`select-club-for-tournament-creation--${club.id}`}
                         key={club.id}
                         className="clubSelectionTabItem"
                         onClick={() => {
@@ -122,6 +123,7 @@ export const TournamentForm: React.FC<TournamentFormProps> = ({
               <div id="tournamentSubmit">
                 <button className="buttonStyleApprove" onClick={() => setPlayersSelected(false)}>choose players</button>
                 <button
+                  data-cy="start-tournament-btn"
                   className="buttonStyleApprove"
                   onClick={() => {
                     if (tournamentObj.guest_competitors.length > 0 && tournamentObj.in_person === false) {
@@ -176,7 +178,11 @@ export const TournamentForm: React.FC<TournamentFormProps> = ({
     }
   } else {
     return (
-      <button id="createTournamentButton" className="setCustomFont" onClick={() => setCreateTournament(true)}>
+      <button 
+        data-cy="create-tournament-btn"
+        id="createTournamentButton" 
+        className="setCustomFont" 
+        onClick={() => setCreateTournament(true)}>
         create new tournament
       </button>
     )

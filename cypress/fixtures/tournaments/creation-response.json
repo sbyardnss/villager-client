@@ -1,0 +1,39 @@
+{
+  "id": 157,
+  "title": "test creation cy",
+  "time_setting": 1,
+  "pairings": [
+    {
+      "round": 1,
+      "match": 1,
+      "player1": 4,
+      "player2": 2
+    },
+    {
+      "round": 1,
+      "match": 2,
+      "player1": 6,
+      "player2": 5
+    },
+    {
+      "round": 1,
+      "match": 3,
+      "player1": 3,
+      "player2": "g7"
+    },
+    {
+      "round": 1,
+      "match": 4,
+      "player1": 1,
+      "player2": "g1"
+    },
+    {
+      "round": 1,
+      "match": 5,
+      "player1": "g5",
+      "player2": null
+    }
+  ],
+  "in_person": true,
+  "club": 1
+}

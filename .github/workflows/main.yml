@@ -11,7 +11,7 @@ jobs:
       - name: Install modules
         run: npm ci
       - name: Cypress run
-        uses: cypress-io/github-action@v3
+        uses: cypress-io/github-action@v2
         with:
           config-file: cypress.config.ts
           browser: chrome

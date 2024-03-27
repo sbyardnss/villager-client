@@ -20,7 +20,7 @@ export function setupTournaments() {
 
   cy.intercept(
     'GET',
-    '/players/club_mates',
+    '**/players/club_mates',
     { fixture: 'playersAndGuests/load-club-mates.json' }
   ).as('loadClubMates');
 
@@ -32,7 +32,7 @@ export function setupTournaments() {
 
   cy.intercept(
     'GET',
-    'tournaments/my_open_tournaments',
+    '**/tournaments/my_open_tournaments',
     { fixture: 'tournaments/load-my-tournaments.json' }
   ).as('loadMyTournaments');
 

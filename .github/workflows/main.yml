@@ -20,8 +20,7 @@ jobs:
           headless: true
           start: npm start
           wait-on: http://localhost:3000
-        spec: |
-          cypress/integrations/**/*.spec.ts
+          spec: cypress/integrations/**/*.spec.ts
         # env:
         #   REACT_APP_API: https://villager-chess-server-acc4f0b418c8.herokuapp.com
           # project: ./site

@@ -15,6 +15,7 @@ describe('Tournament Components', () => {
   });
   it('When user selects a tournament, the tournament and its games should be loaded', () => {
     cy.get('[data-cy="select-tournament--153"]')
+      .should('be.visible')
       .click();
     cy.wait('@loadTournamentGames').its('response.body').its('length').should('equal', 6);
   });

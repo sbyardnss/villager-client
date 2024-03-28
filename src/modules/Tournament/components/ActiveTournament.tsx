@@ -99,6 +99,8 @@ export const ActiveTournament: React.FC<ActiveTournamentProps> = ({
     bye: true
   });
 
+  //TODO: BASED ON TEST :User should be able to submit game with the white pieces player as the winner and the game should disappear from the active games list when the games are reloaded,
+  //THIS USEEFFECT MIGHT BE RUNNING ANY TIME SOMEONE CLICKS A PLAYER IN THE SCORING COMPONENT. ENSURE THIS IS NOT THE CASE
   useEffect(
     () => {
       getTournamentGames(selectedTournament.id)

@@ -13,10 +13,17 @@ describe('Tournament Components', () => {
     cy.visit('/tournament');
   });
   it('When user selects a tournament, the tournament and its games should be loaded', () => {
+    cy.intercept(
+      'GET',
+      '**/games/153/get_selected_tournament_games',
+      { fixture: 'games/load-tournament-games.json' }
+    ).as('loadTournamentGames');
+
     cy.wait('@loadMyTournaments');
     cy.get('[data-cy="select-tournament--153"]')
       .should('be.visible')
       .click();
+
     cy.wait('@loadTournamentGames').its('response.body').its('length').should('equal', 6);
   });
 
@@ -58,8 +65,8 @@ describe('Tournament Components', () => {
         const { pairings, ...restOfFixtureData } = fixtureData;
         expect(restOfInterception).to.deep.equal(restOfFixtureData);
       });
-    })
-  })
+    });
+  });
 
   it('User should be able to create a new guest and new guest should appear in list of potential players', () => {
     cy.wait('@loadMyTournaments');
@@ -80,5 +87,37 @@ describe('Tournament Components', () => {
     cy.get('[data-cy="select-player--John Cena, can\'t see me!--60"]')
       .should('exist')
       .should('contain.text', "John Cena, can't see me!");
-  })
-})
+  });
+
+  it.only('User should be able to submit game with the white pieces player as the winner and the game should disappear from the active games list when the games are reloaded', () => {
+    // Set up the intercept outside of any conditional logic
+    let requestCount = 0;
+    cy.intercept('GET', '**/games/153/get_selected_tournament_games', (req) => {
+      if (requestCount < 2) {
+        req.reply({ fixture: 'games/load-tournament-games.json' });
+      } else if (requestCount >= 2) {
+        req.reply({ fixture: 'games/getResponsesAfterSubmittedGames/load-tournament-games-white-win.json' });
+      }
+      requestCount++;
+    }).as('loadTournamentGames');
+
+    cy.wait('@loadMyTournaments');
+    cy.get('[data-cy="select-tournament--153"]')
+      .should('be.visible')
+      .click();
+    cy.get('[data-cy="matchup-div--match-1--round-2--tournament-153"]')
+      .should('exist');
+    cy.get('[data-cy="white-scoring-selector--match-1--round-2--tournament-153"]')
+      .click();
+    cy.get('[data-cy="submit-score-btn--match-1--round-2--tournament-153"]')
+      .click();
+    cy.wait('@ScoringTestWhite')
+      .then((interception) => {
+        cy.fixture('games/outgoingGames/scoring-test-white-player-win-request-body.json').then((expectedRequestBody) => {
+          expect(interception.request.body).to.deep.equal(expectedRequestBody);
+        });
+      });
+    cy.get('[data-cy="matchup-div--match-1--round-2--tournament-153"]')
+      .should('not.exist');
+  });
+});

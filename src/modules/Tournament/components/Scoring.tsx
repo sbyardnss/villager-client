@@ -74,11 +74,16 @@ export const Scoring: React.FC<ScoringProps> = ({
                   return undefined;
                 }
               });
-              if (!matchingGame && analysis.playerOppRefObj[findIdentifier(whitePlayer)]?.indexOf(findIdentifier(blackPlayer)) !== analysis.playerOppRefObj[findIdentifier(whitePlayer)]?.length + 1) {
+              const whiteIdentifier = findIdentifier(whitePlayer);
+              const blackIdentifier = findIdentifier(blackPlayer);
+              if (!matchingGame && analysis.playerOppRefObj[whiteIdentifier]?.indexOf(blackIdentifier) !== analysis.playerOppRefObj[whiteIdentifier]?.length + 1) {
                 return (
-                  <div key={`${matchup.round} -- ${matchup.match} -- ${index}`}
+                  <div
+                    data-cy={`matchup-div--match-${matchup.match}--round-${matchup.round}--tournament-${tournamentObj.id}`}
+                    key={gameForApi.winner && gameForApi.winner.id ? `${matchup.round}--${matchup.match}--${index}--winner${gameForApi.winner.id}` : `${matchup.round}--${matchup.match}--${index}--no-winner`}
                     className="tournamentScoringMatchup">
                     <div
+                      data-cy={`white-scoring-selector--match-${matchup.match}--round-${matchup.round}--tournament-${tournamentObj.id}`}
                       className={gameForApi.id === undefined && gameForApi.winner === whitePlayer ? "selectedWhitePiecesMatchup" : "whitePiecesMatchup"}
                       id="whitePieces"
                       onClick={() => {
@@ -86,6 +91,7 @@ export const Scoring: React.FC<ScoringProps> = ({
                       }}>{whitePlayer.full_name}
                     </div>
                     <div
+                      data-cy={`draw-scoring-selector--match-${matchup.match}--round-${matchup.round}--tournament-${tournamentObj.id}`}
                       className={gameForApi.id === undefined && gameForApi.player_w === whitePlayer && gameForApi.player_b === blackPlayer && gameForApi.win_style === "draw" ? "selectedDrawMatchupButton" : "drawMatchupButton"}
                       id="drawUpdate"
                       onClick={() => {
@@ -93,6 +99,7 @@ export const Scoring: React.FC<ScoringProps> = ({
                       }}>Draw
                     </div>
                     <div
+                      data-cy={`black-scoring-selector--match-${matchup.match}--round-${matchup.round}--tournament-${tournamentObj.id}`}
                       className={gameForApi.id === undefined && gameForApi.winner === blackPlayer ? "selectedBlackPiecesMatchup" : "blackPiecesMatchup"}
                       id="blackPieces"
                       onClick={() => {
@@ -100,11 +107,16 @@ export const Scoring: React.FC<ScoringProps> = ({
                       }}>{blackPlayer.full_name}
                     </div>
                     <button
+                      data-cy={`submit-score-btn--match-${matchup.match}--round-${matchup.round}--tournament-${tournamentObj.id}`}
                       id="scoringSubmit"
                       className="buttonStyleReject"
                       onClick={() => {
                         if (gameForApi.win_style) {
-                          console.log(gameForApi);
+                          console.log(gameForApi)
+                          console.log(gameForApi.id);
+                          console.log('gameForApi.winner', gameForApi.winner)
+                          console.log('whitePlayer', whitePlayer)
+                          console.log(gameForApi.winner === whitePlayer)
                           sendNewGame(gameForApi)
                             .then(() => resetTourneyGames());
                           resetGame();

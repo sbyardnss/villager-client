@@ -29,11 +29,7 @@ export function setupTournaments() {
     { fixture: 'tournaments/load-my-tournaments.json' }
   ).as('loadMyTournaments');
 
-  cy.intercept(
-    'GET',
-    '**/games/153/get_selected_tournament_games',
-    { fixture: 'games/load-tournament-games.json' }
-  ).as('loadTournamentGames');
+
 
   cy.intercept(
     'POST',
@@ -61,4 +57,31 @@ export function setupTournaments() {
     '**/clubs/1/get_club_guests',
     { fixture: 'playersAndGuests/load-guests-after-create.json' }
   ).as('loadClubGuestsAfterCreation');
-}
+  cy.intercept(
+    'POST',
+    '**/games',
+    {
+      statusCode: 201,
+      body: {
+        fixture: 'games/outgoingGames/scoring-test-white-player-win-response.json',
+      }
+    }
+  ).as('ScoringTestWhite');
+  //EXAMPLE OF ASSERTING REQUEST AND BODY SIMULTANEOUSLY
+  // cy.fixture('games/outgoingGames/scoring-test-white-player-win-request-body.json').then((expectedRequestBody) => {
+  //   cy.intercept(
+  //     'POST',
+  //     '**/games',
+  //     (req) => {
+  //       // Assert on the request body here
+  //       expect(req.body).to.deep.equal(expectedRequestBody);
+
+  //       // Continue the request with the specified response
+  //       req.reply({
+  //         statusCode: 201,
+  //         // fixture: 'games/outgoingGames/scoring-test-white-player-win-response.json'
+  //       });
+  //     }
+  //   ).as('ScoringTestWhite');
+  // });
+};

@@ -169,6 +169,7 @@ export const PlayerSelection: React.FC<PlayerSelectionProps> = ({
       </div>
       <div id="createGuestDiv">
         <input
+          data-cy="create-guest-input"
           className="text-input"
           id="newGuestInput"
           type="text"
@@ -181,6 +182,7 @@ export const PlayerSelection: React.FC<PlayerSelectionProps> = ({
           }}
         />
         <button
+          data-cy="create-guest-btn"
           id="newGuestSubmitBtn"
           className="setCustomFont"
           onClick={() => {

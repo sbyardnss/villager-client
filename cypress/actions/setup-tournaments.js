@@ -47,4 +47,18 @@ export function setupTournaments() {
       }
     },
   ).as('CreateTournament');
+
+  cy.intercept(
+    'POST',
+    '**/guests/create_guest',
+    {
+      statusCode: 204,
+    },
+  ).as('CreateGuest');
+
+  cy.intercept(
+    'GET',
+    '**/clubs/1/get_club_guests',
+    { fixture: 'playersAndGuests/load-guests-after-create.json' }
+  ).as('loadClubGuestsAfterCreation');
 }

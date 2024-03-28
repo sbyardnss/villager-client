@@ -52,13 +52,33 @@ describe('Tournament Components', () => {
       .select('5 minutes -- 0 second increment');
     cy.get('[data-cy="start-tournament-btn"]')
       .click();
-    cy.wait('@CreateTournament').then((interception: any) => {
+    cy.wait('@CreateTournament').then((interception) => {
       const { pairings, ...restOfInterception } = interception.request.body;
       cy.fixture('tournaments/create-tournament-payload.json').then((fixtureData) => {
         const { pairings, ...restOfFixtureData } = fixtureData;
         expect(restOfInterception).to.deep.equal(restOfFixtureData);
       });
     })
-    
+  })
+
+  it('User should be able to create a new guest and new guest should appear in list of potential players', () => {
+    cy.wait('@loadMyTournaments');
+    cy.get('[data-cy="create-tournament-btn"]')
+      .should('be.visible')
+      .click();
+    cy.get('[data-cy="select-club-for-tournament-creation--1"]')
+      .should('be.visible')
+      .click();
+    cy.get('[data-cy="toggle-guests--true"]')
+      .click();
+    cy.get('[data-cy="create-guest-input"]')
+      .type("John Cena, can't see me!");
+    cy.get('[data-cy="create-guest-btn"]')
+      .click();
+    cy.intercept('@CreateGuest');
+    cy.intercept('@loadClubGuestsAfterCreation');
+    cy.get('[data-cy="select-player--John Cena, can\'t see me!--60"]')
+      .should('exist')
+      .should('contain.text', "John Cena, can't see me!");
   })
 })

@@ -1,0 +1,42 @@
+# version: '3'
+# services:
+#   nginx:
+#     restart: always
+#     image: 'nginx:latest'
+#     build:
+#       dockerfile: Dockerfile.dev
+#       context: ./nginx
+#     ports:
+#       - '3050:3051'
+# networks:
+#   dev:
+    # depends_on:
+    #   - api
+      # - client
+  # api:
+  #   build:
+  #     dockerfile: Dockerfile.dev
+  #     context: ./server
+  #   networks:
+  #     - dev
+  # client:
+  #   build: 
+  #     dockerfile: Dockerfile.dev
+  #     context: ./client
+  #   networks:
+  #     - dev
+# networks:
+#   dev:
+#CHECK
+version: '3'
+services:
+  nginx:
+    restart: always
+    image: 'nginx:latest'
+    build:
+      context: ..
+      dockerfile: villager-client/nginx/Dockerfile.dev
+    ports:
+      - '3050:3051'
+networks:
+  dev:

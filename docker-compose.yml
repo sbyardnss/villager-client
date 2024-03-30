@@ -34,8 +34,8 @@ services:
     restart: always
     image: 'nginx:latest'
     build:
-      context: ..
-      dockerfile: villager-client/nginx/Dockerfile.dev
+      context: .
+      dockerfile: nginx/Dockerfile.dev
     ports:
       - '3050:3051'
 networks:

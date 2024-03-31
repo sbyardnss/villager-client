@@ -43,14 +43,15 @@ services:
       # - client
       - api
     networks:
-      - dev
-      
+      - villager_network
+
   api:
     image: 'villager-server-backend'
-    ports:
-      - '8000:8000'
+    # ports:
+    #   - '8000:8000'
     networks:
-      - dev
+      - villager_network
 
 networks:
-  dev:
+  villager_network:
+    external: true

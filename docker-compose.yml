@@ -28,7 +28,8 @@
 # networks:
 #   dev:
 #CHECK
-version: '3'
+# version: '3'
+version: '3.7'
 services:
   nginx:
     restart: always
@@ -38,5 +39,18 @@ services:
       dockerfile: nginx/Dockerfile.dev
     ports:
       - '3050:3051'
+    depends_on:
+      # - client
+      - api
+    networks:
+      - dev
+      
+  api:
+    image: 'villager-server-backend'
+    ports:
+      - '8000:8000'
+    networks:
+      - dev
+
 networks:
   dev:

@@ -6,6 +6,8 @@ services:
     build:
       context: .
       dockerfile: nginx/Dockerfile.dev
+      args:
+        REACT_APP_API: http://api:8000
     ports:
       - '3050:3050'
     depends_on:

@@ -17,6 +17,12 @@ RUN npm ci
 # Copy the rest of the application code
 COPY . .
 
+# Define build-time variables
+ARG REACT_APP_API
+
+# Set environment variables based on build-time variables
+ENV REACT_APP_API=$REACT_APP_API
+
 # Build the app
 RUN npm run build
 
@@ -31,7 +37,6 @@ RUN mkdir -p /etc/nginx/conf.d
 # Copy the custom Nginx configuration file
 COPY nginx/default.conf /etc/nginx/conf.d/default.conf
 
-# Expose port 80
 EXPOSE 3050
 
 # Start Nginx

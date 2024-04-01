@@ -7,7 +7,7 @@ services:
       context: .
       dockerfile: nginx/Dockerfile.dev
       args:
-        REACT_APP_API: http://api:8000
+        REACT_APP_API: http://localhost:8000
     ports:
       - '3050:3050'
     depends_on:
@@ -17,7 +17,8 @@ services:
 
   api:
     image: 'villager-server-backend'
-
+    environment:
+      - CONTAINER=docker
     networks:
       - villager_network
 

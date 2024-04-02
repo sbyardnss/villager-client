@@ -39,7 +39,7 @@ npm start
 ### Running the docker environment
 
 * Start program
-> Clone this repo as well as the backend repo at [http://](https://github.com/sbyardnss/villager-server/tree/dockerize)
+> Clone this repo as well as the backend repo at https://github.com/sbyardnss/villager-server/tree/dockerize
 > Open the docker daemon
 > Run this to create the shared network:
 ```sh
@@ -51,4 +51,4 @@ docker network create villager_network
 ```sh
 docker-compose up --build
 ```
-> Once both the frontend and backend have started, open your browser and go to http://localhost:3050;
+> Once both the frontend and backend have started, open your browser and go to http://localhost:3050

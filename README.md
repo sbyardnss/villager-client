@@ -15,7 +15,59 @@ Villager Chess is an application for chess clubs to coordinate meetups, play cor
 * [Tournament-pairings](https://www.npmjs.com/package/tournament-pairings)
 
 
-### Setup
+### Running the docker environment
+* Clone this repo's dockerized branch:
+```sh
+git clone -b dockerize https://github.com/sbyardnss/villager-client.git
+```
+* Clone the backend repo's dockerized branch:
+```sh
+git clone -b dockerize https://github.com/sbyardnss/villager-server.git
+```
+* Open docker desktop
+> If you don't have docker desktop, you can find it here:
+```sh
+https://docs.docker.com/desktop/
+```
+* Run this to create the shared network:
+```sh
+docker network create villager_network
+```
+* Navigate to directories
+* In the root directory of each repository, run:
+
+```sh
+docker-compose up --build
+```
+* Once both the frontend and backend have started, open your browser and go to http://localhost:3050
+
+> You may also manually make requests to the dockerized server container via
+```sh
+http://localhost:8000
+```
+
+* Stop the containers:
+```sh
+docker stop villager-server-db-1 && docker stop villager-server-backend-1 && docker stop villager-client-nginx-1
+```
+* Restart containers:
+```sh
+docker start villager-server-db-1 && docker start villager-server-backend-1 && docker start villager-client-nginx-1
+```
+
+### Removing docker containers and custom network
+* Remove containers
+> The containers need to be stopped before they can be removed. Or you may add the force flag (--force)
+```sh
+docker rm villager-client-nginx-1 && docker rm villager-server-db-1 && docker rm villager-server-backend-1
+```
+
+* Remove villager_network
+```sh
+docker network rm villager_network
+```
+
+### Local NPM Setup
 
 * Clone Repository
 ```sh
@@ -35,19 +87,3 @@ npm install
 ```sh
 npm start
 ```
-
-### Running the docker environment
-
-* Clone this repo as well as the backend repo at https://github.com/sbyardnss/villager-server/tree/dockerize;
-* Open the docker daemon;
-* Run this to create the shared network:
-```sh
-docker network create villager_network
-```
-* Navigate to directories
-* In the root directory of each repository, run:
-
-```sh
-docker-compose up --build
-```
-* Once both the frontend and backend have started, open your browser and go to http://localhost:3050

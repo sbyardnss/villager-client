@@ -36,3 +36,16 @@ npm install
 npm start
 ```
 
+### Running the docker environment
+
+* Start program
+> Clone this repo as well as the backend repo at [http://](https://github.com/sbyardnss/villager-server/tree/dockerize)
+> Open the docker daemon
+> Navigate to directories
+> In the root directory of each repository, run:
+
+```sh
+docker-compose up --build
+```
+> Once both the frontend and backend have started, open your browser and go to http://localhost:3050;
+

@@ -86,7 +86,7 @@ export const Play = () => {
           }
         }
       }
-    }, [game, selectedGame, resetUserGames]
+    }, [game, selectedGame]
   )
 
   useEffect(

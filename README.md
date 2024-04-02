@@ -15,14 +15,78 @@ Villager Chess is an application for chess clubs to coordinate meetups, play cor
 * [Tournament-pairings](https://www.npmjs.com/package/tournament-pairings)
 
 
-### Setup
+### Running the docker environment
+* Clone this repo's dockerized branch:
+```sh
+git clone -b dockerize https://github.com/sbyardnss/villager-client.git
+```
+* Clone the backend repo's dockerized branch:
+```sh
+git clone -b dockerize https://github.com/sbyardnss/villager-server.git
+```
+* Open docker desktop
+> If you don't have docker desktop, you can find it here:
+```sh
+https://docs.docker.com/desktop/
+```
+* Run this to create the shared network:
+```sh
+docker network create villager_network
+```
+* Once cloned, using one terminal tab for each repo, navigate to the root directory of each cloned repo
+* Build the docker containers
+> This command must be run from within the root directory of each cloned repo:
+```sh
+docker-compose up --build
+```
+* Once both the frontend and backend have started, open your browser and navigate to:
+```sh
+http://localhost:3050
+```
 
-* Clone Repository
+> You may also manually make requests to the dockerized server container via this url:
+```sh
+http://localhost:8000
+```
+> Using this mocked Authorization header value:
+```sh
+Token 06787add96eb3264080015997720cb0877b40f90
+```
+
+
+* Stop the containers:
+```sh
+docker stop villager-server-db-1 && docker stop villager-server-backend-1 && docker stop villager-client-nginx-1
+```
+* Restart containers:
+```sh
+docker start villager-server-db-1 && docker start villager-server-backend-1 && docker start villager-client-nginx-1
+```
+
+### Removing docker containers and custom network
+* Remove containers:
+> The containers need to be stopped before they can be removed. Or you may add the force flag (--force)
+```sh
+docker rm villager-client-nginx-1 && docker rm villager-server-db-1 && docker rm villager-server-backend-1
+```
+
+* Remove villager_network:
+```sh
+docker network rm villager_network
+```
+
+### Local NPM Setup
+
+* Clone Repository:
 ```sh
 git clone git@github.com:sbyardnss/villager-client.git
 ```
-
-* Install dependencies
+> In order to run the full stack application, you will also need to clone the backend repository:
+```sh
+git clone git@github.com:sbyardnss/villager-server.git
+```
+* Install dependencies:
+> This command must be run from within the villager-client directory on your machine
 ```sh
 npm install
 ```
@@ -35,4 +99,3 @@ npm install
 ```sh
 npm start
 ```
-

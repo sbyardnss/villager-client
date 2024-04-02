@@ -33,15 +33,18 @@ https://docs.docker.com/desktop/
 ```sh
 docker network create villager_network
 ```
-* Navigate to directories
-* In the root directory of each repository, run:
-
+* Once cloned, using one terminal tab for each repo, navigate to the root directory of each cloned repo
+* Build the docker containers
+> This command must be run from within the root directory of each cloned repo:
 ```sh
 docker-compose up --build
 ```
-* Once both the frontend and backend have started, open your browser and go to http://localhost:3050
+* Once both the frontend and backend have started, open your browser and navigate to:
+```sh
+http://localhost:3050
+```
 
-> You may also manually make requests to the dockerized server container via
+> You may also manually make requests to the dockerized server container via:
 ```sh
 http://localhost:8000
 ```
@@ -56,25 +59,29 @@ docker start villager-server-db-1 && docker start villager-server-backend-1 && d
 ```
 
 ### Removing docker containers and custom network
-* Remove containers
+* Remove containers:
 > The containers need to be stopped before they can be removed. Or you may add the force flag (--force)
 ```sh
 docker rm villager-client-nginx-1 && docker rm villager-server-db-1 && docker rm villager-server-backend-1
 ```
 
-* Remove villager_network
+* Remove villager_network:
 ```sh
 docker network rm villager_network
 ```
 
 ### Local NPM Setup
 
-* Clone Repository
+* Clone Repository:
 ```sh
 git clone git@github.com:sbyardnss/villager-client.git
 ```
-
-* Install dependencies
+> In order to run the full stack application, you will also need to clone the backend repository:
+```sh
+git clone git@github.com:sbyardnss/villager-server.git
+```
+* Install dependencies:
+> This command must be run from within the villager-client directory on your machine
 ```sh
 npm install
 ```

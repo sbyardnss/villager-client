@@ -44,10 +44,15 @@ docker-compose up --build
 http://localhost:3050
 ```
 
-> You may also manually make requests to the dockerized server container via:
+> You may also manually make requests to the dockerized server container via this url:
 ```sh
 http://localhost:8000
 ```
+> Using this mocked Authorization header value:
+```sh
+Token 06787add96eb3264080015997720cb0877b40f90
+```
+
 
 * Stop the containers:
 ```sh

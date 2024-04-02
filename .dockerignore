@@ -1,0 +1,48 @@
+# Ignore node_modules to avoid copying it into the Docker image
+node_modules
+
+# Ignore build artifacts and logs
+build/
+logs/
+*.log
+
+# Ignore OS and IDE specific files
+.DS_Store
+.idea/
+*.iml
+
+# Ignore environment files and sensitive information
+.env
+.env.*
+
+# Ignore OS generated files
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Ignore Docker and Docker Compose files
+.dockerignore
+docker-compose.yml
+
+# Ignore OS and IDE specific files
+.vscode/
+.idea/
+
+# Ignore OS generated files
+.DS_Store
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Ignore OS and IDE specific files
+.vscode/
+.idea/
+
+# Ignore OS generated files
+.DS_Store
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db

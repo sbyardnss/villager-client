@@ -11,19 +11,8 @@ services:
         REACT_APP_CONTAINER: docker
     ports:
       - '3050:3050'
-    # environment:
-    #   - REACT_APP_CONTAINER=docker
-    # depends_on:
-    #   - api
     networks:
       - villager_network
-
-  # api:
-  #   image: 'villager-server-backend'
-  #   environment:
-  #     - CONTAINER=docker
-  #   networks:
-  #     - villager_network
 
 networks:
   villager_network:

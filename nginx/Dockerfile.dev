@@ -23,6 +23,10 @@ ARG REACT_APP_API
 # Set environment variables based on build-time variables
 ENV REACT_APP_API=$REACT_APP_API
 
+ARG REACT_APP_CONTAINER
+
+ENV REACT_APP_CONTAINER=$REACT_APP_CONTAINER
+
 # Build the app
 RUN npm run build
 

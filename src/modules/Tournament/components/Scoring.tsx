@@ -92,7 +92,7 @@ export const Scoring: React.FC<ScoringProps> = ({
               if (!matchingGame && analysis.playerOppRefObj[whiteIdentifier]?.indexOf(blackIdentifier) !== analysis.playerOppRefObj[whiteIdentifier]?.length + 1) {
                 return (
                   <MatchupItem
-                    matchupKey={`${matchup.round}--${matchup.match}--${index}`}
+                    key={`${matchup.round}--${matchup.match}--${index}`}
                     matchup={matchup}
                     whitePlayer={whitePlayer}
                     blackPlayer={blackPlayer}

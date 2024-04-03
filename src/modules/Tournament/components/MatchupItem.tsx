@@ -3,7 +3,6 @@ import { PlayerRelated } from '../../../Types/Player';
 import { Guest } from '../../../Types/Guest';
 
 interface MatchupItemProps {
-  matchupKey: string;
   matchup: any; // Define the type for matchup
   whitePlayer: any; // Define the type for whitePlayer
   blackPlayer: any; // Define the type for blackPlayer
@@ -15,7 +14,6 @@ interface MatchupItemProps {
 }
 
 export const MatchupItem: React.FC<MatchupItemProps> = ({
-  matchupKey,
   matchup,
   whitePlayer,
   blackPlayer,
@@ -29,7 +27,6 @@ export const MatchupItem: React.FC<MatchupItemProps> = ({
   return (
     <div
       data-cy={`matchup-div--match-${matchup.match}--round-${matchup.round}`}
-      key={matchupKey}
       className="tournamentScoringMatchup">
       <div
         data-cy={`white-scoring-selector--match-${matchup.match}--round-${matchup.round}`}

@@ -1,0 +1,97 @@
+{
+  "blackWhiteTally": {
+    "1": ["w"],
+    "2": ["w"],
+    "3": ["b"],
+    "4": ["b"],
+    "5": ["w"],
+    "6": ["w"],
+    "g1": ["w"],
+    "g5": ["b"],
+    "g7": ["b"],
+    "g59": ["b"]
+  },
+  "playerOppRefObj": {
+    "1": ["g7"],
+    "2": [4],
+    "3": [5],
+    "4": [2],
+    "5": [3],
+    "6": ["g5"],
+    "g1": ["g59"],
+    "g5": [6],
+    "g7": [1],
+    "g8": ["bye"],
+    "g59": ["g1"]
+  },
+  "scoreCard": {
+    "1": [1],
+    "2": [1],
+    "3": [1],
+    "4": [0],
+    "5": [0],
+    "6": [1],
+    "g1": [0.5],
+    "g5": [0],
+    "g7": [0],
+    "g8": ["bye"],
+    "g59": [0.5]
+  },
+  "scoreObj": {
+    "1": 1,
+    "2": 1,
+    "3": 1,
+    "4": 0,
+    "5": 0,
+    "6": 1,
+    "g1": 0.5,
+    "g5": 0,
+    "g7": 0,
+    "g8": 1,
+    "g59": 0.5
+  },
+  "tieBreakData": [
+    {
+      "white": 6,
+      "black": "g5",
+      "win_style": "checkmate",
+      "round": 1,
+      "winner": 6
+    },
+    {
+      "white": "g1",
+      "black": "g59",
+      "win_style": "draw",
+      "round": 1,
+      "winner": null
+    },
+    {
+      "white": 1,
+      "black": "g7",
+      "win_style": "checkmate",
+      "round": 1,
+      "winner": 1
+    },
+    {
+      "white": 2,
+      "black": 4,
+      "win_style": "checkmate",
+      "round": 1,
+      "winner": 2
+    },
+    {
+      "white": 5,
+      "black": 3,
+      "win_style": "checkmate",
+      "round": 1,
+      "winner": 3
+    },
+    {
+      "white": "g8",
+      "black": null,
+      "win_style": "",
+      "round": 1,
+      "winner": "g8"
+    }
+  ]
+}

@@ -45,11 +45,6 @@ export const TournamentController = () => {
         .then(data => setMyOpenTournaments(data));
     }, []
   )
-  useEffect(
-    () => {
-      console.log(newTournament)
-    }, [newTournament]
-  )
   if (selectedTournament.id) {
     return <>
       <ActiveTournament

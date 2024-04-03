@@ -3,6 +3,7 @@
 /* eslint-enable */
 import { setupTournaments } from '../../actions/setup-tournaments';
 import { setupHomepage } from '../../actions/setup-homepage';
+// Cypress._.times(10, () => {
 
 describe('Tournament Components', () => {
   beforeEach(() => {
@@ -89,7 +90,12 @@ describe('Tournament Components', () => {
       .should('contain.text', "John Cena, can't see me!");
   });
 
-  it.only('User should be able to submit game with the white pieces player as the winner and the game should disappear from the active games list when the games are reloaded', () => {
+  it('User should be able to submit game with the white pieces player as the winner and the game should disappear from the active games list when the games are reloaded', {
+    retries: {
+      runMode: 2,
+      openMode: 0,
+    },
+  }, () => {
     // Set up the intercept outside of any conditional logic
     let requestCount = 0;
     cy.intercept('GET', '**/games/153/get_selected_tournament_games', (req) => {
@@ -105,19 +111,22 @@ describe('Tournament Components', () => {
     cy.get('[data-cy="select-tournament--153"]')
       .should('be.visible')
       .click();
-    cy.get('[data-cy="matchup-div--match-1--round-2--tournament-153"]')
+    cy.get('[data-cy="matchup-div--match-1--round-2"]')
       .should('exist');
-    cy.get('[data-cy="white-scoring-selector--match-1--round-2--tournament-153"]')
+    cy.get('[data-cy="white-scoring-selector--match-1--round-2"]')
       .click();
-    cy.get('[data-cy="submit-score-btn--match-1--round-2--tournament-153"]')
-      .click();
-    cy.wait('@ScoringTestWhite')
-      .then((interception) => {
-        cy.fixture('games/outgoingGames/scoring-test-white-player-win-request-body.json').then((expectedRequestBody) => {
-          expect(interception.request.body).to.deep.equal(expectedRequestBody);
-        });
+    cy.get('[data-cy="submit-score-btn--match-1--round-2"]')
+      .click()
+      .then(() => {
+        cy.wait('@ScoringTestWhite')
+          .then((interception) => {
+            cy.fixture('games/outgoingGames/scoring-test-white-player-win-request-body.json').then((expectedRequestBody) => {
+              expect(interception.request.body).to.deep.equal(expectedRequestBody);
+            });
+          });
       });
-    cy.get('[data-cy="matchup-div--match-1--round-2--tournament-153"]')
+    cy.get('[data-cy="matchup-div--match-1--round-2"]')
       .should('not.exist');
   });
 });
+// })

@@ -1,34 +1,31 @@
 import { checkIfUserIsAppCreator } from "../actions/check-if-creator";
 import { findIdentifier } from "../actions/find-identifier";
-// import { sendNewGame } from "../../../ServerManager";
 import type { tournamentAnalysisOutput } from "../actions/matchup-game-analysis";
 import type { PlayerRelated } from "../../../Types/Player";
 import type { Guest } from "../../../Types/Guest";
 import type { Tournament } from "../../../Types/Tournament";
 import type { Match } from "tournament-pairings/dist/Match";
-import type { OutgoingGame, Game } from "../../../Types/Game";
-import { sendNewGame } from "../../../ServerManager";
+import type { Game } from "../../../Types/Game";
+import { useEffect, useState } from "react";
+import { MatchupItem } from "./MatchupItem";
 
 interface ScoringProps {
   tournamentObj: Tournament;
   tourneyGames: Game[];
   currentMatches: Match[];
-  //TODO: FIX PLAYERRELATEDISSUE
+  //TODO: ANY-FIX PLAYERRELATEDISSUE
   byeGame: any;
-  resetGame: () => void;
-  resetTourneyGames: () => void;
   isTourneyCreator: boolean;
   round: number;
   activePlayers: (PlayerRelated | Guest)[];
   analysis: tournamentAnalysisOutput;
-  //TODO: FIX PLAYERRELATEDISSUE
-  gameForApi: OutgoingGame;
   handleUpdate: (
-    whitePlayer: PlayerRelated | Guest,
-    blackPlayer: PlayerRelated | Guest,
+    whitePlayer: PlayerRelated | Guest | null,
+    blackPlayer: PlayerRelated | Guest | null,
     winner?: PlayerRelated | Guest | undefined,
     pastGame?: Game
   ) => void;
+  handleSendGameToApi: () => void;
 }
 
 export const Scoring: React.FC<ScoringProps> = ({
@@ -36,16 +33,32 @@ export const Scoring: React.FC<ScoringProps> = ({
   tourneyGames,
   currentMatches,
   byeGame,
-  resetGame,
-  resetTourneyGames,
   isTourneyCreator,
   round,
   activePlayers,
   analysis,
-  gameForApi,
   handleUpdate,
+  handleSendGameToApi,
 }) => {
-  // const { localVillagerUser } = useContext(AppContext);
+  const [selectedOutcome, setSelectedOutcome] = useState<[number, number, PlayerRelated | Guest | null | 'draw']>([0, 0, null]);//round, match, winner or 'draw'
+  const scoringTargetIds = ['whitePieces', 'blackPieces', 'drawUpdate', 'scoringSubmit'];
+
+  useEffect(() => {
+    const handleClick = (e: MouseEvent) => {
+      const target: HTMLElement = e.target as HTMLElement;
+      if (target && !scoringTargetIds.includes(target.id)) {
+        setSelectedOutcome([0, 0, null]);
+        handleUpdate(null, null);
+      }
+    };
+
+    document.addEventListener('click', handleClick);
+
+    return () => {
+      document.removeEventListener('click', handleClick);
+    };
+  }, []);
+
   const byeMatchup = currentMatches?.find(matchup => matchup.player1 === null || matchup.player2 === null);
   const whiteBye = byeGame.current.player_w.full_name;
 
@@ -78,53 +91,16 @@ export const Scoring: React.FC<ScoringProps> = ({
               const blackIdentifier = findIdentifier(blackPlayer);
               if (!matchingGame && analysis.playerOppRefObj[whiteIdentifier]?.indexOf(blackIdentifier) !== analysis.playerOppRefObj[whiteIdentifier]?.length + 1) {
                 return (
-                  <div
-                    data-cy={`matchup-div--match-${matchup.match}--round-${matchup.round}--tournament-${tournamentObj.id}`}
-                    key={gameForApi.winner && gameForApi.winner.id ? `${matchup.round}--${matchup.match}--${index}--winner${gameForApi.winner.id}` : `${matchup.round}--${matchup.match}--${index}--no-winner`}
-                    className="tournamentScoringMatchup">
-                    <div
-                      data-cy={`white-scoring-selector--match-${matchup.match}--round-${matchup.round}--tournament-${tournamentObj.id}`}
-                      className={gameForApi.id === undefined && gameForApi.winner === whitePlayer ? "selectedWhitePiecesMatchup" : "whitePiecesMatchup"}
-                      id="whitePieces"
-                      onClick={() => {
-                        handleUpdate(whitePlayer, blackPlayer, whitePlayer);
-                      }}>{whitePlayer.full_name}
-                    </div>
-                    <div
-                      data-cy={`draw-scoring-selector--match-${matchup.match}--round-${matchup.round}--tournament-${tournamentObj.id}`}
-                      className={gameForApi.id === undefined && gameForApi.player_w === whitePlayer && gameForApi.player_b === blackPlayer && gameForApi.win_style === "draw" ? "selectedDrawMatchupButton" : "drawMatchupButton"}
-                      id="drawUpdate"
-                      onClick={() => {
-                        handleUpdate(whitePlayer, blackPlayer);
-                      }}>Draw
-                    </div>
-                    <div
-                      data-cy={`black-scoring-selector--match-${matchup.match}--round-${matchup.round}--tournament-${tournamentObj.id}`}
-                      className={gameForApi.id === undefined && gameForApi.winner === blackPlayer ? "selectedBlackPiecesMatchup" : "blackPiecesMatchup"}
-                      id="blackPieces"
-                      onClick={() => {
-                        handleUpdate(whitePlayer, blackPlayer, blackPlayer);
-                      }}>{blackPlayer.full_name}
-                    </div>
-                    <button
-                      data-cy={`submit-score-btn--match-${matchup.match}--round-${matchup.round}--tournament-${tournamentObj.id}`}
-                      id="scoringSubmit"
-                      className="buttonStyleReject"
-                      onClick={() => {
-                        if (gameForApi.win_style) {
-                          console.log(gameForApi)
-                          console.log(gameForApi.id);
-                          console.log('gameForApi.winner', gameForApi.winner)
-                          console.log('whitePlayer', whitePlayer)
-                          console.log(gameForApi.winner === whitePlayer)
-                          sendNewGame(gameForApi)
-                            .then(() => resetTourneyGames());
-                          resetGame();
-                        }
-                      }}>
-                      submit
-                    </button>
-                  </div>
+                  <MatchupItem
+                    matchupKey={`${matchup.round}--${matchup.match}--${index}`}
+                    matchup={matchup}
+                    whitePlayer={whitePlayer}
+                    blackPlayer={blackPlayer}
+                    handleUpdate={handleUpdate}
+                    index={index}
+                    handleSendGameToApi={handleSendGameToApi}
+                    selectedOutcome={selectedOutcome} 
+                    setSelectedOutcome={setSelectedOutcome} />
                 )
               }
             }

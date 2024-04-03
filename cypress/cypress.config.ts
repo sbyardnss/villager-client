@@ -14,5 +14,7 @@ export default defineConfig({
     env: {
       REACT_APP_API: "http://localhost:8000"
     },
+    viewportWidth: 375,
+    viewportHeight: 667,
   },
 });

@@ -57,16 +57,6 @@ export function setupTournaments() {
     '**/clubs/1/get_club_guests',
     { fixture: 'playersAndGuests/load-guests-after-create.json' }
   ).as('loadClubGuestsAfterCreation');
-  cy.intercept(
-    'POST',
-    '**/games',
-    {
-      statusCode: 201,
-      body: {
-        fixture: 'games/outgoingGames/scoring-test-white-player-win-response.json',
-      }
-    }
-  ).as('ScoringTestWhite');
   //EXAMPLE OF ASSERTING REQUEST AND BODY SIMULTANEOUSLY
   // cy.fixture('games/outgoingGames/scoring-test-white-player-win-request-body.json').then((expectedRequestBody) => {
   //   cy.intercept(

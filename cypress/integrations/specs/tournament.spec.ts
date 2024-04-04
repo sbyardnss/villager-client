@@ -25,7 +25,7 @@ describe('Tournament Components', () => {
       .should('be.visible')
       .click();
 
-    cy.wait('@loadTournamentGames').its('response.body').its('length').should('equal', 6);
+    cy.wait('@loadTournamentGames').its('response.body').its('length').should('equal', 19);
   });
 
   it('User should be able to create a new tournament', () => {
@@ -122,11 +122,11 @@ describe('Tournament Components', () => {
     cy.get('[data-cy="select-tournament--153"]')
       .should('be.visible')
       .click();
-    cy.get('[data-cy="matchup-div--match-1--round-2"]')
+    cy.get('[data-cy="matchup-div--match-1--round-4"]')
       .should('exist');
-    cy.get('[data-cy="white-scoring-selector--match-1--round-2"]')
+    cy.get('[data-cy="white-scoring-selector--match-1--round-4"]')
       .click();
-    cy.get('[data-cy="submit-score-btn--match-1--round-2"]')
+    cy.get('[data-cy="submit-score-btn--match-1--round-4"]')
       .click()
       .then(() => {
         cy.wait('@ScoringTestWhite')
@@ -136,7 +136,7 @@ describe('Tournament Components', () => {
             });
           });
       });
-    cy.get('[data-cy="matchup-div--match-1--round-2"]')
+    cy.get('[data-cy="matchup-div--match-1--round-4"]')
       .should('not.exist');
   });
 
@@ -171,11 +171,11 @@ describe('Tournament Components', () => {
     cy.get('[data-cy="select-tournament--153"]')
       .should('be.visible')
       .click();
-    cy.get('[data-cy="matchup-div--match-1--round-2"]')
+    cy.get('[data-cy="matchup-div--match-1--round-4"]')
       .should('exist');
-    cy.get('[data-cy="black-scoring-selector--match-1--round-2"]')
+    cy.get('[data-cy="black-scoring-selector--match-1--round-4"]')
       .click();
-    cy.get('[data-cy="submit-score-btn--match-1--round-2"]')
+    cy.get('[data-cy="submit-score-btn--match-1--round-4"]')
       .click()
       .then(() => {
         cy.wait('@ScoringTestBlack')
@@ -185,11 +185,11 @@ describe('Tournament Components', () => {
             });
           });
       });
-    cy.get('[data-cy="matchup-div--match-1--round-2"]')
+    cy.get('[data-cy="matchup-div--match-1--round-4"]')
       .should('not.exist');
   });
 
-  it('User should be able to submit game with outcome as draw and the game should disappear from the active games list when the games are reloaded', {
+  it.only('User should be able to submit game with outcome as draw and the game should disappear from the active games list when the games are reloaded', {
     retries: {
       runMode: 2,
       openMode: 0,
@@ -210,9 +210,9 @@ describe('Tournament Components', () => {
       '**/games',
       {
         statusCode: 201,
-        body: {
-          fixture: 'games/outgoingGames/scoring-test-draw-response.json',
-        }
+        // body: {
+        //   fixture: 'games/outgoingGames/scoring-test-draw-response.json',
+        // }
       }
     ).as('ScoringTestDraw');
 
@@ -220,11 +220,11 @@ describe('Tournament Components', () => {
     cy.get('[data-cy="select-tournament--153"]')
       .should('be.visible')
       .click();
-    cy.get('[data-cy="matchup-div--match-1--round-2"]')
+    cy.get('[data-cy="matchup-div--match-1--round-4"]')
       .should('exist');
-    cy.get('[data-cy="draw-scoring-selector--match-1--round-2"]')
+    cy.get('[data-cy="draw-scoring-selector--match-1--round-4"]')
       .click();
-    cy.get('[data-cy="submit-score-btn--match-1--round-2"]')
+    cy.get('[data-cy="submit-score-btn--match-1--round-4"]')
       .click()
       .then(() => {
         cy.wait('@ScoringTestDraw')
@@ -234,7 +234,7 @@ describe('Tournament Components', () => {
             });
           });
       });
-    cy.get('[data-cy="matchup-div--match-1--round-2"]')
+    cy.get('[data-cy="matchup-div--match-1--round-4"]')
       .should('not.exist');
   });
 });

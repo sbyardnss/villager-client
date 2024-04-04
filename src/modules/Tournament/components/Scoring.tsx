@@ -82,7 +82,7 @@ export const Scoring: React.FC<ScoringProps> = ({
             if (whitePlayer && blackPlayer && matchup.player1 && matchup.player2) {
               const matchingGame = tourneyGames.find(tg => {
                 if (tg.player_w && tg.player_b) {
-                  return findIdentifier(tg.player_w) === findIdentifier(whitePlayer) && findIdentifier(tg.player_b) === findIdentifier(blackPlayer) && tg.tournament_round === round && tg.tournament === tournamentObj.id
+                  return findIdentifier(tg.player_w) === matchup.player1 && findIdentifier(tg.player_b) === matchup.player2 && tg.tournament_round === round && tg.tournament === tournamentObj.id
                 } else {
                   return undefined;
                 }

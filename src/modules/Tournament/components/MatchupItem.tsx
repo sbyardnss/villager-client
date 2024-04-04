@@ -1,6 +1,7 @@
 import React, { SetStateAction } from 'react';
 import { PlayerRelated } from '../../../Types/Player';
 import { Guest } from '../../../Types/Guest';
+import { findIdentifier } from '../actions/find-identifier';
 
 interface MatchupItemProps {
   matchup: any; // Define the type for matchup
@@ -35,7 +36,7 @@ export const MatchupItem: React.FC<MatchupItemProps> = ({
         onClick={() => {
           setSelectedOutcome([matchup.round, matchup.match, whitePlayer]);
           handleUpdate(whitePlayer, blackPlayer, whitePlayer);
-        }}>{whitePlayer.full_name}
+        }}>{whitePlayer.full_name} {findIdentifier(whitePlayer)}
       </div>
       <div
         data-cy={`draw-scoring-selector--match-${matchup.match}--round-${matchup.round}`}
@@ -53,7 +54,7 @@ export const MatchupItem: React.FC<MatchupItemProps> = ({
         onClick={() => {
           setSelectedOutcome([matchup.round, matchup.match, blackPlayer]);
           handleUpdate(whitePlayer, blackPlayer, blackPlayer);
-        }}>{blackPlayer.full_name}
+        }}>{blackPlayer.full_name} {findIdentifier(blackPlayer)}
       </div>
       <button
         data-cy={`submit-score-btn--match-${matchup.match}--round-${matchup.round}`}

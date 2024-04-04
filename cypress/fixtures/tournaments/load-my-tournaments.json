@@ -1,144 +1,65 @@
 [
   {
     "id": 153,
-    "title": "cypress",
+    "title": "Cypress",
     "creator": {
       "id": 1,
       "full_name": "stephen byard"
     },
-    "games": [1648, 1649, 1650, 1651, 1652, 1653],
+    "games": [
+      1701, 1702, 1703, 1704, 1705, 1706, 1707, 1708, 1709, 1710, 1711, 1712,
+      1713, 1714, 1715, 1716, 1717, 1718, 1719
+    ],
     "time_setting": 1,
     "complete": false,
     "competitors": [
-      {
-        "id": 1,
-        "full_name": "stephen byard"
-      },
-      {
-        "id": 2,
-        "full_name": "tiger woods"
-      },
-      {
-        "id": 3,
-        "full_name": "josh ryner"
-      },
-      {
-        "id": 4,
-        "full_name": "josh whiteman"
-      },
-      {
-        "id": 5,
-        "full_name": "jim jimothy"
-      },
-      {
-        "id": 6,
-        "full_name": "bill johnson"
-      }
+      { "id": 1, "full_name": "stephen byard" },
+      { "id": 2, "full_name": "tiger woods" },
+      { "id": 3, "full_name": "josh ryner" },
+      { "id": 4, "full_name": "josh whiteman" }
     ],
     "guest_competitors": [
-      {
-        "id": 1,
-        "full_name": "Bob Ross",
-        "guest_id": "g1"
-      },
-      {
-        "id": 5,
-        "full_name": "phil",
-        "guest_id": "g5"
-      },
-      {
-        "id": 7,
-        "full_name": "mark",
-        "guest_id": "g7"
-      },
-      {
-        "id": 8,
-        "full_name": "john johnson",
-        "guest_id": "g8"
-      },
-      {
-        "id": 59,
-        "full_name": "Barbie",
-        "guest_id": "g59"
-      }
+      { "id": 1, "full_name": "Bob Ross", "guest_id": "g1" },
+      { "id": 5, "full_name": "phil", "guest_id": "g5" },
+      { "id": 7, "full_name": "mark", "guest_id": "g7" },
+      { "id": 8, "full_name": "john johnson", "guest_id": "g8" },
+      { "id": 59, "full_name": "Barbie", "guest_id": "g59" },
+      { "id": 60, "full_name": "Ken", "guest_id": "g60" },
+      { "id": 61, "full_name": "Chewy", "guest_id": "g61" },
+      { "id": 62, "full_name": "Leia", "guest_id": "g62" },
+      { "id": 63, "full_name": "Han", "guest_id": "g63" }
     ],
-    "rounds": 2,
+    "rounds": 4,
     "pairings": [
-      {
-        "round": 1,
-        "match": 1,
-        "player1": 6,
-        "player2": "g5"
-      },
-      {
-        "round": 1,
-        "match": 2,
-        "player1": "g1",
-        "player2": "g59"
-      },
-      {
-        "round": 1,
-        "match": 3,
-        "player1": 1,
-        "player2": "g7"
-      },
-      {
-        "round": 1,
-        "match": 4,
-        "player1": 2,
-        "player2": 4
-      },
-      {
-        "round": 1,
-        "match": 5,
-        "player1": 5,
-        "player2": 3
-      },
-      {
-        "round": 1,
-        "match": 6,
-        "player1": "g8",
-        "player2": null
-      },
-      {
-        "round": 2,
-        "match": 1,
-        "player1": "g7",
-        "player2": 5
-      },
-      {
-        "round": 2,
-        "match": 2,
-        "player1": "g59",
-        "player2": "g8"
-      },
-      {
-        "round": 2,
-        "match": 3,
-        "player1": "g5",
-        "player2": "g1"
-      },
-      {
-        "round": 2,
-        "match": 4,
-        "player1": 1,
-        "player2": 2
-      },
-      {
-        "round": 2,
-        "match": 5,
-        "player1": 3,
-        "player2": 6
-      },
-      {
-        "round": 2,
-        "match": 6,
-        "player1": 4,
-        "player2": null
-      }
+      { "round": 1, "match": 1, "player1": 5, "player2": "g59" },
+      { "round": 1, "match": 2, "player1": 3, "player2": "g1" },
+      { "round": 1, "match": 3, "player1": 2, "player2": "g5" },
+      { "round": 1, "match": 4, "player1": "g7", "player2": 4 },
+      { "round": 1, "match": 5, "player1": 1, "player2": "g8" },
+      { "round": 1, "match": 6, "player1": 6, "player2": null },
+      { "round": 2, "match": 1, "player1": 6, "player2": 3 },
+      { "round": 2, "match": 2, "player1": "g59", "player2": 2 },
+      { "round": 2, "match": 3, "player1": "g5", "player2": "g7" },
+      { "round": 2, "match": 4, "player1": "g8", "player2": 5 },
+      { "round": 2, "match": 5, "player1": 4, "player2": 1 },
+      { "round": 2, "match": 6, "player1": "g1", "player2": null },
+      { "round": 3, "match": 1, "player1": 4, "player2": "g59" },
+      { "round": 3, "match": 2, "player1": "g62", "player2": "g60" },
+      { "round": 3, "match": 3, "player1": "g7", "player2": "g61" },
+      { "round": 3, "match": 4, "player1": 1, "player2": 3 },
+      { "round": 3, "match": 5, "player1": "g8", "player2": 2 },
+      { "round": 3, "match": 6, "player1": "g1", "player2": "g5" },
+      { "round": 3, "match": 7, "player1": "g63", "player2": null },
+      { "round": 4, "match": 1, "player1": "g5", "player2": "g62" },
+      { "round": 4, "match": 2, "player1": 3, "player2": 4 },
+      { "round": 4, "match": 3, "player1": 2, "player2": 1 },
+      { "round": 4, "match": 4, "player1": "g61", "player2": "g1" },
+      { "round": 4, "match": 5, "player1": "g60", "player2": "g7" },
+      { "round": 4, "match": 6, "player1": "g59", "player2": "g63" },
+      { "round": 4, "match": 7, "player1": "g8", "player2": null }
     ],
     "in_person": true,
     "club": 1,
-    "date": "2024-03-22"
+    "date": "2024-04-04"
   }
 ]

@@ -11,7 +11,7 @@ import { OutgoingGame } from "../../../src/Types/Game";
 // import { setupHomepage } from '../../actions/setup-homepage';
 // Cypress._.times(10, () => {
 
-describe.skip('Tournament Analysis', () => {
+describe('Tournament Analysis', () => {
   beforeEach(() => {
     // cy.visit('http://localhost:3000');
     // setupHomepage();
@@ -26,10 +26,11 @@ describe.skip('Tournament Analysis', () => {
     const currentByeGameData = {
       current: {
         player_w: {
-          "id": 4,
-          "full_name": "josh whiteman"
+          id: 8,
+          full_name: "john johnson",
+          guest_id: "g8"
         },
-        player_w_model_type: "player",
+        player_w_model_type: "guestplayer",
         player_b: {} as Guest | PlayerRelated,
         player_b_model_type: "",
         tournament: 153,
@@ -38,34 +39,34 @@ describe.skip('Tournament Analysis', () => {
         accepted: true,
         tournament_round: 2,
         winner: {
-          "id": 4,
-          "full_name": "josh whiteman"
+          id: 8,
+          full_name: "john johnson",
+          guest_id: "g8"
         },
-        winner_model_type: "player",
+        winner_model_type: "guestplayer",
         bye: true
       }
     } as React.RefObject<OutgoingGame>;
-    let currentMatchups = {current: {} as any};
+    let currentMatchups = { current: {} as any };
     const currentRound = 2;
     cy.fixture('tournaments/load-my-tournaments.json').then((tourneyData) => {
-      console.log('tourneyData.pairings', tourneyData[0].pairings)
+      // console.log('tourneyData.pairings', tourneyData[0].pairings)
       currentMatchups.current = tourneyData[0].pairings.filter((p: Match) => p.round === currentRound);
     })
     cy.fixture('games/load-tournament-games').then(gameData => {
-      console.log('gameData', gameData)
+      // console.log('gameData', gameData)
+      const createdAnalysisObj = tournamentAnalysis(gameData, currentMatchups.current, currentRound, currentByeGameData)
+      // console.log('createdAnalysisObj', createdAnalysisObj)
+
       cy.fixture('tournaments/analysis/active-tournament-analysis.json').then(fixtureData => {
-        console.log('fixtureData', fixtureData);
-        console.log('currentMatchups.current', currentMatchups.current)
-        const createdAnalysisObj = tournamentAnalysis(gameData, currentMatchups.current, currentRound, currentByeGameData)
-        // expect(fixtureData).to.deep.equal(createdAnalysisObj);
-        console.log('createdAnalysisObj', createdAnalysisObj)
+        // console.log('fixtureData', fixtureData);
+        // console.log('currentMatchups.current', currentMatchups.current)
+        expect(fixtureData).to.deep.equal(createdAnalysisObj);
       });
     })
   })
 
 });
 // })
-/*
-scoreCard failing [0, 'bye'] for array that should just be [0]
-*/
+
 

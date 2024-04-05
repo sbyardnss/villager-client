@@ -16,6 +16,11 @@ describe('Tournament Components', () => {
   it('When user selects a tournament, the tournament and its games should be loaded', () => {
     cy.intercept(
       'GET',
+      '**/tournaments/my_open_tournaments',
+      { fixture: 'tournaments/load-my-tournaments.json' }
+    ).as('loadMyTournaments');
+    cy.intercept(
+      'GET',
       '**/games/153/get_selected_tournament_games',
       { fixture: 'games/load-tournament-games.json' }
     ).as('loadTournamentGames');
@@ -29,6 +34,11 @@ describe('Tournament Components', () => {
   });
 
   it('User should be able to create a new tournament', () => {
+    cy.intercept(
+      'GET',
+      '**/tournaments/my_open_tournaments',
+      { fixture: 'tournaments/load-my-tournaments.json' }
+    ).as('loadMyTournaments');
     const selectors = [
       'select-player--stephen byard--1',
       'select-player--tiger woods--2',
@@ -70,6 +80,11 @@ describe('Tournament Components', () => {
   });
 
   it('User should be able to create a new guest and new guest should appear in list of potential players', () => {
+    cy.intercept(
+      'GET',
+      '**/tournaments/my_open_tournaments',
+      { fixture: 'tournaments/load-my-tournaments.json' }
+    ).as('loadMyTournaments');
     cy.wait('@loadMyTournaments');
     cy.get('[data-cy="create-tournament-btn"]')
       .should('be.visible')
@@ -96,6 +111,11 @@ describe('Tournament Components', () => {
       openMode: 0,
     },
   }, () => {
+    cy.intercept(
+      'GET',
+      '**/tournaments/my_open_tournaments',
+      { fixture: 'tournaments/load-my-tournaments.json' }
+    ).as('loadMyTournaments');
     // Set up the intercept outside of any conditional logic
     let requestCount = 0;
     cy.intercept('GET', '**/games/153/get_selected_tournament_games', (req) => {
@@ -146,6 +166,11 @@ describe('Tournament Components', () => {
       openMode: 0,
     },
   }, () => {
+    cy.intercept(
+      'GET',
+      '**/tournaments/my_open_tournaments',
+      { fixture: 'tournaments/load-my-tournaments.json' }
+    ).as('loadMyTournaments');
     let requestCount = 0;
     cy.intercept('GET', '**/games/153/get_selected_tournament_games', (req) => {
       if (requestCount < 2) {
@@ -195,6 +220,11 @@ describe('Tournament Components', () => {
       openMode: 0,
     },
   }, () => {
+    cy.intercept(
+      'GET',
+      '**/tournaments/my_open_tournaments',
+      { fixture: 'tournaments/load-my-tournaments.json' }
+    ).as('loadMyTournaments');
     let requestCount = 0;
     cy.intercept('GET', '**/games/153/get_selected_tournament_games', (req) => {
       if (requestCount < 2) {
@@ -238,6 +268,11 @@ describe('Tournament Components', () => {
       .should('not.exist');
   });
   it('Manager should be able to edit score for previous game, making white pieces player the winner and score should update', () => {
+    cy.intercept(
+      'GET',
+      '**/tournaments/my_open_tournaments',
+      { fixture: 'tournaments/load-my-tournaments.json' }
+    ).as('loadMyTournaments');
     let requestCount = 0;
     cy.intercept('GET', '**/games/153/get_selected_tournament_games', (req) => {
       if (requestCount < 2) {
@@ -281,6 +316,11 @@ describe('Tournament Components', () => {
       .should('contain.text', 3);
   });
   it('Manager should be able to edit score for previous game, making black pieces player the winner and score should update', () => {
+    cy.intercept(
+      'GET',
+      '**/tournaments/my_open_tournaments',
+      { fixture: 'tournaments/load-my-tournaments.json' }
+    ).as('loadMyTournaments');
     let requestCount = 0;
     cy.intercept('GET', '**/games/153/get_selected_tournament_games', (req) => {
       if (requestCount < 2) {
@@ -329,6 +369,11 @@ describe('Tournament Components', () => {
       openMode: 0,
     },
   }, () => {
+    cy.intercept(
+      'GET',
+      '**/tournaments/my_open_tournaments',
+      { fixture: 'tournaments/load-my-tournaments.json' }
+    ).as('loadMyTournaments');
     let requestCount = 0;
     cy.intercept('GET', '**/games/153/get_selected_tournament_games', (req) => {
       if (requestCount < 2) {
@@ -373,5 +418,94 @@ describe('Tournament Components', () => {
     cy.get('[data-cy="g7--score-cell"]')
       .should('contain.text', 1);
   });
+  it('Manager should be able to adjust change players on a tournament before games start and there should be enough pairings for each player', () => {
+    const addSelectors = [
+      'select-player--Richard--67',
+      'select-player--Alex--64',
+      'select-player--Adam--69',
+    ];
+    const removePlayerSelectors = [
+      'remove-player--tiger woods--2'
+    ];
+    const removeGuestSelectors = [
+      'remove-guest--Chewy--61',
+      'remove-guest--Bob Ross--1'
+    ];
+    let tournamentRequestCount = 0;
+    cy.intercept(
+      'GET',
+      '**/tournaments/my_open_tournaments',
+      (req) => {
+        console.log('count', tournamentRequestCount)
+        if (tournamentRequestCount < 2) {
+          req.reply({ fixture: 'tournaments/load-my-tournaments.json' });
+        } else {
+          req.reply({ fixture: 'tournaments/editingPlayers/edited-players-updated-tournaments-list.json' });
+        }
+        tournamentRequestCount++;
+      }
+
+    ).as('loadMyTournaments');
+    cy.intercept(
+      'GET',
+      '**/tournaments/153',
+      { fixture: 'tournaments/editingPlayers/edited-players-updated-tournament.json' }
+    ).as('LoadActiveTournament');
+    let requestCount = 0;
+    cy.intercept('GET', '**/games/153/get_selected_tournament_games', (req) => {
+      if (requestCount < 2) {
+        req.reply({ fixture: 'games/load-tournament-games.json' });
+      } else if (requestCount >= 2) {
+        req.reply({ fixture: 'games/getResponsesAfterSubmittedGames/load-tournament-games-edit-draw.json' });
+      }
+      requestCount++;
+    }).as('loadTournamentGames');
+    cy.intercept('PUT', '**/tournaments/153', { statusCode: 204 }).as('SubmitEditedTournament');
+    cy.get('[data-cy="select-tournament--153"]')
+      .should('be.visible')
+      .click();
+    cy.get('[data-cy="edit-players-tournament-controls-btn"]')
+      .should('be.visible')
+      .click();
+    cy.get('[data-cy="toggle-guests--true"]')
+      .click();
+    addSelectors.forEach(selector => {
+      cy.get(`[data-cy="${selector}"]`).click();
+    });
+    removePlayerSelectors.forEach(selector => {
+      cy.get(`[data-cy="${selector}"]`).click();
+
+    });
+    removeGuestSelectors.forEach(selector => {
+      cy.get(`[data-cy="${selector}"]`).click();
+    });
+    cy.get('[data-cy="confirm-player-selection"]')
+      .click();
+    cy.get('.gamesNotStartedBtn')
+      .click();
+    cy.get('#submitNewPlayersBtn')
+      .click();
+    cy.wait('@SubmitEditedTournament').then(interception => {
+      const newPlayers = interception.request.body.competitors.sort((a: any, b: any) => a.id - b.id);
+      const newGuests = interception.request.body.guest_competitors.sort((a: any, b: any) => a.id - b.id);
+      expect(interception.request.body.pairings.filter(p => p.round === 4).length).to.equal(7);
+      cy.fixture('tournaments/editingPlayers/edited-players-updated-tournament.json').then((expectedRequestBody) => {
+        const fixturePlayers = expectedRequestBody.competitors.sort((a: any, b: any) => a.id - b.id);
+        const fixtureGuests = expectedRequestBody.guest_competitors.sort((a: any, b: any) => a.id - b.id);
+        expect(newPlayers).to.deep.equal(fixturePlayers);
+        expect(newGuests).to.deep.equal(fixtureGuests);
+      });
+    });
+    cy.wait('@LoadActiveTournament').then(interception => {
+      const newPlayers = interception.response?.body.competitors.sort((a: any, b: any) => a.id - b.id);
+      const newGuests = interception.response?.body.guest_competitors.sort((a: any, b: any) => a.id - b.id);
+      cy.fixture('tournaments/editingPlayers/edited-players-updated-tournament.json').then((expectedRequestBody) => {
+        const fixturePlayers = expectedRequestBody.competitors.sort((a: any, b: any) => a.id - b.id);
+        const fixtureGuests = expectedRequestBody.guest_competitors.sort((a: any, b: any) => a.id - b.id);
+        expect(newPlayers).to.deep.equal(fixturePlayers);
+        expect(newGuests).to.deep.equal(fixtureGuests);
+      });
+    });
+  })
 });
 // })

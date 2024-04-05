@@ -352,7 +352,7 @@ export const ActiveTournament: React.FC<ActiveTournamentProps> = ({
       <TournamentControls
         tournamentResetter={resetTourneys}
         tournamentGamesResetter={resetTournamentGames}
-        activeTournamentResetter={resetActiveTournament}
+        activeTournamentResetter={resetActiveTournament} //TODO: where is this being used
         modalMode={modalMode}
         modalModeSetter={setModalMode}
         scoringMode={scoreMode}

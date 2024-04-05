@@ -122,6 +122,7 @@ export const PlayerSelection: React.FC<PlayerSelectionProps> = ({
               tournamentObj.competitors.map((competitor, index) => {
                 return (
                   <li key={competitor.id + '-- competitor'}
+                    data-cy={`remove-player--${competitor.full_name}--${competitor.id}`}
                     className="newTournamentPlayerListItem"
                     onClick={() => {
                       const tournamentCopy = { ...tournamentObj }
@@ -137,6 +138,7 @@ export const PlayerSelection: React.FC<PlayerSelectionProps> = ({
               tournamentObj.guest_competitors.map((competitor, index) => {
                 return (
                   <li key={competitor.guest_id + '-- competitor'}
+                    data-cy={`remove-guest--${competitor.full_name}--${competitor.id}`}
                     className="newTournamentPlayerListItem"
                     onClick={() => {
                       const tournamentCopy = { ...tournamentObj }

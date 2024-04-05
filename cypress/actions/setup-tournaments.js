@@ -23,11 +23,11 @@ export function setupTournaments() {
     { fixture: 'timeSettings/load-all-time-settings.json' }
   ).as('loadAllTimes');
 
-  cy.intercept(
-    'GET',
-    '**/tournaments/my_open_tournaments',
-    { fixture: 'tournaments/load-my-tournaments.json' }
-  ).as('loadMyTournaments');
+  // cy.intercept(
+  //   'GET',
+  //   '**/tournaments/my_open_tournaments',
+  //   { fixture: 'tournaments/load-my-tournaments.json' }
+  // ).as('loadMyTournaments');
 
 
 

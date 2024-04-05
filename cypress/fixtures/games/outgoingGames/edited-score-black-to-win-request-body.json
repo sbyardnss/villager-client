@@ -19,6 +19,7 @@
     "full_name": "phil",
     "guest_id": "g5"
   },
+  "winner_model_type": "guestplayer",
   "pgn": null,
   "bye": false,
   "accepted": true,

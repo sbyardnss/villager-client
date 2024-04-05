@@ -132,6 +132,7 @@ export const TournamentControls: React.FC<TournamentControlsProps> = ({
         : ""}
       {!tournamentObj.complete && (userIsCreator || checkIfUserIsAppCreator()) ?
         <button
+          data-cy="edit-scores-tournament-control-btn"
           className="progressionControlBtn controlBtnApprove"
           onClick={() => {
             scoringModeSetter('editing');
@@ -154,9 +155,12 @@ export const TournamentControls: React.FC<TournamentControlsProps> = ({
         }}>edit players</button>
         : ""}
       {!tournamentObj.complete ?
-        <button className="progressionControlBtn controlBtnApprove" onClick={() => {
-          scoringModeSetter('table');
-        }}>View Table</button>
+        <button
+          data-cy="view-table-tournament-control-btn"
+          className="progressionControlBtn controlBtnApprove"
+          onClick={() => {
+            scoringModeSetter('table');
+          }}>View Table</button>
         : ""}
       {tournamentObj.complete && (userIsCreator || checkIfUserIsAppCreator()) ?
         <div id="tournamentProgressionControls">

@@ -237,5 +237,141 @@ describe('Tournament Components', () => {
     cy.get('[data-cy="matchup-div--match-1--round-4"]')
       .should('not.exist');
   });
+  it('Manager should be able to edit score for previous game, making white pieces player the winner and score should update', () => {
+    let requestCount = 0;
+    cy.intercept('GET', '**/games/153/get_selected_tournament_games', (req) => {
+      if (requestCount < 2) {
+        req.reply({ fixture: 'games/load-tournament-games.json' });
+      } else if (requestCount >= 2) {
+        req.reply({ fixture: 'games/getResponsesAfterSubmittedGames/load-tournament-games-edit-white-win.json' });
+      }
+      requestCount++;
+    }).as('loadTournamentGames');
+    cy.intercept(
+      'PUT',
+      '**/games/1710',
+      { statusCode: 204 }
+    ).as('ScoringEditWhite');
+
+    cy.wait('@loadMyTournaments');
+    cy.get('[data-cy="select-tournament--153"]')
+      .should('be.visible')
+      .click();
+    cy.get('[data-cy="edit-scores-tournament-control-btn"]')
+      .should('be.visible')
+      .click();
+    cy.get('[data-cy="edit-score--round-2--gameId-1710"]')
+      .should('be.visible');
+    cy.get('[data-cy="edit-score--white-win--round-2--gameId-1710"]')
+      .click();
+    cy.get('[data-cy="edit-score-submit-btn--round-2--gameId-1710"]')
+      .click()
+      .then(() => {
+        cy.wait('@ScoringEditWhite')
+          .then((interception) => {
+            expect(interception.response?.statusCode).to.equal(204);
+            cy.fixture('games/outgoingGames/edited-score-white-to-win-request-body.json').then((expectedRequestBody) => {
+              expect(interception.request.body).to.deep.equal(expectedRequestBody);
+            });
+          });
+      });
+    cy.get('[data-cy="view-table-tournament-control-btn"]')
+      .click();
+    cy.get('[data-cy="4--score-cell"]')
+      .should('contain.text', 3);
+  });
+  it('Manager should be able to edit score for previous game, making black pieces player the winner and score should update', () => {
+    let requestCount = 0;
+    cy.intercept('GET', '**/games/153/get_selected_tournament_games', (req) => {
+      if (requestCount < 2) {
+        req.reply({ fixture: 'games/load-tournament-games.json' });
+      } else if (requestCount >= 2) {
+        req.reply({ fixture: 'games/getResponsesAfterSubmittedGames/load-tournament-games-edit-black-win.json' });
+      }
+      requestCount++;
+    }).as('loadTournamentGames');
+    cy.intercept(
+      'PUT',
+      '**/games/1717',
+      { statusCode: 204 }
+    ).as('ScoringEditBlack');
+
+    cy.wait('@loadMyTournaments');
+    cy.get('[data-cy="select-tournament--153"]')
+      .should('be.visible')
+      .click();
+    cy.get('[data-cy="edit-scores-tournament-control-btn"]')
+      .should('be.visible')
+      .click();
+    cy.get('[data-cy="edit-score--round-3--gameId-1717"]')
+      .should('be.visible');
+    cy.get('[data-cy="edit-score--black-win--round-3--gameId-1717"]')
+      .click();
+    cy.get('[data-cy="edit-score-submit-btn--round-3--gameId-1717"]')
+      .click()
+      .then(() => {
+        cy.wait('@ScoringEditBlack')
+          .then((interception) => {
+            expect(interception.response?.statusCode).to.equal(204);
+            cy.fixture('games/outgoingGames/edited-score-black-to-win-request-body.json').then((expectedRequestBody) => {
+              expect(interception.request.body).to.deep.equal(expectedRequestBody);
+            });
+          });
+      });
+    cy.get('[data-cy="view-table-tournament-control-btn"]')
+      .click();
+    cy.get('[data-cy="g5--score-cell"]')
+      .should('contain.text', 1.5);
+  });
+  it('Manager should be able to edit score for previous game, making outcome a draw and scores should update', {
+    retries: {
+      runMode: 2,
+      openMode: 0,
+    },
+  }, () => {
+    let requestCount = 0;
+    cy.intercept('GET', '**/games/153/get_selected_tournament_games', (req) => {
+      if (requestCount < 2) {
+        req.reply({ fixture: 'games/load-tournament-games.json' });
+      } else if (requestCount >= 2) {
+        req.reply({ fixture: 'games/getResponsesAfterSubmittedGames/load-tournament-games-edit-draw.json' });
+      }
+      requestCount++;
+    }).as('loadTournamentGames');
+    cy.intercept(
+      'PUT',
+      '**/games/1718',
+      { statusCode: 204 }
+    ).as('ScoringEditDraw');
+
+    cy.wait('@loadMyTournaments');
+    cy.get('[data-cy="select-tournament--153"]')
+      .should('be.visible')
+      .click();
+    cy.get('[data-cy="edit-scores-tournament-control-btn"]')
+      .should('be.visible')
+      .click();
+    cy.get('[data-cy="edit-score--round-3--gameId-1718"]')
+      .should('be.visible');
+    cy.get('[data-cy="edit-score--draw--round-3--gameId-1718"]')
+      .click();
+    cy.get('[data-cy="edit-score-submit-btn--round-3--gameId-1718"]')
+      .click()
+      .then(() => {
+        cy.wait('@ScoringEditDraw')
+          .then((interception) => {
+            expect(interception.response?.statusCode).to.equal(204);
+            cy.fixture('games/outgoingGames/edited-score-draw-request-body.json').then((expectedRequestBody) => {
+              expect(interception.request.body).to.deep.equal(expectedRequestBody);
+            });
+          });
+      });
+    cy.get('[data-cy="view-table-tournament-control-btn"]')
+      .click();
+    cy.get('[data-cy="g61--score-cell"]')
+      .should('contain.text', .5);
+    cy.get('[data-cy="g7--score-cell"]')
+      .should('contain.text', 1);
+  });
 });
 // })

@@ -16,6 +16,7 @@
     "id": 4,
     "full_name": "josh whiteman"
   },
+  "winner_model_type": "player",
   "pgn": null,
   "bye": false,
   "accepted": true,

@@ -32,7 +32,7 @@ export const TournamentTable: React.FC<TournamentTableProps> = ({
   )
   useEffect(
     () => {
-      const scoreCardCopy = {...analysis.scoreCard};
+      const scoreCardCopy = { ...analysis.scoreCard };
       for (const identifier in scoreCardCopy) {
         if (scoreCardCopy[identifier].length < round) {
           while (scoreCardCopy[identifier].length < round) {
@@ -110,7 +110,11 @@ export const TournamentTable: React.FC<TournamentTableProps> = ({
                     })
                   }
                   {round < 6 ? <td className="scoreCell"></td> : ""}
-                  <td key={identifier + "-- score" + player.full_name} id={identifier + "-- score"} className="totalScoreCell">
+                  <td
+                    data-cy={`${identifier}--score-cell`}
+                    key={identifier + "-- score" + player.full_name}
+                    id={identifier + "-- score"}
+                    className="totalScoreCell">
                     {analysis.scoreObj[identifier]}
                   </td>
                 </tr>

@@ -458,7 +458,7 @@
       "guest_id": "g61"
     },
     "date_time": "2024-04-04T21:35:36.724940Z",
-    "tournament": 162,
+    "tournament": 153,
     "tournament_round": 3,
     "time_setting": 1,
     "winner": null,
@@ -493,31 +493,6 @@
     "win_style": "",
     "target_winner_ct": 15,
     "target_player_b_ct": null,
-    "target_player_w_ct": 15
-  },
-  {
-    "id": 1720,
-    "player_w": { 
-      "id": 5, 
-      "full_name": "phil", 
-      "guest_id": "g5" 
-    },
-    "player_b": { 
-      "id": 62, 
-      "full_name": "Leia", 
-      "guest_id": "g62" 
-    },
-    "date_time": "2024-04-04T21:35:39.332738Z",
-    "tournament": 153,
-    "tournament_round": 4,
-    "time_setting": 1,
-    "winner": null,
-    "pgn": null,
-    "bye": false,
-    "accepted": true,
-    "win_style": "draw",
-    "target_winner_ct": null,
-    "target_player_b_ct": 15,
     "target_player_w_ct": 15
   }
 ]

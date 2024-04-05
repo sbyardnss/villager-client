@@ -112,9 +112,9 @@ describe('Tournament Components', () => {
       '**/games',
       {
         statusCode: 201,
-        body: {
-          fixture: 'games/outgoingGames/scoring-test-white-player-win-response.json',
-        }
+        // body: {
+        //   fixture: 'games/outgoingGames/scoring-test-white-player-win-response.json',
+        // }
       }
     ).as('ScoringTestWhite');
 
@@ -161,9 +161,9 @@ describe('Tournament Components', () => {
       '**/games',
       {
         statusCode: 201,
-        body: {
-          fixture: 'games/outgoingGames/scoring-test-black-player-win-response.json',
-        }
+        // body: {
+        //   fixture: 'games/outgoingGames/scoring-test-black-player-win-response.json',
+        // }
       }
     ).as('ScoringTestBlack');
 
@@ -189,7 +189,7 @@ describe('Tournament Components', () => {
       .should('not.exist');
   });
 
-  it.only('User should be able to submit game with outcome as draw and the game should disappear from the active games list when the games are reloaded', {
+  it('User should be able to submit game with outcome as draw and the game should disappear from the active games list when the games are reloaded', {
     retries: {
       runMode: 2,
       openMode: 0,

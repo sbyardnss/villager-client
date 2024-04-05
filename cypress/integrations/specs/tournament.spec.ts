@@ -488,7 +488,7 @@ describe('Tournament Components', () => {
     cy.wait('@SubmitEditedTournament').then(interception => {
       const newPlayers = interception.request.body.competitors.sort((a: any, b: any) => a.id - b.id);
       const newGuests = interception.request.body.guest_competitors.sort((a: any, b: any) => a.id - b.id);
-      expect(interception.request.body.pairings.filter(p => p.round === 4).length).to.equal(7);
+      expect(interception.request.body.pairings.filter((p: any) => p.round === 4).length).to.equal(7);
       cy.fixture('tournaments/editingPlayers/edited-players-updated-tournament.json').then((expectedRequestBody) => {
         const fixturePlayers = expectedRequestBody.competitors.sort((a: any, b: any) => a.id - b.id);
         const fixtureGuests = expectedRequestBody.guest_competitors.sort((a: any, b: any) => a.id - b.id);

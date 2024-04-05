@@ -105,12 +105,7 @@ describe('Tournament Components', () => {
       .should('contain.text', "John Cena, can't see me!");
   });
 
-  it('User should be able to submit game with the white pieces player as the winner and the game should disappear from the active games list when the games are reloaded', {
-    retries: {
-      runMode: 2,
-      openMode: 0,
-    },
-  }, () => {
+  it('User should be able to submit game with the white pieces player as the winner and the game should disappear from the active games list when the games are reloaded', () => {
     cy.intercept(
       'GET',
       '**/tournaments/my_open_tournaments',
@@ -160,12 +155,7 @@ describe('Tournament Components', () => {
       .should('not.exist');
   });
 
-  it('User should be able to submit game with the black pieces player as the winner and the game should disappear from the active games list when the games are reloaded', {
-    retries: {
-      runMode: 2,
-      openMode: 0,
-    },
-  }, () => {
+  it('User should be able to submit game with the black pieces player as the winner and the game should disappear from the active games list when the games are reloaded', () => {
     cy.intercept(
       'GET',
       '**/tournaments/my_open_tournaments',
@@ -214,12 +204,7 @@ describe('Tournament Components', () => {
       .should('not.exist');
   });
 
-  it('User should be able to submit game with outcome as draw and the game should disappear from the active games list when the games are reloaded', {
-    retries: {
-      runMode: 2,
-      openMode: 0,
-    },
-  }, () => {
+  it('User should be able to submit game with outcome as draw and the game should disappear from the active games list when the games are reloaded', () => {
     cy.intercept(
       'GET',
       '**/tournaments/my_open_tournaments',
@@ -363,12 +348,7 @@ describe('Tournament Components', () => {
     cy.get('[data-cy="g5--score-cell"]')
       .should('contain.text', 1.5);
   });
-  it('Manager should be able to edit score for previous game, making outcome a draw and scores should update', {
-    retries: {
-      runMode: 2,
-      openMode: 0,
-    },
-  }, () => {
+  it('Manager should be able to edit score for previous game, making outcome a draw and scores should update', () => {
     cy.intercept(
       'GET',
       '**/tournaments/my_open_tournaments',

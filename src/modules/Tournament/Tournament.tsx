@@ -15,12 +15,11 @@ import { useParams } from "react-router";
 
 export const TournamentController = () => {
   const { tournamentId } = useParams();
-  const { myChessClubs, clubMatesAndGuests } = useAppContext();
+  const { myChessClubs, clubMatesAndGuests, selectedClub, setSelectedClub } = useAppContext();
   // const [clubMatesAndGuests, setClubMatesAndGuests] = useState<(PlayerRelated | Guest)[]>([]);
   // const [timeSettings, setTimeSettings] = useState<TimeSetting[]>([]);
   const [myOpenTournaments, setMyOpenTournaments] = useState<Tournament[]>([]);
   const [createNewTournament, setCreateNewTournament] = useState(false);
-  const [selectedClub, setSelectedClub] = useState<ChessClub>({} as ChessClub);
   const [selectedTournament, setSelectedTournament] = useState<Tournament>({} as Tournament);
   const [pastTournaments, setPastTournaments] = useState<Tournament[]>([]);
   const [showPastTournaments, setShowPastTournaments] = useState(false);

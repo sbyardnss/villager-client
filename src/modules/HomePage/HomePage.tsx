@@ -17,20 +17,20 @@ import type { Tournament } from "../../Types/Tournament";
 import type { ChallengeCreated, ChallengeEditing, ChallengeNew } from "../../Types/Challenge";
 import type { Puzzle } from "../../Types/Puzzle";
 import { usePlayContext } from "../Play/PlayController";
-import { showAlertModal } from "../../shared/AlertModal/alert-modal"
-import { findByIdentifier } from "../Tournament/actions/find-by-identifier"
+import { showAlertModal } from "../../shared/AlertModal/alert-modal";
+import { findByIdentifier } from "../Tournament/actions/find-by-identifier";
 
 //TODO: MY CHALLENGES NOT SHOWING
 export const HomePage = () => {
-  const { localVillagerUser, myChessClubs, clubMatesAndGuests } = useAppContext();
+  const { localVillagerUser, myChessClubs, clubMatesAndGuests, selectedClub, setSelectedClub } = useAppContext();
   const [communityPosts, setCommunityPosts] = useState([]);
   const [challenges, setChallenges] = useState([]);
   // const [usersActiveGames, setUsersActiveGames] = useState([]);
   const navigate = useNavigate();
-  //TODO: NEED DATETIME AND CLUB FOR POST
   const [newPost, updateNewPost] = useState({
     poster: localVillagerUser.userId,
-    message: ""
+    message: "",
+    club: 0,
   });
 
   const [challengeForApi, updateChallengeForApi] = useState<DigitalGame>({
@@ -65,7 +65,7 @@ export const HomePage = () => {
     themes: [],
   });
   const [displayedCommunityPosts, setDisplayedCommunityPosts] = useState([]);
-  const [selectedClub, setSelectedClub] = useState(0);
+  // const [selectedClub, setSelectedClub] = useState(0);
   const [challengeAlertVisible, setChallengeAlertVisible] = useState(false);
 
   //POTENTIALLY TEMPORARY END
@@ -96,19 +96,17 @@ export const HomePage = () => {
           setCommunityPosts(postData);
         })
 
-      }, [myChessClubs]
+    }, [myChessClubs]
   )
 
   useEffect(
     () => {
-      setSelectedClub(myChessClubs[0]?.id);
-    }, [myChessClubs]
-  )
-  
-  useEffect(
-    () => {
-      const postsForSelectedClub = communityPosts.filter((post: CommunityPost) => post.club === selectedClub);
+      //TODO: community_posts_for_selected_club_endpoint
+      const postsForSelectedClub = communityPosts.filter((post: CommunityPost) => post.club === selectedClub.id);
       setDisplayedCommunityPosts(postsForSelectedClub);
+      const postCopy = { ...newPost };
+      postCopy.club = selectedClub.id;
+      updateNewPost(postCopy);
     }, [selectedClub, myChessClubs, communityPosts]
   )
   useEffect(
@@ -118,105 +116,8 @@ export const HomePage = () => {
         setActiveUserPlayerObject(playerObject);
     }, [clubMatesAndGuests, localVillagerUser.userId]
   )
-  /*
-  community posts
-  chess clubs
-  challenges
-  my active games
-
-  */
 
 
-  // const localVillager = localStorage.getItem("villager")
-  // const localVillagerObj = JSON.parse(localVillager)
-  // const navigate = useNavigate()
-  // const { players, games, resetGames, selectedGameObj, updateSelectedGameObj, selectedGame, setSelectedGame, puzzles, selectedPuzzle, setSelectedPuzzle, selectedRange, setSelectedRange } = useContext(PlayContext)
-  // const [communityPosts, setCommunityPosts] = useState([])
-  // const [displayedCommunityPosts, setDisplayedCommunityPosts] = useState([])
-  // const [tournaments, setTournaments] = useState([])
-  // const [myTournaments, setMyTournaments] = useState([])
-  // const [challenges, setChallenges] = useState([])
-  // const [myChallenges, setMyChallenges] = useState([])
-  // const [myUnfinishedGames, setMyUnfinishedGames] = useState([])
-  // const [displayedPuzzle, setDisplayedPuzzle] = useState({})
-  // const [myChessClubs, setMyChessClubs] = useState([])
-  // const [selectedClub, setSelectedClub] = useState(0)
-  // const [challengeAlertVisible, setChallengeAlertVisible] = useState(false)
-  // const [newPost, updateNewPost] = useState({
-  //     poster: localVillagerObj.userId,
-  //     message: ""
-  // })
-  //OLD CHALLENGEFOR API
-  // const [challengeForApi, updateChallengeForApi] = useState({
-  //     player_w: 0,
-  //     player_b: 0,
-  //     accepted: false,
-  //     computer_opponent: false
-  // })
-
-  // const [challengeForApi, updateChallengeForApi] = useState({
-  //     player_w: 0,
-  //     player_w_model_type: 'player',
-  //     player_b: 0,
-  //     player_b_model_type: 'player',
-  //     accepted: false,
-  //     computer_opponent: false,
-  //     winner: null
-  // })
-  // useEffect(
-  //     () => {
-  //         Promise.all([getAllCommunityPosts(), getMyChessClubs()/*, getAllTournaments()*/]).then(([communityPostData, myClubsData/*, tournamentData*/]) => {
-  //             setCommunityPosts(communityPostData)
-  //             setMyChessClubs(myClubsData)
-  //             // setTournaments(tournamentData)
-  //         })
-  //     }, []
-  // )
-  // useEffect(
-  //     () => {
-  //         setSelectedClub(myChessClubs[0]?.id)
-  //     }, [myChessClubs]
-  // )
-  // useEffect(
-  //     () => {
-  //         if (selectedClub !== 0) {
-  //             const filteredCommunityPosts = communityPosts.filter(post => {
-  //                 return post.club === selectedClub
-  //             })
-  //             setDisplayedCommunityPosts(filteredCommunityPosts)
-  //         }
-  //         else {
-  //             setDisplayedCommunityPosts(communityPosts)
-  //         }
-  //     }, [selectedClub, myChessClubs]
-  // )
-  // useEffect(
-  //     () => {
-  //         // const challengeGames = games?.filter(game => game.accepted === false)
-  //         const challengeGames = games?.filter(game => {
-  //             const challengingPlayerId = game.player_b?.id ? game.player_b.id : game.player_w.id
-  //             const allMembersOfClubs = []
-  //             myChessClubs.map(club => {
-  //                 club.members.map(member => member.id !== localVillagerObj.userId ? allMembersOfClubs.push(member.id) : null)
-  //             })
-  //             if (game.accepted === false && allMembersOfClubs.find(memberId => memberId === challengingPlayerId)) {
-  //                 return game
-  //             }
-  //         })
-  //         setChallenges(challengeGames)
-  //         const myCreatedChallenges = games?.filter(game => {
-  //             return game.accepted === false && game.player_w?.id === localVillagerObj.userId && !game.player_w?.guest_id || game.accepted === false && game.player_b?.id === localVillagerObj.userId && !game.player_b?.guest_id
-  //         })
-  //         setMyChallenges(myCreatedChallenges)
-  //         const nonGuestGames = games?.filter(game => {
-  //             return (!game.player_b?.guest_id && !game.player_w?.guest_id)
-  //         })
-  //         const unfinishedGames = nonGuestGames?.filter(game => {
-  //             return (game.player_b?.id === localVillagerObj.userId || game.player_w?.id === localVillagerObj.userId) && game.winner === null && game.win_style === '' && game.accepted === true
-  //         })
-  //         setMyUnfinishedGames(unfinishedGames)
-  //     }, [games]
-  // )
   // useEffect(
   //     () => {
   //         if (selectedPuzzle.fen !== "") {
@@ -277,10 +178,10 @@ export const HomePage = () => {
   const handleKeyDown = (e: KeyboardEvent) => {
     if (e.key === 'Enter') {
       submitNewPostToAPI(newPost).then(() => {
-        const copy = { ...newPost }
-        copy.message = ""
-        updateNewPost(copy)
-        resetCommunityPosts()
+        const copy = { ...newPost };
+        copy.message = "";
+        updateNewPost(copy);
+        resetCommunityPosts();
       })
     }
   }
@@ -293,53 +194,6 @@ export const HomePage = () => {
     }
   }
 
-  // const openChallengesOrMsg = () => {
-  //   const othersChallenges = challenges.filter((c: Game) => c.player_b?.id !== localVillagerUser.userId && c.player_w?.id !== localVillagerUser.userId)
-  //   if (!othersChallenges.length) {
-  //     return (
-  //       <div id="noChallengesMsg">
-  //         There are currently no open challenges
-  //       </div>
-  //     )
-  //   }
-  //   else {
-  //     return <>
-  //       <section id="openChallengesList">
-  //         {
-  //           challenges?.map((c: ChallengeCreated) => {
-  //             const challengingPlayer = c.player_w ? c.player_w : c.player_b
-  //             //TODO: STORY: CHALLENGE TYPE FIX
-  //             if ((challengingPlayer as PlayerRelated).id !== localVillagerUser.userId) {
-  //               return (
-  //                 <div key={c.id} className="challengeListItem">
-  //                   <div>
-
-  //                     <div className="openChallengerInfo">
-  //                       <div>
-  //                         Play <span id={c.player_w ? "blackChallengeSpan" : "whiteChallengeSpan"}>{c.player_w ? "black" : "white"}</span> vs <span id={c.player_w ? "whiteChallengeSpan" : "blackChallengeSpan"}>{challengingPlayer.username}</span>
-  //                       </div>
-  //                       <button className="challengeBtn buttonStyleAmbiguous"
-  //                         onClick={() => {
-  //                           const copy = { ...c }
-  //                           c.player_w ? copy.player_b = localVillagerUser.userId : copy.player_w = localVillagerUser.userId
-  //                           c.player_w ? copy.player_w = c.player_w.id : copy.player_b = c.player_b.id
-  //                           copy.accepted = true
-  //                           acceptChallenge(copy)
-  //                             .then(() => resetGames())
-  //                         }}>accept</button>
-  //                     </div>
-  //                   </div>
-  //                 </div>
-  //               )
-  //             }
-  //             return null;
-  //           })
-  //         }
-  //       </section>
-  //     </>
-
-  //   }
-  // }
   return <>
     <main id="homepageContainer">
       {challengeAlertVisible === true ?
@@ -359,7 +213,7 @@ export const HomePage = () => {
                   {
                     myChessClubs.map((club: ChessClub) => {
                       return (
-                        <li key={club.id} className="communityForumFilterTab setCustomFont" onClick={() => setSelectedClub(club.id)}>{club.name}</li>
+                        <li key={club.id} className="communityForumFilterTab setCustomFont" onClick={() => setSelectedClub(club)}>{club.name}</li>
                       )
                     })
                   }
@@ -412,10 +266,12 @@ export const HomePage = () => {
                 className="buttonStyleApprove"
                 onClick={() => {
                   submitNewPostToAPI(newPost).then(() => {
-                    const copy = { ...newPost }
-                    copy.message = ""
-                    updateNewPost(copy)
-                    getAllCommunityPosts().then(data => setCommunityPosts(data))
+                    const copy = { ...newPost };
+                    copy.message = "";
+                    copy.club = selectedClub.id;
+                    updateNewPost(copy);
+                    // getAllCommunityPosts().then(data => setCommunityPosts(data));
+                    resetCommunityPosts();
                     // resetMessages()
                   })
                 }}

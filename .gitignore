@@ -26,3 +26,4 @@ yarn-error.log*
 # cypress ignores
 cypress/videos
 cypress/screenshots
+cypress/downloads/

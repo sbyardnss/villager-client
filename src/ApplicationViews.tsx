@@ -16,40 +16,6 @@ import { HomePage } from "./modules/HomePage/HomePage";
 import { TournamentController } from "./modules/Tournament/Tournament"
 import { PlayController } from "./modules/Play/PlayController"
 export const ApplicationViews = () => {
-  // return (
-  //     <Routes>
-  //         <Route path="/" element={
-  //             <>
-  //                 <Outlet />
-  //             </>
-  //         }>
-  //             <Route path="" element={
-  //                 <PlayProvider>
-  //                     <HomePage />
-  //                 </PlayProvider>
-  //             } />
-  //             {/* <Route path="userList" element={<UserList />} /> */}
-  //             <Route path="play" element={
-  //                 <PlayProvider>
-  //                     <Play />
-  //                 </PlayProvider>
-  //             } />
-
-  //             <Route path="profile" element={
-  //                 <PlayProvider>
-  //                     <Profile />
-  //                 </PlayProvider>
-  //             } />
-  //             <Route path="messages" element={<Messages />} />
-  //             <Route path="tournament" element={
-  //                 <TournamentProvider>
-  //                     <Tournament />
-  //                 </TournamentProvider>
-  //             } />
-  //             <Route path="clubs" element={<ChessClubs />} />
-  //         </Route>
-  //     </Routes>
-  // )
   return (
     <AppProvider>
       <Routes>
@@ -70,7 +36,7 @@ export const ApplicationViews = () => {
           } />
         </Route>
         <Route path="clubs" element={<ChessClubs />} />
-        <Route path="tournament" element={
+        <Route path="tournament/:tournamentId?" element={
           <TournamentController />
         } />
       </Routes>

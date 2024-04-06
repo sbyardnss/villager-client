@@ -1,6 +1,6 @@
 import { useContext } from "react"
 import { TournamentContext } from "./TournamentProvider"
-import { alterGame } from "../../ServerManager"
+import { alterGame } from "../../../ServerManager"
 import trophyIcon from "../../images/small_trophy_with_background.png";
 import { findIdentifier } from "../actions/find-identifier";
 

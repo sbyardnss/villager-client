@@ -1,7 +1,7 @@
-import { useState, useContext, useEffect, SetStateAction, useRef } from "react"
-import { AppContext, useAppContext } from "../../App/AppProvider"
+import { useState, useEffect, SetStateAction, useRef } from "react"
+import { useAppContext } from "../../App/AppProvider"
 import { checkIfUserIsAppCreator } from "../actions/check-if-creator"
-import { getTournamentGames, getTournament } from "../../../ServerManager";
+import { getTournamentGames, getTournament, sendNewGame } from "../../../ServerManager";
 import { tournamentAnalysis } from "../actions/matchup-game-analysis";
 import { ResultsModal } from "./ResultsModal";
 import { EndTournamentModal } from "./EndTournamentModal";
@@ -9,10 +9,7 @@ import { EditPlayersModal } from "./EditPlayersModal";
 import { Scoring } from "./Scoring";
 import { EditScores } from "./EditScores";
 import { TournamentTable } from "./TournamentTable";
-// import { createPairings } from "../actions/create-pairings";
-// import { findIdentifier } from "../actions/find-identifier";
 import { TournamentControls } from "./TournamentControls";
-// import { getPlayerType } from "../../../utils/player-guest-typing";
 import { type Tournament, selectedTournamentDefaults } from "../../../Types/Tournament";
 import type { PlayerRelated } from "../../../Types/Player";
 import type { Guest } from "../../../Types/Guest";
@@ -100,6 +97,8 @@ export const ActiveTournament: React.FC<ActiveTournamentProps> = ({
     bye: true
   });
 
+  //TODO: BASED ON TEST :User should be able to submit game with the white pieces player as the winner and the game should disappear from the active games list when the games are reloaded,
+  //THIS USEEFFECT MIGHT BE RUNNING ANY TIME SOMEONE CLICKS A PLAYER IN THE SCORING COMPONENT. ENSURE THIS IS NOT THE CASE
   useEffect(
     () => {
       getTournamentGames(selectedTournament.id)
@@ -112,7 +111,6 @@ export const ActiveTournament: React.FC<ActiveTournamentProps> = ({
       const chosenClub = myChessClubs.find((club: ChessClub) => club.id === selectedTournament.club);
       if (chosenClub)
         selectClub(chosenClub)
-      // console.log(selectedTournament)
     }, [selectedTournament, selectClub, myChessClubs, localVillagerUser.userId]
   )
   useEffect(
@@ -261,41 +259,53 @@ export const ActiveTournament: React.FC<ActiveTournamentProps> = ({
 
   //TODO: need to have the same data going out as coming in for Games. Currently causing some complexity
   const handleGameForApiUpdate = (
-    whitePlayer: PlayerRelated | Guest,
-    blackPlayer: PlayerRelated | Guest,
+    whitePlayer: PlayerRelated | Guest | null,
+    blackPlayer: PlayerRelated | Guest | null,
     winner?: PlayerRelated | Guest,
     pastGame?: Game,
   ) => {
-    //update winner, round, 
-    let copy: OutgoingGame | Game = {} as OutgoingGame | Game;
-    if (!pastGame) {
-      copy = { ...gameForApi } as OutgoingGame;
-      copy.tournament = selectedTournament.id;
-      copy.tournament_round = currentRound;
-      copy.time_setting = selectedTournament.time_setting;
-      copy.player_w = whitePlayer;
-      copy.player_w_model_type = getModelTypeForApi(whitePlayer);
-      copy.player_b = blackPlayer;
-      copy.player_b_model_type = getModelTypeForApi(blackPlayer);
-    } else {
-      if (pastGame) {
-        copy = { ...pastGame };
+    if (whitePlayer && blackPlayer) {
+      //update winner, round, 
+      let copy: OutgoingGame | Game = {} as OutgoingGame | Game;
+      //TODO: ADD USEEFFECT FOR SOME OF THIS. SHOULD BE ABLE TO AUTOMATICALLY ADD SOME PROPERTIES TO GAMEFORAPI LIKE ROUND AND TOURNAMENT
+      if (!pastGame) {
+        copy = { ...gameForApi } as OutgoingGame;
+        copy.tournament = selectedTournament.id;
+        copy.tournament_round = currentRound;
+        copy.time_setting = selectedTournament.time_setting;
+        copy.player_w = whitePlayer;
+        copy.player_w_model_type = getModelTypeForApi(whitePlayer);
+        copy.player_b = blackPlayer;
+        copy.player_b_model_type = getModelTypeForApi(blackPlayer);
+      } else {
+        if (pastGame) {
+          copy = { ...pastGame };
+        }
       }
-    }
-    if (winner) {
-      copy = copy as OutgoingGame;
-      copy.winner = winner;
-      copy.winner_model_type = getModelTypeForApi(winner);
-      copy.win_style = 'checkmate';
+      if (winner) {
+        copy = copy as OutgoingGame;
+        copy.winner = winner;
+        copy.winner_model_type = getModelTypeForApi(winner);
+        copy.win_style = 'checkmate';
+      } else {
+        copy = copy as OutgoingGame;
+        copy.winner = null;
+        copy.winner_model_type = null;
+        copy.win_style = 'draw';
+      }
+  
+      if (copy) {
+        updateGameForApi(copy);
+      }
     } else {
-      copy = copy as OutgoingGame;
-      copy.winner = null;
-      copy.winner_model_type = null;
-      copy.win_style = 'draw';
+      resetGameForApi();
     }
-
-    if (copy) {
-      updateGameForApi(copy);
+  }
+  const handleSendGameToApi = () => {
+    if (gameForApi.win_style) {
+      sendNewGame(gameForApi)
+        .then(() => resetTournamentGames());
+      resetGameForApi();
     }
   }
   return <>
@@ -307,7 +317,6 @@ export const ActiveTournament: React.FC<ActiveTournamentProps> = ({
           analysis={tournamentAnalysisObj}
           creatorBool={tournamentCreatorBool}
           tournamentObj={selectedTournament} />
-          // currentByeGame={byeGameRef} />
         : modalMode === 'edit-players' ?
           <EditPlayersModal
             tournamentObj={selectedTournament}
@@ -345,7 +354,7 @@ export const ActiveTournament: React.FC<ActiveTournamentProps> = ({
       <TournamentControls
         tournamentResetter={resetTourneys}
         tournamentGamesResetter={resetTournamentGames}
-        activeTournamentResetter={resetActiveTournament}
+        activeTournamentResetter={resetActiveTournament} //TODO: where is this being used
         modalMode={modalMode}
         modalModeSetter={setModalMode}
         scoringMode={scoreMode}
@@ -371,14 +380,12 @@ export const ActiveTournament: React.FC<ActiveTournamentProps> = ({
             tourneyGames={tournamentGames}
             currentMatches={currentRoundMatchups}
             byeGame={byeGameRef}
-            resetGame={resetGameForApi}
-            resetTourneyGames={resetTournamentGames}
             isTourneyCreator={tournamentCreatorBool}
             round={currentRound}
             activePlayers={activeTournamentPlayers}
             analysis={tournamentAnalysisObj}
-            gameForApi={gameForApi as OutgoingGame}
-            handleUpdate={handleGameForApiUpdate} />
+            handleUpdate={handleGameForApiUpdate}
+            handleSendGameToApi={handleSendGameToApi} />
           : scoreMode === 'editing' ?
             <EditScores
               tourneyGames={tournamentGames}

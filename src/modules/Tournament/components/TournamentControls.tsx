@@ -132,6 +132,7 @@ export const TournamentControls: React.FC<TournamentControlsProps> = ({
         : ""}
       {!tournamentObj.complete && (userIsCreator || checkIfUserIsAppCreator()) ?
         <button
+          data-cy="edit-scores-tournament-control-btn"
           className="progressionControlBtn controlBtnApprove"
           onClick={() => {
             scoringModeSetter('editing');
@@ -143,20 +144,26 @@ export const TournamentControls: React.FC<TournamentControlsProps> = ({
         newRoundButtonDigitalTournament()
         : ""}
       {tournamentObj.in_person === true && !tournamentObj.complete && (userIsCreator || checkIfUserIsAppCreator()) ?
-        <button className="progressionControlBtn controlBtnApprove" onClick={() => {
-          if (roundComplete) {
-            window.alert('This round seems to be over. Start new round before adding players')
-            modalModeSetter('none');
-          }
-          else {
-            modalModeSetter('edit-players');
-          }
-        }}>edit players</button>
+        <button
+          data-cy="edit-players-tournament-controls-btn"
+          className="progressionControlBtn controlBtnApprove"
+          onClick={() => {
+            if (roundComplete) {
+              window.alert('This round seems to be over. Start new round before adding players')
+              modalModeSetter('none');
+            }
+            else {
+              modalModeSetter('edit-players');
+            }
+          }}>edit players</button>
         : ""}
       {!tournamentObj.complete ?
-        <button className="progressionControlBtn controlBtnApprove" onClick={() => {
-          scoringModeSetter('table');
-        }}>View Table</button>
+        <button
+          data-cy="view-table-tournament-control-btn"
+          className="progressionControlBtn controlBtnApprove"
+          onClick={() => {
+            scoringModeSetter('table');
+          }}>View Table</button>
         : ""}
       {tournamentObj.complete && (userIsCreator || checkIfUserIsAppCreator()) ?
         <div id="tournamentProgressionControls">

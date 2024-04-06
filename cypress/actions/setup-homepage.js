@@ -1,5 +1,4 @@
 export function setupHomepage() {
-  // cy.login();
   cy.intercept(
     'GET',
     '**/clubs/my_clubs',

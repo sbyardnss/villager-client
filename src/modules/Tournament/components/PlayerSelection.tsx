@@ -92,7 +92,9 @@ export const PlayerSelection: React.FC<PlayerSelectionProps> = ({
               displayedCompetitors.map((p: (PlayerRelated | Guest), index) => {
                 const playerType = getPlayerType(p);
                 return (
-                  <li key={!isPlayerOrGuest(p) ? (p as Guest).guest_id + '-- potentialCompetitor' : p.id + '-- potentialCompetitor'}
+                  <li
+                    data-cy={`select-player--${p.full_name}--${p.id}`}
+                    key={!isPlayerOrGuest(p) ? (p as Guest).guest_id + '-- potentialCompetitor' : p.id + '-- potentialCompetitor'}
                     className="newTournamentPlayerListItem"
                     onClick={() => {
                       const tournamentCopy = { ...tournamentObj }
@@ -120,6 +122,7 @@ export const PlayerSelection: React.FC<PlayerSelectionProps> = ({
               tournamentObj.competitors.map((competitor, index) => {
                 return (
                   <li key={competitor.id + '-- competitor'}
+                    data-cy={`remove-player--${competitor.full_name}--${competitor.id}`}
                     className="newTournamentPlayerListItem"
                     onClick={() => {
                       const tournamentCopy = { ...tournamentObj }
@@ -135,6 +138,7 @@ export const PlayerSelection: React.FC<PlayerSelectionProps> = ({
               tournamentObj.guest_competitors.map((competitor, index) => {
                 return (
                   <li key={competitor.guest_id + '-- competitor'}
+                    data-cy={`remove-guest--${competitor.full_name}--${competitor.id}`}
                     className="newTournamentPlayerListItem"
                     onClick={() => {
                       const tournamentCopy = { ...tournamentObj }
@@ -167,6 +171,7 @@ export const PlayerSelection: React.FC<PlayerSelectionProps> = ({
       </div>
       <div id="createGuestDiv">
         <input
+          data-cy="create-guest-input"
           className="text-input"
           id="newGuestInput"
           type="text"
@@ -179,6 +184,7 @@ export const PlayerSelection: React.FC<PlayerSelectionProps> = ({
           }}
         />
         <button
+          data-cy="create-guest-btn"
           id="newGuestSubmitBtn"
           className="setCustomFont"
           onClick={() => {
@@ -192,11 +198,14 @@ export const PlayerSelection: React.FC<PlayerSelectionProps> = ({
       </div>
       <div className="controlSpread">
 
-        <button className="buttonStyleApprove" onClick={() => setShowGuests(!showGuests)}>toggle guests</button>
-        <button className="buttonStyleReject" onClick={() => {
-          setShowGuests(false)
-          updatePlayersSelected(true)
-        }}>confirm</button>
+        <button data-cy={`toggle-guests--${!showGuests}`} className="buttonStyleApprove" onClick={() => setShowGuests(!showGuests)}>toggle guests</button>
+        <button
+          data-cy='confirm-player-selection'
+          className="buttonStyleReject"
+          onClick={() => {
+            setShowGuests(false)
+            updatePlayersSelected(true)
+          }}>confirm</button>
       </div>
     </section>
   )

@@ -29,6 +29,7 @@ export const TournamentParameters: React.FC<TournamentParametersProps> = ({
     return (
       <div id="tournamentParameterControls">
         <input
+          data-cy="tournament-title-input"
           type="text"
           name="title"
           className="text-input"
@@ -42,6 +43,7 @@ export const TournamentParameters: React.FC<TournamentParametersProps> = ({
         />
         <div id="tournamentTimeSettingSelection">
           <select
+            data-cy='tournament-time-setting-selection'
             className="tournamentFormDropdownSelection"
             onChange={(e) => {
               const copy = { ...tournamentObj }

@@ -1,0 +1,30 @@
+{
+  "id": 1717,
+  "player_w": {
+    "id": 1,
+    "full_name": "Bob Ross",
+    "guest_id": "g1"
+  },
+  "player_b": {
+    "id": 5,
+    "full_name": "phil",
+    "guest_id": "g5"
+  },
+  "date_time": "2024-04-04T21:35:35.445090Z",
+  "tournament": 153,
+  "tournament_round": 3,
+  "time_setting": 1,
+  "winner": {
+    "id": 5,
+    "full_name": "phil",
+    "guest_id": "g5"
+  },
+  "winner_model_type": "guestplayer",
+  "pgn": null,
+  "bye": false,
+  "accepted": true,
+  "win_style": "checkmate",
+  "target_winner_ct": 15,
+  "target_player_b_ct": 15,
+  "target_player_w_ct": 15
+}

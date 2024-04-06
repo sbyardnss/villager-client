@@ -5,6 +5,9 @@ import { updatePlayerOppRefObj } from "./update-player-opp-ref";
 import { updateBlackWhiteTally } from "./update-black-white-tally";
 import { updateTieBreakAndScoreCardData } from "./update-tie-break-score-card-data";
 
+//TODO SCORECARD AND PLAYER OPP REF OBJECT SHOWING INCORRECT OUTPUT
+
+
 //TODO: COULD ADD hadBye PROPERTY TO THIS TO MAKE CREATING PAIRINGS EASIER. check createPairings for 'BYE ON SCORE WOULD BE EASIER'
 export type ScoreObjType = {
   [key: string | number]: number; // This part covers the string keys

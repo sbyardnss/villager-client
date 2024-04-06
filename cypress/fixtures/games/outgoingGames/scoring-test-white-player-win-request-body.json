@@ -1,0 +1,14 @@
+{
+  "player_w": { "id": 5, "full_name": "phil", "guest_id": "g5" },
+  "player_w_model_type": "guestplayer",
+  "player_b": { "id": 62, "full_name": "Leia", "guest_id": "g62" },
+  "player_b_model_type": "guestplayer",
+  "accepted": true,
+  "bye": false,
+  "time_setting": 1,
+  "tournament": 153,
+  "tournament_round": 4,
+  "win_style": "checkmate",
+  "winner": { "id": 5, "full_name": "phil", "guest_id": "g5" },
+  "winner_model_type": "guestplayer"
+}

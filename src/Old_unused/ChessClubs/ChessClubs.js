@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom"
-import "../ChessClubs/ChessClubs.css"
+import "./ChessClubs.css"
 import { useEffect, useRef, useState } from "react"
-import { addMemberToClub, checkForPassword, createNewClub, getAllChessClubs, getMyChessClubs, leaveClub } from "../ServerManager"
+import { addMemberToClub, checkForPassword, createNewClub, getAllChessClubs, getMyChessClubs, leaveClub } from "../../ServerManager"
 import { EditClub } from "./EditClub"
 
 export const ChessClubs = () => {

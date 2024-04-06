@@ -5,7 +5,7 @@ import { Outlet, Route, Routes } from "react-router-dom"
 import { Play } from "./modules/Play/components/Play";
 import { Profile } from "./Profile/Profile"
 import { Messages } from "./Messages/Messages"
-import { Tournament } from "./Tournament/Tournament"
+import { Tournament } from "./Old_unused/Tournament/Tournament"
 // import { TournamentProvider } from "./Tournament/components/TournamentProvider"
 import { PlayProvider } from "./Play/PlayProvider"
 // import { ChessClubs } from "./ChessClubs/ChessClubs"

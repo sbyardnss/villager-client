@@ -27,8 +27,9 @@ export const HomePage = () => {
   const [challenges, setChallenges] = useState([]);
   // const [usersActiveGames, setUsersActiveGames] = useState([]);
   const navigate = useNavigate();
+  //TODO: NEED DATETIME AND CLUB FOR POST
   const [newPost, updateNewPost] = useState({
-    poster: localVillagerUser,
+    poster: localVillagerUser.userId,
     message: ""
   });
 

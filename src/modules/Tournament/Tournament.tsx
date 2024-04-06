@@ -11,8 +11,10 @@ import type { ChessClub } from "../../Types/ChessClub";
 import type { PlayerRelated } from "../../Types/Player";
 // import type { TimeSetting } from "../../Types/TimeSetting";
 import type { Tournament, NewTournament } from "../../Types/Tournament";
+import { useParams } from "react-router";
 
 export const TournamentController = () => {
+  const { tournamentId } = useParams();
   const { myChessClubs, clubMatesAndGuests } = useAppContext();
   // const [clubMatesAndGuests, setClubMatesAndGuests] = useState<(PlayerRelated | Guest)[]>([]);
   // const [timeSettings, setTimeSettings] = useState<TimeSetting[]>([]);
@@ -44,6 +46,21 @@ export const TournamentController = () => {
       getMyOpenTournaments()
         .then(data => setMyOpenTournaments(data));
     }, []
+  )
+  useEffect(
+    () => {
+      console.log(newTournament)
+    }, [newTournament]
+  )
+  useEffect(
+    () => {
+      if (tournamentId && myOpenTournaments) {
+        const tournamentFromParam = myOpenTournaments.find(t => t.id === parseInt(tournamentId));
+        if (tournamentFromParam) {
+          setSelectedTournament(tournamentFromParam);
+        }
+      }
+    }, [tournamentId, myOpenTournaments]
   )
   if (selectedTournament.id) {
     return <>

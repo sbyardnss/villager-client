@@ -16,6 +16,7 @@ import type { Guest } from "../../../Types/Guest";
 import type { Game, OutgoingGame } from "../../../Types/Game";
 import type { Match } from "tournament-pairings/dist/Match";
 import type { ChessClub } from "../../../Types/ChessClub";
+import { chessClubDefaults } from "../../../Types/ChessClub";
 import type { tournamentAnalysisOutput } from "../actions/matchup-game-analysis";
 
 interface ActiveTournamentProps {
@@ -341,6 +342,7 @@ export const ActiveTournament: React.FC<ActiveTournamentProps> = ({
           onClick={() => {
             setModalMode('none');
             selectTournament(selectedTournamentDefaults);
+            selectClub(chessClubDefaults);
             setTournamentAnalysisObj({} as tournamentAnalysisOutput);
           }}>exit</button>
         <button

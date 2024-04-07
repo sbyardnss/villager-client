@@ -76,7 +76,6 @@ export const EditScores: React.FC<EditScoresProps> = ({
                     <button
                       data-cy={`edit-score-submit-btn--round-${game.tournament_round}--gameId-${game.id}`}
                       onClick={() => {
-
                         alterGame(gameForApi)
                           .then(() => resetTourneyGames())
                         resetGame()

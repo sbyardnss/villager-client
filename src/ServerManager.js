@@ -271,6 +271,7 @@ export const sendNewGame = (gameObj) => {
         },
         body: JSON.stringify(gameObj)
     })
+      .then(res => res.json());
 }
 export const sendTournamentRoundOutcomes = (outcomeArr) => {
     const localVillagerObj = getToken()
@@ -386,6 +387,7 @@ export const alterGame = (gameObj) => {
         },
         body: JSON.stringify(gameObj)
     })
+      .then(res => res.json());
 }
 export const acceptChallenge = (gameObj) => {
     const localVillagerObj = getToken()

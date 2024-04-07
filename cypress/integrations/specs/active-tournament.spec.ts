@@ -264,13 +264,15 @@ describe('Tournament Components', () => {
               expect(interception.request.body).to.deep.equal(expectedRequestBody);
             });
           });
+      })
+      .then(() => {
+        cy.get('[data-cy="view-table-tournament-control-btn"]')
+          .click();
+        cy.get('[data-cy="g61--score-cell"]')
+          .should('contain.text', .5);
+        cy.get('[data-cy="g7--score-cell"]')
+          .should('contain.text', 1);
       });
-    cy.get('[data-cy="view-table-tournament-control-btn"]')
-      .click();
-    cy.get('[data-cy="g61--score-cell"]')
-      .should('contain.text', .5);
-    cy.get('[data-cy="g7--score-cell"]')
-      .should('contain.text', 1);
   });
   it('Manager should be able to change players on a tournament before games start and there should be enough pairings for each player', () => {
     const addSelectors = [

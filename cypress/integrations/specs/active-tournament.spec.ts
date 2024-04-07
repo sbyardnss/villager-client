@@ -24,7 +24,7 @@ describe('Tournament Components', () => {
     cy.visit('/tournament/153');
     let requestCount = 0;
     cy.intercept('GET', '**/games/153/get_selected_tournament_games', (req) => {
-      if (requestCount < 2) {
+      if (requestCount < 1) {
         req.reply({ fixture: requestCount === 0 ? 'games/load-tournament-games.json' : 'games/getResponsesAfterSubmittedGames/load-tournament-games-white-win.json' });
         requestCount++;
       }
@@ -45,6 +45,7 @@ describe('Tournament Components', () => {
       '**/games',
       {
         statusCode: 201,
+        fixture: 'games/outgoingGames/white-win-response.json',
       }
     ).as('ScoringTestWhite');
     cy.get('[data-cy="matchup-div--match-1--round-4"]')
@@ -52,16 +53,15 @@ describe('Tournament Components', () => {
     cy.get('[data-cy="white-scoring-selector--match-1--round-4"]')
       .click({ force: true });
     cy.get('[data-cy="submit-score-btn--match-1--round-4"]')
-      .click({ force: true })
-      .then(() => {
-        cy.wait('@ScoringTestWhite')
-          .then((interception) => {
-            cy.fixture('games/outgoingGames/scoring-test-white-player-win-request-body.json').then((expectedRequestBody) => {
-              expect(interception.request.body).to.deep.equal(expectedRequestBody);
-            });
-          });
+      .click({ force: true });
+    cy.wait(200);
+    cy.wait('@ScoringTestWhite')
+      .then((interception) => {
+        cy.fixture('games/outgoingGames/scoring-test-white-player-win-request-body.json').then((expectedRequestBody) => {
+          expect(interception.request.body).to.deep.equal(expectedRequestBody);
+        });
       });
-    cy.wait(500);
+    cy.wait(200);
     cy.get('[data-cy="matchup-div--match-1--round-4"]')
       .should('not.exist');
   });
@@ -74,7 +74,7 @@ describe('Tournament Components', () => {
     ).as('loadMyTournaments');
     let tourneyGameRequestCount = 0;
     cy.intercept('GET', '**/games/153/get_selected_tournament_games', (req) => {
-      if (tourneyGameRequestCount >= 2) {
+      if (tourneyGameRequestCount >= 1) {
         req.reply({ fixture: 'games/getResponsesAfterSubmittedGames/load-tournament-games-black-win.json' });
       }
       tourneyGameRequestCount++;
@@ -85,6 +85,7 @@ describe('Tournament Components', () => {
       '**/games',
       {
         statusCode: 201,
+        fixture: 'games/outgoingGames/black-win-response.json',
       }
     ).as('ScoringTestBlack');
     cy.get('[data-cy="matchup-div--match-1--round-4"]')
@@ -92,15 +93,15 @@ describe('Tournament Components', () => {
     cy.get('[data-cy="black-scoring-selector--match-1--round-4"]')
       .click({ force: true });
     cy.get('[data-cy="submit-score-btn--match-1--round-4"]')
-      .click({ force: true })
-      .then(() => {
-        cy.wait('@ScoringTestBlack')
-          .then((interception) => {
-            cy.fixture('games/outgoingGames/scoring-test-black-player-win-request-body.json').then((expectedRequestBody) => {
-              expect(interception.request.body).to.deep.equal(expectedRequestBody);
-            });
-          });
+      .click({ force: true });
+    cy.wait(200);
+    cy.wait('@ScoringTestBlack')
+      .then((interception) => {
+        cy.fixture('games/outgoingGames/scoring-test-black-player-win-request-body.json').then((expectedRequestBody) => {
+          expect(interception.request.body).to.deep.equal(expectedRequestBody);
+        });
       });
+    cy.wait(200);
     cy.get('[data-cy="matchup-div--match-1--round-4"]')
       .should('not.exist');
   });
@@ -113,7 +114,7 @@ describe('Tournament Components', () => {
     ).as('loadMyTournaments');
     let tourneyGameRequestCount = 0;
     cy.intercept('GET', '**/games/153/get_selected_tournament_games', (req) => {
-      if (tourneyGameRequestCount >= 2) {
+      if (tourneyGameRequestCount >= 1) {
         req.reply({ statusCode: 200, fixture: 'games/getResponsesAfterSubmittedGames/load-tournament-games-draw.json' });
       }
       tourneyGameRequestCount++;
@@ -124,6 +125,7 @@ describe('Tournament Components', () => {
       '**/games',
       {
         statusCode: 201,
+        fixture: 'games/outgoingGames/draw-response.json',
       }
     ).as('ScoringTestDraw');
 
@@ -132,15 +134,15 @@ describe('Tournament Components', () => {
     cy.get('[data-cy="draw-scoring-selector--match-1--round-4"]')
       .click({ force: true });
     cy.get('[data-cy="submit-score-btn--match-1--round-4"]')
-      .click({ force: true })
-      .then(() => {
-        cy.wait('@ScoringTestDraw')
-          .then((interception) => {
-            cy.fixture('games/outgoingGames/scoring-test-draw-request-body.json').then((expectedRequestBody) => {
-              expect(interception.request.body).to.deep.equal(expectedRequestBody);
-            });
-          });
+      .click({ force: true });
+    cy.wait(200);
+    cy.wait('@ScoringTestDraw')
+      .then((interception) => {
+        cy.fixture('games/outgoingGames/scoring-test-draw-request-body.json').then((expectedRequestBody) => {
+          expect(interception.request.body).to.deep.equal(expectedRequestBody);
+        });
       });
+    cy.wait(200);
     cy.get('[data-cy="matchup-div--match-1--round-4"]')
       .should('not.exist');
   });

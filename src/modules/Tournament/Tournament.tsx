@@ -1,41 +1,26 @@
-import { getClubMatesAndGuests, getMyOpenTournaments, getMyPastTournaments } from "../../ServerManager";
-import { useEffect, useState, useContext } from "react";
-import { AppContext, useAppContext } from "../App/AppProvider";
-import type { Guest } from "../../Types/Guest";
-// import type { Match } from "tournament-pairings/dist/Match";
+import { getMyOpenTournaments, getMyPastTournaments } from "../../ServerManager";
+import { useEffect, useState } from "react";
+import { useAppContext } from "../App/AppProvider";
 import { ActiveTournament } from "./components/ActiveTournament";
 import { TournamentForm } from "./components/TournamentForm";
 import { TournamentList } from "./components/TournamentList";
 import "../../styles/Tournament.css";
 import type { ChessClub } from "../../Types/ChessClub";
 import { chessClubDefaults } from "../../Types/ChessClub";
-import type { PlayerRelated } from "../../Types/Player";
-// import type { TimeSetting } from "../../Types/TimeSetting";
 import type { Tournament, NewTournament } from "../../Types/Tournament";
+import { selectedTournamentDefaults, newTournamentDefaults } from "../../Types/Tournament";
 import { useParams } from "react-router";
 
 export const TournamentController = () => {
   const { tournamentId } = useParams();
   const { myChessClubs, clubMatesAndGuests } = useAppContext();
-  // const [clubMatesAndGuests, setClubMatesAndGuests] = useState<(PlayerRelated | Guest)[]>([]);
-  // const [timeSettings, setTimeSettings] = useState<TimeSetting[]>([]);
   const [myOpenTournaments, setMyOpenTournaments] = useState<Tournament[]>([]);
   const [createNewTournament, setCreateNewTournament] = useState(false);
   const [selectedClub, setSelectedClub] = useState<ChessClub>({ ...chessClubDefaults });
-  const [selectedTournament, setSelectedTournament] = useState<Tournament>({} as Tournament);
+  const [selectedTournament, setSelectedTournament] = useState<Tournament>({ ...selectedTournamentDefaults });
   const [pastTournaments, setPastTournaments] = useState<Tournament[]>([]);
   const [showPastTournaments, setShowPastTournaments] = useState(false);
-  const [newTournament, updateNewTournament] = useState<NewTournament>({
-    title: "",
-    // creator: localVillagerUser.userId,
-    competitors: [],
-    guest_competitors: [],
-    time_setting: 0,
-    rounds: 1,
-    in_person: true,
-    pairings: [],
-    club: 0
-  })
+  const [newTournament, updateNewTournament] = useState<NewTournament>({ ...newTournamentDefaults })
 
   const resetTournaments = () => {
     getMyOpenTournaments()
@@ -48,11 +33,7 @@ export const TournamentController = () => {
         .then(data => setMyOpenTournaments(data));
     }, []
   )
-  // useEffect(
-  //   () => {
-  //     console.log(newTournament)
-  //   }, [newTournament]
-  // )
+
   useEffect(
     () => {
       if (tournamentId && myOpenTournaments) {
@@ -81,7 +62,6 @@ export const TournamentController = () => {
           clubs={myChessClubs}
           selectedClub={selectedClub}
           selectClub={setSelectedClub}
-          // playersAndGuests={clubMatesAndGuests}
           resetTourneys={resetTournaments}
           createTournament={createNewTournament}
           setCreateTournament={setCreateNewTournament}

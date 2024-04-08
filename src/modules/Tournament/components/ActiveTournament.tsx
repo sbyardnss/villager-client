@@ -38,7 +38,6 @@ export const ActiveTournament: React.FC<ActiveTournamentProps> = ({
 }) => {
   const { localVillagerUser, myChessClubs } = useAppContext();
 
-  // const [activeTournament, setActiveTournament] = useState<Tournament>({} as Tournament);
   const [activeTournamentPlayers, setActiveTournamentPlayers] = useState<(PlayerRelated | Guest)[]>([])
   const [tournamentCreatorBool, setTournamentCreatorBool] = useState(false);
   const [tournamentGames, setTournamentGames] = useState<Game[]>([]);
@@ -48,10 +47,7 @@ export const ActiveTournament: React.FC<ActiveTournamentProps> = ({
   const [currentRound, setCurrentRound] = useState(0);
   const [scoreMode, setScoreMode] = useState<'scoring' | 'editing' | 'table'>("scoring");
   const [modalMode, setModalMode] = useState<'none' | 'results' | 'edit-players' | 'end-tournament'>('none');
-  // const [viewTable, setViewTable] = useState(false);
-  // const [showResults, setShowResults] = useState(false);
-  // const [showEndTournament, setShowEndTournament] = useState(false);
-  const [tournamentAnalysisObj, setTournamentAnalysisObj] = useState<tournamentAnalysisOutput>({} as tournamentAnalysisOutput);
+  const [tournamentAnalysisObj, setTournamentAnalysisObj] = useState<tournamentAnalysisOutput>({} as tournamentAnalysisOutput); //TODO DEFAULTS
   const [roundOver, setRoundOver] = useState(false);
   const [gameForApi, updateGameForApi] = useState<OutgoingGame | Game>({ ...gameForApiDefaults });
   //TODO: FIGURE OUT HOW TO RECONCILE THIS

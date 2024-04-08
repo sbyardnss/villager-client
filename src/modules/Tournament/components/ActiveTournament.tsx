@@ -20,6 +20,7 @@ import type { ChessClub } from "../../../Types/ChessClub";
 import { chessClubDefaults } from "../../../Types/ChessClub";
 import type { tournamentAnalysisOutput } from "../actions/matchup-game-analysis";
 import { tournamentAnalysisDefaults } from "../actions/matchup-game-analysis";
+import { findByIdentifier } from "../actions/find-by-identifier";
 
 interface ActiveTournamentProps {
   selectedTournament: Tournament;
@@ -51,21 +52,6 @@ export const ActiveTournament: React.FC<ActiveTournamentProps> = ({
   const [tournamentAnalysisObj, setTournamentAnalysisObj] = useState<tournamentAnalysisOutput>({ ...tournamentAnalysisDefaults }); //TODO DEFAULTS
   const [roundOver, setRoundOver] = useState(false);
   const [gameForApi, updateGameForApi] = useState<OutgoingGame | Game>({ ...gameForApiDefaults });
-  //TODO: FIGURE OUT HOW TO RECONCILE THIS
-  const [byeGame] = useState<OutgoingGame>({
-    player_w: {} as Guest | PlayerRelated,
-    player_w_model_type: "",
-    player_b: null,
-    player_b_model_type: null,
-    tournament: 0,
-    time_setting: 0,
-    win_style: "",
-    accepted: true,
-    tournament_round: 0,
-    winner: null,
-    winner_model_type: null,
-    bye: true
-  });
   const byeGameRef = useRef<OutgoingGame>({
     player_w: {} as Guest | PlayerRelated, //TODO: INITIALIZE THIS WITH UNDEFINED OR NULL
     player_w_model_type: "",
@@ -81,8 +67,6 @@ export const ActiveTournament: React.FC<ActiveTournamentProps> = ({
     bye: true
   });
 
-  //TODO: BASED ON TEST :User should be able to submit game with the white pieces player as the winner and the game should disappear from the active games list when the games are reloaded,
-  //THIS USEEFFECT MIGHT BE RUNNING ANY TIME SOMEONE CLICKS A PLAYER IN THE SCORING COMPONENT. ENSURE THIS IS NOT THE CASE
   useEffect(
     () => {
       getTournamentGames(selectedTournament.id)
@@ -171,38 +155,32 @@ export const ActiveTournament: React.FC<ActiveTournamentProps> = ({
   useEffect(
     () => {
       const byePairing = currentRoundMatchups.find(pairing => pairing.player2 === null);
-      const byeCopy = { ...byeGame };
       if (byePairing) {
-        byeCopy.player_b = null;
-        byeCopy.player_b_model_type = null;
-        byeCopy.bye = true;
-        byeCopy.win_style = "";
-        byeCopy.time_setting = selectedTournament.time_setting;
-        byeCopy.tournament = selectedTournament.id;
-        byeCopy.tournament_round = currentRound;
-        if (typeof byePairing.player1 === 'string') {
-          const guestPlayer = activeTournamentPlayers.find(p => (p as Guest).guest_id === byePairing.player1)
-          // byeCopy.winner_model_type = 'guestplayer';
-          if (guestPlayer) {
-            byeCopy.player_w_model_type = 'guestplayer';
-            byeCopy.winner_model_type = getModelTypeForApi(guestPlayer);
-            byeCopy.player_w = guestPlayer;
-            byeCopy.winner = guestPlayer;
+        const byeGameData: OutgoingGame = {
+          ...gameForApiDefaults,
+          bye: true,
+          player_b: null,
+          player_b_model_type: null,
+          win_style: "",
+          tournament_round: currentRound,
+          tournament: selectedTournament.id,
+          time_setting: selectedTournament.time_setting,
+        };
+        const byeCompetitor = findByIdentifier(byePairing.player1, activeTournamentPlayers);
+        if (byeCompetitor) {
+          byeGameData.player_w = byeCompetitor;
+          byeGameData.winner = byeCompetitor;
+          if (typeof byePairing.player1 === 'number') {
+            byeGameData.player_w_model_type = 'player';
+            byeGameData.winner_model_type = 'player';
+          } else {
+            byeGameData.player_w_model_type = 'guestplayer';
+            byeGameData.winner_model_type = 'guestplayer';
           }
         }
-        else {
-          byeCopy.winner_model_type = 'player'
-          byeCopy.player_w_model_type = 'player'
-          const player = activeTournamentPlayers.find(p => p.id === byePairing.player1)
-          if (player) {
-            byeCopy.player_w = player
-            byeCopy.winner = player
-          }
-        }
-        // setByeGame(byeCopy)
+        byeGameRef.current = byeGameData;
       }
-      byeGameRef.current = byeCopy;
-    }, [currentRoundMatchups, activeTournamentPlayers, byeGame, tournamentAnalysisObj, currentRound, selectedTournament.id, selectedTournament.time_setting]
+    }, [currentRoundMatchups, selectedTournament.rounds, activeTournamentPlayers]
   )
   useEffect(
     () => {

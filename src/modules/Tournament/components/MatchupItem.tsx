@@ -8,7 +8,7 @@ interface MatchupItemProps {
   whitePlayer: any; // Define the type for whitePlayer
   blackPlayer: any; // Define the type for blackPlayer
   handleUpdate: (...args: any[]) => void; // Define the type for handleUpdate
-  index: number;
+  // index: number;
   handleSendGameToApi: () => void;
   selectedOutcome: [number, number, PlayerRelated | Guest | null | 'draw'];
   setSelectedOutcome: React.Dispatch<SetStateAction<[number, number, PlayerRelated | Guest | null | 'draw']>>;
@@ -19,7 +19,7 @@ export const MatchupItem: React.FC<MatchupItemProps> = ({
   whitePlayer,
   blackPlayer,
   handleUpdate,
-  index,
+  // index,
   handleSendGameToApi,
   selectedOutcome,
   setSelectedOutcome,

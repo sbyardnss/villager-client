@@ -3,14 +3,19 @@
 /* eslint-enable */
 import { setupTournaments } from '../../actions/setup-tournaments';
 import { setupHomepage } from '../../actions/setup-homepage';
-// Cypress._.times(10, () => {
+Cypress._.times(10, () => {
 
 describe('Tournament Components', () => {
   beforeEach(() => {
     cy.visit('http://localhost:3000');
-    setupHomepage();
+    // setupHomepage();
     setupTournaments();
     cy.login();
+    cy.intercept(
+      'GET',
+      '**/clubs/my_clubs',
+      { fixture: 'chessClubs/load-chess-clubs.json' },
+    ).as('loadChessClubs');
     cy.intercept(
       'GET',
       '**/tournaments/my_open_tournaments',
@@ -24,18 +29,18 @@ describe('Tournament Components', () => {
     cy.visit('/tournament/153');
     let requestCount = 0;
     cy.intercept('GET', '**/games/153/get_selected_tournament_games', (req) => {
-      if (requestCount < 1) {
-        req.reply({ fixture: requestCount === 0 ? 'games/load-tournament-games.json' : 'games/getResponsesAfterSubmittedGames/load-tournament-games-white-win.json' });
-        requestCount++;
-      }
-    });
+      // if (requestCount < 1) {
+      req.reply({ statusCode: 200, fixture: 'games/load-tournament-games.json' });
+      //   requestCount++;
+      // }
+    }).as('initialLoadTournamentGames');
   });
 
   it('User should be able to submit game with the white pieces player as the winner and the game should disappear from the active games list when the games are reloaded', () => {
     let tourneyGameRequestCount = 0;
     cy.intercept('GET', '**/games/153/get_selected_tournament_games', (req) => {
       if (tourneyGameRequestCount >= 2) {
-        req.reply({ fixture: 'games/getResponsesAfterSubmittedGames/load-tournament-games-white-win.json' });
+        req.reply({ statusCode: 200, fixture: 'games/getResponsesAfterSubmittedGames/load-tournament-games-white-win.json' });
       }
       tourneyGameRequestCount++;
     }).as('loadTournamentGames');
@@ -66,19 +71,19 @@ describe('Tournament Components', () => {
       .should('not.exist');
   });
 
-  it('User should be able to submit game with the black pieces player as the winner and the game should disappear from the active games list when the games are reloaded', () => {
+  it.only('User should be able to submit game with the black pieces player as the winner and the game should disappear from the active games list when the games are reloaded', () => {
     cy.intercept(
       'GET',
       '**/tournaments/my_open_tournaments',
       { statusCode: 200, fixture: 'tournaments/load-my-tournaments.json' }
     ).as('loadMyTournaments');
     let tourneyGameRequestCount = 0;
-    cy.intercept('GET', '**/games/153/get_selected_tournament_games', (req) => {
-      if (tourneyGameRequestCount >= 1) {
-        req.reply({ fixture: 'games/getResponsesAfterSubmittedGames/load-tournament-games-black-win.json' });
-      }
-      tourneyGameRequestCount++;
-    }).as('loadTournamentGames');
+    // cy.intercept('GET', '**/games/153/get_selected_tournament_games', (req) => {
+    //   if (tourneyGameRequestCount >= 1) {
+    //     req.reply({ statusCode: 200, fixture: 'games/getResponsesAfterSubmittedGames/load-tournament-games-black-win.json' });
+    //   }
+    //   tourneyGameRequestCount++;
+    // }).as('loadTournamentGames');
 
     cy.intercept(
       'POST',
@@ -92,6 +97,7 @@ describe('Tournament Components', () => {
       .should('exist');
     cy.get('[data-cy="black-scoring-selector--match-1--round-4"]')
       .click({ force: true });
+    cy.wait(100);
     cy.get('[data-cy="submit-score-btn--match-1--round-4"]')
       .click({ force: true });
     cy.wait(200);
@@ -133,6 +139,7 @@ describe('Tournament Components', () => {
       .should('exist');
     cy.get('[data-cy="draw-scoring-selector--match-1--round-4"]')
       .click({ force: true });
+    cy.wait(100);
     cy.get('[data-cy="submit-score-btn--match-1--round-4"]')
       .click({ force: true });
     cy.wait(200);
@@ -153,12 +160,12 @@ describe('Tournament Components', () => {
       { statusCode: 200, fixture: 'tournaments/load-my-tournaments.json' }
     ).as('loadMyTournaments');
     let tourneyGameRequestCount = 0;
-    cy.intercept('GET', '**/games/153/get_selected_tournament_games', (req) => {
-      if (tourneyGameRequestCount >= 2) {
-        req.reply({ statusCode: 200, fixture: 'games/getResponsesAfterSubmittedGames/load-tournament-games-edit-white-win.json' });
-      }
-      tourneyGameRequestCount++;
-    }).as('loadTournamentGames');
+    // cy.intercept('GET', '**/games/153/get_selected_tournament_games', (req) => {
+    //   if (tourneyGameRequestCount >= 2) {
+    //     req.reply({ statusCode: 200, fixture: 'games/getResponsesAfterSubmittedGames/load-tournament-games-edit-white-win.json' });
+    //   }
+    //   tourneyGameRequestCount++;
+    // }).as('loadTournamentGames');
     cy.intercept(
       'PUT',
       '**/games/1710',
@@ -359,4 +366,4 @@ describe('Tournament Components', () => {
     });
   })
 });
-// })
+})

@@ -65,6 +65,7 @@ export const TournamentController = () => {
   if (selectedTournament.id) {
     return <>
       <ActiveTournament
+        key={selectedTournament.id}
         selectedTournament={selectedTournament}
         selectTournament={setSelectedTournament}
         selectClub={setSelectedClub}

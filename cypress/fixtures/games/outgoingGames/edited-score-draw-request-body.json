@@ -19,8 +19,5 @@
   "pgn": null,
   "bye": false,
   "accepted": true,
-  "win_style": "draw",
-  "target_winner_ct": 15,
-  "target_player_b_ct": 15,
-  "target_player_w_ct": 15
+  "win_style": "draw"
 }

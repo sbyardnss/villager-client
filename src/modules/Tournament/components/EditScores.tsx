@@ -17,6 +17,7 @@ interface EditScoresProps {
     pastGame?: Game,
   ) => void;
   allClubMates: (PlayerRelated | Guest)[];
+  handleReplaceGame: (game: Game, index: number) => void;
 }
 
 export const EditScores: React.FC<EditScoresProps> = ({
@@ -26,13 +27,14 @@ export const EditScores: React.FC<EditScoresProps> = ({
   gameForApi,
   handleUpdate,
   allClubMates,
+  handleReplaceGame,
 }) => {
   const sortedGames = tourneyGames.sort((a: Game, b: Game) => a.id - b.id);
   return (
     <section id="tournamentEditSection">
       <section id="previousMatchups">
         {
-          sortedGames.map((game: Game) => {
+          sortedGames.map((game: Game, index) => {
             if (!game.bye) {
               // let whiteTargetForIndicator;
               // if (game.player_w)
@@ -77,8 +79,10 @@ export const EditScores: React.FC<EditScoresProps> = ({
                       data-cy={`edit-score-submit-btn--round-${game.tournament_round}--gameId-${game.id}`}
                       onClick={() => {
                         alterGame(gameForApi)
-                          .then(() => resetTourneyGames())
-                        resetGame()
+                          .then(data => {
+                            handleReplaceGame(data, index);
+                          })
+                        // resetGame();
                       }}>
                       submit
                     </button>

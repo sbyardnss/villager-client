@@ -22,10 +22,7 @@
     "pgn": null,
     "bye": false,
     "accepted": true,
-    "win_style": "checkmate",
-    "target_winner_ct": 15,
-    "target_player_b_ct": 15,
-    "target_player_w_ct": 11
+    "win_style": "checkmate"
   },
   {
     "id": 1702,
@@ -49,10 +46,7 @@
     "pgn": null,
     "bye": false,
     "accepted": true,
-    "win_style": "checkmate",
-    "target_winner_ct": 11,
-    "target_player_b_ct": 15,
-    "target_player_w_ct": 11
+    "win_style": "checkmate"
   },
   {
     "id": 1703,
@@ -76,10 +70,7 @@
     "pgn": null,
     "bye": false,
     "accepted": true,
-    "win_style": "checkmate",
-    "target_winner_ct": 11,
-    "target_player_b_ct": 15,
-    "target_player_w_ct": 11
+    "win_style": "checkmate"
   },
   {
     "id": 1704,
@@ -103,10 +94,7 @@
     "pgn": null,
     "bye": false,
     "accepted": true,
-    "win_style": "checkmate",
-    "target_winner_ct": 11,
-    "target_player_b_ct": 11,
-    "target_player_w_ct": 15
+    "win_style": "checkmate"
   },
   {
     "id": 1705,
@@ -130,10 +118,7 @@
     "pgn": null,
     "bye": false,
     "accepted": true,
-    "win_style": "checkmate",
-    "target_winner_ct": 11,
-    "target_player_b_ct": 15,
-    "target_player_w_ct": 11
+    "win_style": "checkmate"
   },
   {
     "id": 1706,
@@ -153,10 +138,7 @@
     "pgn": null,
     "bye": true,
     "accepted": true,
-    "win_style": "",
-    "target_winner_ct": 11,
-    "target_player_b_ct": null,
-    "target_player_w_ct": 11
+    "win_style": ""
   },
   {
     "id": 1707,
@@ -179,10 +161,7 @@
     "pgn": null,
     "bye": false,
     "accepted": true,
-    "win_style": "checkmate",
-    "target_winner_ct": 11,
-    "target_player_b_ct": 11,
-    "target_player_w_ct": 11
+    "win_style": "checkmate"
   },
   {
     "id": 1708,
@@ -203,10 +182,7 @@
     "pgn": null,
     "bye": false,
     "accepted": true,
-    "win_style": "draw",
-    "target_winner_ct": null,
-    "target_player_b_ct": 11,
-    "target_player_w_ct": 15
+    "win_style": "draw"
   },
   {
     "id": 1709,
@@ -228,10 +204,7 @@
     "pgn": null,
     "bye": false,
     "accepted": true,
-    "win_style": "draw",
-    "target_winner_ct": null,
-    "target_player_b_ct": 15,
-    "target_player_w_ct": 15
+    "win_style": "draw"
   },
   {
     "id": 1710,
@@ -254,10 +227,7 @@
     "pgn": null,
     "bye": false,
     "accepted": true,
-    "win_style": "checkmate",
-    "target_winner_ct": 11,
-    "target_player_b_ct": 11,
-    "target_player_w_ct": 11
+    "win_style": "checkmate"
   },
   {
     "id": 1711,
@@ -281,10 +251,7 @@
     "pgn": null,
     "bye": false,
     "accepted": true,
-    "win_style": "checkmate",
-    "target_winner_ct": 11,
-    "target_player_b_ct": 11,
-    "target_player_w_ct": 15
+    "win_style": "checkmate"
   },
   {
     "id": 1712,
@@ -306,10 +273,7 @@
     "pgn": null,
     "bye": true,
     "accepted": true,
-    "win_style": "",
-    "target_winner_ct": 15,
-    "target_player_b_ct": null,
-    "target_player_w_ct": 15
+    "win_style": ""
   },
   {
     "id": 1713,
@@ -333,10 +297,7 @@
     "pgn": null,
     "bye": false,
     "accepted": true,
-    "win_style": "checkmate",
-    "target_winner_ct": 11,
-    "target_player_b_ct": 15,
-    "target_player_w_ct": 11
+    "win_style": "checkmate"
   },
   {
     "id": 1714,
@@ -358,10 +319,7 @@
     "pgn": null,
     "bye": false,
     "accepted": true,
-    "win_style": "draw",
-    "target_winner_ct": null,
-    "target_player_b_ct": 15,
-    "target_player_w_ct": 15
+    "win_style": "draw"
   },
   {
     "id": 1715,
@@ -384,10 +342,7 @@
     "pgn": null,
     "bye": false,
     "accepted": true,
-    "win_style": "checkmate",
-    "target_winner_ct": 11,
-    "target_player_b_ct": 11,
-    "target_player_w_ct": 11
+    "win_style": "checkmate"
   },
   {
     "id": 1716,
@@ -411,10 +366,7 @@
     "pgn": null,
     "bye": false,
     "accepted": true,
-    "win_style": "checkmate",
-    "target_winner_ct": 11,
-    "target_player_b_ct": 11,
-    "target_player_w_ct": 15
+    "win_style": "checkmate"
   },
   {
     "id": 1717,
@@ -440,10 +392,7 @@
     "pgn": null,
     "bye": false,
     "accepted": true,
-    "win_style": "checkmate",
-    "target_winner_ct": 15,
-    "target_player_b_ct": 15,
-    "target_player_w_ct": 15
+    "win_style": "checkmate"
   },
   {
     "id": 1718,
@@ -465,10 +414,7 @@
     "pgn": null,
     "bye": false,
     "accepted": true,
-    "win_style": "draw",
-    "target_winner_ct": null,
-    "target_player_b_ct": 15,
-    "target_player_w_ct": 15
+    "win_style": "draw"
   },
   {
     "id": 1719,
@@ -490,9 +436,6 @@
     "pgn": null,
     "bye": true,
     "accepted": true,
-    "win_style": "",
-    "target_winner_ct": 15,
-    "target_player_b_ct": null,
-    "target_player_w_ct": 15
+    "win_style": ""
   }
 ]

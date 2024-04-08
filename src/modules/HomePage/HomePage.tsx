@@ -22,7 +22,7 @@ import { findByIdentifier } from "../Tournament/actions/find-by-identifier";
 
 //TODO: MY CHALLENGES NOT SHOWING
 export const HomePage = () => {
-  const { localVillagerUser, myChessClubs, clubMatesAndGuests, selectedClub, setSelectedClub } = useAppContext();
+  const { localVillagerUser, myChessClubs, clubMatesAndGuests } = useAppContext();
   const [communityPosts, setCommunityPosts] = useState([]);
   const [challenges, setChallenges] = useState([]);
   // const [usersActiveGames, setUsersActiveGames] = useState([]);

@@ -13,11 +13,12 @@ import type { DigitalGame, Game, OutgoingGame } from "../../Types/Game";
 import type { ChessClub } from "../../Types/ChessClub";
 import { chessClubDefaults } from "../../Types/ChessClub"
 import type { PlayerRelated } from "../../Types/Player";
+import { playerRelatedDefaults } from "../../Types/Player";
 import type { Tournament } from "../../Types/Tournament";
 import type { ChallengeCreated, ChallengeEditing, ChallengeNew } from "../../Types/Challenge";
 import type { Puzzle } from "../../Types/Puzzle";
 import { usePlayContext } from "../Play/PlayController";
-import { showAlertModal } from "../../shared/AlertModal/alert-modal";
+// import { showAlertModal } from "../../shared/AlertModal/alert-modal";
 import { findByIdentifier } from "../Tournament/actions/find-by-identifier";
 
 //TODO: MY CHALLENGES NOT SHOWING
@@ -25,7 +26,6 @@ export const HomePage = () => {
   const { localVillagerUser, myChessClubs, clubMatesAndGuests } = useAppContext();
   const [communityPosts, setCommunityPosts] = useState([]);
   const [challenges, setChallenges] = useState([]);
-  // const [usersActiveGames, setUsersActiveGames] = useState([]);
   const navigate = useNavigate();
   const [newPost, updateNewPost] = useState({
     poster: localVillagerUser.userId,
@@ -50,7 +50,7 @@ export const HomePage = () => {
     bye: false,
     pgn: "",
   });
-  const [activeUserPlayerObject, setActiveUserPlayerObject] = useState<PlayerRelated>({} as PlayerRelated);
+  const [activeUserPlayerObject, setActiveUserPlayerObject] = useState<PlayerRelated>({ ...playerRelatedDefaults });
 
   //POTENTIALLY TEMPORARY BEGIN
   // const { games, resetGames, updateSelectedGameObj, selectedGame, setSelectedGame, setSelectedRange, puzzles } = usePlayContext();

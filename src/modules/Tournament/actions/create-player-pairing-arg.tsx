@@ -5,12 +5,22 @@ import { findIdentifier } from "./find-identifier";
 export interface PlayerArg {
   id: string | number;
   score: number;
+  receivedBye: boolean;
+  avoid: Array<string | number>;
+  colors: Array<'w' | 'b'>;
   pairedUpDown?: boolean;
-  receivedBye?: boolean;
-  avoid?: Array<string | number>;
-  colors?: Array<'w' | 'b'>;
   rating?: number | null;
 }
+export const playerArgDefaults: PlayerArg = {
+  id: 0,
+  score: 0,
+  receivedBye: false,
+  avoid: [],
+  colors: [],
+  // pairedUpDown: false,
+  // rating: null,
+}
+
 type PlayerArgCreatorFunction = (
   identifier: number | string,
   analysisObj: tournamentAnalysisOutput,
@@ -19,7 +29,7 @@ type PlayerArgCreatorFunction = (
 ) => PlayerArg | undefined;
 export const playerArgCreator: PlayerArgCreatorFunction = (identifier, analysisObj, activeTourneyPlayers, currentByeGameRef?) => {
   let isActive = true
-  let playerArg: PlayerArg = {} as PlayerArg;
+  let playerArg: PlayerArg = { ...playerArgDefaults };
   //check if player is active and get identifier
   if (typeof identifier === 'string') {
     //TODO: IS THIS AN ISSUE USING ONLY GUEST TYPING HERE

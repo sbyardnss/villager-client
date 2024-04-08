@@ -8,9 +8,14 @@ import { setupHomepage } from '../../actions/setup-homepage';
 describe('Tournament Components', () => {
   beforeEach(() => {
     cy.visit('http://localhost:3000');
-    setupHomepage();
+    // setupHomepage();
     setupTournaments();
     cy.login();
+    cy.intercept(
+      'GET',
+      '**/clubs/my_clubs',
+      { fixture: 'chessClubs/load-chess-clubs.json' },
+    ).as('loadChessClubs');
     cy.intercept(
       'GET',
       '**/tournaments/my_open_tournaments',
@@ -24,143 +29,104 @@ describe('Tournament Components', () => {
     cy.visit('/tournament/153');
     let requestCount = 0;
     cy.intercept('GET', '**/games/153/get_selected_tournament_games', (req) => {
-      if (requestCount < 2) {
-        req.reply({ fixture: requestCount === 0 ? 'games/load-tournament-games.json' : 'games/getResponsesAfterSubmittedGames/load-tournament-games-white-win.json' });
-        requestCount++;
-      }
-    });
+      // if (requestCount < 1) {
+      req.reply({ statusCode: 200, fixture: 'games/load-tournament-games.json' });
+      //   requestCount++;
+      // }
+    }).as('initialLoadTournamentGames');
   });
 
-  it('User should be able to submit game with the white pieces player as the winner and the game should disappear from the active games list when the games are reloaded', () => {
-    let tourneyGameRequestCount = 0;
-    cy.intercept('GET', '**/games/153/get_selected_tournament_games', (req) => {
-      if (tourneyGameRequestCount >= 2) {
-        req.reply({ fixture: 'games/getResponsesAfterSubmittedGames/load-tournament-games-white-win.json' });
-      }
-      tourneyGameRequestCount++;
-    }).as('loadTournamentGames');
-
+  it('User should be able to submit game with the white pieces player as the winner and the game should disappear from the active games list', () => {
     cy.intercept(
       'POST',
       '**/games',
       {
         statusCode: 201,
+        fixture: 'games/outgoingGames/white-win-response.json',
       }
     ).as('ScoringTestWhite');
     cy.get('[data-cy="matchup-div--match-1--round-4"]')
       .should('exist');
     cy.get('[data-cy="white-scoring-selector--match-1--round-4"]')
       .click({ force: true });
+    cy.wait(100);
     cy.get('[data-cy="submit-score-btn--match-1--round-4"]')
-      .click({ force: true })
-      .then(() => {
-        cy.wait('@ScoringTestWhite')
-          .then((interception) => {
-            cy.fixture('games/outgoingGames/scoring-test-white-player-win-request-body.json').then((expectedRequestBody) => {
-              expect(interception.request.body).to.deep.equal(expectedRequestBody);
-            });
-          });
+      .click({ force: true });
+    cy.wait(200);
+    cy.wait('@ScoringTestWhite')
+      .then((interception) => {
+        cy.fixture('games/outgoingGames/scoring-test-white-player-win-request-body.json').then((expectedRequestBody) => {
+          expect(interception.request.body).to.deep.equal(expectedRequestBody);
+        });
       });
     cy.wait(500);
     cy.get('[data-cy="matchup-div--match-1--round-4"]')
       .should('not.exist');
   });
 
-  it('User should be able to submit game with the black pieces player as the winner and the game should disappear from the active games list when the games are reloaded', () => {
-    cy.intercept(
-      'GET',
-      '**/tournaments/my_open_tournaments',
-      { statusCode: 200, fixture: 'tournaments/load-my-tournaments.json' }
-    ).as('loadMyTournaments');
-    let tourneyGameRequestCount = 0;
-    cy.intercept('GET', '**/games/153/get_selected_tournament_games', (req) => {
-      if (tourneyGameRequestCount >= 2) {
-        req.reply({ fixture: 'games/getResponsesAfterSubmittedGames/load-tournament-games-black-win.json' });
-      }
-      tourneyGameRequestCount++;
-    }).as('loadTournamentGames');
-
+  it('User should be able to submit game with the black pieces player as the winner and the game should disappear from the active games list', () => {
     cy.intercept(
       'POST',
       '**/games',
       {
         statusCode: 201,
+        fixture: 'games/outgoingGames/black-win-response.json',
       }
     ).as('ScoringTestBlack');
     cy.get('[data-cy="matchup-div--match-1--round-4"]')
       .should('exist');
     cy.get('[data-cy="black-scoring-selector--match-1--round-4"]')
       .click({ force: true });
+    cy.wait(100);
     cy.get('[data-cy="submit-score-btn--match-1--round-4"]')
-      .click({ force: true })
-      .then(() => {
-        cy.wait('@ScoringTestBlack')
-          .then((interception) => {
-            cy.fixture('games/outgoingGames/scoring-test-black-player-win-request-body.json').then((expectedRequestBody) => {
-              expect(interception.request.body).to.deep.equal(expectedRequestBody);
-            });
-          });
+      .click({ force: true });
+    cy.wait(200);
+    cy.wait('@ScoringTestBlack')
+      .then((interception) => {
+        cy.fixture('games/outgoingGames/scoring-test-black-player-win-request-body.json').then((expectedRequestBody) => {
+          expect(interception.request.body).to.deep.equal(expectedRequestBody);
+        });
       });
+    cy.wait(500);
     cy.get('[data-cy="matchup-div--match-1--round-4"]')
       .should('not.exist');
   });
 
-  it('User should be able to submit game with outcome as draw and the game should disappear from the active games list when the games are reloaded', () => {
-    cy.intercept(
-      'GET',
-      '**/tournaments/my_open_tournaments',
-      { statusCode: 200, fixture: 'tournaments/load-my-tournaments.json' }
-    ).as('loadMyTournaments');
-    let tourneyGameRequestCount = 0;
-    cy.intercept('GET', '**/games/153/get_selected_tournament_games', (req) => {
-      if (tourneyGameRequestCount >= 2) {
-        req.reply({ statusCode: 200, fixture: 'games/getResponsesAfterSubmittedGames/load-tournament-games-draw.json' });
-      }
-      tourneyGameRequestCount++;
-    }).as('loadTournamentGames');
-
+  it('User should be able to submit game with outcome as draw and the game should disappear from the active games list', () => {
     cy.intercept(
       'POST',
       '**/games',
       {
         statusCode: 201,
+        fixture: 'games/outgoingGames/draw-response.json',
       }
     ).as('ScoringTestDraw');
-
     cy.get('[data-cy="matchup-div--match-1--round-4"]')
       .should('exist');
     cy.get('[data-cy="draw-scoring-selector--match-1--round-4"]')
       .click({ force: true });
+    cy.wait(100);
     cy.get('[data-cy="submit-score-btn--match-1--round-4"]')
-      .click({ force: true })
-      .then(() => {
-        cy.wait('@ScoringTestDraw')
-          .then((interception) => {
-            cy.fixture('games/outgoingGames/scoring-test-draw-request-body.json').then((expectedRequestBody) => {
-              expect(interception.request.body).to.deep.equal(expectedRequestBody);
-            });
-          });
+      .click({ force: true });
+    cy.wait(200);
+    cy.wait('@ScoringTestDraw')
+      .then((interception) => {
+        cy.fixture('games/outgoingGames/scoring-test-draw-request-body.json').then((expectedRequestBody) => {
+          expect(interception.request.body).to.deep.equal(expectedRequestBody);
+        });
       });
+    cy.wait(500);
     cy.get('[data-cy="matchup-div--match-1--round-4"]')
       .should('not.exist');
   });
   it('Manager should be able to edit score for previous game, making white pieces player the winner and score should update', () => {
     cy.intercept(
-      'GET',
-      '**/tournaments/my_open_tournaments',
-      { statusCode: 200, fixture: 'tournaments/load-my-tournaments.json' }
-    ).as('loadMyTournaments');
-    let tourneyGameRequestCount = 0;
-    cy.intercept('GET', '**/games/153/get_selected_tournament_games', (req) => {
-      if (tourneyGameRequestCount >= 2) {
-        req.reply({ statusCode: 200, fixture: 'games/getResponsesAfterSubmittedGames/load-tournament-games-edit-white-win.json' });
-      }
-      tourneyGameRequestCount++;
-    }).as('loadTournamentGames');
-    cy.intercept(
       'PUT',
       '**/games/1710',
-      { statusCode: 204 }
+      {
+        statusCode: 200,
+        fixture: 'games/editingScoresResponse/edited-white-win.json',
+      }
     ).as('ScoringEditWhite');
 
     cy.get('[data-cy="edit-scores-tournament-control-btn"]')
@@ -175,7 +141,7 @@ describe('Tournament Components', () => {
       .then(() => {
         cy.wait('@ScoringEditWhite')
           .then((interception) => {
-            expect(interception.response?.statusCode).to.equal(204);
+            expect(interception.response?.statusCode).to.equal(200);
             cy.fixture('games/outgoingGames/edited-score-white-to-win-request-body.json').then((expectedRequestBody) => {
               expect(interception.request.body).to.deep.equal(expectedRequestBody);
             });
@@ -183,26 +149,18 @@ describe('Tournament Components', () => {
       });
     cy.get('[data-cy="view-table-tournament-control-btn"]')
       .click();
+    cy.wait(200);
     cy.get('[data-cy="4--score-cell"]')
       .should('contain.text', 3);
   });
   it('Manager should be able to edit score for previous game, making black pieces player the winner and score should update', () => {
     cy.intercept(
-      'GET',
-      '**/tournaments/my_open_tournaments',
-      { statusCode: 200, fixture: 'tournaments/load-my-tournaments.json' }
-    ).as('loadMyTournaments');
-    let tourneyGameRequestCount = 0;
-    cy.intercept('GET', '**/games/153/get_selected_tournament_games', (req) => {
-      if (tourneyGameRequestCount >= 2) {
-        req.reply({ statusCode: 200, fixture: 'games/getResponsesAfterSubmittedGames/load-tournament-games-edit-black-win.json' });
-      }
-      tourneyGameRequestCount++;
-    }).as('loadTournamentGames');
-    cy.intercept(
       'PUT',
       '**/games/1717',
-      { statusCode: 204 }
+      {
+        statusCode: 200,
+        fixture: 'games/editingScoresResponse/edited-black-win.json',
+      }
     ).as('ScoringEditBlack');
 
     cy.get('[data-cy="edit-scores-tournament-control-btn"]')
@@ -217,7 +175,7 @@ describe('Tournament Components', () => {
       .then(() => {
         cy.wait('@ScoringEditBlack')
           .then((interception) => {
-            expect(interception.response?.statusCode).to.equal(204);
+            expect(interception.response?.statusCode).to.equal(200);
             cy.fixture('games/outgoingGames/edited-score-black-to-win-request-body.json').then((expectedRequestBody) => {
               expect(interception.request.body).to.deep.equal(expectedRequestBody);
             });
@@ -225,26 +183,18 @@ describe('Tournament Components', () => {
       });
     cy.get('[data-cy="view-table-tournament-control-btn"]')
       .click();
+    cy.wait(200);
     cy.get('[data-cy="g5--score-cell"]')
       .should('contain.text', 1.5);
   });
   it('Manager should be able to edit score for previous game, making outcome a draw and scores should update', () => {
     cy.intercept(
-      'GET',
-      '**/tournaments/my_open_tournaments',
-      { statusCode: 200, fixture: 'tournaments/load-my-tournaments.json' }
-    ).as('loadMyTournaments');
-    let tourneyGameRequestCount = 0;
-    cy.intercept('GET', '**/games/153/get_selected_tournament_games', (req) => {
-      if (tourneyGameRequestCount >= 2) {
-        req.reply({ statusCode: 200, fixture: 'games/getResponsesAfterSubmittedGames/load-tournament-games-edit-draw.json' });
-      }
-      tourneyGameRequestCount++;
-    }).as('loadTournamentGames');
-    cy.intercept(
       'PUT',
       '**/games/1718',
-      { statusCode: 204 }
+      {
+        statusCode: 200,
+        fixture: 'games/editingScoresResponse/edited-draw.json',
+      }
     ).as('ScoringEditDraw');
 
     cy.get('[data-cy="edit-scores-tournament-control-btn"]')
@@ -259,7 +209,7 @@ describe('Tournament Components', () => {
       .then(() => {
         cy.wait('@ScoringEditDraw')
           .then((interception) => {
-            expect(interception.response?.statusCode).to.equal(204);
+            expect(interception.response?.statusCode).to.equal(200);
             cy.fixture('games/outgoingGames/edited-score-draw-request-body.json').then((expectedRequestBody) => {
               expect(interception.request.body).to.deep.equal(expectedRequestBody);
             });
@@ -267,6 +217,7 @@ describe('Tournament Components', () => {
       });
     cy.get('[data-cy="view-table-tournament-control-btn"]')
       .click();
+    cy.wait(200);
     cy.get('[data-cy="g61--score-cell"]')
       .should('contain.text', .5);
     cy.get('[data-cy="g7--score-cell"]')
@@ -290,7 +241,6 @@ describe('Tournament Components', () => {
       'GET',
       '**/tournaments/my_open_tournaments',
       (req) => {
-        console.log('count', tournamentRequestCount)
         if (tournamentRequestCount >= 2) {
           req.reply({ statusCode: 200, fixture: 'tournaments/editingPlayers/edited-players-updated-tournaments-list.json' });
         }
@@ -303,19 +253,13 @@ describe('Tournament Components', () => {
       '**/tournaments/153',
       { statusCode: 200, fixture: 'tournaments/editingPlayers/edited-players-updated-tournament.json' }
     ).as('LoadActiveTournament');
-    let tourneyGameRequestCount = 0;
-    cy.intercept('GET', '**/games/153/get_selected_tournament_games', (req) => {
-      if (tourneyGameRequestCount < 2) {
-        req.reply({ statusCode: 200, fixture: 'games/load-tournament-games.json' });
-      } else {
-        req.reply({ statusCode: 200, fixture: 'games/getResponsesAfterSubmittedGames/load-tournament-games-edit-draw.json' });
-      }
-      tourneyGameRequestCount++;
-    }).as('loadTournamentGames');
+
     cy.intercept('PUT', '**/tournaments/153', { statusCode: 204 }).as('SubmitEditedTournament');
+    cy.wait(200);
     cy.get('[data-cy="edit-players-tournament-controls-btn"]')
       .should('be.visible')
       .click();
+    cy.wait(200);
     cy.get('[data-cy="toggle-guests--true"]')
       .click();
     addSelectors.forEach(selector => {
@@ -330,9 +274,9 @@ describe('Tournament Components', () => {
     });
     cy.get('[data-cy="confirm-player-selection"]')
       .click();
-    cy.get('.gamesNotStartedBtn')
+    cy.get('[data-cy="games-not-started-btn"]')
       .click();
-    cy.get('#submitNewPlayersBtn')
+    cy.get('[data-cy="submit-players-btn"]')
       .click();
     cy.wait('@SubmitEditedTournament').then(interception => {
       const newPlayers = interception.request.body.competitors.sort((a: any, b: any) => a.id - b.id);

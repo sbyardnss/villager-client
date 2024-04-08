@@ -14,6 +14,7 @@ import { type Tournament, selectedTournamentDefaults } from "../../../Types/Tour
 import type { PlayerRelated } from "../../../Types/Player";
 import type { Guest } from "../../../Types/Guest";
 import type { Game, OutgoingGame } from "../../../Types/Game";
+import { gameForApiDefaults } from "../../../Types/Game";
 import type { Match } from "tournament-pairings/dist/Match";
 import type { ChessClub } from "../../../Types/ChessClub";
 import { chessClubDefaults } from "../../../Types/ChessClub";
@@ -52,21 +53,7 @@ export const ActiveTournament: React.FC<ActiveTournamentProps> = ({
   // const [showEndTournament, setShowEndTournament] = useState(false);
   const [tournamentAnalysisObj, setTournamentAnalysisObj] = useState<tournamentAnalysisOutput>({} as tournamentAnalysisOutput);
   const [roundOver, setRoundOver] = useState(false);
-  const [gameForApi, updateGameForApi] = useState<OutgoingGame | Game>({
-    id: undefined,
-    player_w: {} as Guest | PlayerRelated,
-    player_w_model_type: "",
-    player_b: {} as Guest | PlayerRelated,
-    player_b_model_type: "",
-    tournament: 0,
-    time_setting: 0,
-    win_style: "",
-    accepted: true,
-    tournament_round: 0,
-    winner: {} as Guest | PlayerRelated,
-    winner_model_type: "",
-    bye: false
-  });
+  const [gameForApi, updateGameForApi] = useState<OutgoingGame | Game>({ ...gameForApiDefaults });
   //TODO: FIGURE OUT HOW TO RECONCILE THIS
   const [byeGame] = useState<OutgoingGame>({
     player_w: {} as Guest | PlayerRelated,
@@ -230,20 +217,7 @@ export const ActiveTournament: React.FC<ActiveTournamentProps> = ({
       .then(data => setTournamentGames(data))
   }
   const resetGameForApi = () => {
-    updateGameForApi({
-      player_w: {} as Guest | PlayerRelated,
-      player_w_model_type: "",
-      player_b: {} as Guest | PlayerRelated,
-      player_b_model_type: "",
-      tournament: 0,
-      time_setting: 0,
-      win_style: "",
-      accepted: true,
-      tournament_round: 0,
-      winner: {} as Guest | PlayerRelated,
-      winner_model_type: "",
-      bye: false,
-    });
+    updateGameForApi({ ...gameForApiDefaults });
   }
   const resetActiveTournament = () => {
     getTournament(selectedTournament.id)
@@ -304,10 +278,19 @@ export const ActiveTournament: React.FC<ActiveTournamentProps> = ({
   const handleSendGameToApi = () => {
     if (gameForApi.win_style) {
       sendNewGame(gameForApi)
-        .then(() => resetTournamentGames());
+        .then(data => {
+          setTournamentGames([...tournamentGames, data]);
+        });
       resetGameForApi();
     }
   }
+  const handleReplaceGame = (gameData: Game, index: number) => {
+    const tourneyGamesCopy = [...tournamentGames];
+    tourneyGamesCopy.splice(index, 1, gameData);
+    setTournamentGames(tourneyGamesCopy);
+    resetGameForApi();
+  }
+
   return <>
     <main id="tournamentContainer">
       {modalMode === 'results' ?
@@ -393,7 +376,8 @@ export const ActiveTournament: React.FC<ActiveTournamentProps> = ({
               resetTourneyGames={resetTournamentGames}
               gameForApi={gameForApi}
               handleUpdate={handleGameForApiUpdate}
-              allClubMates={selectedClubMates} />
+              allClubMates={selectedClubMates}
+              handleReplaceGame={handleReplaceGame} />
             : scoreMode === 'table' ?
               <TournamentTable
                 analysis={tournamentAnalysisObj}

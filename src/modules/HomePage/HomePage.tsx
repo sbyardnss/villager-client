@@ -11,7 +11,7 @@ import { useAppContext } from "../App/AppProvider";
 import type { CommunityPost } from "../../Types/CommunityPost";
 import type { DigitalGame, Game, OutgoingGame } from "../../Types/Game";
 import type { ChessClub } from "../../Types/ChessClub";
-
+import { chessClubDefaults } from "../../Types/ChessClub"
 import type { PlayerRelated } from "../../Types/Player";
 import type { Tournament } from "../../Types/Tournament";
 import type { ChallengeCreated, ChallengeEditing, ChallengeNew } from "../../Types/Challenge";
@@ -65,7 +65,7 @@ export const HomePage = () => {
     themes: [],
   });
   const [displayedCommunityPosts, setDisplayedCommunityPosts] = useState([]);
-  // const [selectedClub, setSelectedClub] = useState(0);
+  const [selectedClub, setSelectedClub] = useState<ChessClub>({ ...chessClubDefaults });
   const [challengeAlertVisible, setChallengeAlertVisible] = useState(false);
 
   //POTENTIALLY TEMPORARY END
@@ -101,7 +101,12 @@ export const HomePage = () => {
 
   useEffect(
     () => {
-      //TODO: community_posts_for_selected_club_endpoint
+      setSelectedClub(myChessClubs[0]);
+    }, [myChessClubs]
+  )
+  
+  useEffect(
+    () => {
       const postsForSelectedClub = communityPosts.filter((post: CommunityPost) => post.club === selectedClub.id);
       setDisplayedCommunityPosts(postsForSelectedClub);
       const postCopy = { ...newPost };

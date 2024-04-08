@@ -1,4 +1,5 @@
 import type { PlayerRelated } from "./Player"
+import { playerRelatedDefaults } from "./Player"
 import type { Guest } from "./Guest"
 //TODO: ADJUST SO THAT WE CAN USE ONE INTERFACE FOR BOTH
 export interface Game {
@@ -14,9 +15,6 @@ export interface Game {
   bye: boolean,
   accepted: boolean,
   win_style: string,
-  target_winner_ct: number,
-  target_player_b_ct: number,
-  target_player_w_ct: number
 }
 
 export interface OutgoingGame {
@@ -71,4 +69,20 @@ export const digitalGameDefaults: DigitalGame = {
   // computer_opponent: true,
   pgn: "",
   date_time: "",
+}
+
+export const gameForApiDefaults: OutgoingGame = {
+  id: undefined,
+  player_w: playerRelatedDefaults as PlayerRelated | Guest,
+  player_w_model_type: "",
+  player_b: playerRelatedDefaults as PlayerRelated | Guest,
+  player_b_model_type: "",
+  tournament: 0,
+  time_setting: 0,
+  win_style: "",
+  accepted: true,
+  tournament_round: 0,
+  winner: playerRelatedDefaults as PlayerRelated | Guest,
+  winner_model_type: "",
+  bye: false
 }

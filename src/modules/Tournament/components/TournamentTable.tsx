@@ -3,7 +3,7 @@ import type { Guest } from "../../../Types/Guest";
 import type { PlayerRelated } from "../../../Types/Player";
 import { ScoreCardType, type tournamentAnalysisOutput } from "../actions/matchup-game-analysis"
 import { Tournament } from "../../../Types/Tournament";
-import { findByIdentifier } from "../../../Tournament/actions/find-by-identifier";
+import { findByIdentifier } from "../../../Old_unused/Tournament/actions/find-by-identifier";
 import { OutgoingGame } from "../../../Types/Game";
 import { useEffect, useState } from "react";
 

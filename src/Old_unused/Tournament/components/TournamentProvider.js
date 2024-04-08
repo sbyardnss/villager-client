@@ -1,5 +1,5 @@
 import { useState, useEffect, createContext } from "react";
-import { getAllGuestPlayers, getAllPlayers, getAllTimeSettings, getAllTournaments, getMyChessClubs, getMyOpenTournaments, getTournamentGames } from "../../ServerManager";
+import { getAllGuestPlayers, getAllPlayers, getAllTimeSettings, getAllTournaments, getMyChessClubs, getMyOpenTournaments, getTournamentGames } from "../../../ServerManager";
 
 export const TournamentContext = createContext()
 

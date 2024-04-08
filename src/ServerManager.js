@@ -131,7 +131,7 @@ export const getMyPastTournaments = () => {
 }
 export const getTournamentGames = (tournamentId) => {
     const localVillagerObj = getToken()
-    return fetch(`${apiKey}/games/${tournamentId}/get_selected_tournament_games`, {
+    return fetch(`${apiKey}/tournaments/${tournamentId}/get_selected_tournament_games`, {
         headers: {
             "Authorization": `Token ${localVillagerObj.token}`,
             "Content-Type": "application/json"

@@ -110,7 +110,8 @@ export const HomePage = () => {
       const postsForSelectedClub = communityPosts.filter((post: CommunityPost) => post.club === selectedClub.id);
       setDisplayedCommunityPosts(postsForSelectedClub);
       const postCopy = { ...newPost };
-      postCopy.club = selectedClub.id;
+      if (selectedClub)
+        postCopy.club = selectedClub.id;
       updateNewPost(postCopy);
     }, [selectedClub, myChessClubs, communityPosts]
   )

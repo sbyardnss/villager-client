@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { updateClub } from "../ServerManager"
+import { updateClub } from "../../ServerManager"
 
 
 export const EditClub = ({ clubId, clubObj, setClub }) => {

@@ -8,6 +8,7 @@ import { TournamentForm } from "./components/TournamentForm";
 import { TournamentList } from "./components/TournamentList";
 import "../../styles/Tournament.css";
 import type { ChessClub } from "../../Types/ChessClub";
+import { chessClubDefaults } from "../../Types/ChessClub";
 import type { PlayerRelated } from "../../Types/Player";
 // import type { TimeSetting } from "../../Types/TimeSetting";
 import type { Tournament, NewTournament } from "../../Types/Tournament";
@@ -20,7 +21,7 @@ export const TournamentController = () => {
   // const [timeSettings, setTimeSettings] = useState<TimeSetting[]>([]);
   const [myOpenTournaments, setMyOpenTournaments] = useState<Tournament[]>([]);
   const [createNewTournament, setCreateNewTournament] = useState(false);
-  const [selectedClub, setSelectedClub] = useState<ChessClub>({} as ChessClub);
+  const [selectedClub, setSelectedClub] = useState<ChessClub>({ ...chessClubDefaults });
   const [selectedTournament, setSelectedTournament] = useState<Tournament>({} as Tournament);
   const [pastTournaments, setPastTournaments] = useState<Tournament[]>([]);
   const [showPastTournaments, setShowPastTournaments] = useState(false);

@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from "react"
 import { TournamentContext } from "./TournamentProvider"
 import "../Tournament.css"
-import { createNewGuest, getChessClub, getTournament, updateTournament } from "../../ServerManager"
+import { createNewGuest, getChessClub, getTournament, updateTournament } from "../../../ServerManager"
 import { createPairings } from "../actions/create-pairings"
 import { RoundRobin, Swiss } from "tournament-pairings"
 import { PlayerSelection } from "./PlayerSelection"

@@ -1,6 +1,6 @@
 import { useState, useEffect, useContext } from "react"
 import { TournamentContext } from "./TournamentProvider"
-import { sendNewGame, updateTournament } from "../../ServerManager"
+import { sendNewGame, updateTournament } from "../../../ServerManager"
 import "../Tournament.css"
 import { EditPlayersModal } from "./EditPlayersModal"
 // import { Swiss } from "tournament-pairings"

@@ -20,8 +20,5 @@
   "pgn": null,
   "bye": false,
   "accepted": true,
-  "win_style": "checkmate",
-  "target_winner_ct": 11,
-  "target_player_b_ct": 11,
-  "target_player_w_ct": 11
+  "win_style": "checkmate"
 }

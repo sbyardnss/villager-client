@@ -64,7 +64,7 @@ export const TournamentParameters: React.FC<TournamentParametersProps> = ({
         </div>
         <div>
           <input id="digitalTournamentCheckbox" className="setColor" type="checkbox" onChange={(e) => {
-            const copy = {...tournamentObj};
+            const copy = { ...tournamentObj };
             const in_person = !e.target.checked;
             copy.in_person = in_person;
             updateTournamentObj(copy);
@@ -77,15 +77,21 @@ export const TournamentParameters: React.FC<TournamentParametersProps> = ({
   } else {
     return (
       <div id="gamesStartedBtnBlock">
-        <button className={gamesStarted === true ? "gamesStartedBtnActive" : "gamesStartedBtn"} onClick={() => {
-          if (setGamesStarted)
-            setGamesStarted(true)
+        <button
+          data-cy="games-already-started-btn"
+          className={gamesStarted === true ? "gamesStartedBtnActive" : "gamesStartedBtn"}
+          onClick={() => {
+            if (setGamesStarted)
+              setGamesStarted(true)
           }
-        }>Games already started</button>
-        <button className={gamesStarted === false ? "gamesNotStartedBtnActive" : "gamesNotStartedBtn"} onClick={() => {
-          if (setGamesStarted)
-          setGamesStarted(false)
-        }}>Games not started</button>
+          }>Games already started</button>
+        <button
+          data-cy="games-not-started-btn"
+          className={gamesStarted === false ? "gamesNotStartedBtnActive" : "gamesNotStartedBtn"}
+          onClick={() => {
+            if (setGamesStarted)
+              setGamesStarted(false)
+          }}>Games not started</button>
       </div>
     )
   }

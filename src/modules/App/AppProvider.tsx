@@ -1,7 +1,7 @@
 import { PropsWithChildren, createContext, useState, useEffect, useContext } from "react";
 import { GetLoggedInUser } from "./actions/get-current-user";
 import { getClubMatesAndGuests, getMyChessClubs } from "../../ServerManager";
-import { AppStateDefaults } from "./state";
+// import { AppStateDefaults } from "./state";
 import type { ChessClub } from "../../Types/ChessClub";
 import { PlayerRelated } from "../../Types/Player";
 import { Guest } from "../../Types/Guest";
@@ -13,8 +13,6 @@ interface AppContextType {
   resetChessClubs: () => Promise<void>; // Adjust the return type as necessary
   clubMatesAndGuests: (PlayerRelated | Guest)[];
   setClubMatesAndGuests: React.Dispatch<React.SetStateAction<(PlayerRelated | Guest)[]>>;
-  selectedClub: ChessClub;
-  setSelectedClub: React.Dispatch<React.SetStateAction<ChessClub>>;
 }
 
 export const AppContext = createContext<AppContextType | null>(null);
@@ -32,18 +30,8 @@ interface AppProviderProps extends PropsWithChildren<{}> { };
 export function AppProvider({ children }: AppProviderProps) {
   const localVillagerUser = GetLoggedInUser();
   const [myChessClubs, setMyChessClubs] = useState<ChessClub[]>([]);
-  const [selectedClub, setSelectedClub] = useState<ChessClub>({} as ChessClub);
   const [clubMatesAndGuests, setClubMatesAndGuests] = useState<(PlayerRelated | Guest)[]>([]);
 
-  // useEffect(
-  //   () => {
-  //     getMyChessClubs()
-  //       .then((clubData) => {
-  //         setMyChessClubs(clubData);
-  //         AppStateDefaults.clubs = clubData;
-  //       })
-  //   }, []
-  // )
   useEffect(
     () => {
       Promise.all([getClubMatesAndGuests(), getMyChessClubs()])
@@ -53,13 +41,7 @@ export function AppProvider({ children }: AppProviderProps) {
         });
     }, []
   )
-  useEffect(
-    () => {
-      if (myChessClubs.length) {
-        setSelectedClub(myChessClubs[0]);
-      }
-    }, [myChessClubs]
-  )
+
   const resetChessClubs = () => {
     return getMyChessClubs()
       .then(data => setMyChessClubs(data));
@@ -68,7 +50,7 @@ export function AppProvider({ children }: AppProviderProps) {
     <AppContext.Provider value={{
       // Your context value here
       localVillagerUser, myChessClubs, setMyChessClubs, resetChessClubs,
-      clubMatesAndGuests, setClubMatesAndGuests, selectedClub, setSelectedClub
+      clubMatesAndGuests, setClubMatesAndGuests
     }}>
       {children}
     </AppContext.Provider>

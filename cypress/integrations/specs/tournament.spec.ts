@@ -21,7 +21,7 @@ describe('Tournament Components', () => {
     ).as('loadMyTournaments');
     cy.intercept(
       'GET',
-      '**/games/153/get_selected_tournament_games',
+      '**/tournaments/153/get_selected_tournament_games',
       { fixture: 'games/load-tournament-games.json' }
     ).as('loadTournamentGames');
 

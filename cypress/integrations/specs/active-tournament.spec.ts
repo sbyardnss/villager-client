@@ -28,7 +28,7 @@ describe('Tournament Components', () => {
     ).as('loadSelectedTournament');
     cy.visit('/tournament/153');
     let requestCount = 0;
-    cy.intercept('GET', '**/games/153/get_selected_tournament_games', (req) => {
+    cy.intercept('GET', '**/tournaments/153/get_selected_tournament_games', (req) => {
       // if (requestCount < 1) {
       req.reply({ statusCode: 200, fixture: 'games/load-tournament-games.json' });
       //   requestCount++;

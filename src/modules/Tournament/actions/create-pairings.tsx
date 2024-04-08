@@ -4,31 +4,142 @@ import { Swiss } from "tournament-pairings";
 import type { PlayerRelated } from "../../../Types/Player";
 import type { Guest } from "../../../Types/Guest";
 import type { tournamentAnalysisOutput } from "./matchup-game-analysis";
+import { findByIdentifier } from "./find-by-identifier";
 
 type CreatePairingsFunction = (
-  editOrNew: string,
+  editOrNew: "edit" | "new",
   tournamentPlayers: (PlayerRelated | Guest)[],
   curRound: number,
   analysisObj: tournamentAnalysisOutput,
   // currentByePlayer?: number | string,
-  currentByeGameRef?: any,
+  currentByeGameRef?: any
 ) => any;
 
 export const createPairings: CreatePairingsFunction = (
-  editOrNew,
+  /*'new', playersNeedingMatchups, currentRound, tournamentAnalysisObj, byeGameRef.current */
+  editOrNew, //DO WE ACTUALLY NEED THIS?
   tournamentPlayers,
   curRound,
   analysisObj,
-  currentByeGameRef,
+  currentByeGameRef
 ) => {
-  //check whether odd or even number of players
-  //if so choose bye player and then continue to iterate
-  //iterate players
+  let playerArgs = [];
+  console.log('hitting function', analysisObj.scoreCard)
+  // if (editOrNew === 'edit') {
+  const targetRound = editOrNew === "new" ? curRound + 1 : curRound;
+  if (tournamentPlayers.length % 2 !== 0) {
+    //EDITING AND ODD
+    //sort player scores from lowest to highest, and try to create pairings, using the selected player as the bye
+    //if pairings created and valid, append bye pairing and return
+    const orderedIdentifiers = Object.keys(analysisObj.scoreObj).sort((a, b) => analysisObj.scoreObj[a] - analysisObj.scoreObj[b]);
+    const notHadByeOrderedIdentifiers = orderedIdentifiers.filter(identifier => !analysisObj.scoreCard[identifier].includes('bye'));
+    //WE HAVE AN ARRAY OF IDENTIFIERS, SORTED FROM LOWEST SCORE TO HIGHEST, FOR PLAYERS THAT HAVE NOT HAD BYE
 
-  const targetRound = editOrNew === 'new' ? curRound + 1 : curRound
-  let playerArgs = []
-  //TODO: TEST AND SEE IF WE NEED TO USE THIS ZOMBIE CODE TO CREATE BYE GAME
-  /*
+
+
+    //iterate notHadByeOrderedIdentifiers arr and try to make pairings
+    for (const identifier of notHadByeOrderedIdentifiers) {
+      const attemptedByePlayer = findByIdentifier(identifier, tournamentPlayers);
+      // const playersSansByeAttempt = tournamentPlayers.filter(p => p !== attemptedByePlayer)
+      // console.log('identifier', identifier)
+      const playerIdentifiersSansByeAttempt = notHadByeOrderedIdentifiers.filter(p => p !== identifier)
+      // if (attemptedByePlayer && attemptedByePlayer.id === 5) {
+      //   console.log('attemptedByePlayer', attemptedByePlayer)
+      // }
+        // console.log('playersSansByeAttempt', playerIdentifiersSansByeAttempt)
+      const playerArgs: PlayerArg[] = []
+
+      playerIdentifiersSansByeAttempt.forEach(playerIdentifier => {
+        if (isNaN(parseInt(playerIdentifier))) {
+          const playerArg = playerArgCreator(playerIdentifier, analysisObj, tournamentPlayers, currentByeGameRef);
+          if (playerArg) {
+            playerArgs.push(playerArg);
+          }
+        } else {
+          const playerArg = playerArgCreator(parseInt(playerIdentifier), analysisObj, tournamentPlayers, currentByeGameRef);
+          if (playerArg) {
+            playerArgs.push(playerArg);
+          }
+        }
+      });
+      if (playerArgs) {
+        const swissPairingsSansBye = Swiss(playerArgs, targetRound, false, true);
+        if (swissPairingsSansBye) {
+          const byeMatchup = { round: targetRound, match: swissPairingsSansBye.length + 1, player1: identifier, player2: null }
+          return swissPairingsSansBye.concat(byeMatchup);
+          //TODO: ENSURE THAT YOU FORCE THE STOPPAGE OF THE FUNCTION IF PAIRINGS CREATED
+        }
+      }
+      // console.log('playerArgs', playerArgs)
+    }
+
+
+
+  } else {
+    //EDIITNG AND EVEN
+    //simply create args and run through swiss
+    for (const player of tournamentPlayers) {
+      //EDITING AND EVEN
+      const identifier = findIdentifier(player);
+
+      const playerArgObj = playerArgCreator(
+        identifier,
+        analysisObj,
+        tournamentPlayers,
+        currentByeGameRef
+      );
+      if (playerArgObj) playerArgs.push(playerArgObj);
+    }
+    if (playerArgs) {
+      // console.log('playerArgs', playerArgs)
+      // console.log('targetRound', targetRound)
+      const pairings = Swiss(playerArgs, targetRound, false, true);
+      if (pairings) {
+        return pairings;
+      } else {
+        window.alert("unable to create more pairings");
+      }
+    }
+  }
+
+
+
+  // } else {
+  //   //NEW
+  //   const targetRound = curRound + 1;
+  //   if (tournamentPlayers.length % 2 !== 0) {
+  //     //NEW AND ODD NUMBER OF PLAYERS
+
+  //   } else {
+  //     //NEW AND EVEN NUMBER OF PLAYERS
+  //     for (const player of tournamentPlayers) {
+  //       //EDITING AND EVEN
+  //       const identifier = findIdentifier(player)
+
+  //       const playerArgObj = playerArgCreator(identifier, analysisObj, tournamentPlayers, currentByeGameRef)
+  //       if (playerArgObj)
+  //         playerArgs.push(playerArgObj)
+  //     }
+  //     if (playerArgs) {
+  //       // console.log('playerArgs', playerArgs)
+  //       // console.log('targetRound', targetRound)
+  //       const pairings = Swiss(playerArgs, targetRound, false, true)
+  //       if (pairings) {
+  //         return pairings
+  //       } else {
+  //         window.alert('unable to create more pairings');
+  //       }
+  //     }
+  //   }
+  // }
+};
+// }
+
+//TODO: TEST AND SEE IF WE NEED TO USE THIS ZOMBIE CODE TO CREATE BYE GAME
+//check whether odd or even number of players
+//if so choose bye player and then continue to iterate
+//iterate players
+/*
   console.log('currentByeGameRef', currentByeGameRef)
   if (tournamentPlayers.length % 2 !== 0) {
     //TODO: FIX ANY
@@ -52,7 +163,7 @@ export const createPairings: CreatePairingsFunction = (
       const playerScore = analysisObj.scoreObj[identifier];
       return [identifier, playerScore];
     });
-    
+
     console.log('scoreArrNoBye', scoreArrNoBye)
     console.log('scoreArrTotals', scoreArrTotals)
     const sortedScoreArrTotals = scoreArrTotals.sort((a, b) => a[1] - b[1]);
@@ -106,27 +217,4 @@ export const createPairings: CreatePairingsFunction = (
   }
   else {
     */
-  // console.log(findIdentifier(currentByeGameRef.player_w))
-  for (const player of tournamentPlayers) {
-    const identifier = findIdentifier(player)
-
-    const playerArgObj = playerArgCreator(identifier, analysisObj, tournamentPlayers, currentByeGameRef)
-    if (playerArgObj)
-      playerArgs.push(playerArgObj)
-  }
-  if (playerArgs) {
-    // console.log('playerArgs', playerArgs)
-    // console.log('targetRound', targetRound)
-    const pairings = Swiss(playerArgs, targetRound, false, true)
-    if (pairings) {
-      return pairings
-    } else {
-      window.alert('bad bad bad');
-    }
-  }
-  // else {
-  //   window.alert('unable to create more pairings');
-  //   return null
-  // }
-}
-// }
+// console.log(findIdentifier(currentByeGameRef.player_w))

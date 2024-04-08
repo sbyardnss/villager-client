@@ -4,7 +4,8 @@ import { TournamentParameters } from "./Parameters"
 import { PlayerSelection } from "./PlayerSelection"
 import { NewTournament, Tournament } from "../../../Types/Tournament"
 import { AppContext } from "../../App/AppProvider";
-import { PlayerRelated } from "../../../Types/Player";
+import type { PlayerRelated } from "../../../Types/Player";
+import { playerRelatedDefaults } from "../../../Types/Player"
 import { Game, OutgoingGame } from "../../../Types/Game";
 import { tournamentAnalysisOutput } from "../actions/matchup-game-analysis";
 import "../../../styles/Tournament.css";
@@ -49,7 +50,7 @@ export const EditPlayersModal: React.FC<EditPlayersModalProps> = ({
   const [editedTournament, updateEditedTournament] = useState<Tournament>({
     id: 0,
     title: "",
-    creator: {} as PlayerRelated,
+    creator: { ...playerRelatedDefaults },
     date: "",
     club: 0,
     rounds: 0,

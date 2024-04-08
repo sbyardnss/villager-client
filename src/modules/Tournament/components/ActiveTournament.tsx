@@ -19,6 +19,7 @@ import type { Match } from "tournament-pairings/dist/Match";
 import type { ChessClub } from "../../../Types/ChessClub";
 import { chessClubDefaults } from "../../../Types/ChessClub";
 import type { tournamentAnalysisOutput } from "../actions/matchup-game-analysis";
+import { tournamentAnalysisDefaults } from "../actions/matchup-game-analysis";
 
 interface ActiveTournamentProps {
   selectedTournament: Tournament;
@@ -38,7 +39,6 @@ export const ActiveTournament: React.FC<ActiveTournamentProps> = ({
 }) => {
   const { localVillagerUser, myChessClubs } = useAppContext();
 
-  // const [activeTournament, setActiveTournament] = useState<Tournament>({} as Tournament);
   const [activeTournamentPlayers, setActiveTournamentPlayers] = useState<(PlayerRelated | Guest)[]>([])
   const [tournamentCreatorBool, setTournamentCreatorBool] = useState(false);
   const [tournamentGames, setTournamentGames] = useState<Game[]>([]);
@@ -48,39 +48,36 @@ export const ActiveTournament: React.FC<ActiveTournamentProps> = ({
   const [currentRound, setCurrentRound] = useState(0);
   const [scoreMode, setScoreMode] = useState<'scoring' | 'editing' | 'table'>("scoring");
   const [modalMode, setModalMode] = useState<'none' | 'results' | 'edit-players' | 'end-tournament'>('none');
-  // const [viewTable, setViewTable] = useState(false);
-  // const [showResults, setShowResults] = useState(false);
-  // const [showEndTournament, setShowEndTournament] = useState(false);
-  const [tournamentAnalysisObj, setTournamentAnalysisObj] = useState<tournamentAnalysisOutput>({} as tournamentAnalysisOutput);
+  const [tournamentAnalysisObj, setTournamentAnalysisObj] = useState<tournamentAnalysisOutput>({ ...tournamentAnalysisDefaults }); //TODO DEFAULTS
   const [roundOver, setRoundOver] = useState(false);
   const [gameForApi, updateGameForApi] = useState<OutgoingGame | Game>({ ...gameForApiDefaults });
   //TODO: FIGURE OUT HOW TO RECONCILE THIS
   const [byeGame] = useState<OutgoingGame>({
     player_w: {} as Guest | PlayerRelated,
     player_w_model_type: "",
-    player_b: {} as Guest | PlayerRelated,
-    player_b_model_type: "",
+    player_b: null,
+    player_b_model_type: null,
     tournament: 0,
     time_setting: 0,
     win_style: "",
     accepted: true,
     tournament_round: 0,
-    winner: {} as Guest | PlayerRelated,
-    winner_model_type: "",
+    winner: null,
+    winner_model_type: null,
     bye: true
   });
   const byeGameRef = useRef<OutgoingGame>({
     player_w: {} as Guest | PlayerRelated, //TODO: INITIALIZE THIS WITH UNDEFINED OR NULL
     player_w_model_type: "",
-    player_b: {} as Guest | PlayerRelated,
-    player_b_model_type: "",
+    player_b: null,
+    player_b_model_type: null,
     tournament: 0,
     time_setting: 0,
     win_style: "",
     accepted: true,
     tournament_round: 0,
-    winner: {} as Guest | PlayerRelated,
-    winner_model_type: "",
+    winner: null,
+    winner_model_type: null,
     bye: true
   });
 
@@ -176,7 +173,8 @@ export const ActiveTournament: React.FC<ActiveTournamentProps> = ({
       const byePairing = currentRoundMatchups.find(pairing => pairing.player2 === null);
       const byeCopy = { ...byeGame };
       if (byePairing) {
-        byeCopy.player_b = {} as PlayerRelated | Guest;
+        byeCopy.player_b = null;
+        byeCopy.player_b_model_type = null;
         byeCopy.bye = true;
         byeCopy.win_style = "";
         byeCopy.time_setting = selectedTournament.time_setting;
@@ -240,7 +238,8 @@ export const ActiveTournament: React.FC<ActiveTournamentProps> = ({
   ) => {
     if (whitePlayer && blackPlayer) {
       //update winner, round, 
-      let copy: OutgoingGame | Game = {} as OutgoingGame | Game;
+      let copy: OutgoingGame | Game = { ...gameForApiDefaults };
+      // let copy: OutgoingGame | Game = {} as OutgoingGame | Game;
       //TODO: ADD USEEFFECT FOR SOME OF THIS. SHOULD BE ABLE TO AUTOMATICALLY ADD SOME PROPERTIES TO GAMEFORAPI LIKE ROUND AND TOURNAMENT
       if (!pastGame) {
         copy = { ...gameForApi } as OutgoingGame;
@@ -326,7 +325,7 @@ export const ActiveTournament: React.FC<ActiveTournamentProps> = ({
             setModalMode('none');
             selectTournament(selectedTournamentDefaults);
             selectClub(chessClubDefaults);
-            setTournamentAnalysisObj({} as tournamentAnalysisOutput);
+            setTournamentAnalysisObj({ ...tournamentAnalysisDefaults }); //TODO do we actually need this? the component should be reinitialized with the default value
             resetTourneys();
           }}>exit</button>
         <button

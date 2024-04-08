@@ -29,7 +29,7 @@ export const TournamentForm: React.FC<TournamentFormProps> = ({
   updater,
   tournamentObj,
 }) => {
-  const [clubObj, setClubObj] = useState<ChessClub>({} as ChessClub);
+  const [clubObj, setClubObj] = useState<ChessClub>({ ...chessClubDefaults });
   const [clubPlayers, setClubPlayers] = useState<PlayerRelated[]>([]);
   const [clubGuests, setClubGuests] = useState<Guest[]>([]);
   const [playersSelected, setPlayersSelected] = useState(false);
@@ -178,10 +178,10 @@ export const TournamentForm: React.FC<TournamentFormProps> = ({
     }
   } else {
     return (
-      <button 
+      <button
         data-cy="create-tournament-btn"
-        id="createTournamentButton" 
-        className="setCustomFont" 
+        id="createTournamentButton"
+        className="setCustomFont"
         onClick={() => setCreateTournament(true)}>
         create new tournament
       </button>

@@ -3,7 +3,6 @@ import type { Match } from "tournament-pairings/dist/Match";
 import type { Guest } from "./Guest";
 export interface NewTournament {
   title: string;
-  // creator: number;
   competitors: PlayerRelated[];
   guest_competitors: Guest[];
   time_setting: number;
@@ -15,11 +14,10 @@ export interface NewTournament {
 
 export const newTournamentDefaults: NewTournament = {
   title: "",
-  // creator: 0,
   competitors: [],
   guest_competitors: [],
   time_setting: 0,
-  rounds: 0,
+  rounds: 1,
   in_person: true,
   pairings: [],
   club: 0,

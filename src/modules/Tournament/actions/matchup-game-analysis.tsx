@@ -28,6 +28,14 @@ export type GameResult = {
   round: number;
 }
 
+const gameResultDefaults: GameResult = {
+  white: 0,
+  black: 0,
+  winner: null,
+  win_style: null,
+  round: 1,
+}
+
 // export type TieBreakObject = {
 //   [key: string | number]: {
 //     solkoff: number,
@@ -58,6 +66,14 @@ export interface tournamentAnalysisOutput {
   tieBreakData: GameResult[];
   blackWhiteTally: BlackWhiteTallyType;
   playerOppRefObj: PlayerOppRefObjType;
+}
+
+export const tournamentAnalysisDefaults: tournamentAnalysisOutput = {
+  scoreCard: {},
+  scoreObj: {},
+  tieBreakData: [],
+  blackWhiteTally: {},
+  playerOppRefObj: {},
 }
 
 type TournamentAnalysisFunction = (
@@ -93,7 +109,7 @@ export const tournamentAnalysis: TournamentAnalysisFunction = (
     const gameRound = game.tournament_round;
     let whitePlayerIdentifier: string | number = 0;
     let blackPlayerIdentifier: string | number = 0;
-    const gameResult: GameResult = {} as GameResult;
+    const gameResult: GameResult = { ...gameResultDefaults };
     if (game.player_w) {
       const identifier = findIdentifier(game.player_w);
       whitePlayerIdentifier = identifier;
@@ -118,12 +134,13 @@ export const tournamentAnalysis: TournamentAnalysisFunction = (
   //THIS IS FOR ADDING THE CURRENT BYE PLAYER TO THE ANALYSIS SINCE WE DON'T WANT TO SEND THE BYE GAME UNTIL THE ROUND IS OVER
   if (byeGame.current?.player_w.id) {
     const byePlayerIdentifier = findIdentifier(byeGame.current?.player_w);
-    const byeGameResult: GameResult = { 
-      white: byePlayerIdentifier, 
-      black: null, 
-      winner: byePlayerIdentifier, 
-      win_style: null, 
-      round: currentRound };
+    const byeGameResult: GameResult = {
+      white: byePlayerIdentifier,
+      black: null,
+      winner: byePlayerIdentifier,
+      win_style: null,
+      round: currentRound
+    };
     updateTieBreakAndScoreCardData(byeGame.current, byeGameResult, scoreCardForOutput, scoreObjForOutput, currentRound, currentRound, byePlayerIdentifier, undefined)
   }
 

@@ -5,17 +5,17 @@ import { EditClub } from "./components/EditClub";
 import { AppContext, useAppContext } from "../App/AppProvider";
 import { JoinClubModal } from "./components/JoinClubModal";
 import { CreateClubForm } from "./components/CreateClub";
-
+import { chessClubDefaults } from "../../Types/ChessClub";
 // import type { ChessClub } from "../App/types";
 import type { ChessClubCreate, ChessClub } from "../../Types/ChessClub";
 export const ChessClubs = () => {
   const { localVillagerUser, myChessClubs, resetChessClubs } = useAppContext();
   const [unjoinedChessClubs, setUnjoinedClubs] = useState([]);
   const [selectedClubToEdit, setSelectedClubToEdit] = useState(0)
-  const [selectedClubObj, setSelectedClubObj] = useState<ChessClub>({} as ChessClub)
+  const [selectedClubObj, setSelectedClubObj] = useState<ChessClub>({ ...chessClubDefaults })
   const [joinClub, setJoinClub] = useState(0);
   //TODO: see if this state variable is causing problems
-  const [clubToJoin, setClubToJoin] = useState<ChessClub>({} as ChessClub);
+  const [clubToJoin, setClubToJoin] = useState<ChessClub>({ ...chessClubDefaults });
   const [createClub, setCreateClub] = useState(false)
   const [newClub, updateNewClub] = useState<Partial<ChessClubCreate | ChessClub>>({
     name: "",
@@ -73,7 +73,7 @@ export const ChessClubs = () => {
         <EditClub
           clubId={selectedClubToEdit}
           clubObj={selectedClubObj}
-          setClub={setSelectedClubToEdit} 
+          setClub={setSelectedClubToEdit}
           resetter={resetChessClubs} />
       );
     }
@@ -84,11 +84,11 @@ export const ChessClubs = () => {
   const createClubForm = () => {
     if (createClub) {
       return <CreateClubForm
-                newClub={newClub}
-                resetter={resetChessClubs}
-                updateClub={updateNewClub}
-                setter={setCreateClub} 
-                />
+        newClub={newClub}
+        resetter={resetChessClubs}
+        updateClub={updateNewClub}
+        setter={setCreateClub}
+      />
     } else {
       return <button id="createChessClubButton" className="setCustomFont" onClick={() => setCreateClub(true)}>Create Club</button>;
     }
@@ -100,7 +100,7 @@ export const ChessClubs = () => {
         <section id="editClubModal">
           {editClubForm()}
         </section>
-        {<JoinClubModal 
+        {<JoinClubModal
           clubToJoin={clubToJoin}
           setJoinClub={setJoinClub}
           resetter={resetChessClubs} />}

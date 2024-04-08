@@ -44,7 +44,6 @@ export const ResultsModal: React.FC<ResultsModalProps> = ({
     }).sort((a: [string, number, string], b: [string, number, string]) => {
       return b[1] - a[1];
     });
-  console.log(resultArr)
   return (
     <div id="resultsModal">
       Results
@@ -65,8 +64,8 @@ export const ResultsModal: React.FC<ResultsModalProps> = ({
         </div>
         <TieBreakDisplay
           analysis={analysis}
-          playerScores={resultArr} 
-          allClubMates={allClubMates}/>
+          playerScores={resultArr}
+          allClubMates={allClubMates} />
       </section>
       <div id="modalBtns">
         {tournamentObj?.complete === false && (creatorBool || checkIfUserIsAppCreator()) ?

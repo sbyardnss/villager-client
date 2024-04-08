@@ -48,11 +48,11 @@ export const TournamentController = () => {
         .then(data => setMyOpenTournaments(data));
     }, []
   )
-  useEffect(
-    () => {
-      console.log(newTournament)
-    }, [newTournament]
-  )
+  // useEffect(
+  //   () => {
+  //     console.log(newTournament)
+  //   }, [newTournament]
+  // )
   useEffect(
     () => {
       if (tournamentId && myOpenTournaments) {

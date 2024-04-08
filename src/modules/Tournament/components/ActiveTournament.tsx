@@ -327,6 +327,7 @@ export const ActiveTournament: React.FC<ActiveTournamentProps> = ({
             selectTournament(selectedTournamentDefaults);
             selectClub(chessClubDefaults);
             setTournamentAnalysisObj({} as tournamentAnalysisOutput);
+            resetTourneys();
           }}>exit</button>
         <button
           className="progressionControlBtn controlBtnApprove"

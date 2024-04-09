@@ -2,7 +2,7 @@ import { Outlet, Route, Routes } from "react-router-dom"
 // import { HomePage } from "./HomePage/HomePage"
 // import { UserList } from "./UserList/UserList"
 // import { Play } from "./Play/Play"
-import { Play } from "./modules/Play/components/Play";
+// import { Play } from "./modules/Play/components/Play";
 import { NewPlay } from "./modules/Play/components/NewPlay";
 import { Profile } from "./Profile/Profile"
 import { Messages } from "./Messages/Messages"

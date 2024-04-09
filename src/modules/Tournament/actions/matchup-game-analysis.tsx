@@ -95,20 +95,21 @@ export const tournamentAnalysis: TournamentAnalysisFunction = (
   byeGame,
   tournamentPlayers,
 ) => {
-  const playerOppObjForOutput: PlayerOppRefObjType = {}; // check
-  // const scoreCardForOutput: ScoreCardType = {}; // check
-  const scoreCardForOutput: ScoreCardType = tournamentPlayers.reduce((scoreCard: ScoreCardType, competitor) => {
-    const identifier = findIdentifier(competitor);
-    return {...scoreCard, [identifier]: []}
-  }, {});
-  const tieBreakDataForOutput: GameResult[] = []; // check
-  // const tieBreakDataForOutput: TieBreakObject = {}; // check
-  const blackWhiteForOutput: BlackWhiteTallyType = {}; // check
-  // const scoreObjForOutput: ScoreObjType = {}; // check
-  const scoreObjForOutput: ScoreObjType = tournamentPlayers.reduce((scoreObj: ScoreObjType, competitor) => {
-    const identifier = findIdentifier(competitor);
-    return { ...scoreObj, [identifier]: 0 };
-  }, {}); // check
+  const playerOppObjForOutput: PlayerOppRefObjType = {};
+  const scoreCardForOutput: ScoreCardType = tournamentPlayers
+    ? tournamentPlayers.reduce((scoreCard: ScoreCardType, competitor) => {
+      const identifier = findIdentifier(competitor);
+      return { ...scoreCard, [identifier]: [] }
+    }, {})
+    : {};
+  const tieBreakDataForOutput: GameResult[] = [];
+  const blackWhiteForOutput: BlackWhiteTallyType = {};
+  const scoreObjForOutput: ScoreObjType = tournamentPlayers
+    ? tournamentPlayers.reduce((scoreObj: ScoreObjType, competitor) => {
+      const identifier = findIdentifier(competitor);
+      return { ...scoreObj, [identifier]: 0 };
+    }, {})
+    : {};
   // let gamesToIterate: (OutgoingGame | Game)[] = [];
   // if (byeGame.current?.player_w.id) {
   //   gamesToIterate = (games as (OutgoingGame | Game)[]).concat(byeGame.current);

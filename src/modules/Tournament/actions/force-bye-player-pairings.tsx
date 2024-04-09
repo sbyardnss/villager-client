@@ -22,7 +22,7 @@ export const forceByePlayerPairings: ForceByePairingFunction = (
 ) => {
   // const orderedIdentifiers = Object.keys(analysisObj.scoreObj).sort((a, b) => analysisObj.scoreObj[a] - analysisObj.scoreObj[b]);
   const orderedIdentifiers: string[] = randomizeOrSortPlayers(targetRound, analysisObj);
-  console.log('orderedIdentifiers', orderedIdentifiers)
+
   //THIS IS AN ARRAY OF IDENTIFIERS, SORTED FROM LOWEST SCORE TO HIGHEST (OR RANDOMIZED IF IN FIRST ROUND), FOR PLAYERS THAT HAVE NOT HAD BYE
   const notHadByeOrderedIdentifiers: string[] = orderedIdentifiers.filter(identifier => !analysisObj.scoreCard[identifier].includes('bye'));
 

@@ -17,7 +17,6 @@ export const randomizeOrSortPlayers: RandomizeOrSortPlayersFunction = (
   targetRound,
   analysisObj,
 ) => {
-  console.log(analysisObj)
   if (targetRound > 1) {
     return Object.keys(analysisObj.scoreObj).sort((a, b) => analysisObj.scoreObj[a] - analysisObj.scoreObj[b]);
   } else {

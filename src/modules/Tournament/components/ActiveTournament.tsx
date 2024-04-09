@@ -147,7 +147,7 @@ export const ActiveTournament: React.FC<ActiveTournamentProps> = ({
   useEffect(
     () => {
       // if (tournamentGames) {
-      const analysis = tournamentAnalysis(tournamentGames, currentRoundMatchupsRef.current, currentRound, byeGameRef);
+      const analysis = tournamentAnalysis(tournamentGames, currentRoundMatchupsRef.current, currentRound, byeGameRef, activeTournamentPlayers);
       setTournamentAnalysisObj(analysis);
       // }
     }, [tournamentGames, currentRound, selectedTournament]

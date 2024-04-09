@@ -101,6 +101,12 @@ export const EditPlayersModal: React.FC<EditPlayersModalProps> = ({
     }, [tourneyGames, rounds]
   )
 
+  useEffect(
+    () => {
+      console.log('analysis', analysis)
+
+    }, [analysis]
+  )
   const [gamesStarted, setGamesStarted] = useState(true);
   const resetGuests = () => {
     getClubsGuests(tournamentClub.id)
@@ -259,7 +265,7 @@ export const EditPlayersModal: React.FC<EditPlayersModalProps> = ({
                     //resetting match numbers for new pairings and adding to past pairings
                     resetPairingMatchNumbers(newPairings);
                     copy.pairings = pastPairings.concat(newPairings);
-                    // console.log('copy', copy)
+                    console.log('copy', copy)
                     updateTournament(copy)
                       .then(() => {
                         activeTournamentResetter();

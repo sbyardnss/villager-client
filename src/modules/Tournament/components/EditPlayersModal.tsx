@@ -7,15 +7,16 @@ import { AppContext } from "../../App/AppProvider";
 import type { PlayerRelated } from "../../../Types/Player";
 import { playerRelatedDefaults } from "../../../Types/Player"
 import { Game, OutgoingGame } from "../../../Types/Game";
-import { tournamentAnalysisOutput } from "../actions/matchup-game-analysis";
+import type { tournamentAnalysisOutput } from "../actions/matchup-game-analysis";
+import { tournamentAnalysis, tournamentAnalysisDefaults } from "../actions/matchup-game-analysis";
 import "../../../styles/Tournament.css";
-import { ChessClub } from "../../../Types/ChessClub"
-import { getClubsGuests, updateTournament } from "../../../ServerManager"
-import { Match } from "tournament-pairings/dist/Match"
-import { findIdentifier } from "../actions/find-identifier"
-import { createPairings } from "../actions/create-pairings"
+import { ChessClub } from "../../../Types/ChessClub";
+import { getClubsGuests, updateTournament } from "../../../ServerManager";
+import { Match } from "tournament-pairings/dist/Match";
+import { findIdentifier } from "../actions/find-identifier";
+import { createPairings } from "../actions/create-pairings";
 // import { Swiss } from "tournament-pairings"
-import { resetPairingMatchNumbers } from "../actions/reset-pairing-match-numbers"
+import { resetPairingMatchNumbers } from "../actions/reset-pairing-match-numbers";
 interface EditPlayersModalProps {
   tournamentObj: Tournament;
   modalModeSetter: React.Dispatch<SetStateAction<'none' | 'results' | 'edit-players' | 'end-tournament'>>;
@@ -47,6 +48,7 @@ export const EditPlayersModal: React.FC<EditPlayersModalProps> = ({
   const [currentPairings, setCurrentPairings] = useState<Match[]>([]);
   const [gamesFromThisRound, setGamesFromThisRound] = useState<Game[]>([]);
   const [roundGameIdentifiers, setRoundGameIdentifiers] = useState<(string | number)[][]>([]);
+  const [newAnalysis, setNewAnalysis] = useState<tournamentAnalysisOutput>({ ...tournamentAnalysisDefaults });
   const [editedTournament, updateEditedTournament] = useState<Tournament>({
     id: 0,
     title: "",
@@ -100,13 +102,19 @@ export const EditPlayersModal: React.FC<EditPlayersModalProps> = ({
       setGamesFromThisRound(completedCurrentRoundGames);
     }, [tourneyGames, rounds]
   )
-
   useEffect(
     () => {
-      console.log('analysis', analysis)
-
-    }, [analysis]
+      const allNewPlayers = editedTournament.competitors.concat(editedTournament.guest_competitors);
+      const editedPlayersAnalysis = tournamentAnalysis(tourneyGames, currentPairings, rounds, byeGame, allNewPlayers);
+      setNewAnalysis(editedPlayersAnalysis);
+    }, [editedTournament]
   )
+  // useEffect(
+  //   () => {
+  //     console.log('newAnalysis', newAnalysis)
+
+  //   }, [newAnalysis]
+  // )
   const [gamesStarted, setGamesStarted] = useState(true);
   const resetGuests = () => {
     getClubsGuests(tournamentClub.id)
@@ -256,7 +264,7 @@ export const EditPlayersModal: React.FC<EditPlayersModalProps> = ({
                         */
                         let newlyCreatedPairings = [];
                         if (unmatchedCompetitors.length) {
-                          newlyCreatedPairings = createPairings('edit', unmatchedCompetitors, rounds, analysis);
+                          newlyCreatedPairings = createPairings('edit', unmatchedCompetitors, rounds, newAnalysis);
                         }
                         newPairings = filteredPairings.concat(newlyCreatedPairings);
                       }
@@ -265,7 +273,7 @@ export const EditPlayersModal: React.FC<EditPlayersModalProps> = ({
                     //resetting match numbers for new pairings and adding to past pairings
                     resetPairingMatchNumbers(newPairings);
                     copy.pairings = pastPairings.concat(newPairings);
-                    console.log('copy', copy)
+                    // console.log('copy', copy)
                     updateTournament(copy)
                       .then(() => {
                         activeTournamentResetter();

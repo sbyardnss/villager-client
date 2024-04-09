@@ -147,7 +147,7 @@ export const ActiveTournament: React.FC<ActiveTournamentProps> = ({
   useEffect(
     () => {
       // if (tournamentGames) {
-      const analysis = tournamentAnalysis(tournamentGames, currentRoundMatchupsRef.current, currentRound, byeGameRef);
+      const analysis = tournamentAnalysis(tournamentGames, currentRoundMatchupsRef.current, currentRound, byeGameRef, activeTournamentPlayers);
       setTournamentAnalysisObj(analysis);
       // }
     }, [tournamentGames, currentRound, selectedTournament]
@@ -180,6 +180,17 @@ export const ActiveTournament: React.FC<ActiveTournamentProps> = ({
           }
         }
         byeGameRef.current = byeGameData;
+      } else {
+        byeGameRef.current = {
+          ...gameForApiDefaults,
+          bye: true,
+          player_b: null,
+          player_b_model_type: null,
+          win_style: "",
+          tournament_round: currentRound,
+          tournament: selectedTournament.id,
+          time_setting: selectedTournament.time_setting,
+        };
       }
     }, [currentRoundMatchups, selectedTournament.rounds, activeTournamentPlayers]
   )

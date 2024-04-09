@@ -4,6 +4,8 @@ import { findIdentifier } from "./find-identifier";
 import { updatePlayerOppRefObj } from "./update-player-opp-ref";
 import { updateBlackWhiteTally } from "./update-black-white-tally";
 import { updateTieBreakAndScoreCardData } from "./update-tie-break-score-card-data";
+import { PlayerRelated } from "../../../Types/Player";
+import { Guest } from "../../../Types/Guest";
 
 //TODO SCORECARD AND PLAYER OPP REF OBJECT SHOWING INCORRECT OUTPUT
 
@@ -82,6 +84,7 @@ type TournamentAnalysisFunction = (
   // currentMatchupsSetter: React.Dispatch<SetStateAction<Match[]>>,
   currentRound: number,
   byeGame: React.RefObject<OutgoingGame>,
+  tournamentPlayers: (PlayerRelated | Guest)[],
 ) => tournamentAnalysisOutput;
 
 export const tournamentAnalysis: TournamentAnalysisFunction = (
@@ -90,13 +93,23 @@ export const tournamentAnalysis: TournamentAnalysisFunction = (
   // currentMatchupsSetter,
   currentRound,
   byeGame,
+  tournamentPlayers,
 ) => {
-  const playerOppObjForOutput: PlayerOppRefObjType = {}; // check
-  const scoreCardForOutput: ScoreCardType = {}; // check
-  const tieBreakDataForOutput: GameResult[] = []; // check
-  // const tieBreakDataForOutput: TieBreakObject = {}; // check
-  const blackWhiteForOutput: BlackWhiteTallyType = {}; // check
-  const scoreObjForOutput: ScoreObjType = {}; // check
+  const playerOppObjForOutput: PlayerOppRefObjType = {};
+  const scoreCardForOutput: ScoreCardType = tournamentPlayers
+    ? tournamentPlayers.reduce((scoreCard: ScoreCardType, competitor) => {
+      const identifier = findIdentifier(competitor);
+      return { ...scoreCard, [identifier]: [] }
+    }, {})
+    : {};
+  const tieBreakDataForOutput: GameResult[] = [];
+  const blackWhiteForOutput: BlackWhiteTallyType = {};
+  const scoreObjForOutput: ScoreObjType = tournamentPlayers
+    ? tournamentPlayers.reduce((scoreObj: ScoreObjType, competitor) => {
+      const identifier = findIdentifier(competitor);
+      return { ...scoreObj, [identifier]: 0 };
+    }, {})
+    : {};
   // let gamesToIterate: (OutgoingGame | Game)[] = [];
   // if (byeGame.current?.player_w.id) {
   //   gamesToIterate = (games as (OutgoingGame | Game)[]).concat(byeGame.current);

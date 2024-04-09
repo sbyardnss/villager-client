@@ -5,6 +5,7 @@ import { tournamentAnalysisOutput } from "./matchup-game-analysis";
 import { PlayerArg, playerArgCreator } from "./create-player-pairing-arg";
 import { Swiss } from "tournament-pairings";
 import { findIdentifier } from "./find-identifier";
+import { randomizeOrSortPlayers } from "./randomize-or-sort-players";
 
 type ForceByePairingFunction = (
   targetRound: number,
@@ -19,10 +20,11 @@ export const forceByePlayerPairings: ForceByePairingFunction = (
   analysisObj,
   currentByeGameRef,
 ) => {
-  const orderedIdentifiers = Object.keys(analysisObj.scoreObj).sort((a, b) => analysisObj.scoreObj[a] - analysisObj.scoreObj[b]);
+  // const orderedIdentifiers = Object.keys(analysisObj.scoreObj).sort((a, b) => analysisObj.scoreObj[a] - analysisObj.scoreObj[b]);
+  const orderedIdentifiers: string[] = randomizeOrSortPlayers(targetRound, analysisObj);
 
-  //THIS IS AN ARRAY OF IDENTIFIERS, SORTED FROM LOWEST SCORE TO HIGHEST, FOR PLAYERS THAT HAVE NOT HAD BYE
-  const notHadByeOrderedIdentifiers = orderedIdentifiers.filter(identifier => !analysisObj.scoreCard[identifier].includes('bye'));
+  //THIS IS AN ARRAY OF IDENTIFIERS, SORTED FROM LOWEST SCORE TO HIGHEST (OR RANDOMIZED IF IN FIRST ROUND), FOR PLAYERS THAT HAVE NOT HAD BYE
+  const notHadByeOrderedIdentifiers: string[] = orderedIdentifiers.filter(identifier => !analysisObj.scoreCard[identifier].includes('bye'));
 
   for (const identifier of notHadByeOrderedIdentifiers) {
     const allPlayersSansByeAttempt = tournamentPlayers.filter(p => findIdentifier(p) !== (parseInt(identifier) || identifier));

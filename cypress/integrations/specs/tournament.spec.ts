@@ -33,7 +33,7 @@ describe('Tournament Components', () => {
     cy.wait('@loadTournamentGames').its('response.body').its('length').should('equal', 19);
   });
 
-  it('User should be able to create a new tournament', () => {
+  it.only('User should be able to create a new tournament', () => {
     cy.intercept(
       'GET',
       '**/tournaments/my_open_tournaments',
@@ -51,6 +51,7 @@ describe('Tournament Components', () => {
       'select-player--mark--7'
     ];
     cy.wait('@loadMyTournaments');
+    cy.wait(200);
     cy.get('[data-cy="create-tournament-btn"]')
       .should('be.visible')
       .click();

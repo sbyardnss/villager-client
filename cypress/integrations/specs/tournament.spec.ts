@@ -10,15 +10,16 @@ describe('Tournament Components', () => {
     cy.visit('http://localhost:3000');
     setupHomepage();
     setupTournaments();
-    cy.login();
-    cy.visit('/tournament');
-  });
-  it('When user selects a tournament, the tournament and its games should be loaded', () => {
     cy.intercept(
       'GET',
       '**/tournaments/my_open_tournaments',
-      { fixture: 'tournaments/load-my-tournaments.json' }
+      { statusCode: 200, fixture: 'tournaments/load-my-tournaments.json' }
     ).as('loadMyTournaments');
+    cy.login();
+    cy.visit('/tournament');
+  });
+
+  it('When user selects a tournament, the tournament and its games should be loaded', () => {
     cy.intercept(
       'GET',
       '**/tournaments/153/get_selected_tournament_games',
@@ -29,16 +30,12 @@ describe('Tournament Components', () => {
     cy.get('[data-cy="select-tournament--153"]')
       .should('be.visible')
       .click();
-
     cy.wait('@loadTournamentGames').its('response.body').its('length').should('equal', 19);
+    cy.get('[data-cy="matchup-div--match-1--round-4"]')
+      .should('exist');
   });
 
   it('User should be able to create a new tournament', () => {
-    cy.intercept(
-      'GET',
-      '**/tournaments/my_open_tournaments',
-      { statusCode: 200, fixture: 'tournaments/load-my-tournaments.json' }
-    ).as('loadMyTournaments');
     const selectors = [
       'select-player--stephen byard--1',
       'select-player--tiger woods--2',
@@ -50,8 +47,6 @@ describe('Tournament Components', () => {
       'select-player--phil--5',
       'select-player--mark--7'
     ];
-    cy.wait('@loadMyTournaments');
-    cy.wait(200);
     cy.get('[data-cy="create-tournament-btn"]')
       .should('be.visible')
       .click();
@@ -81,12 +76,6 @@ describe('Tournament Components', () => {
   });
 
   it('User should be able to create a new guest and new guest should appear in list of potential players', () => {
-    cy.intercept(
-      'GET',
-      '**/tournaments/my_open_tournaments',
-      { statusCode: 200, fixture: 'tournaments/load-my-tournaments.json' }
-    ).as('loadMyTournaments');
-    cy.wait('@loadMyTournaments');
     cy.get('[data-cy="create-tournament-btn"]')
       .should('be.visible')
       .click();

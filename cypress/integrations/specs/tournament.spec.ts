@@ -33,7 +33,7 @@ describe('Tournament Components', () => {
     cy.wait('@loadTournamentGames').its('response.body').its('length').should('equal', 19);
   });
 
-  it.only('User should be able to create a new tournament', () => {
+  it('User should be able to create a new tournament', () => {
     cy.intercept(
       'GET',
       '**/tournaments/my_open_tournaments',

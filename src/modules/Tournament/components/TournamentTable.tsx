@@ -23,6 +23,7 @@ export const TournamentTable: React.FC<TournamentTableProps> = ({
 }) => {
   const [byePlayerIdentifier, setByePlayerIdentifier] = useState<string | number>();
   const [scoreCardForDisplay, setScoreCardForDisplay] = useState<ScoreCardType>({});
+  const [sortedScoreIdentifiers, setSortedScoreIdentifiers] = useState<(string | number)[]>([]);
   useEffect(
     () => {
       if (byeGame.current) {
@@ -33,6 +34,7 @@ export const TournamentTable: React.FC<TournamentTableProps> = ({
   useEffect(
     () => {
       const scoreCardCopy = { ...analysis.scoreCard };
+      //TODO: do we need this 
       for (const identifier in scoreCardCopy) {
         if (scoreCardCopy[identifier].length < round) {
           while (scoreCardCopy[identifier].length < round) {
@@ -43,13 +45,13 @@ export const TournamentTable: React.FC<TournamentTableProps> = ({
       setScoreCardForDisplay(scoreCardCopy);
     }, [analysis.scoreCard, round]
   )
-  // const sortAllPlayersArr = (playersArr: (PlayerRelated | Guest)[]) => {
-  //   return playersArr.sort((a: PlayerRelated | Guest, b: PlayerRelated | Guest) => {
-  //     const aIdentifier = findIdentifier(a);
-  //     const bIdentifier = findIdentifier(b);
-  //     return analysis.scoreObj[bIdentifier] - analysis.scoreObj[aIdentifier];
-  //   });
-  // };
+  useEffect(
+    () => {
+      const sorted = Object.keys(analysis.scoreObj).sort((a, b) => analysis.scoreObj[b] - analysis.scoreObj[a]).map(i => parseInt(i) || i);
+      setSortedScoreIdentifiers(sorted);
+    }, [analysis.scoreObj]
+  )
+
   const roundPopulation = () => {
     let roundNumber = tournamentObj.rounds;
 
@@ -85,7 +87,7 @@ export const TournamentTable: React.FC<TournamentTableProps> = ({
         </thead>
         <tbody>
           {
-            Object.keys(scoreCardForDisplay).map((identifier: number | string) => {
+            sortedScoreIdentifiers.map((identifier: number | string) => {
               const player = findByIdentifier(identifier, allClubMates);
               return (
                 <tr key={identifier} id={identifier + "--tourneyRow"} className="tablePlayerRow">

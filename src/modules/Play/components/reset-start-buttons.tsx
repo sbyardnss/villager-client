@@ -1,5 +1,5 @@
 import type { DigitalGame } from "../../../Types/Game";
-import type { Move } from "./NewPlay";
+import type { Move } from "./Play";
 
 interface ResetOrStartProps {
   selectedGame: DigitalGame;

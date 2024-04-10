@@ -7,7 +7,7 @@ import { useAppContext } from "../../App/AppProvider";
 import { usePlayContext } from "../PlayController";
 import { getMovesFromPGN } from "../actions/get-moves-from-pgn";
 import { ResetOrStartBtns } from "./reset-start-buttons";
-import { digitalGameDefaults } from "../../../Types/Game";
+import { DigitalGame, Game, digitalGameDefaults } from "../../../Types/Game";
 import { useNavigate } from "react-router-dom";
 import { alterGame } from "../../../ServerManager";
 export interface Move {
@@ -22,32 +22,17 @@ const moveDefaults: Move = {
 }
 export const NewPlay = () => {
   const navigate = useNavigate();
-  const { localVillagerUser } = useAppContext();
+  // const { localVillagerUser } = useAppContext();
   const { selectedGame, updateSelectedGame, usersActiveGames, setUsersActiveGames, resetUserGames,
-    selectedRange, setSelectedRange, orientation, setOrientation, review, setReview, activePlayer } = usePlayContext()
+    selectedRange, setSelectedRange, orientation, setOrientation, review, setReview } = usePlayContext()
   const [game, setGame] = useState(new Chess());
-  // const [moveFrom, setMoveFrom] = useState("");
   const [optionSquares, setOptionSquares] = useState({});
   const [moveSquares, setMoveSquares] = useState({});
   const [matchReady, setMatchReady] = useState<boolean>(false);
   const [reviewPgn, setReviewPgn] = useState<string[]>([]);
   const [reviewLength, setReviewLength] = useState(0);
   const [playerMove, updatePlayerMove] = useState<Move>({ ...moveDefaults })
-  useEffect(
-    () => {
-      console.log(game.pgn())
-    }, [game]
-  )
-  useEffect(
-    () => {
-      console.log(selectedGame)
-    }, [selectedGame]
-  )
-  useEffect(
-    () => {
-      console.log(selectedGame.pgn)
-    }, [selectedGame.pgn]
-  )
+
   useEffect(
     () => {
       document.addEventListener('click', leaveGame);
@@ -95,7 +80,10 @@ export const NewPlay = () => {
         const gameCopy = { ...selectedGame };
         gameCopy.pgn = newPgn;
         updateSelectedGame(gameCopy);
-        alterGame(gameCopy);
+        alterGame(gameCopy)
+          .then((data: DigitalGame) => {
+            setUsersActiveGames(usersActiveGames.map(game => game.id === data.id ? data : game));
+          });
         resetMove();
         setOptionSquares({});
       }
@@ -175,6 +163,7 @@ export const NewPlay = () => {
     <div id="playContainer">
       <div id="boardInterface">
         <Chessboard
+          boardOrientation={orientation}
           animationDuration={300}
           position={game.fen()}
           onPieceDrop={onDrop}

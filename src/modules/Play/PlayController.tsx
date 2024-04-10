@@ -23,7 +23,6 @@ interface PlayContextType {
   setOrientation: React.Dispatch<SetStateAction<'black' | 'white'>>;
   review: boolean;
   setReview: React.Dispatch<SetStateAction<boolean>>;
-  activePlayer: PlayerRelated;
 }
 
 export const PlayContext = createContext<PlayContextType | null>(null);
@@ -45,7 +44,6 @@ export const PlayController = (props: any) => {
   // const [puzzles, setPuzzles] = useState([]);
   const [selectedRange, setSelectedRange] = useState('');
   const [usersActiveGames, setUsersActiveGames] = useState<DigitalGame[]>([]);
-  const [activePlayer, setActivePlayer] = useState<PlayerRelated>({...playerRelatedDefaults});
   useEffect(
     () => {
       getActiveUserGames()
@@ -57,7 +55,6 @@ export const PlayController = (props: any) => {
   useEffect(
     () => {
       const userPlayerObject = findByIdentifier(localVillagerUser.userId, clubMatesAndGuests);
-      if (userPlayerObject) setActivePlayer(userPlayerObject);
     }, [localVillagerUser, clubMatesAndGuests]
   )
   useEffect(//TODO: DO WE NEED THIS USEEFFECT?
@@ -73,7 +70,7 @@ export const PlayController = (props: any) => {
   useEffect(
     () => {
       if (selectedGame.id && selectedGame.player_w && selectedGame.player_b) {
-        if (selectedGame.player_w === activePlayer) {
+        if (selectedGame.player_w.id === localVillagerUser.userId) {
           setOrientation('white');
         } else {
           setOrientation('black');
@@ -87,7 +84,7 @@ export const PlayController = (props: any) => {
           setOrientation("black");
         }
       }
-    }, [selectedGame, activePlayer]
+    }, [selectedGame]
   )
   //TODO: RESET INDIVIDUAL GAME may not need once websocket added?
   const resetUserGames = () => {
@@ -99,7 +96,7 @@ export const PlayController = (props: any) => {
   return (
     <PlayContext.Provider value={{
       selectedGame, updateSelectedGame, usersActiveGames, setUsersActiveGames, resetUserGames,
-      selectedRange, setSelectedRange, orientation, setOrientation, review, setReview, activePlayer
+      selectedRange, setSelectedRange, orientation, setOrientation, review, setReview,
     }}>
       {props.children}
     </PlayContext.Provider>

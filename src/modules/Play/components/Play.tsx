@@ -27,12 +27,12 @@ export const Play = () => {
   const [optionSquares, setOptionSquares] = useState({});
   const [moveSquares, setMoveSquares] = useState({});
 
-  useEffect(
-    () => {
-      console.log('game', game)
-      console.log('game.game_over()', game.game_over())
-    }, [game]
-  )
+  // useEffect(
+  //   () => {
+  //     console.log('game', game)
+  //     console.log('game.game_over()', game.game_over())
+  //   }, [game]
+  // )
   useEffect(
     () => {
       if (selectedGame) {

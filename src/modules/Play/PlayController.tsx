@@ -1,8 +1,12 @@
 import { SetStateAction, createContext, useContext, useEffect, useState } from "react";
 import { useAppContext } from "../App/AppProvider";
 import { getActiveUserGames } from "../../ServerManager";
-import { DigitalGame, Game, OutgoingGame } from "../../Types/Game";
+import type { DigitalGame, Game, OutgoingGame } from "../../Types/Game";
+import { digitalGameDefaults } from "../../Types/Game";
 import { findIdentifier } from "../Tournament/actions/find-identifier";
+import { findByIdentifier } from "../Tournament/actions/find-by-identifier";
+import type { PlayerRelated } from "../../Types/Player";
+import { playerRelatedDefaults } from "../../Types/Player";
 interface PlayContextType {
   // localVillagerUser: any; // Replace 'any' with the actual type of localVillagerUser
   // myChessClubs: ChessClub[];
@@ -32,15 +36,14 @@ export function usePlayContext() {
 }
 //games, resetGames, updateSelectedGameObj, setSelectedRange, puzzles
 export const PlayController = (props: any) => {
-  const { localVillagerUser } = useAppContext();
+  const { localVillagerUser, clubMatesAndGuests } = useAppContext();
 
-  const [selectedGame, updateSelectedGame] = useState<DigitalGame>({} as DigitalGame);
+  const [selectedGame, updateSelectedGame] = useState<DigitalGame>({ ...digitalGameDefaults });
   const [orientation, setOrientation] = useState<'black' | 'white'>('white');
   const [review, setReview] = useState(false);
   // const [puzzles, setPuzzles] = useState([]);
   const [selectedRange, setSelectedRange] = useState('');
   const [usersActiveGames, setUsersActiveGames] = useState<DigitalGame[]>([]);
-
   useEffect(
     () => {
       getActiveUserGames()
@@ -50,6 +53,11 @@ export const PlayController = (props: any) => {
     }, []
   )
   useEffect(
+    () => {
+      const userPlayerObject = findByIdentifier(localVillagerUser.userId, clubMatesAndGuests);
+    }, [localVillagerUser, clubMatesAndGuests]
+  )
+  useEffect(//TODO: DO WE NEED THIS USEEFFECT?
     () => {
       if (selectedGame.id) {
         const updatedGame = usersActiveGames.find((game: DigitalGame) => game.id === selectedGame.id);
@@ -62,7 +70,7 @@ export const PlayController = (props: any) => {
   useEffect(
     () => {
       if (selectedGame.id && selectedGame.player_w && selectedGame.player_b) {
-        if (findIdentifier(selectedGame.player_w) === localVillagerUser.userId) {
+        if (selectedGame.player_w.id === localVillagerUser.userId) {
           setOrientation('white');
         } else {
           setOrientation('black');
@@ -76,8 +84,9 @@ export const PlayController = (props: any) => {
           setOrientation("black");
         }
       }
-    }, [selectedGame, localVillagerUser.userId]
+    }, [selectedGame]
   )
+  //TODO: RESET INDIVIDUAL GAME may not need once websocket added?
   const resetUserGames = () => {
     getActiveUserGames()
       .then(data => {
@@ -87,7 +96,7 @@ export const PlayController = (props: any) => {
   return (
     <PlayContext.Provider value={{
       selectedGame, updateSelectedGame, usersActiveGames, setUsersActiveGames, resetUserGames,
-      selectedRange, setSelectedRange, orientation, setOrientation, review, setReview
+      selectedRange, setSelectedRange, orientation, setOrientation, review, setReview,
     }}>
       {props.children}
     </PlayContext.Provider>

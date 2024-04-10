@@ -40,7 +40,7 @@ export interface DigitalGame {
   player_b_model_type: 'player',
   tournament: number | null,
   date_time: string,
-  time_setting: number,
+  time_setting: number | null,
   win_style: 'checkmate' | 'draw' | '',
   accepted: boolean,
   tournament_round: number | null,
@@ -49,7 +49,7 @@ export interface DigitalGame {
   bye: boolean,
   id?: number | undefined,
   // computer_opponent?: boolean,
-  pgn?: string,
+  pgn?: string | null,
 }
 
 export const digitalGameDefaults: DigitalGame = {
@@ -59,7 +59,7 @@ export const digitalGameDefaults: DigitalGame = {
   player_b: { ...playerRelatedDefaults },
   player_b_model_type: 'player',
   tournament: null,
-  time_setting: 1,
+  time_setting: null,
   win_style: '',
   accepted: true,
   tournament_round: null,
@@ -67,7 +67,7 @@ export const digitalGameDefaults: DigitalGame = {
   winner_model_type: null,
   bye: false,
   // computer_opponent: true,
-  pgn: "",
+  pgn: null,
   date_time: "",
 }
 

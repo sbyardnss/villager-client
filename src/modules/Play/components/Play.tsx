@@ -29,6 +29,12 @@ export const Play = () => {
 
   useEffect(
     () => {
+      console.log('game', game)
+      console.log('game.game_over()', game.game_over())
+    }, [game]
+  )
+  useEffect(
+    () => {
       if (selectedGame) {
         if (selectedGame.pgn) {
           game.load_pgn(selectedGame.pgn);
@@ -57,11 +63,13 @@ export const Play = () => {
     }, [selectedGame, orientation, game, clubMatesAndGuests, localVillagerUser]
   )
 
+  //this is likely what was causing the bug
   useEffect(
     () => {
       if (selectedGame.id) {
         if (selectedGame.winner === null) {
           if (game.game_over()) {
+            console.log('inuseEffect', game.game_over())
             const copy = { ...selectedGame };
             copy.pgn = game.pgn();
             if (game.in_checkmate()) {
@@ -80,8 +88,8 @@ export const Play = () => {
             if (selectedGame.id) {
               //TODO-COMMENT
               console.log('game over useEffect', selectedGame)
-              alterGame(copy)
-                .then(() => resetUserGames());
+              // alterGame(copy)
+              //   .then(() => resetUserGames());
             }
           }
         }
@@ -113,9 +121,9 @@ export const Play = () => {
   )
   //  TODO: DO WE NEED THIS?
   const safeGameMutate = (modify: any) => {
-    console.log('modify', modify)
+    // console.log('modify', modify)
     setGame((g: any) => {
-      console.log('g', g)
+      // console.log('g', g)
       const update = { ...g };
       modify(update);
       return update;
@@ -124,17 +132,17 @@ export const Play = () => {
   const onSquareClick = (square: any) => {
     // console.log('square', square)
     // setRightClickedSquares({});
-    console.log('outer square', square)
+    // console.log('outer square', square)
     function resetFirstMove(square: any) {
-      console.log('square', square)
+      // console.log('square', square)
       // console.log('within move reset')
       const hasOptions: { hasOptions: boolean, newSquares: any } = getMoveOptions(square, game) ;
       setOptionSquares(hasOptions.newSquares);
-      console.log('gamemoves in component', game.moves({
-        square,
-        verbose: true,
-      }))
-      console.log('hasOptions', hasOptions)
+      // console.log('gamemoves in component', game.moves({
+      //   square,
+      //   verbose: true,
+      // }))
+      // console.log('hasOptions', hasOptions)
       if (hasOptions.hasOptions) setMoveFrom(square);
     }
     // from square
@@ -265,8 +273,8 @@ export const Play = () => {
           boardOrientation={orientation}
           position={game.fen()}
           onSquareClick={(evt) => {
-            console.log('hitting')
-            console.log('evt', evt)
+            // console.log('hitting')
+            // console.log('evt', evt)
             if (matchReady) {
               onSquareClick(evt)
               if (selectedGame.id) {
@@ -316,3 +324,6 @@ export const Play = () => {
     </main>
   )
 }
+// export const Play = () => {
+//   return <></>
+// }

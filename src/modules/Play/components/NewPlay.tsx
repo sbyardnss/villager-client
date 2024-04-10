@@ -7,6 +7,9 @@ import { useAppContext } from "../../App/AppProvider";
 import { usePlayContext } from "../PlayController";
 import { getMovesFromPGN } from "../actions/get-moves-from-pgn";
 import { ResetOrStartBtns } from "./reset-start-buttons";
+import { digitalGameDefaults } from "../../../Types/Game";
+import { useNavigate } from "react-router-dom";
+import { alterGame } from "../../../ServerManager";
 export interface Move {
   from: string | null;
   to: string | null;
@@ -18,6 +21,7 @@ const moveDefaults: Move = {
   promotion: 'q',
 }
 export const NewPlay = () => {
+  const navigate = useNavigate();
   const { localVillagerUser } = useAppContext();
   const { selectedGame, updateSelectedGame, usersActiveGames, setUsersActiveGames, resetUserGames,
     selectedRange, setSelectedRange, orientation, setOrientation, review, setReview, activePlayer } = usePlayContext()
@@ -34,8 +38,26 @@ export const NewPlay = () => {
       console.log(game.pgn())
     }, [game]
   )
+  useEffect(
+    () => {
+      console.log(selectedGame)
+    }, [selectedGame]
+  )
+  useEffect(
+    () => {
+      console.log(selectedGame.pgn)
+    }, [selectedGame.pgn]
+  )
+  useEffect(
+    () => {
+      document.addEventListener('click', leaveGame);
 
-  //
+      // Clean up the event listener
+      // return () => {
+      //   document.removeEventListener('click', leaveGame);
+      // };
+    }, []
+  )
 
   useEffect(
     () => {
@@ -69,6 +91,11 @@ export const NewPlay = () => {
           to: playerMove.to,
           promotion: "q", // always promote to a queen for example simplicity
         });
+        const newPgn = game.pgn();
+        const gameCopy = { ...selectedGame };
+        gameCopy.pgn = newPgn;
+        updateSelectedGame(gameCopy);
+        alterGame(gameCopy);
         resetMove();
         setOptionSquares({});
       }
@@ -114,11 +141,31 @@ export const NewPlay = () => {
   }
 
   const handleSquareClick = (square: any) => {
-
     if (!playerMove.from) {
       updatePlayerMove({ ...playerMove, from: square });
     } else {
       updatePlayerMove({ ...playerMove, to: square });
+    }
+  }
+  const leaveGame = (e: Event) => {
+    if (e.target) {
+      const target = e.target as HTMLElement;
+
+      if (document.getElementById("navMenu")?.contains(target)) {
+        if (target.className !== "menu-btn" && target.id !== "inactive" && target.id !== "active" && target.id !== "navMenu" && target.id !== "navLinks" && target.id !== "logo" && target.className !== "" && target.id !== "play") {
+          updateSelectedGame({ ...digitalGameDefaults });
+          document.removeEventListener('click', leaveGame);
+          // setReview(false)
+          navigate((e.target as HTMLElement).id);
+        }
+      }
+      if (target.id === "logout") {
+        updateSelectedGame(digitalGameDefaults);
+        // setReview(false);
+        localStorage.removeItem("villager");
+        document.removeEventListener('click', leaveGame);
+        navigate("/", { replace: true });
+      }
     }
   }
 

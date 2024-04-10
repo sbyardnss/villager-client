@@ -275,9 +275,7 @@ export const ActiveTournament: React.FC<ActiveTournamentProps> = ({
     }
   }
   const handleReplaceGame = (gameData: Game, index: number) => {
-    const tourneyGamesCopy = [...tournamentGames];
-    tourneyGamesCopy.splice(index, 1, gameData);
-    setTournamentGames(tourneyGamesCopy);
+    setTournamentGames(tournamentGames.map(game => game.id === gameData.id ? gameData : game));
     resetGameForApi();
   }
 

@@ -785,7 +785,7 @@
     backdrop-filter: blur(2px);
     height: 14em;
     overflow: scroll;
-
+    list-style: none;
   }
 
   #tournamentSelectedCompetitors {

@@ -47,6 +47,33 @@ export const NewRoundModal: React.FC<NewRoundProps> = ({
             cancel
           </button>
         </div>
+        <div id="competitorSelectionSplit">
+          <div id="potentialLabel" className="setColor setCustomFont">Potential:</div>
+          <div id="tournamentPotentialCompetitorSelection">
+            {
+              activePlayers.map(p => {
+                return (
+                  <li
+                    key={`force-${p.id}--${p.full_name}`}
+                    data-cy={`select-player--${p.full_name}--${p.id}`}
+                    className="newTournamentPlayerListItem"
+                    onClick={() => {
+                      // if (playerType === 'Guest') {
+                      //   tournamentCopy.guest_competitors.push(p as Guest);
+                      // }
+                      // else {
+                      //   tournamentCopy.competitors.push(p as PlayerRelated);
+                      // }
+                      // updateTournamentObj(tournamentCopy)
+                      // setSearch("");
+                    }}>
+                    {p.full_name}
+                  </li>
+                )
+              })
+            }
+          </div>
+        </div>
       </div>
       :
       <div className="tournament-modal-fixed column a-center" style={{ top: '30%' }}>
@@ -60,7 +87,7 @@ export const NewRoundModal: React.FC<NewRoundProps> = ({
             cancel
           </button>
         </div>
-        
+
         <button
           className="large-control-button"
           onClick={() => {

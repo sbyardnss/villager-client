@@ -1,4 +1,4 @@
-import { SetStateAction } from "react";
+// import { SetStateAction, useState } from "react";
 import { updateTournament, sendNewGame, reopenTournament } from "../../../ServerManager";
 import { createPairings } from "../actions/create-pairings";
 import { findIdentifier } from "../actions/find-identifier";
@@ -8,23 +8,23 @@ import type { PlayerRelated } from "../../../Types/Player";
 import type { Guest } from "../../../Types/Guest";
 import type { Tournament } from "../../../Types/Tournament";
 import type { Match } from "tournament-pairings/dist/Match";
-import type { Game } from "../../../Types/Game";
+import type { Game, OutgoingGame } from "../../../Types/Game";
 
 interface TournamentControlsProps {
-  // updater: React.Dispatch<SetStateAction<Tournament>>;
+  // updater: React.Dispatch<React.SetStateAction<Tournament>>;
   tournamentResetter: () => void;
   tournamentGamesResetter: () => void;
   activeTournamentResetter: () => void;
-  modalMode: 'none' | 'results' | 'edit-players' | 'end-tournament';
-  modalModeSetter: React.Dispatch<SetStateAction<'none' | 'results' | 'edit-players' | 'end-tournament'>>;
+  modalMode: 'none' | 'results' | 'edit-players' | 'end-tournament' | 'new-round';
+  modalModeSetter: React.Dispatch<React.SetStateAction<'none' | 'results' | 'edit-players' | 'end-tournament' | 'new-round'>>;
   scoringMode: 'scoring' | 'editing' | 'table';
-  scoringModeSetter: React.Dispatch<SetStateAction<'scoring' | 'editing' | 'table'>>;
+  scoringModeSetter: React.Dispatch<React.SetStateAction<'scoring' | 'editing' | 'table'>>;
   tournamentObj: Tournament;
   currentMatchups: Match[];
   //TODO: FIX PLAYERRELATEDISSUE
   gameForApi: Game | any;
   //TODO: FIX PLAYERRELATEDISSUE
-  byeGame: any;
+  byeGameCurrent: OutgoingGame;
   userIsCreator: boolean;
   activePlayers: (PlayerRelated | Guest)[];
   currentRound: number;
@@ -44,7 +44,7 @@ export const TournamentControls: React.FC<TournamentControlsProps> = ({
   currentMatchups,
   //TODO: FIX PLAYERRELATED ISSUE
   gameForApi,
-  byeGame,
+  byeGameCurrent,
   userIsCreator,
   activePlayers,
   currentRound,
@@ -96,27 +96,23 @@ export const TournamentControls: React.FC<TournamentControlsProps> = ({
         <button
           className="progressionControlBtn controlBtnApprove"
           onClick={() => {
-            if (window.confirm("create round?")) {
-              const tournamentCopy = { ...tournamentObj }
-              // const newPairings = createPairings('new', activeTournamentPlayers, playerOpponentsReferenceObj, currentRound, scoreObj, scoreCard, byeGame.player_w, blackWhiteTally)
-              const newPairings = createPairings('new', activePlayers, currentRound, analysis, byeGame.current)
-              tournamentCopy.pairings = tournamentCopy.pairings.concat(newPairings)
-              tournamentCopy.rounds++
-              // console.log('newPairings', newPairings)
-              // console.log('tournamentCopy', tournamentCopy)
-              // tournamentCopy.competitors = tournamentCopy.competitors.map(c => { return c.id })
-              // tournamentCopy.guest_competitors = tournamentCopy.guest_competitors.map(gc => { return gc.id })
-              if (byeGame.player_w.id) {
-                sendNewGame(byeGame)
-              }
-              updateTournament(tournamentCopy)
-                .then(() => {
-                  // tournamentResetter();
-                  activeTournamentResetter();
-                  tournamentGamesResetter();
-                });
-              modalModeSetter('none');
-            }
+            // if (window.confirm("create round?")) {
+            //   const tournamentCopy = { ...tournamentObj }
+            //   const newPairings = createPairings('new', activePlayers, currentRound, analysis, byeGame.current)
+            //   tournamentCopy.pairings = tournamentCopy.pairings.concat(newPairings)
+            //   tournamentCopy.rounds++
+            //   if (byeGame.player_w.id) {
+            //     sendNewGame(byeGame)
+            //   }
+            //   updateTournament(tournamentCopy)
+            //     .then(() => {
+            //       // tournamentResetter();
+            //       activeTournamentResetter();
+            //       tournamentGamesResetter();
+            //     });
+            //   modalModeSetter('none');
+            // }
+            modalModeSetter('new-round');
           }}>
           New Round
         </button>

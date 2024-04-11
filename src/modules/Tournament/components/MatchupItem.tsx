@@ -1,4 +1,3 @@
-import React, { SetStateAction } from 'react';
 import { PlayerRelated } from '../../../Types/Player';
 import { Guest } from '../../../Types/Guest';
 import { findIdentifier } from '../actions/find-identifier';
@@ -11,7 +10,7 @@ interface MatchupItemProps {
   // index: number;
   handleSendGameToApi: () => void;
   selectedOutcome: [number, number, PlayerRelated | Guest | null | 'draw'];
-  setSelectedOutcome: React.Dispatch<SetStateAction<[number, number, PlayerRelated | Guest | null | 'draw']>>;
+  setSelectedOutcome: React.Dispatch<React.SetStateAction<[number, number, PlayerRelated | Guest | null | 'draw']>>;
 }
 
 export const MatchupItem: React.FC<MatchupItemProps> = ({

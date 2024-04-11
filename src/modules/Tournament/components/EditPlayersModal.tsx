@@ -1,4 +1,4 @@
-import { useState, useContext, SetStateAction, useEffect } from "react"
+import { useState, useEffect } from "react"
 import { Guest } from "../../../Types/Guest"
 import { TournamentParameters } from "./Parameters"
 import { PlayerSelection } from "./PlayerSelection"
@@ -19,7 +19,7 @@ import { createPairings } from "../actions/create-pairings";
 import { resetPairingMatchNumbers } from "../actions/reset-pairing-match-numbers";
 interface EditPlayersModalProps {
   tournamentObj: Tournament;
-  modalModeSetter: React.Dispatch<SetStateAction<'none' | 'results' | 'edit-players' | 'end-tournament'>>;
+  modalModeSetter: React.Dispatch<React.SetStateAction<'none' | 'results' | 'edit-players' | 'end-tournament' | 'new-round'>>;
   activeTournamentResetter: () => void;
   byeGame: React.RefObject<OutgoingGame>;
   rounds: number;

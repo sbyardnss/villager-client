@@ -1,13 +1,13 @@
 import { createNewClub } from "../../../ServerManager";
-import { Dispatch, SetStateAction, useRef } from "react";
+import { Dispatch, useRef } from "react";
 import type { ChessClubCreate } from "../../../Types/ChessClub";
 import { handleFormChange } from "../actions/handle-form-change";
 
 interface CreateClubFormProps {
   newClub: Partial<ChessClubCreate>;
   resetter: () => Promise<void>;
-  updateClub: Dispatch<SetStateAction<Partial<ChessClubCreate>>>;
-  setter: Dispatch<SetStateAction<boolean>>;
+  updateClub: Dispatch<React.SetStateAction<Partial<ChessClubCreate>>>;
+  setter: Dispatch<React.SetStateAction<boolean>>;
 }
 export const CreateClubForm: React.FC<CreateClubFormProps> = ({
   newClub,

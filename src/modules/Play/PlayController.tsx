@@ -1,4 +1,4 @@
-import { SetStateAction, createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import { useAppContext } from "../App/AppProvider";
 import { getActiveUserGames } from "../../ServerManager";
 import type { DigitalGame, Game, OutgoingGame } from "../../Types/Game";
@@ -13,16 +13,16 @@ interface PlayContextType {
   // setMyChessClubs: React.Dispatch<React.SetStateAction<ChessClub[]>>;
   // resetChessClubs: () => Promise<void>; // Adjust the return type as necessary
   usersActiveGames: DigitalGame[];
-  setUsersActiveGames: React.Dispatch<SetStateAction<DigitalGame[]>>;
+  setUsersActiveGames: React.Dispatch<React.SetStateAction<DigitalGame[]>>;
   selectedGame: DigitalGame;
-  updateSelectedGame: React.Dispatch<SetStateAction<DigitalGame>>;
+  updateSelectedGame: React.Dispatch<React.SetStateAction<DigitalGame>>;
   resetUserGames: () => void;
   selectedRange: string;
-  setSelectedRange: React.Dispatch<SetStateAction<string>>;
+  setSelectedRange: React.Dispatch<React.SetStateAction<string>>;
   orientation: 'black' | 'white';
-  setOrientation: React.Dispatch<SetStateAction<'black' | 'white'>>;
+  setOrientation: React.Dispatch<React.SetStateAction<'black' | 'white'>>;
   review: boolean;
-  setReview: React.Dispatch<SetStateAction<boolean>>;
+  setReview: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export const PlayContext = createContext<PlayContextType | null>(null);

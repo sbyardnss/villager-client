@@ -5,9 +5,8 @@ import { Tournament } from "../../../Types/Tournament";
 import { createPairings } from "../actions/create-pairings";
 import { sendNewGame, updateTournament } from "../../../ServerManager";
 import { tournamentAnalysisOutput } from "../actions/matchup-game-analysis";
-// import classNames from 'classnames';
 import { useState } from "react";
-
+//TODO: CSS-ISSUE
 interface NewRoundProps {
   tournamentObj: Tournament;
   activePlayers: (PlayerRelated | Guest)[];
@@ -30,10 +29,8 @@ export const NewRoundModal: React.FC<NewRoundProps> = ({
   analysis,
 }) => {
   const [forcePairing, setForcePairing] = useState<boolean>(false);
-  // const forcePairBtnClass = classNames({
-  //   'large-control-button': !forcePairing,
-  //   'large-control-button-active': forcePairing,
-  // });
+  const [selectedPlayers, setSelectedPlayers] = useState<(PlayerRelated | Guest | undefined)[]>([undefined, undefined]);
+
   return <>
     {forcePairing === true ?
       <div className="tournament-modal-fixed">
@@ -47,31 +44,48 @@ export const NewRoundModal: React.FC<NewRoundProps> = ({
             cancel
           </button>
         </div>
-        <div id="competitorSelectionSplit">
-          <div id="potentialLabel" className="setColor setCustomFont">Potential:</div>
-          <div id="tournamentPotentialCompetitorSelection">
-            {
-              activePlayers.map(p => {
-                return (
-                  <li
-                    key={`force-${p.id}--${p.full_name}`}
-                    data-cy={`select-player--${p.full_name}--${p.id}`}
-                    className="newTournamentPlayerListItem"
-                    onClick={() => {
-                      // if (playerType === 'Guest') {
-                      //   tournamentCopy.guest_competitors.push(p as Guest);
-                      // }
-                      // else {
-                      //   tournamentCopy.competitors.push(p as PlayerRelated);
-                      // }
-                      // updateTournamentObj(tournamentCopy)
-                      // setSearch("");
-                    }}>
-                    {p.full_name}
-                  </li>
-                )
-              })
-            }
+        <div className="d-flex j-between setColor">
+          <div id="competitorSelectionSplit">
+            <div id="potentialLabel" className="setCustomFont">Potential:</div>
+            <div id="tournamentPotentialCompetitorSelection">
+              {
+                activePlayers.map(p => {
+                  return (
+                    <li
+                      key={`force-${p.id}--${p.full_name}`}
+                      data-cy={`select-player--${p.full_name}--${p.id}`}
+                      className="newTournamentPlayerListItem"
+                      onClick={() => {
+                        const selectedPlayersCopy = [...selectedPlayers];
+                        if (selectedPlayersCopy[0] === undefined) {
+                          selectedPlayersCopy[0] = p;
+                        } else if (selectedPlayersCopy[1] === undefined) {
+                          selectedPlayersCopy[1] = p;
+                        }
+                        setSelectedPlayers(selectedPlayersCopy);
+                      }}>
+                      {p.full_name}
+                    </li>
+                  )
+                })
+              }
+            </div>
+          </div>
+          <div id="competitorSelectionSplit" >
+            <div id="potentialLabel" className="setCustomFont">Selected:</div>
+            <div className="player-selection-area b-border text-align-c d-flex column j-even">
+              <h2 onClick={() => {
+                const selectedCopy = [...selectedPlayers];
+                selectedCopy[0] = undefined;
+                setSelectedPlayers(selectedCopy);
+              }}>{selectedPlayers[0] ? selectedPlayers[0].full_name : 'select player'}</h2>
+              <div>VS</div>
+              <h2 onClick={() => {
+                const selectedCopy = [...selectedPlayers];
+                selectedCopy[1] = undefined;
+                setSelectedPlayers(selectedCopy);
+              }}>{selectedPlayers[1] ? selectedPlayers[1].full_name : 'select player'}</h2>
+            </div>
           </div>
         </div>
       </div>

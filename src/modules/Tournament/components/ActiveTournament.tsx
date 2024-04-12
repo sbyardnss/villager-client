@@ -56,7 +56,7 @@ export const ActiveTournament: React.FC<ActiveTournamentProps> = ({
   const [roundOver, setRoundOver] = useState(false);
   const [gameForApi, updateGameForApi] = useState<OutgoingGame | Game>({ ...gameForApiDefaults });
   const [selectedPlayersForForce, setSelectedPlayersForForce] = useState<(PlayerRelated | Guest)[]>([]);
-
+  const [currentOperation, setCurrentOperation] = useState < 'editing-players' | 'new-round-normal' | 'normal-play'>('normal-play');
   const byeGameRef = useRef<OutgoingGame>({
     player_w: {} as Guest | PlayerRelated, //TODO: INITIALIZE THIS WITH UNDEFINED OR NULL
     player_w_model_type: "",
@@ -294,6 +294,8 @@ export const ActiveTournament: React.FC<ActiveTournamentProps> = ({
           tournamentObj={selectedTournament} />
         : modalMode === 'edit-players' ?
           <EditPlayersModal
+            operation={currentOperation}
+            setOperation={setCurrentOperation}
             tournamentObj={selectedTournament}
             modalModeSetter={setModalMode}
             activeTournamentResetter={resetActiveTournament}
@@ -313,6 +315,8 @@ export const ActiveTournament: React.FC<ActiveTournamentProps> = ({
               selectedTournament={selectedTournament} />
             : modalMode === 'new-round' ?
               <NewRoundModal
+                operation={currentOperation}
+                setOperation={setCurrentOperation}
                 tournamentObj={selectedTournament}
                 activePlayers={activeTournamentPlayers}
                 modalModeSetter={setModalMode}
@@ -324,6 +328,8 @@ export const ActiveTournament: React.FC<ActiveTournamentProps> = ({
               />
               : modalMode === 'force-match' ?
                 <ForcePlayersModal
+                  operation={currentOperation}
+                  setOperation={setCurrentOperation}
                   tournamentObj={selectedTournament}
                   modalModeSetter={setModalMode}
                   selectedPlayersForForce={selectedPlayersForForce}
@@ -351,6 +357,8 @@ export const ActiveTournament: React.FC<ActiveTournamentProps> = ({
           }}>Results</button>
       </div>
       <TournamentControls
+        operation={currentOperation}
+        setOperation={setCurrentOperation}
         tournamentResetter={resetTourneys}
         tournamentGamesResetter={resetTournamentGames}
         activeTournamentResetter={resetActiveTournament} //TODO: where is this being used

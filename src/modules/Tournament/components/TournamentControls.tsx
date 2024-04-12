@@ -11,6 +11,9 @@ import type { Match } from "tournament-pairings/dist/Match";
 import type { Game, OutgoingGame } from "../../../Types/Game";
 
 interface TournamentControlsProps {
+  operation: 'editing-players' | 'new-round-normal' | 'normal-play';
+  setOperation: React.Dispatch<React.SetStateAction<'editing-players' | 'new-round-normal' | 'normal-play'>>;
+
   // updater: React.Dispatch<React.SetStateAction<Tournament>>;
   tournamentResetter: () => void;
   tournamentGamesResetter: () => void;
@@ -32,6 +35,8 @@ interface TournamentControlsProps {
   roundComplete: boolean;
 }
 export const TournamentControls: React.FC<TournamentControlsProps> = ({
+  operation,
+  setOperation,
   // updater,
   tournamentResetter,
   tournamentGamesResetter,
@@ -112,6 +117,7 @@ export const TournamentControls: React.FC<TournamentControlsProps> = ({
             //     });
             //   modalModeSetter('none');
             // }
+            setOperation('new-round-normal');
             modalModeSetter('new-round');
           }}>
           New Round
@@ -149,6 +155,7 @@ export const TournamentControls: React.FC<TournamentControlsProps> = ({
               modalModeSetter('none');
             }
             else {
+              setOperation('editing-players');
               modalModeSetter('edit-players');
             }
           }}>edit players</button>

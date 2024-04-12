@@ -20,6 +20,8 @@ import { createPairingForTwoPlayers } from "../actions/two-players-pairing"
 import { resetPairingMatchNumbers } from "../actions/reset-pairing-match-numbers";
 import { handleCreatePairings } from "../actions/handle-create-pairings"
 interface EditPlayersModalProps {
+  operation: 'editing-players' | 'new-round-normal' | 'normal-play';
+  setOperation: React.Dispatch<React.SetStateAction<'editing-players' | 'new-round-normal' | 'normal-play'>>;
   tournamentObj: Tournament;
   modalModeSetter: React.Dispatch<React.SetStateAction<'none' | 'results' | 'edit-players' | 'end-tournament' | 'new-round' | 'force-match'>>;
   activeTournamentResetter: () => void;
@@ -34,6 +36,8 @@ interface EditPlayersModalProps {
 }
 
 export const EditPlayersModal: React.FC<EditPlayersModalProps> = ({
+  operation,
+  setOperation,
   tournamentObj,
   modalModeSetter,
   activeTournamentResetter,
@@ -138,6 +142,7 @@ export const EditPlayersModal: React.FC<EditPlayersModalProps> = ({
           <button className="buttonStyleReject" onClick={() => {
             // getTournament(activeTournamentObj.id)
             //     .then(data => updatedTournamentObj(data))
+            setOperation('normal-play');
             modalModeSetter('none');
           }}>cancel</button>
         </div>
@@ -170,21 +175,24 @@ export const EditPlayersModal: React.FC<EditPlayersModalProps> = ({
               id="submitNewPlayersBtn"
               className="buttonStyleApprove"
               onClick={() => {
-                if (!gamesStarted) {
-                  if (window.confirm("Confirm games have NOT started")) {
-                    if (!gamesFromThisRound.length) {
-                      modalModeSetter('new-round');
-                    } else {
-                      window.alert('It looks like the games actually have started. try again');
-                    }
-                  }
-                } else {
-                  if (window.confirm("Confirm games have already started")) {
-                    const newPairings: Match[] = handleCreatePairings(tournamentObj, analysis, rounds, currentPairings, roundGameIdentifiers, gamesStarted, gamesFromThisRound, selectedPlayersForForce, newAnalysis);
-                    const copy = { ...editedTournament };
-                    copy.pairings = pastPairings.concat(newPairings);
-                  }
+                if (window.confirm(gamesStarted === true ? "Confirm games have already started" : "Confirm games have not started")) {
+                  modalModeSetter('new-round');
                 }
+                // if (!gamesStarted) {
+                //   if (window.confirm("Confirm games have NOT started")) {
+                //     if (!gamesFromThisRound.length) {
+                //       modalModeSetter('new-round');
+                //     } else {
+                //       window.alert('It looks like the games actually have started. try again');
+                //     }
+                //   }
+                // } else {
+                //   if (window.confirm("Confirm games have already started")) {
+                //     const newPairings: Match[] = handleCreatePairings(tournamentObj, analysis, rounds, currentPairings, roundGameIdentifiers, gamesStarted, gamesFromThisRound, selectedPlayersForForce, newAnalysis);
+                //     const copy = { ...editedTournament };
+                //     copy.pairings = pastPairings.concat(newPairings);
+                //   }
+                // }
                 /*
                 if (window.confirm(gamesStarted === true ? "Confirm games have already started" : "Confirm games have not started")) {
                   if (tournamentObj.in_person === true) {

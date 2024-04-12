@@ -7,6 +7,8 @@ import { Tournament } from "../../../Types/Tournament";
 import { tournamentAnalysisOutput } from "../actions/matchup-game-analysis";
 
 interface ForcePlayersModalProps {
+  operation: 'editing-players' | 'new-round-normal' | 'normal-play';
+  setOperation: React.Dispatch<React.SetStateAction<'editing-players' | 'new-round-normal' | 'normal-play'>>;
   tournamentObj: Tournament;
   modalModeSetter: React.Dispatch<React.SetStateAction<'none' | 'results' | 'edit-players' | 'end-tournament' | 'new-round' | 'force-match'>>;
   selectedPlayersForForce: (PlayerRelated | Guest)[];
@@ -16,6 +18,8 @@ interface ForcePlayersModalProps {
   currentRound: number
 }
 export const ForcePlayersModal: React.FC<ForcePlayersModalProps> = ({
+  operation,
+  setOperation,
   tournamentObj,
   modalModeSetter,
   selectedPlayersForForce,
@@ -50,7 +54,7 @@ export const ForcePlayersModal: React.FC<ForcePlayersModalProps> = ({
             modalModeSetter('new-round');
             setSelectedPlayersForForce([]);
           }}>
-          cancel
+          back
         </button>
       </div>
       <div className="d-flex j-between setColor">
@@ -107,7 +111,8 @@ export const ForcePlayersModal: React.FC<ForcePlayersModalProps> = ({
             if (selectedPlayersForForce && selectedPlayersForForce[0] && selectedPlayersForForce[1] && selectedPlayersForForce.length === 2) {
               if (window.confirm(`create round with forced pairing: ${selectedPlayersForForce[0].full_name} vs ${selectedPlayersForForce[1].full_name}?`)) {
                 const tournamentCopy = { ...tournamentObj };
-                const newPairings = handleCreatePairings(tournamentObj, analysis, currentRound, undefined, undefined, false, undefined, [...selectedPlayersForForce] as (PlayerRelated | Guest)[]/* TODO: address typing*/, undefined);
+                //TODO: OPERATION
+                const newPairings = handleCreatePairings(operation, setOperation, tournamentObj, analysis, currentRound, undefined, undefined, false, undefined, [...selectedPlayersForForce] as (PlayerRelated | Guest)[]/* TODO: address typing*/, undefined);
                 tournamentCopy.pairings = tournamentCopy.pairings.concat(newPairings);
                 tournamentCopy.rounds++
                 console.log('tournament', tournamentCopy)

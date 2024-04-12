@@ -11,8 +11,8 @@ import { resetPairingMatchNumbers } from "./reset-pairing-match-numbers";
 
 
 type handleCreatePairingsFunction = (
-  // purpose: 'editing-players' | 'forcing-matchup-new' | 'edit-with-force',
-  // editOrNew: 'new' | 'edit',
+  operation: 'editing-players' | 'new-round-normal' | 'normal-play',
+  setOperation: React.Dispatch<React.SetStateAction<'editing-players' | 'new-round-normal' | 'normal-play'>>,
   tournamentObj: Tournament,
   analysisObj: tournamentAnalysisOutput,
   rounds: number,
@@ -24,8 +24,8 @@ type handleCreatePairingsFunction = (
   newAnalysis?: tournamentAnalysisOutput, //TODO: games_started_conditional_relocate THIS PROP SHOULD BE ABLE TO BE REMOVED TO EDITPLAYERS AFTER REFACTOR
 ) => Match[]
 export const handleCreatePairings: handleCreatePairingsFunction = (
-  // purpose,
-  // editOrNew,
+  operation,
+  setOperation,
   tournamentObj,
   analysisObj,
   rounds,

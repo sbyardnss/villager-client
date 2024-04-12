@@ -8,6 +8,8 @@ import { tournamentAnalysisOutput } from "../actions/matchup-game-analysis";
 
 //TODO: CSS-ISSUE --throughout this component
 interface NewRoundProps {
+  operation: 'editing-players' | 'new-round-normal' | 'normal-play';
+  setOperation: React.Dispatch<React.SetStateAction<'editing-players' | 'new-round-normal' | 'normal-play'>>;
   tournamentObj: Tournament;
   activePlayers: (PlayerRelated | Guest)[];
   modalModeSetter: React.Dispatch<React.SetStateAction<'none' | 'results' | 'edit-players' | 'end-tournament' | 'new-round' | 'force-match'>>;
@@ -19,6 +21,8 @@ interface NewRoundProps {
 }
 
 export const NewRoundModal: React.FC<NewRoundProps> = ({
+  operation,
+  setOperation,
   tournamentObj,
   activePlayers,
   modalModeSetter,
@@ -31,11 +35,16 @@ export const NewRoundModal: React.FC<NewRoundProps> = ({
   return <>
       <div className="tournament-modal-fixed column a-center">
         <div className="d-flex j-between w-100">
-          <h2 className="setCustomFont">Create New Round</h2>
+          <h2 className="setCustomFont">Need a forced match?</h2>
           <button
             className="progressionControlBtn buttonStyleReject"
             onClick={() => {
-              modalModeSetter('none');
+              if (operation === 'editing-players') {
+                modalModeSetter('edit-players');
+              } else {
+                setOperation('normal-play');
+                modalModeSetter('none');
+              }
             }}>
             cancel
           </button>
@@ -48,15 +57,18 @@ export const NewRoundModal: React.FC<NewRoundProps> = ({
               const newPairings = createPairings('new', activePlayers, currentRound, analysis, byeGameCurrent)
               tournamentCopy.pairings = tournamentCopy.pairings.concat(newPairings)
               tournamentCopy.rounds++
-              if (byeGameCurrent.player_w.id) {
-                sendNewGame(byeGameCurrent)
-              }
-              updateTournament(tournamentCopy)
-                .then(() => {
-                  // tournamentResetter();
-                  activeTournamentResetter();
-                  tournamentGamesResetter();
-                });
+              console.log('tournamentCopy', tournamentCopy)
+              //TODO: UPDATE-TOURNAMENT-HANDLER
+              // if (byeGameCurrent.player_w.id) {
+              //   sendNewGame(byeGameCurrent)
+              // }
+              // updateTournament(tournamentCopy)
+              //   .then(() => {
+              //     // tournamentResetter();
+              //     activeTournamentResetter();
+              //     tournamentGamesResetter();
+              //   });
+              setOperation('normal-play');
               modalModeSetter('none');
             }
           }}>

@@ -52,13 +52,32 @@ export const handleCreatePairings: handleCreatePairingsFunction = (
     unmatchedCompetitors = unmatchedCompetitors.concat(allAddedCompetitors.filter(p => !forcedPlayerIdentifiers.includes(findIdentifier(p))));
   }
 
-  if (!currentPairings) {
+  if (operation === 'new-round-normal') {
     const remainingPairings = createPairings('new', unmatchedCompetitors, rounds, analysisObj)
 
     filteredPairings = resetPairingMatchNumbers(filteredPairings.concat(remainingPairings));
     return filteredPairings;
   } else {
-    console.log('unmatchedCompetitors', unmatchedCompetitors)
+    if (currentPairings && roundGameIdentifiers) {
+      const neededPairingsFromCurrent = currentPairings.filter(p => {
+        const playerW = allAddedCompetitors.find(c => findIdentifier(c) === p.player1);
+        const playerB = allAddedCompetitors.find(c => findIdentifier(c) === p.player2);
+        const hasGameBeenPlayed = roundGameIdentifiers.find(i => {
+          return i[0] === p.player1 && i[1] === p.player2;
+        });
+        return (playerW && playerB) || hasGameBeenPlayed;
+      });
+      unmatchedCompetitors = unmatchedCompetitors.concat(allAddedCompetitors.filter(competitor => {
+        const identifier = findIdentifier(competitor);
+        return (!neededPairingsFromCurrent.find(p => {
+          return p.player1 === identifier || p.player2 === identifier
+        }));
+      }));
+
+      console.log('neededPairingsFromCurrent', neededPairingsFromCurrent)
+
+      console.log('unmatchedCompetitors', unmatchedCompetitors)
+    }
   }
 
 

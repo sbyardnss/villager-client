@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react"
+import React, { useState, useEffect } from "react"
 import { Guest } from "../../../Types/Guest"
 import { TournamentParameters } from "./Parameters"
 import { PlayerSelection } from "./PlayerSelection"
@@ -20,59 +20,79 @@ import { createPairingForTwoPlayers } from "../actions/two-players-pairing"
 import { resetPairingMatchNumbers } from "../actions/reset-pairing-match-numbers";
 import { handleCreatePairings } from "../actions/handle-create-pairings"
 interface EditPlayersModalProps {
-  operation: 'editing-players' | 'new-round-normal' | 'normal-play';
+  // operation: 'editing-players' | 'new-round-normal' | 'normal-play';
   setOperation: React.Dispatch<React.SetStateAction<'editing-players' | 'new-round-normal' | 'normal-play'>>;
   tournamentObj: Tournament;
   modalModeSetter: React.Dispatch<React.SetStateAction<'none' | 'results' | 'edit-players' | 'end-tournament' | 'new-round' | 'force-match'>>;
-  activeTournamentResetter: () => void;
+  // activeTournamentResetter: () => void;
   byeGame: React.RefObject<OutgoingGame>;
   rounds: number;
-  analysis: tournamentAnalysisOutput;
+  // analysis: tournamentAnalysisOutput;
   tourneyGames: Game[];
   tournamentClub: ChessClub;
-  resetTournaments: () => void;
-  selectedPlayersForForce: (PlayerRelated | Guest)[];
-  setSelectedPlayersForForce: React.Dispatch<React.SetStateAction<(PlayerRelated | Guest)[]>>;
+  // resetTournaments: () => void;
+  // selectedPlayersForForce: (PlayerRelated | Guest)[];
+  // setSelectedPlayersForForce: React.Dispatch<React.SetStateAction<(PlayerRelated | Guest)[]>>;
+  setPastPairings: React.Dispatch<React.SetStateAction<Match[]>>;
+  currentPairings: Match[];
+  setCurrentPairings: React.Dispatch<React.SetStateAction<Match[]>>;
+  setGamesFromThisRound: React.Dispatch<React.SetStateAction<Game[]>>;
+  setRoundGameIdentifiers: React.Dispatch<React.SetStateAction<(string | number)[][]>>;
+  setNewAnalysis: React.Dispatch<React.SetStateAction<tournamentAnalysisOutput>>;
+  editedTournament: Tournament;
+  updateEditedTournament: React.Dispatch<React.SetStateAction<Tournament>>;
+  gamesStarted: boolean;
+  setGamesStarted: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export const EditPlayersModal: React.FC<EditPlayersModalProps> = ({
-  operation,
+  // operation,
   setOperation,
   tournamentObj,
   modalModeSetter,
-  activeTournamentResetter,
+  // activeTournamentResetter,
   byeGame,
   rounds,
-  analysis,
+  // analysis,
   tourneyGames,
   tournamentClub,
-  resetTournaments,
-  selectedPlayersForForce,
-  setSelectedPlayersForForce,
+  // resetTournaments,
+  // selectedPlayersForForce,
+  // setSelectedPlayersForForce,
+  setPastPairings,
+  currentPairings,
+  setCurrentPairings,
+  setGamesFromThisRound,
+  setRoundGameIdentifiers,
+  setNewAnalysis,
+  editedTournament,
+  updateEditedTournament,
+  gamesStarted,
+  setGamesStarted,
 }) => {
   // const { localVillagerUser } = useContext(AppContext);
   const [playersSelected, setPlayersSelected] = useState(false);
   const [clubPlayers, setClubPlayers] = useState<PlayerRelated[]>([]);
   const [clubGuests, setClubGuests] = useState<Guest[]>([]);
-  const [pastPairings, setPastPairings] = useState<Match[]>([]);
-  const [currentPairings, setCurrentPairings] = useState<Match[]>([]);
-  const [gamesFromThisRound, setGamesFromThisRound] = useState<Game[]>([]);
-  const [roundGameIdentifiers, setRoundGameIdentifiers] = useState<(string | number)[][]>([]);
-  const [newAnalysis, setNewAnalysis] = useState<tournamentAnalysisOutput>({ ...tournamentAnalysisDefaults });
-  const [editedTournament, updateEditedTournament] = useState<Tournament>({
-    id: 0,
-    title: "",
-    creator: { ...playerRelatedDefaults },
-    date: "",
-    club: 0,
-    rounds: 0,
-    in_person: false,
-    complete: false,
-    time_setting: 0,
-    competitors: [],
-    guest_competitors: [],
-    pairings: [],
-  })
+  // const [pastPairings, setPastPairings] = useState<Match[]>([]);
+  // const [currentPairings, setCurrentPairings] = useState<Match[]>([]);
+  // const [gamesFromThisRound, setGamesFromThisRound] = useState<Game[]>([]);
+  // const [roundGameIdentifiers, setRoundGameIdentifiers] = useState<(string | number)[][]>([]);
+  // const [newAnalysis, setNewAnalysis] = useState<tournamentAnalysisOutput>({ ...tournamentAnalysisDefaults });
+  // const [editedTournament, updateEditedTournament] = useState<Tournament>({
+  //   id: 0,
+  //   title: "",
+  //   creator: { ...playerRelatedDefaults },
+  //   date: "",
+  //   club: 0,
+  //   rounds: 0,
+  //   in_person: false,
+  //   complete: false,
+  //   time_setting: 0,
+  //   competitors: [],
+  //   guest_competitors: [],
+  //   pairings: [],
+  // })
 
   //TODO: DO WE NEED THESE STATE VARIABLES. MAYBE FOR RESETTING THE TOURNAMENT COMPETITORS ON CANCEL?
   // const [initialCompetitors, setInitialCompetitors] = useState<(PlayerRelated | Guest)[]>([]);
@@ -125,7 +145,7 @@ export const EditPlayersModal: React.FC<EditPlayersModalProps> = ({
 
   //   }, [newAnalysis]
   // )
-  const [gamesStarted, setGamesStarted] = useState(true);
+
   const resetGuests = () => {
     getClubsGuests(tournamentClub.id)
       .then(data => {

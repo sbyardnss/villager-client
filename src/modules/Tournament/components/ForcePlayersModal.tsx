@@ -111,7 +111,7 @@ export const ForcePlayersModal: React.FC<ForcePlayersModalProps> = ({
             if (selectedPlayersForForce && selectedPlayersForForce[0] && selectedPlayersForForce[1] && selectedPlayersForForce.length === 2) {
               if (window.confirm(`create round with forced pairing: ${selectedPlayersForForce[0].full_name} vs ${selectedPlayersForForce[1].full_name}?`)) {
                 const tournamentCopy = { ...tournamentObj };
-                const newPairings = handleCreatePairings(operation, setOperation, tournamentObj, analysis, currentRound, undefined, undefined, false, undefined, [...selectedPlayersForForce] as (PlayerRelated | Guest)[]/* TODO: address typing*/, undefined);
+                const newPairings = handleCreatePairings(operation, setOperation, tournamentObj, analysis, currentRound, undefined, undefined, false, undefined, [...selectedPlayersForForce], undefined);
                 tournamentCopy.pairings = tournamentCopy.pairings.concat(newPairings);
                 tournamentCopy.rounds++
                 console.log('tournament', tournamentCopy)

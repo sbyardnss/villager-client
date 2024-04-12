@@ -12,6 +12,7 @@ import { TournamentTable } from "./TournamentTable";
 import { TournamentControls } from "./TournamentControls";
 import { type Tournament, selectedTournamentDefaults } from "../../../Types/Tournament";
 import type { PlayerRelated } from "../../../Types/Player";
+import { playerRelatedDefaults } from "../../../Types/Player";
 import type { Guest } from "../../../Types/Guest";
 import type { Game, OutgoingGame } from "../../../Types/Game";
 import { gameForApiDefaults } from "../../../Types/Game";
@@ -56,7 +57,7 @@ export const ActiveTournament: React.FC<ActiveTournamentProps> = ({
   const [roundOver, setRoundOver] = useState(false);
   const [gameForApi, updateGameForApi] = useState<OutgoingGame | Game>({ ...gameForApiDefaults });
   const [selectedPlayersForForce, setSelectedPlayersForForce] = useState<(PlayerRelated | Guest)[]>([]);
-  const [currentOperation, setCurrentOperation] = useState < 'editing-players' | 'new-round-normal' | 'normal-play'>('normal-play');
+  const [currentOperation, setCurrentOperation] = useState<'editing-players' | 'new-round-normal' | 'normal-play'>('normal-play');
   const byeGameRef = useRef<OutgoingGame>({
     player_w: {} as Guest | PlayerRelated, //TODO: INITIALIZE THIS WITH UNDEFINED OR NULL
     player_w_model_type: "",
@@ -72,6 +73,35 @@ export const ActiveTournament: React.FC<ActiveTournamentProps> = ({
     bye: true
   });
 
+  //TODO: MAYBE ADD THESE TO CONTEXT LAYER? THEY ARE ONLY USED FOR CREATING PAIRINGS WITH EDITED PLAYERS
+  const [gamesStarted, setGamesStarted] = useState(true);
+  const [pastPairings, setPastPairings] = useState<Match[]>([]);
+  const [currentPairings, setCurrentPairings] = useState<Match[]>([]);
+  const [gamesFromThisRound, setGamesFromThisRound] = useState<Game[]>([]);
+  const [roundGameIdentifiers, setRoundGameIdentifiers] = useState<(string | number)[][]>([]);
+  const [newAnalysis, setNewAnalysis] = useState<tournamentAnalysisOutput>({ ...tournamentAnalysisDefaults });
+  const [editedTournament, updateEditedTournament] = useState<Tournament>({
+    id: 0,
+    title: "",
+    creator: { ...playerRelatedDefaults },
+    date: "",
+    club: 0,
+    rounds: 0,
+    in_person: false,
+    complete: false,
+    time_setting: 0,
+    competitors: [],
+    guest_competitors: [],
+    pairings: [],
+  })
+  //END ONLY FOR EDITED PLAYER PAIRING CREATION
+
+
+  useEffect(
+    () => {
+      console.log('currentOperation', currentOperation)
+    }, [currentOperation]
+  )
   useEffect(
     () => {
       getTournamentGames(selectedTournament.id)
@@ -294,19 +324,29 @@ export const ActiveTournament: React.FC<ActiveTournamentProps> = ({
           tournamentObj={selectedTournament} />
         : modalMode === 'edit-players' ?
           <EditPlayersModal
-            operation={currentOperation}
+            // operation={currentOperation}
             setOperation={setCurrentOperation}
             tournamentObj={selectedTournament}
             modalModeSetter={setModalMode}
-            activeTournamentResetter={resetActiveTournament}
+            // activeTournamentResetter={resetActiveTournament}
             byeGame={byeGameRef}
             rounds={currentRound}
-            analysis={tournamentAnalysisObj}
+            // analysis={tournamentAnalysisObj}
             tourneyGames={tournamentGames}
             tournamentClub={selectedClub}
-            resetTournaments={resetTourneys} 
-            selectedPlayersForForce={selectedPlayersForForce}
-            setSelectedPlayersForForce={setSelectedPlayersForForce} />
+            // resetTournaments={resetTourneys}
+            // selectedPlayersForForce={selectedPlayersForForce}
+            // setSelectedPlayersForForce={setSelectedPlayersForForce} 
+            setPastPairings={setPastPairings}
+            currentPairings={currentPairings}
+            setCurrentPairings={setCurrentPairings}
+            setGamesFromThisRound={setGamesFromThisRound}
+            setRoundGameIdentifiers={setRoundGameIdentifiers}
+            setNewAnalysis={setNewAnalysis}
+            editedTournament={editedTournament}
+            updateEditedTournament={updateEditedTournament}
+            gamesStarted={gamesStarted}
+            setGamesStarted={setGamesStarted} />
           : modalMode === 'end-tournament' ?
             <EndTournamentModal
               resetTourneys={resetTourneys}
@@ -325,7 +365,12 @@ export const ActiveTournament: React.FC<ActiveTournamentProps> = ({
                 activeTournamentResetter={resetActiveTournament}
                 tournamentGamesResetter={resetTournamentGames}
                 analysis={tournamentAnalysisObj}
-              />
+                currentPairings={currentPairings}
+                roundGameIdentifiers={roundGameIdentifiers}
+                forcedMatchupsPlayers={selectedPlayersForForce}
+                newAnalysis={newAnalysis} 
+                gamesStarted={gamesStarted} 
+                gamesFromThisRound={gamesFromThisRound} />
               : modalMode === 'force-match' ?
                 <ForcePlayersModal
                   operation={currentOperation}

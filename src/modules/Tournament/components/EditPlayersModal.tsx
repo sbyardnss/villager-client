@@ -19,7 +19,7 @@ import { createPairings } from "../actions/create-pairings";
 import { resetPairingMatchNumbers } from "../actions/reset-pairing-match-numbers";
 interface EditPlayersModalProps {
   tournamentObj: Tournament;
-  modalModeSetter: React.Dispatch<React.SetStateAction<'none' | 'results' | 'edit-players' | 'end-tournament' | 'new-round'>>;
+  modalModeSetter: React.Dispatch<React.SetStateAction<'none' | 'results' | 'edit-players' | 'end-tournament' | 'new-round' | 'force-match'>>;
   activeTournamentResetter: () => void;
   byeGame: React.RefObject<OutgoingGame>;
   rounds: number;

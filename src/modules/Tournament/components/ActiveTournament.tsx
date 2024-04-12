@@ -23,6 +23,7 @@ import { tournamentAnalysisDefaults } from "../actions/matchup-game-analysis";
 import { findByIdentifier } from "../actions/find-by-identifier";
 import { createPairings } from "../actions/create-pairings";
 import { NewRoundModal } from "./NewRoundModal";
+import { ForcePlayersModal } from "./ForcePlayersModal";
 
 interface ActiveTournamentProps {
   selectedTournament: Tournament;
@@ -50,10 +51,12 @@ export const ActiveTournament: React.FC<ActiveTournamentProps> = ({
   const [selectedClubMates, setSelectedClubMates] = useState<(PlayerRelated | Guest)[]>([]);
   const [currentRound, setCurrentRound] = useState(0);
   const [scoreMode, setScoreMode] = useState<'scoring' | 'editing' | 'table'>("scoring");
-  const [modalMode, setModalMode] = useState<'none' | 'results' | 'edit-players' | 'end-tournament' | 'new-round'>('none');
+  const [modalMode, setModalMode] = useState<'none' | 'results' | 'edit-players' | 'end-tournament' | 'new-round' | 'force-match'>('none');
   const [tournamentAnalysisObj, setTournamentAnalysisObj] = useState<tournamentAnalysisOutput>({ ...tournamentAnalysisDefaults }); //TODO DEFAULTS
   const [roundOver, setRoundOver] = useState(false);
   const [gameForApi, updateGameForApi] = useState<OutgoingGame | Game>({ ...gameForApiDefaults });
+  const [selectedPlayersForForce, setSelectedPlayersForForce] = useState<(PlayerRelated | Guest)[]>([]);
+
   const byeGameRef = useRef<OutgoingGame>({
     player_w: {} as Guest | PlayerRelated, //TODO: INITIALIZE THIS WITH UNDEFINED OR NULL
     player_w_model_type: "",
@@ -316,7 +319,18 @@ export const ActiveTournament: React.FC<ActiveTournamentProps> = ({
                 activeTournamentResetter={resetActiveTournament}
                 tournamentGamesResetter={resetTournamentGames}
                 analysis={tournamentAnalysisObj}
-              /> : ""}
+              />
+              : modalMode === 'force-match' ?
+                <ForcePlayersModal
+                  tournamentObj={selectedTournament}
+                  modalModeSetter={setModalMode}
+                  selectedPlayersForForce={selectedPlayersForForce}
+                  setSelectedPlayersForForce={setSelectedPlayersForForce}
+                  activePlayers={activeTournamentPlayers}
+                  analysis={tournamentAnalysisObj}
+                  currentRound={currentRound}
+                />
+                : ""}
       <div id="tournamentHeader">
         <div id="activeTournamentTitle" className="setColor setTournamentFontSize">{selectedTournament.title}</div>
         <button

@@ -57,8 +57,7 @@ export const handleCreatePairings: handleCreatePairingsFunction = (
     const remainingPairings = createPairings('new', unmatchedCompetitors, rounds, analysisObj)
 
     filteredPairings = resetPairingMatchNumbers(filteredPairings.concat(remainingPairings));
-    console.log('filteredPairings output', filteredPairings)
-    // return filteredPairings.concat(createPairings('new', unmatchedCompetitors, rounds, analysisObj, undefined));
+    return filteredPairings;
   }
 
 

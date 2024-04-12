@@ -15,8 +15,8 @@ interface TournamentControlsProps {
   tournamentResetter: () => void;
   tournamentGamesResetter: () => void;
   activeTournamentResetter: () => void;
-  modalMode: 'none' | 'results' | 'edit-players' | 'end-tournament' | 'new-round';
-  modalModeSetter: React.Dispatch<React.SetStateAction<'none' | 'results' | 'edit-players' | 'end-tournament' | 'new-round'>>;
+  modalMode: 'none' | 'results' | 'edit-players' | 'end-tournament' | 'new-round' | 'force-match';
+  modalModeSetter: React.Dispatch<React.SetStateAction<'none' | 'results' | 'edit-players' | 'end-tournament' | 'new-round' | 'force-match'>>;
   scoringMode: 'scoring' | 'editing' | 'table';
   scoringModeSetter: React.Dispatch<React.SetStateAction<'scoring' | 'editing' | 'table'>>;
   tournamentObj: Tournament;

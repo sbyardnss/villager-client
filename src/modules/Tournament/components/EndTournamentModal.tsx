@@ -6,7 +6,7 @@ interface EndTournamentModalProps {
   resetTourneys: () => void;
   selectTournament: React.Dispatch<React.SetStateAction<Tournament>>;
   selectedTournament: Tournament;
-  modalModeSetter: React.Dispatch<React.SetStateAction<'none' | 'results' | 'edit-players' | 'end-tournament' | 'new-round'>>;
+  modalModeSetter: React.Dispatch<React.SetStateAction<'none' | 'results' | 'edit-players' | 'end-tournament' | 'new-round' | 'force-match'>>;
 }
 
 export const EndTournamentModal: React.FC<EndTournamentModalProps> = ({

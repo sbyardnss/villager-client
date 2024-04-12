@@ -10,7 +10,7 @@ import { TieBreakDisplay } from "./TieBreakDisplay";
 interface ResultsModalProps {
   allClubMates: (PlayerRelated | Guest)[];
   analysis: tournamentAnalysisOutput;
-  modalModeSetter: React.Dispatch<React.SetStateAction<'none' | 'results' | 'edit-players' | 'end-tournament' | 'new-round'>>;
+  modalModeSetter: React.Dispatch<React.SetStateAction<'none' | 'results' | 'edit-players' | 'end-tournament' | 'new-round' | 'force-match'>>;
   creatorBool: boolean;
   tournamentObj: Tournament;
 }

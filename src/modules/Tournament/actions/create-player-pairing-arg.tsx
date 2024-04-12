@@ -43,6 +43,7 @@ export const playerArgCreator: PlayerArgCreatorFunction = (identifier, analysisO
     }
   }
   if (isActive) {
+    //DO WE NEED THIS TO ADD CURRENT BY INFO? MAYBE WHEN EDITING PLAYERS?
     if (currentByeGameRef?.player_w?.id) {
       playerArg = {
         id: identifier,

@@ -181,6 +181,8 @@ export const EditPlayersModal: React.FC<EditPlayersModalProps> = ({
 
                       return (playerW && playerB) || hasGameBeenPlayed;
                     });
+
+                    //TODO: DO WE NEED THIS AT ALL SINCE WE ALWAYS RESET THE MATCH NUMBERS?
                     const lastMatchNumFromCurrentPairings = currentPairings[currentPairings.length - 1]?.match;
 
                     const unmatchedCompetitors = allAddedCompetitors.filter(competitor => {
@@ -216,7 +218,7 @@ export const EditPlayersModal: React.FC<EditPlayersModalProps> = ({
 
                       } else if (unmatchedCompetitors.length === 2) {
                         //TWO UNMATCHED PLAYERS. SIMPLY CREATING MATCH
-
+                        //TODO: ADJUST TO NEW createPairingForTwoPlayers FUNCTION
                         const randomWhite = Math.floor(Math.random() * 2)
                         const whitePlayer = findIdentifier(unmatchedCompetitors.splice(randomWhite, 1)[0])
                         const blackPlayer = findIdentifier(unmatchedCompetitors[0])

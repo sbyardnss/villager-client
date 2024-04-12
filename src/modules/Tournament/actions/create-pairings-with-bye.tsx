@@ -7,14 +7,14 @@ import { Swiss } from "tournament-pairings";
 import { findIdentifier } from "./find-identifier";
 import { randomizeOrSortPlayers } from "./randomize-or-sort-players";
 
-type ForceByePairingFunction = (
+type CreatePairingsWithByeFunction = (
   targetRound: number,
   tournamentPlayers: (PlayerRelated | Guest)[],
   analysisObj: tournamentAnalysisOutput,
   currentByeGameRef?: any
 ) => Match[] | null;
 
-export const forceByePlayerPairings: ForceByePairingFunction = (
+export const createPairingsWithBye: CreatePairingsWithByeFunction = (
   targetRound,
   tournamentPlayers,
   analysisObj,

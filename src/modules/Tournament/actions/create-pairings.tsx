@@ -4,7 +4,7 @@ import { Swiss } from "tournament-pairings";
 import type { PlayerRelated } from "../../../Types/Player";
 import type { Guest } from "../../../Types/Guest";
 import type { tournamentAnalysisOutput } from "./matchup-game-analysis";
-import { forceByePlayerPairings } from "./force-bye-player-pairings";
+import { createPairingsWithBye } from "./create-pairings-with-bye";
 
 type CreatePairingsFunction = (
   editOrNew: "edit" | "new",
@@ -29,7 +29,7 @@ export const createPairings: CreatePairingsFunction = (
     //ODD
     //sort player scores from lowest to highest, and try to create pairings, using the selected player as the bye
     //if pairings created and valid, append bye pairing and return
-    const matchups = forceByePlayerPairings(targetRound, tournamentPlayers, analysisObj, currentByeGameRef);
+    const matchups = createPairingsWithBye(targetRound, tournamentPlayers, analysisObj, currentByeGameRef);
     if (matchups) {
       return matchups;
     } else {

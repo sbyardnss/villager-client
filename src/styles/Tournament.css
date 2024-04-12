@@ -1386,7 +1386,7 @@
   border-radius: 6px;
   backdrop-filter: blur(30px);
   background-color: #20202099;
-  /* z-index: 6; */
+  z-index: 6;
   /* transition: height .2s; */
 }
 

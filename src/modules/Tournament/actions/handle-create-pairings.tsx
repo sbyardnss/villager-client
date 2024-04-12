@@ -37,7 +37,7 @@ export const handleCreatePairings: handleCreatePairingsFunction = (
   newAnalysis,
   // currentByeGameRef,
 ) => {
-
+  console.log('handle operation', operation)
   const copy = { ...tournamentObj };
   let filteredPairings: Match[] = [];
   let unmatchedCompetitors: (PlayerRelated | Guest)[] = [];

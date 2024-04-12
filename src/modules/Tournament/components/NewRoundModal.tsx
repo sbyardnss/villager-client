@@ -5,6 +5,7 @@ import { Tournament } from "../../../Types/Tournament";
 import { createPairings } from "../actions/create-pairings";
 import { sendNewGame, updateTournament } from "../../../ServerManager";
 import { tournamentAnalysisOutput } from "../actions/matchup-game-analysis";
+import { handleCreatePairings } from "../actions/handle-create-pairings";
 
 //TODO: CSS-ISSUE --throughout this component
 interface NewRoundProps {
@@ -54,10 +55,13 @@ export const NewRoundModal: React.FC<NewRoundProps> = ({
           onClick={() => {
             if (window.confirm("create round?")) {
               const tournamentCopy = { ...tournamentObj }
-              const newPairings = createPairings('new', activePlayers, currentRound, analysis, byeGameCurrent)
+              //handleCreatePairings
+              const newPairings = handleCreatePairings('new-round-normal', setOperation, tournamentObj, analysis, currentRound, undefined, undefined, undefined, undefined, undefined, undefined)
+              // const newPairings = createPairings('new', activePlayers, currentRound, analysis, byeGameCurrent)
               tournamentCopy.pairings = tournamentCopy.pairings.concat(newPairings)
               tournamentCopy.rounds++
               console.log('tournamentCopy', tournamentCopy)
+
               //TODO: UPDATE-TOURNAMENT-HANDLER
               // if (byeGameCurrent.player_w.id) {
               //   sendNewGame(byeGameCurrent)

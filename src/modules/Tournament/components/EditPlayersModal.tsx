@@ -1,4 +1,4 @@
-import { useState, useContext, SetStateAction, useEffect } from "react"
+import { useState, useEffect } from "react"
 import { Guest } from "../../../Types/Guest"
 import { TournamentParameters } from "./Parameters"
 import { PlayerSelection } from "./PlayerSelection"
@@ -19,7 +19,7 @@ import { createPairings } from "../actions/create-pairings";
 import { resetPairingMatchNumbers } from "../actions/reset-pairing-match-numbers";
 interface EditPlayersModalProps {
   tournamentObj: Tournament;
-  modalModeSetter: React.Dispatch<SetStateAction<'none' | 'results' | 'edit-players' | 'end-tournament'>>;
+  modalModeSetter: React.Dispatch<React.SetStateAction<'none' | 'results' | 'edit-players' | 'end-tournament' | 'new-round' | 'force-match'>>;
   activeTournamentResetter: () => void;
   byeGame: React.RefObject<OutgoingGame>;
   rounds: number;
@@ -181,6 +181,8 @@ export const EditPlayersModal: React.FC<EditPlayersModalProps> = ({
 
                       return (playerW && playerB) || hasGameBeenPlayed;
                     });
+
+                    //TODO: DO WE NEED THIS AT ALL SINCE WE ALWAYS RESET THE MATCH NUMBERS?
                     const lastMatchNumFromCurrentPairings = currentPairings[currentPairings.length - 1]?.match;
 
                     const unmatchedCompetitors = allAddedCompetitors.filter(competitor => {
@@ -216,7 +218,7 @@ export const EditPlayersModal: React.FC<EditPlayersModalProps> = ({
 
                       } else if (unmatchedCompetitors.length === 2) {
                         //TWO UNMATCHED PLAYERS. SIMPLY CREATING MATCH
-
+                        //TODO: ADJUST TO NEW createPairingForTwoPlayers FUNCTION
                         const randomWhite = Math.floor(Math.random() * 2)
                         const whitePlayer = findIdentifier(unmatchedCompetitors.splice(randomWhite, 1)[0])
                         const blackPlayer = findIdentifier(unmatchedCompetitors[0])

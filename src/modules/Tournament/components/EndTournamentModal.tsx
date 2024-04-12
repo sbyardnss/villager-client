@@ -1,12 +1,12 @@
-import { SetStateAction } from "react";
+// import { SetStateAction } from "react";
 import { endTournament } from "../../../ServerManager"
 import { type Tournament, selectedTournamentDefaults } from "../../../Types/Tournament";
 
 interface EndTournamentModalProps {
   resetTourneys: () => void;
-  selectTournament: React.Dispatch<SetStateAction<Tournament>>;
+  selectTournament: React.Dispatch<React.SetStateAction<Tournament>>;
   selectedTournament: Tournament;
-  modalModeSetter: React.Dispatch<SetStateAction<'none' | 'results' | 'edit-players' | 'end-tournament'>>;
+  modalModeSetter: React.Dispatch<React.SetStateAction<'none' | 'results' | 'edit-players' | 'end-tournament' | 'new-round' | 'force-match'>>;
 }
 
 export const EndTournamentModal: React.FC<EndTournamentModalProps> = ({

@@ -1,4 +1,4 @@
-import { SetStateAction } from "react";
+// import { SetStateAction } from "react";
 import { Guest } from "../../../Types/Guest";
 import { PlayerRelated } from "../../../Types/Player";
 import { checkIfUserIsAppCreator } from "../actions/check-if-creator";
@@ -10,7 +10,7 @@ import { TieBreakDisplay } from "./TieBreakDisplay";
 interface ResultsModalProps {
   allClubMates: (PlayerRelated | Guest)[];
   analysis: tournamentAnalysisOutput;
-  modalModeSetter: React.Dispatch<SetStateAction<'none' | 'results' | 'edit-players' | 'end-tournament'>>;
+  modalModeSetter: React.Dispatch<React.SetStateAction<'none' | 'results' | 'edit-players' | 'end-tournament' | 'new-round' | 'force-match'>>;
   creatorBool: boolean;
   tournamentObj: Tournament;
 }

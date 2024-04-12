@@ -1,4 +1,4 @@
-import { useState, useEffect, SetStateAction, useRef } from "react"
+import { useState, useEffect, useRef } from "react"
 import { useAppContext } from "../../App/AppProvider"
 import { checkIfUserIsAppCreator } from "../actions/check-if-creator"
 import { getTournamentGames, getTournament, sendNewGame } from "../../../ServerManager";
@@ -22,11 +22,13 @@ import type { tournamentAnalysisOutput } from "../actions/matchup-game-analysis"
 import { tournamentAnalysisDefaults } from "../actions/matchup-game-analysis";
 import { findByIdentifier } from "../actions/find-by-identifier";
 import { createPairings } from "../actions/create-pairings";
+import { NewRoundModal } from "./NewRoundModal";
+import { ForcePlayersModal } from "./ForcePlayersModal";
 
 interface ActiveTournamentProps {
   selectedTournament: Tournament;
-  selectTournament: React.Dispatch<SetStateAction<Tournament>>;
-  selectClub: React.Dispatch<SetStateAction<ChessClub>>;
+  selectTournament: React.Dispatch<React.SetStateAction<Tournament>>;
+  selectClub: React.Dispatch<React.SetStateAction<ChessClub>>;
   selectedClub: ChessClub;
   resetTourneys: () => void;
   allClubMates: (PlayerRelated | Guest)[];
@@ -49,10 +51,12 @@ export const ActiveTournament: React.FC<ActiveTournamentProps> = ({
   const [selectedClubMates, setSelectedClubMates] = useState<(PlayerRelated | Guest)[]>([]);
   const [currentRound, setCurrentRound] = useState(0);
   const [scoreMode, setScoreMode] = useState<'scoring' | 'editing' | 'table'>("scoring");
-  const [modalMode, setModalMode] = useState<'none' | 'results' | 'edit-players' | 'end-tournament'>('none');
+  const [modalMode, setModalMode] = useState<'none' | 'results' | 'edit-players' | 'end-tournament' | 'new-round' | 'force-match'>('none');
   const [tournamentAnalysisObj, setTournamentAnalysisObj] = useState<tournamentAnalysisOutput>({ ...tournamentAnalysisDefaults }); //TODO DEFAULTS
   const [roundOver, setRoundOver] = useState(false);
   const [gameForApi, updateGameForApi] = useState<OutgoingGame | Game>({ ...gameForApiDefaults });
+  const [selectedPlayersForForce, setSelectedPlayersForForce] = useState<(PlayerRelated | Guest)[]>([]);
+
   const byeGameRef = useRef<OutgoingGame>({
     player_w: {} as Guest | PlayerRelated, //TODO: INITIALIZE THIS WITH UNDEFINED OR NULL
     player_w_model_type: "",
@@ -257,7 +261,7 @@ export const ActiveTournament: React.FC<ActiveTournamentProps> = ({
         copy.winner_model_type = null;
         copy.win_style = 'draw';
       }
-  
+
       if (copy) {
         updateGameForApi(copy);
       }
@@ -305,7 +309,28 @@ export const ActiveTournament: React.FC<ActiveTournamentProps> = ({
               modalModeSetter={setModalMode}
               selectTournament={selectTournament}
               selectedTournament={selectedTournament} />
-            : ""}
+            : modalMode === 'new-round' ?
+              <NewRoundModal
+                tournamentObj={selectedTournament}
+                activePlayers={activeTournamentPlayers}
+                modalModeSetter={setModalMode}
+                currentRound={currentRound}
+                byeGameCurrent={byeGameRef.current}
+                activeTournamentResetter={resetActiveTournament}
+                tournamentGamesResetter={resetTournamentGames}
+                analysis={tournamentAnalysisObj}
+              />
+              : modalMode === 'force-match' ?
+                <ForcePlayersModal
+                  tournamentObj={selectedTournament}
+                  modalModeSetter={setModalMode}
+                  selectedPlayersForForce={selectedPlayersForForce}
+                  setSelectedPlayersForForce={setSelectedPlayersForForce}
+                  activePlayers={activeTournamentPlayers}
+                  analysis={tournamentAnalysisObj}
+                  currentRound={currentRound}
+                />
+                : ""}
       <div id="tournamentHeader">
         <div id="activeTournamentTitle" className="setColor setTournamentFontSize">{selectedTournament.title}</div>
         <button
@@ -334,7 +359,7 @@ export const ActiveTournament: React.FC<ActiveTournamentProps> = ({
         tournamentObj={selectedTournament}
         currentMatchups={currentRoundMatchups}
         gameForApi={gameForApi}
-        byeGame={byeGameRef.current}
+        byeGameCurrent={byeGameRef.current}
         userIsCreator={tournamentCreatorBool}
         activePlayers={activeTournamentPlayers}
         currentRound={currentRound}

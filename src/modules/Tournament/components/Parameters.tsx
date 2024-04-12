@@ -1,4 +1,4 @@
-import { SetStateAction, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { getAllTimeSettings } from "../../../ServerManager";
 import type { TimeSetting } from "../../../Types/TimeSetting";
 import type { NewTournament, Tournament } from "../../../Types/Tournament";
@@ -6,7 +6,7 @@ import type { NewTournament, Tournament } from "../../../Types/Tournament";
 interface TournamentParametersProps {
   editOrNew: 'new' | 'edit';
   tournamentObj: NewTournament;
-  updateTournamentObj: React.Dispatch<SetStateAction<NewTournament | Tournament>>;
+  updateTournamentObj: React.Dispatch<React.SetStateAction<NewTournament | Tournament>>;
   gamesStarted?: boolean; // Mark as optional
   setGamesStarted?: React.Dispatch<React.SetStateAction<boolean>>;
 }

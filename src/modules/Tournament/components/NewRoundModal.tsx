@@ -33,27 +33,19 @@ export const NewRoundModal: React.FC<NewRoundProps> = ({
   const [forcePairing, setForcePairing] = useState<boolean>(false);
   const [selectedPlayers, setSelectedPlayers] = useState<(PlayerRelated | Guest)[]>([]);
   const [displayedPlayers, setDisplayedPlayers] = useState<(PlayerRelated | Guest)[]>([]);
+
+
   useEffect(
     () => {
-      const selectedIdentifiers: (string | number)[] = [];
-      [...selectedPlayers]
-        .forEach(p => {
-          if (p) {
-            const identifier = findIdentifier(p);
-            if (identifier !== undefined) {
-              selectedIdentifiers.push(identifier);
-            }
-          }
-        });
+      const selectedIdentifiers: (string | number)[] = [...selectedPlayers].map(p => findIdentifier(p));
       const availablePlayers: (PlayerRelated | Guest)[] = [];
-      activePlayers.map(p => {
+      activePlayers.forEach(p => {
         const pIdentifier = findIdentifier(p);
         if (!selectedPlayers.includes(p) && !selectedIdentifiers.some(identifier => analysis.playerOppRefObj[pIdentifier].includes(identifier))) {
           availablePlayers.push(p);
         }
       })
       setDisplayedPlayers(availablePlayers);
-      console.log('currently selectedPlayers', selectedPlayers)
     }, [selectedPlayers]
   )
   return <>
@@ -102,16 +94,16 @@ export const NewRoundModal: React.FC<NewRoundProps> = ({
             <div id="potentialLabel" className="setCustomFont">Selected:</div>
             <div className="player-selection-area b-border text-align-c d-flex column j-even">
               <h2 onClick={() => {
-                const selectedCopy = [...selectedPlayers];
-                selectedCopy.splice(0, 1);
-                setSelectedPlayers(selectedCopy);
-              }}>{selectedPlayers[0] ? selectedPlayers[0].full_name : 'select player'}</h2>
+                const selectedPlayersCopy = [...selectedPlayers];
+                selectedPlayersCopy.splice(0, 1);
+                setSelectedPlayers(selectedPlayersCopy);
+              }}>{selectedPlayers[0] ? <span className="text-hl-pink">{selectedPlayers[0].full_name}</span> : 'select player'}</h2>
               <div>VS</div>
               <h2 onClick={() => {
-                const selectedCopy = [...selectedPlayers];
-                selectedCopy.splice(1, 1);
-                setSelectedPlayers(selectedCopy);
-              }}>{selectedPlayers[1] ? selectedPlayers[1].full_name : 'select player'}</h2>
+                const selectedPlayersCopy = [...selectedPlayers];
+                selectedPlayersCopy.splice(1, 1);
+                setSelectedPlayers(selectedPlayersCopy);
+              }}>{selectedPlayers[1] ? <span className="text-hl-blue">{selectedPlayers[1].full_name}</span> : 'select player'}</h2>
             </div>
           </div>
         </div>
@@ -125,11 +117,9 @@ export const NewRoundModal: React.FC<NewRoundProps> = ({
               if (selectedPlayers && selectedPlayers[0] && selectedPlayers[1] && selectedPlayers.length === 2) {
                 if (window.confirm(`create round with forced pairing: ${selectedPlayers[0].full_name} vs ${selectedPlayers[1].full_name}?`)) {
                   const tournamentCopy = { ...tournamentObj }
-                  console.log('selectedPlayers immediately before', selectedPlayers)
                   const newPairings = handleCreatePairings('forcing-matchup-new', tournamentObj, analysis, currentRound, undefined, undefined, false, undefined, [...selectedPlayers] as (PlayerRelated | Guest)[]/* TODO: address typing*/, undefined)
                   tournamentCopy.pairings = tournamentCopy.pairings.concat(newPairings)
                   tournamentCopy.rounds++
-                  console.log('tournamentCopy', tournamentCopy)
                   // if (byeGameCurrent.player_w.id) {
                   //   sendNewGame(byeGameCurrent)
                   // }
@@ -144,7 +134,7 @@ export const NewRoundModal: React.FC<NewRoundProps> = ({
               } else {
                 window.alert('You must select two players to force. Otherwise, click cancel')
               }
-              
+
               // setForcePairing(false);
             }}>
             Create Round

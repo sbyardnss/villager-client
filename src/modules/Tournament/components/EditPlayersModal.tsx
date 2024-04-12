@@ -15,8 +15,10 @@ import { getClubsGuests, updateTournament } from "../../../ServerManager";
 import { Match } from "tournament-pairings/dist/Match";
 import { findIdentifier } from "../actions/find-identifier";
 import { createPairings } from "../actions/create-pairings";
+import { createPairingForTwoPlayers } from "../actions/two-players-pairing"
 // import { Swiss } from "tournament-pairings"
 import { resetPairingMatchNumbers } from "../actions/reset-pairing-match-numbers";
+import { handleCreatePairings } from "../actions/handle-create-pairings"
 interface EditPlayersModalProps {
   tournamentObj: Tournament;
   modalModeSetter: React.Dispatch<React.SetStateAction<'none' | 'results' | 'edit-players' | 'end-tournament' | 'new-round' | 'force-match'>>;
@@ -27,6 +29,8 @@ interface EditPlayersModalProps {
   tourneyGames: Game[];
   tournamentClub: ChessClub;
   resetTournaments: () => void;
+  selectedPlayersForForce: (PlayerRelated | Guest)[];
+  setSelectedPlayersForForce: React.Dispatch<React.SetStateAction<(PlayerRelated | Guest)[]>>;
 }
 
 export const EditPlayersModal: React.FC<EditPlayersModalProps> = ({
@@ -39,6 +43,8 @@ export const EditPlayersModal: React.FC<EditPlayersModalProps> = ({
   tourneyGames,
   tournamentClub,
   resetTournaments,
+  selectedPlayersForForce,
+  setSelectedPlayersForForce,
 }) => {
   // const { localVillagerUser } = useContext(AppContext);
   const [playersSelected, setPlayersSelected] = useState(false);
@@ -164,6 +170,22 @@ export const EditPlayersModal: React.FC<EditPlayersModalProps> = ({
               id="submitNewPlayersBtn"
               className="buttonStyleApprove"
               onClick={() => {
+                if (!gamesStarted) {
+                  if (window.confirm("Confirm games have NOT started")) {
+                    if (!gamesFromThisRound.length) {
+                      modalModeSetter('new-round');
+                    } else {
+                      window.alert('It looks like the games actually have started. try again');
+                    }
+                  }
+                } else {
+                  if (window.confirm("Confirm games have already started")) {
+                    const newPairings: Match[] = handleCreatePairings(tournamentObj, analysis, rounds, currentPairings, roundGameIdentifiers, gamesStarted, gamesFromThisRound, selectedPlayersForForce, newAnalysis);
+                    const copy = { ...editedTournament };
+                    copy.pairings = pastPairings.concat(newPairings);
+                  }
+                }
+                /*
                 if (window.confirm(gamesStarted === true ? "Confirm games have already started" : "Confirm games have not started")) {
                   if (tournamentObj.in_person === true) {
                     const copy = { ...editedTournament };
@@ -181,109 +203,63 @@ export const EditPlayersModal: React.FC<EditPlayersModalProps> = ({
 
                       return (playerW && playerB) || hasGameBeenPlayed;
                     });
-
+                    const newPairings: Match[] = handleCreatePairings(tournamentObj, analysis, rounds, currentPairings, roundGameIdentifiers, gamesStarted, gamesFromThisRound, selectedPlayersForForce, newAnalysis);
                     //TODO: DO WE NEED THIS AT ALL SINCE WE ALWAYS RESET THE MATCH NUMBERS?
-                    const lastMatchNumFromCurrentPairings = currentPairings[currentPairings.length - 1]?.match;
+                    // const lastMatchNumFromCurrentPairings = currentPairings[currentPairings.length - 1]?.match;
 
-                    const unmatchedCompetitors = allAddedCompetitors.filter(competitor => {
-                      const identifier = findIdentifier(competitor);
-                      return (!filteredPairings.find(p => {
-                        return p.player1 === identifier || p.player2 === identifier
-                      })
-                        //THIS WAS CHECKING IF THE GAME HAD BEEN PLAYED. LIKELY DON'T NEED ANYMORE
-                        // && (gamesFromThisRound.find(g => {
-                        //   if ((g.player_w && findIdentifier(g.player_w) === identifier) || (g.player_b && findIdentifier(g.player_b) === identifier)) {
-                        //     return false;
-                        //   } else {
-                        //     return true;
-                        //   }
-                        // }))
-                      );
-                    });
-                    let newPairings: Match[] = [];
+                    // const unmatchedCompetitors = allAddedCompetitors.filter(competitor => {
+                    //   const identifier = findIdentifier(competitor);
+                    //   return (!filteredPairings.find(p => {
+                    //     return p.player1 === identifier || p.player2 === identifier
+                    //   })
+
+                    //   );
+                    // });
+                    // let newPairings: Match[] = [];
 
 
-                    //GAMES NOT STARTED
-                    if (!gamesStarted && !gamesFromThisRound.length) {
-                      newPairings = createPairings('edit', allAddedCompetitors, rounds, analysis);
-                    } else {
-                      //GAMES STARTED
-                      // CANNOT SEND ONE PLAYER TO CREATE PAIRINGS. THAT IS THE REASON FOR IF ELSES BELOW
+                    // //GAMES NOT STARTED
+                    // if (!gamesStarted && !gamesFromThisRound.length) {
+                    //   newPairings = createPairings('edit', allAddedCompetitors, rounds, analysis);
+                    // } else {
+                    //   //GAMES STARTED
+                    //   // CANNOT SEND ONE PLAYER TO CREATE PAIRINGS. THAT IS THE REASON FOR IF ELSES BELOW
 
-                      if (unmatchedCompetitors.length === 1) {
-                        //ONE UNMATCHED PLAYER. SIMPLY CREATING BYE
-                        const byeMatchup = { round: rounds, match: lastMatchNumFromCurrentPairings, player1: findIdentifier(unmatchedCompetitors[0]), player2: null };
-                        //TODO-QUESTION: WHY DOES THIS NEED TO BE CONCAT AND NOT PUSH?
-                        newPairings = filteredPairings.concat(byeMatchup);
+                    //   if (unmatchedCompetitors.length === 1) {
+                    //     //ONE UNMATCHED PLAYER. SIMPLY CREATING BYE
+                    //     //can set this match number to 1 because it will be changed before the return
+                    //     const byeMatchup = { round: rounds, match: 1, player1: findIdentifier(unmatchedCompetitors[0]), player2: null };
+                    //     //TODO-QUESTION: WHY DOES THIS NEED TO BE CONCAT AND NOT PUSH?
+                    //     newPairings = filteredPairings.concat(byeMatchup);
 
-                      } else if (unmatchedCompetitors.length === 2) {
-                        //TWO UNMATCHED PLAYERS. SIMPLY CREATING MATCH
-                        //TODO: ADJUST TO NEW createPairingForTwoPlayers FUNCTION
-                        const randomWhite = Math.floor(Math.random() * 2)
-                        const whitePlayer = findIdentifier(unmatchedCompetitors.splice(randomWhite, 1)[0])
-                        const blackPlayer = findIdentifier(unmatchedCompetitors[0])
-                        const newMatchup = {
-                          round: rounds,
-                          match: lastMatchNumFromCurrentPairings,
-                          player1: whitePlayer,
-                          player2: blackPlayer,
-                        };
-                        newPairings = filteredPairings.concat(newMatchup);
-                        // if (analysis.playerOppRefObj[whitePlayer].includes(blackPlayer) || analysis.playerOppRefObj[blackPlayer].includes(whitePlayer)) {
-                        //   window.alert('adding and removing players may result in duplicate matches')
-                        // }
-                      } else {
-                        //ZERO OR MORE THAN TWO UNMATCHED PLAYERS.
-                        //CREATING PAIRINGS FOR UNMATCHED PLAYERS AND APPENDING
-                        /*
-                        TODO: DO WE NEED THIS ZOMBIE CODE. IS PART OF THE ORIGINAL
-                        
-                        let remainingPlayersCheckOpponents = []
-                        for (let i = 0; i < unMatchedPlayersAndGuests.length; i++) {
-                          const identifier = unMatchedPlayersAndGuests[i].guest_id ? unMatchedPlayersAndGuests[i].guest_id : unMatchedPlayersAndGuests[i].id
-                          const playersPossibleOpponents = unMatchedPlayersAndGuests.filter(pg => {
-                            const opponentIdentifier = pg.guest_id ? pg.guest_id : pg.id
-                            if (previousOpponents[identifier]?.includes(opponentIdentifier) || opponentIdentifier === identifier) {
-                              return false
-                            }
-                            else {
-                              return opponentIdentifier
-                            }
-                          })
-                          if (playersPossibleOpponents.length) {
-                            remainingPlayersCheckOpponents.push(unMatchedPlayersAndGuests[i])
-                          }
-                          remainingPlayersCheckOpponents.filter(rp => {
-                            const identifier = rp.guest_id ? rp.guest_id : rp.id
-                            if (currentPairings.find(p => p.player1 === identifier || p.player2 === identifier)) {
-                              return false
-                            }
-                            else {
-                              return true
-                            }
-                          })
-                        }
-                        */
-                        let newlyCreatedPairings = [];
-                        if (unmatchedCompetitors.length) {
-                          newlyCreatedPairings = createPairings('edit', unmatchedCompetitors, rounds, newAnalysis);
-                        }
-                        newPairings = filteredPairings.concat(newlyCreatedPairings);
-                      }
-                    }
+                    //   } else if (unmatchedCompetitors.length === 2) {
+                    //     //TWO UNMATCHED PLAYERS. SIMPLY CREATING MATCH
+                    //     const newMatchup = createPairingForTwoPlayers(unmatchedCompetitors, rounds)
+                    //     newPairings = filteredPairings.concat(newMatchup);
+
+                    //   } else {
+                    //     //ZERO OR MORE THAN TWO UNMATCHED PLAYERS.
+                    //     let newlyCreatedPairings = [];
+                    //     if (unmatchedCompetitors.length) {
+                    //       newlyCreatedPairings = createPairings('edit', unmatchedCompetitors, rounds, newAnalysis);
+                    //     }
+                    //     newPairings = filteredPairings.concat(newlyCreatedPairings);
+                    //   }
+                    // }
 
                     //resetting match numbers for new pairings and adding to past pairings
                     resetPairingMatchNumbers(newPairings);
                     copy.pairings = pastPairings.concat(newPairings);
-                    // console.log('copy', copy)
-                    updateTournament(copy)
-                      .then(() => {
-                        activeTournamentResetter();
-                        modalModeSetter('none');
-                        resetTournaments();
-                      })
+                    console.log('copy', copy)
+                    // updateTournament(copy)
+                    //   .then(() => {
+                    //     activeTournamentResetter();
+                    //     modalModeSetter('none');
+                    //     resetTournaments();
+                    //   })
                   }
                 }
+                */
               }
               }>
               Submit

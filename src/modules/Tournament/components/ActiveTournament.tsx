@@ -302,7 +302,9 @@ export const ActiveTournament: React.FC<ActiveTournamentProps> = ({
             analysis={tournamentAnalysisObj}
             tourneyGames={tournamentGames}
             tournamentClub={selectedClub}
-            resetTournaments={resetTourneys} />
+            resetTournaments={resetTourneys} 
+            selectedPlayersForForce={selectedPlayersForForce}
+            setSelectedPlayersForForce={setSelectedPlayersForForce} />
           : modalMode === 'end-tournament' ?
             <EndTournamentModal
               resetTourneys={resetTourneys}

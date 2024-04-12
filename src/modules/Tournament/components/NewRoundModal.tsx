@@ -29,7 +29,7 @@ export const NewRoundModal: React.FC<NewRoundProps> = ({
   analysis,
 }) => {
   return <>
-      <div className="tournament-modal-fixed column a-center" style={{ top: '30%' }}>
+      <div className="tournament-modal-fixed column a-center">
         <div className="d-flex j-between w-100">
           <h2 className="setCustomFont">Create New Round</h2>
           <button

@@ -13,16 +13,14 @@ type HandleUpdateTournamentFunction = (
   tournamentObj: Tournament,
   selectedPlayersForForce: (PlayerRelated | Guest)[],
   setSelectedPlayersForForce: React.Dispatch<React.SetStateAction<(PlayerRelated | Guest)[]>>,
-  activePlayers: (PlayerRelated | Guest)[],
   analysis: tournamentAnalysisOutput,
   currentRound: number,
   byeGame: OutgoingGame,
   activeTournamentResetter: () => void,
   tournamentGamesResetter: () => void,
+  gamesFromThisRound: Game[],
   roundGameIdentifiers?: (string | number)[][],
   gamesStarted?: boolean,
-  gamesFromThisRound?: Game[],
-  forcedMatchupsPlayers?: (PlayerRelated | Guest)[],
   newAnalysis?: tournamentAnalysisOutput,
   currentPairings?: Match[],
 ) => void;
@@ -33,62 +31,52 @@ export const handleUpdateTournament: HandleUpdateTournamentFunction = (
   tournamentObj,
   selectedPlayersForForce,
   setSelectedPlayersForForce,
-  activePlayers,
   analysis,
   currentRound,
   byeGame,
   activeTournamentResetter,
   tournamentGamesResetter,
+  gamesFromThisRound,
   roundGameIdentifiers,
   gamesStarted,
-  gamesFromThisRound,
-  forcedMatchupsPlayers,
   newAnalysis,
   currentPairings,
 ) => {
+  // console.log('all props in handleUpdate', {
+  //   operation: operation,
+  //   setOperation: setOperation,
+  //   selectedPlayersForForce: selectedPlayersForForce,
+  //   setSelectedPlayersForForce: setSelectedPlayersForForce,
+  //   analysis: analysis,
+  //   currentRound: currentRound,
+  //   byeGame: byeGame,
+  //   activeTournamentResetter: activeTournamentResetter,
+  //   tournamentGamesResetter: tournamentGamesResetter,
+  //   gamesFromThisRound: gamesFromThisRound,
+  //   roundGameIdentifiers: roundGameIdentifiers,
+  //   gamesStarted: gamesStarted,
+  //   newAnalysis: newAnalysis,
+  //   currentPairings: currentPairings,
+  // })
   const tournamentCopy = { ...tournamentObj };
+
+  const newPairings = handleCreatePairings(operation, setOperation, tournamentCopy, analysis, currentRound, byeGame, gamesFromThisRound, currentPairings, roundGameIdentifiers, gamesStarted, selectedPlayersForForce, newAnalysis);
+  tournamentCopy.pairings = tournamentCopy.pairings.concat(newPairings);
+  
   if (operation === 'new-round-normal') {
-    if (selectedPlayersForForce.length === 2 && selectedPlayersForForce[0].full_name && selectedPlayersForForce[1].full_name) {
-      const newPairings = handleCreatePairings(operation, setOperation, tournamentObj, analysis, currentRound, undefined, undefined, false, undefined, [...selectedPlayersForForce], undefined);
-      tournamentCopy.pairings = tournamentCopy.pairings.concat(newPairings);
-    } else {
-      const newPairings = handleCreatePairings(operation, setOperation, tournamentObj, analysis, currentRound, undefined, undefined, false, undefined, undefined, undefined);
-      tournamentCopy.pairings = tournamentCopy.pairings.concat(newPairings);
-    }
     tournamentCopy.rounds++;
     if (byeGame.player_w.id) {
       sendNewGame(byeGame)
-    }
-  } else if (operation === 'editing-players') {
-    /*
-currentPairings,
-  roundGameIdentifiers,
-  gamesStarted,
-  gamesFromThisRound,
-  forcedMatchupsPlayers,
-  newAnalysis,
-    */
-    if (selectedPlayersForForce.length === 2 && selectedPlayersForForce[0].full_name && selectedPlayersForForce[1].full_name) {
-      // const newPairings = handleCreatePairings(operation, setOperation, tournamentObj, analysis, currentRound, undefined, undefined, false, undefined, [...selectedPlayersForForce], undefined);
-      const newPairings = handleCreatePairings(operation, setOperation, tournamentObj, analysis, currentRound, currentPairings, roundGameIdentifiers, gamesStarted, gamesFromThisRound, [...selectedPlayersForForce], newAnalysis);
-      tournamentCopy.pairings = tournamentCopy.pairings.concat(newPairings);
-    } else {
-      // const newPairings = handleCreatePairings(operation, setOperation, tournamentObj, analysis, currentRound, undefined, undefined, false, undefined, undefined, undefined);
-      const newPairings = handleCreatePairings(operation, setOperation, tournamentObj, analysis, currentRound, currentPairings, roundGameIdentifiers, gamesStarted, gamesFromThisRound, undefined, newAnalysis);
-      tournamentCopy.pairings = tournamentCopy.pairings.concat(newPairings);
     }
   }
 
   console.log('tournamentCopy', tournamentCopy)
 
-  // if (byeGame.player_w.id) {
-  //   sendNewGame(byeGame)
-  // }
-  updateTournament(tournamentCopy)
-    .then(() => {
-      activeTournamentResetter();
-      tournamentGamesResetter();
-    });
+  // updateTournament(tournamentCopy)
+  //   .then(() => {
+  //     activeTournamentResetter();
+  //     tournamentGamesResetter();
+  //   });
   // modalModeSetter('none');
   setSelectedPlayersForForce([]);
 }

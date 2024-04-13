@@ -122,19 +122,19 @@ export const EditPlayersModal: React.FC<EditPlayersModalProps> = ({
       setClubGuests(tournamentClub.guest_members);
     }, [tournamentClub]
   )
-  useEffect(
-    () => {
-      const matchupIdentifiers: (string | number)[][] = [];
-      //TODO: IS THIS FILTERED ENOUGH? DO WE NEED TO CHECK ANYTHING ELSE?
-      const completedCurrentRoundGames = tourneyGames.filter(game => {
-        if (game.player_b && game.player_w && game.tournament_round === rounds)
-          matchupIdentifiers.push([findIdentifier(game.player_w), findIdentifier(game.player_b)]);
-        return game.tournament_round === rounds;
-      });
-      setRoundGameIdentifiers(matchupIdentifiers);
-      setGamesFromThisRound(completedCurrentRoundGames);
-    }, [tourneyGames, rounds]
-  )
+  // useEffect(
+  //   () => {
+  //     const matchupIdentifiers: (string | number)[][] = [];
+  //     //TODO: IS THIS FILTERED ENOUGH? DO WE NEED TO CHECK ANYTHING ELSE?
+  //     const completedCurrentRoundGames = tourneyGames.filter(game => {
+  //       if (game.player_b && game.player_w && game.tournament_round === rounds)
+  //         matchupIdentifiers.push([findIdentifier(game.player_w), findIdentifier(game.player_b)]);
+  //       return game.tournament_round === rounds;
+  //     });
+  //     setRoundGameIdentifiers(matchupIdentifiers);
+  //     setGamesFromThisRound(completedCurrentRoundGames);
+  //   }, [tourneyGames, rounds]
+  // )
   useEffect(
     () => {
       const allNewPlayers = editedTournament.competitors.concat(editedTournament.guest_competitors);

@@ -26,6 +26,7 @@ import { createPairings } from "../actions/create-pairings";
 import { NewRoundModal } from "./NewRoundModal";
 import { ForcePlayersModal } from "./ForcePlayersModal";
 import { handleUpdateTournament } from "../actions/handle-update-tournament";
+import { findIdentifier } from "../actions/find-identifier";
 
 interface ActiveTournamentProps {
   selectedTournament: Tournament;
@@ -80,7 +81,7 @@ export const ActiveTournament: React.FC<ActiveTournamentProps> = ({
   const [currentPairings, setCurrentPairings] = useState<Match[]>([]);
   const [gamesFromThisRound, setGamesFromThisRound] = useState<Game[]>([]);
   const [roundGameIdentifiers, setRoundGameIdentifiers] = useState<(string | number)[][]>([]);
-  const [newAnalysis, setNewAnalysis] = useState<tournamentAnalysisOutput>({ ...tournamentAnalysisDefaults });
+  const [editedTournamentAnalysis, setEditedTournamentAnalysis] = useState<tournamentAnalysisOutput>({ ...tournamentAnalysisDefaults });
   const [editedTournament, updateEditedTournament] = useState<Tournament>({
     id: 0,
     title: "",
@@ -235,6 +236,20 @@ export const ActiveTournament: React.FC<ActiveTournamentProps> = ({
     }, [currentRoundMatchups]
   )
 
+  useEffect(
+    () => {
+      const matchupIdentifiers: (string | number)[][] = [];
+      //TODO: IS THIS FILTERED ENOUGH? DO WE NEED TO CHECK ANYTHING ELSE?
+      const completedCurrentRoundGames = tournamentGames.filter(game => {
+        if (game.player_b && game.player_w && game.tournament_round === currentRound)
+          matchupIdentifiers.push([findIdentifier(game.player_w), findIdentifier(game.player_b)]);
+        return game.tournament_round === currentRound;
+      });
+      setRoundGameIdentifiers(matchupIdentifiers);
+      setGamesFromThisRound(completedCurrentRoundGames);
+    }, [tournamentGames, currentRound]
+  )
+
   const resetTournamentGames = () => {
     getTournamentGames(selectedTournament.id)
       .then(data => setTournamentGames(data))
@@ -315,7 +330,11 @@ export const ActiveTournament: React.FC<ActiveTournamentProps> = ({
   }
 
   const callHandleUpdateTournament = () => {
-    handleUpdateTournament(currentOperation, setCurrentOperation, selectedTournament, selectedPlayersForForce, setSelectedPlayersForForce, activeTournamentPlayers, tournamentAnalysisObj, currentRound, byeGameRef.current, resetActiveTournament, resetTournamentGames);
+    if (currentOperation === 'editing-players') {
+      handleUpdateTournament(currentOperation, setCurrentOperation, editedTournament, [...selectedPlayersForForce], setSelectedPlayersForForce, tournamentAnalysisObj, currentRound, byeGameRef.current, resetActiveTournament, resetTournamentGames, gamesFromThisRound, roundGameIdentifiers, gamesStarted, editedTournamentAnalysis, currentPairings);
+    } else if (currentOperation === 'new-round-normal') {
+      handleUpdateTournament(currentOperation, setCurrentOperation, selectedTournament, [...selectedPlayersForForce], setSelectedPlayersForForce, tournamentAnalysisObj, currentRound, byeGameRef.current, resetActiveTournament, resetTournamentGames, gamesFromThisRound, undefined, undefined, undefined, currentPairings);
+    }
   }
 
   return <>
@@ -347,11 +366,11 @@ export const ActiveTournament: React.FC<ActiveTournamentProps> = ({
             setCurrentPairings={setCurrentPairings}
             setGamesFromThisRound={setGamesFromThisRound}
             setRoundGameIdentifiers={setRoundGameIdentifiers}
-            setNewAnalysis={setNewAnalysis}
+            setNewAnalysis={setEditedTournamentAnalysis}
             editedTournament={editedTournament}
             updateEditedTournament={updateEditedTournament}
             gamesStarted={gamesStarted}
-            setGamesStarted={setGamesStarted} 
+            setGamesStarted={setGamesStarted}
             callHandleUpdateTournament={callHandleUpdateTournament} />
           : modalMode === 'end-tournament' ?
             <EndTournamentModal
@@ -363,36 +382,23 @@ export const ActiveTournament: React.FC<ActiveTournamentProps> = ({
               <NewRoundModal
                 operation={currentOperation}
                 setOperation={setCurrentOperation}
-                // tournamentObj={selectedTournament}
-                // activePlayers={activeTournamentPlayers}
                 modalModeSetter={setModalMode}
-                // currentRound={currentRound}
-                // byeGameCurrent={byeGameRef.current}
-                // activeTournamentResetter={resetActiveTournament}
-                // tournamentGamesResetter={resetTournamentGames}
-                // analysis={tournamentAnalysisObj}
-                // currentPairings={currentPairings}
-                // roundGameIdentifiers={roundGameIdentifiers}
-                // forcedMatchupsPlayers={selectedPlayersForForce}
-                // setForcedMatchupsPlayers={setSelectedPlayersForForce}
-                // newAnalysis={newAnalysis}
-                // gamesStarted={gamesStarted}
-                // gamesFromThisRound={gamesFromThisRound}
                 callHandleUpdateTournament={callHandleUpdateTournament} />
               : modalMode === 'force-match' ?
                 <ForcePlayersModal
-                  // operation={currentOperation}
-                  // setOperation={setCurrentOperation}
-                  // tournamentObj={selectedTournament}
                   modalModeSetter={setModalMode}
                   selectedPlayersForForce={selectedPlayersForForce}
                   setSelectedPlayersForForce={setSelectedPlayersForForce}
-                  activePlayers={activeTournamentPlayers}
-                  analysis={tournamentAnalysisObj}
-                  // currentRound={currentRound}
-                  // byeGameCurrent={byeGameRef.current}
-                  // activeTournamentResetter={resetActiveTournament}
-                  // tournamentGamesResetter={resetTournamentGames}
+                  activePlayers={
+                    currentOperation === 'editing-players'
+                      ? editedTournament.competitors.concat(editedTournament.guest_competitors)
+                      : activeTournamentPlayers
+                  }
+                  analysis={
+                    currentOperation === 'editing-players'
+                      ? editedTournamentAnalysis
+                      : tournamentAnalysisObj
+                  }
                   callHandleUpdateTournament={callHandleUpdateTournament}
                 />
                 : ""}

@@ -111,9 +111,9 @@ export const handleCreatePairings: handleCreatePairingsFunction = (
       // console.log('unmatched competitors before not started creation', unmatchedCompetitors)
       const newPairings = createPairings('edit', unmatchedCompetitors, rounds, analysisObj);
       // console.log('newPairings from unmatched', newPairings)
-      filteredPairings = filteredPairings.concat(newPairings);
+      filteredPairings = resetPairingMatchNumbers(filteredPairings.concat(newPairings));
       console.log('filteredPairings changed', filteredPairings)
-
+      return filteredPairings;
     } else {
       window.alert('error within games started conditionals')
     }

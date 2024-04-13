@@ -25,6 +25,7 @@ import { findByIdentifier } from "../actions/find-by-identifier";
 import { createPairings } from "../actions/create-pairings";
 import { NewRoundModal } from "./NewRoundModal";
 import { ForcePlayersModal } from "./ForcePlayersModal";
+import { handleUpdateTournament } from "../actions/handle-update-tournament";
 
 interface ActiveTournamentProps {
   selectedTournament: Tournament;
@@ -313,6 +314,10 @@ export const ActiveTournament: React.FC<ActiveTournamentProps> = ({
     resetGameForApi();
   }
 
+  const callHandleUpdateTournament = () => {
+    handleUpdateTournament(currentOperation, setCurrentOperation, selectedTournament, selectedPlayersForForce, setSelectedPlayersForForce, activeTournamentPlayers, tournamentAnalysisObj, currentRound, byeGameRef.current, resetActiveTournament, resetTournamentGames);
+  }
+
   return <>
     <main id="tournamentContainer">
       {modalMode === 'results' ?
@@ -346,7 +351,8 @@ export const ActiveTournament: React.FC<ActiveTournamentProps> = ({
             editedTournament={editedTournament}
             updateEditedTournament={updateEditedTournament}
             gamesStarted={gamesStarted}
-            setGamesStarted={setGamesStarted} />
+            setGamesStarted={setGamesStarted} 
+            callHandleUpdateTournament={callHandleUpdateTournament} />
           : modalMode === 'end-tournament' ?
             <EndTournamentModal
               resetTourneys={resetTourneys}
@@ -357,31 +363,37 @@ export const ActiveTournament: React.FC<ActiveTournamentProps> = ({
               <NewRoundModal
                 operation={currentOperation}
                 setOperation={setCurrentOperation}
-                tournamentObj={selectedTournament}
-                activePlayers={activeTournamentPlayers}
+                // tournamentObj={selectedTournament}
+                // activePlayers={activeTournamentPlayers}
                 modalModeSetter={setModalMode}
-                currentRound={currentRound}
-                byeGameCurrent={byeGameRef.current}
-                activeTournamentResetter={resetActiveTournament}
-                tournamentGamesResetter={resetTournamentGames}
-                analysis={tournamentAnalysisObj}
-                currentPairings={currentPairings}
-                roundGameIdentifiers={roundGameIdentifiers}
-                forcedMatchupsPlayers={selectedPlayersForForce}
-                newAnalysis={newAnalysis} 
-                gamesStarted={gamesStarted} 
-                gamesFromThisRound={gamesFromThisRound} />
+                // currentRound={currentRound}
+                // byeGameCurrent={byeGameRef.current}
+                // activeTournamentResetter={resetActiveTournament}
+                // tournamentGamesResetter={resetTournamentGames}
+                // analysis={tournamentAnalysisObj}
+                // currentPairings={currentPairings}
+                // roundGameIdentifiers={roundGameIdentifiers}
+                // forcedMatchupsPlayers={selectedPlayersForForce}
+                // setForcedMatchupsPlayers={setSelectedPlayersForForce}
+                // newAnalysis={newAnalysis}
+                // gamesStarted={gamesStarted}
+                // gamesFromThisRound={gamesFromThisRound}
+                callHandleUpdateTournament={callHandleUpdateTournament} />
               : modalMode === 'force-match' ?
                 <ForcePlayersModal
-                  operation={currentOperation}
-                  setOperation={setCurrentOperation}
-                  tournamentObj={selectedTournament}
+                  // operation={currentOperation}
+                  // setOperation={setCurrentOperation}
+                  // tournamentObj={selectedTournament}
                   modalModeSetter={setModalMode}
                   selectedPlayersForForce={selectedPlayersForForce}
                   setSelectedPlayersForForce={setSelectedPlayersForForce}
                   activePlayers={activeTournamentPlayers}
                   analysis={tournamentAnalysisObj}
-                  currentRound={currentRound}
+                  // currentRound={currentRound}
+                  // byeGameCurrent={byeGameRef.current}
+                  // activeTournamentResetter={resetActiveTournament}
+                  // tournamentGamesResetter={resetTournamentGames}
+                  callHandleUpdateTournament={callHandleUpdateTournament}
                 />
                 : ""}
       <div id="tournamentHeader">

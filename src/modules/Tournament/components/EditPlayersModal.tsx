@@ -43,6 +43,8 @@ interface EditPlayersModalProps {
   updateEditedTournament: React.Dispatch<React.SetStateAction<Tournament>>;
   gamesStarted: boolean;
   setGamesStarted: React.Dispatch<React.SetStateAction<boolean>>;
+  callHandleUpdateTournament: () => void;
+
 }
 
 export const EditPlayersModal: React.FC<EditPlayersModalProps> = ({
@@ -69,6 +71,7 @@ export const EditPlayersModal: React.FC<EditPlayersModalProps> = ({
   updateEditedTournament,
   gamesStarted,
   setGamesStarted,
+  callHandleUpdateTournament,
 }) => {
   // const { localVillagerUser } = useContext(AppContext);
   const [playersSelected, setPlayersSelected] = useState(false);

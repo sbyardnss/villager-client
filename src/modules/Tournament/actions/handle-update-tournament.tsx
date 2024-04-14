@@ -6,6 +6,7 @@ import { PlayerRelated } from "../../../Types/Player";
 import { Tournament } from "../../../Types/Tournament";
 import { handleCreatePairings } from "./handle-create-pairings";
 import { tournamentAnalysisOutput } from "./matchup-game-analysis";
+import { findByIdentifier } from "./find-by-identifier";
 
 type HandleUpdateTournamentFunction = (
   operation: 'editing-players' | 'new-round-normal' | 'normal-play',
@@ -42,22 +43,7 @@ export const handleUpdateTournament: HandleUpdateTournamentFunction = (
   newAnalysis,
   currentPairings,
 ) => {
-  // console.log('all props in handleUpdate', {
-  //   operation: operation,
-  //   setOperation: setOperation,
-  //   selectedPlayersForForce: selectedPlayersForForce,
-  //   setSelectedPlayersForForce: setSelectedPlayersForForce,
-  //   analysis: analysis,
-  //   currentRound: currentRound,
-  //   byeGame: byeGame,
-  //   activeTournamentResetter: activeTournamentResetter,
-  //   tournamentGamesResetter: tournamentGamesResetter,
-  //   gamesFromThisRound: gamesFromThisRound,
-  //   roundGameIdentifiers: roundGameIdentifiers,
-  //   gamesStarted: gamesStarted,
-  //   newAnalysis: newAnalysis,
-  //   currentPairings: currentPairings,
-  // })
+
   const tournamentCopy = { ...tournamentObj };
 
   const newPairings = handleCreatePairings(operation, setOperation, tournamentCopy, analysis, currentRound, byeGame, gamesFromThisRound, currentPairings, roundGameIdentifiers, gamesStarted, selectedPlayersForForce, newAnalysis);
@@ -72,6 +58,12 @@ export const handleUpdateTournament: HandleUpdateTournamentFunction = (
     const pastPairings = tournamentCopy.pairings.filter(p => p.round < currentRound);
     tournamentCopy.pairings = pastPairings.concat(newPairings);
   }
+  // const allRemainingPlayers = tournamentCopy.competitors.concat(tournamentCopy.guest_competitors)
+  // const remainingPlayersMatchups = tournamentCopy.pairings.filter(i => i.round === currentRound).map(p => {
+  //   const playerW = findByIdentifier(p.player1, allRemainingPlayers)
+  //   const playerB = findByIdentifier(p.player2, allRemainingPlayers)
+  //   return { round: p.round, match: p.match, player1: playerW?.full_name, player2: playerB?.full_name}
+  // })
   console.log('tournamentCopy', tournamentCopy)
 
   // updateTournament(tournamentCopy)

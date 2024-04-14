@@ -30,7 +30,6 @@ export const createPairings: CreatePairingsFunction = (
     //sort player scores from lowest to highest, and try to create pairings, using the selected player as the bye
     //if pairings created and valid, append bye pairing and return
     const matchups = createPairingsWithBye(targetRound, tournamentPlayers, analysisObj, currentByeGameRef);
-    // console.log('matchups', matchups)
     if (matchups) {
       return matchups;
     } else {
@@ -41,7 +40,6 @@ export const createPairings: CreatePairingsFunction = (
     //EVEN
     //simply create args and run through swiss
     for (const player of tournamentPlayers) {
-      console.log('player', player)
       //EDITING AND EVEN
       const identifier = findIdentifier(player);
 
@@ -49,7 +47,7 @@ export const createPairings: CreatePairingsFunction = (
         identifier,
         analysisObj,
         tournamentPlayers,
-        currentByeGameRef
+        currentByeGameRef//TODO BYEGAME REF ARG
       );
       if (playerArgObj) playerArgs.push(playerArgObj);
     }

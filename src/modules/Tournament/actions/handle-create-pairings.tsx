@@ -39,20 +39,6 @@ export const handleCreatePairings: handleCreatePairingsFunction = (
   // currentByeGameRef,
 ) => {
 
-  // console.log('all props in create', {
-  //   operation: operation,
-  //   setOperation: setOperation,
-  //   tournamentObj: tournamentObj,
-  //   analysisObj: analysisObj,
-  //   rounds: rounds,
-  //   byeGameCurrent: byeGameCurrent,
-  //   gamesFromThisRound: gamesFromThisRound,
-  //   currentPairings: currentPairings,
-  //   roundGameIdentifiers: roundGameIdentifiers,
-  //   gamesStarted: gamesStarted,
-  //   forcedMatchupsPlayers: forcedMatchupsPlayers,
-  //   newAnalysis: newAnalysis,
-  // })
   const copy = { ...tournamentObj };
   let filteredPairings: Match[] = [];
 
@@ -64,18 +50,16 @@ export const handleCreatePairings: handleCreatePairingsFunction = (
 
   if (forcedMatchupsPlayers && forcedMatchupsPlayers[0] && forcedMatchupsPlayers[1]) {
     filteredPairings.push(createPairingForTwoPlayers([...forcedMatchupsPlayers], targetRound));
-    console.log('filteredPairings changed', filteredPairings)
 
     const forcedPlayerIdentifiers = [...forcedMatchupsPlayers].map(p => findIdentifier(p));
 
     // unmatchedCompetitors = unmatchedCompetitors.concat(allAddedCompetitors.filter(p => !forcedPlayerIdentifiers.includes(findIdentifier(p))));
     unmatchedCompetitors = unmatchedCompetitors.filter(p => !forcedPlayerIdentifiers.includes(findIdentifier(p)));
-    console.log('filtering force', unmatchedCompetitors)
   }
 
   if (operation === 'new-round-normal') {
     //Simply creating new round
-    const remainingPairings = createPairings('new', unmatchedCompetitors, rounds, analysisObj)
+    const remainingPairings = createPairings('new', [...unmatchedCompetitors], rounds, analysisObj)
     filteredPairings = resetPairingMatchNumbers(filteredPairings.concat(remainingPairings));
     return filteredPairings;
   } else if (operation === 'editing-players' && currentPairings && roundGameIdentifiers) {
@@ -90,9 +74,10 @@ export const handleCreatePairings: handleCreatePairingsFunction = (
         });
         return (playerW && playerB) || hasGameBeenPlayed;
       });
+      // console.log('neededPairingsFromCurrent', neededPairingsFromCurrent)
 
       filteredPairings = filteredPairings.concat(neededPairingsFromCurrent);
-      
+
       unmatchedCompetitors = unmatchedCompetitors.filter(competitor => {
         const identifier = findIdentifier(competitor);
         return (!neededPairingsFromCurrent.find(p => {
@@ -100,19 +85,16 @@ export const handleCreatePairings: handleCreatePairingsFunction = (
         }));
       });
 
-      // console.log('neededPairingsFromCurrent', neededPairingsFromCurrent)
-
-      // console.log('unmatchedCompetitors after checking needed matchups', unmatchedCompetitors)
-
-      // console.log('filteredPairings games started', filteredPairings)
+      // console.log('unmatchedCompetitors before providing to create',unmatchedCompetitors)
+      const newPairings = createPairings('edit', [...unmatchedCompetitors], rounds, analysisObj);
+      filteredPairings = resetPairingMatchNumbers(filteredPairings.concat(newPairings));
+      // console.log('filteredPairings changed', filteredPairings);
+      return filteredPairings;
 
     } else if (!gamesStarted && !gamesFromThisRound.length) {
       //editing players and games have NOT STARTED
-      // console.log('unmatched competitors before not started creation', unmatchedCompetitors)
-      const newPairings = createPairings('edit', unmatchedCompetitors, rounds, analysisObj);
-      // console.log('newPairings from unmatched', newPairings)
+      const newPairings = createPairings('edit', [...unmatchedCompetitors], rounds, analysisObj);
       filteredPairings = resetPairingMatchNumbers(filteredPairings.concat(newPairings));
-      console.log('filteredPairings changed', filteredPairings)
       return filteredPairings;
     } else {
       window.alert('error within games started conditionals')

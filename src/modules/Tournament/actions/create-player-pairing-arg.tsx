@@ -79,7 +79,6 @@ export const playerArgCreator: PlayerArgCreatorFunction = (
         }
       }
     }
-    console.log('playerArg output', identifier, playerArg)
     return playerArg
   }
 }

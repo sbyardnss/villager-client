@@ -22,7 +22,6 @@ import { chessClubDefaults } from "../../../Types/ChessClub";
 import type { tournamentAnalysisOutput } from "../actions/matchup-game-analysis";
 import { tournamentAnalysisDefaults } from "../actions/matchup-game-analysis";
 import { findByIdentifier } from "../actions/find-by-identifier";
-import { createPairings } from "../actions/create-pairings";
 import { NewRoundModal } from "./NewRoundModal";
 import { ForcePlayersModal } from "./ForcePlayersModal";
 import { handleUpdateTournament } from "../actions/handle-update-tournament";
@@ -99,11 +98,6 @@ export const ActiveTournament: React.FC<ActiveTournamentProps> = ({
   //END ONLY FOR EDITED PLAYER PAIRING CREATION
 
 
-  useEffect(
-    () => {
-      console.log('currentOperation', currentOperation)
-    }, [currentOperation]
-  )
   useEffect(
     () => {
       getTournamentGames(selectedTournament.id)
@@ -268,7 +262,6 @@ export const ActiveTournament: React.FC<ActiveTournamentProps> = ({
       return 'player'
     }
   }
-  // console.log(createPairings('new', activeTournamentPlayers, currentRound, tournamentAnalysisObj, byeGameRef.current))
 
   //TODO: need to have the same data going out as coming in for Games. Currently causing some complexity
   const handleGameForApiUpdate = (

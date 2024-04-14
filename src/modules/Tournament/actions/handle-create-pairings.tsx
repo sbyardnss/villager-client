@@ -64,7 +64,7 @@ export const handleCreatePairings: handleCreatePairingsFunction = (
     return filteredPairings;
   } else if (operation === 'editing-players' && currentPairings && roundGameIdentifiers) {
     //editing players
-    if (gamesStarted && currentPairings && roundGameIdentifiers) {
+    if (gamesStarted && currentPairings && roundGameIdentifiers && newAnalysis) {
       //editing players and games HAVE STARTED
       const neededPairingsFromCurrent = currentPairings.filter(p => {
         const playerW = unmatchedCompetitors.find(c => findIdentifier(c) === p.player1);
@@ -86,14 +86,14 @@ export const handleCreatePairings: handleCreatePairingsFunction = (
       });
 
       // console.log('unmatchedCompetitors before providing to create',unmatchedCompetitors)
-      const newPairings = createPairings('edit', [...unmatchedCompetitors], rounds, analysisObj);
+      const newPairings = createPairings('edit', [...unmatchedCompetitors], rounds, newAnalysis);
       filteredPairings = resetPairingMatchNumbers(filteredPairings.concat(newPairings));
       // console.log('filteredPairings changed', filteredPairings);
       return filteredPairings;
 
-    } else if (!gamesStarted && !gamesFromThisRound.length) {
+    } else if (!gamesStarted && !gamesFromThisRound.length && newAnalysis) {
       //editing players and games have NOT STARTED
-      const newPairings = createPairings('edit', [...unmatchedCompetitors], rounds, analysisObj);
+      const newPairings = createPairings('edit', [...unmatchedCompetitors], rounds, newAnalysis);
       filteredPairings = resetPairingMatchNumbers(filteredPairings.concat(newPairings));
       return filteredPairings;
     } else {

@@ -20,7 +20,6 @@ export const createPairingsWithBye: CreatePairingsWithByeFunction = (
   analysisObj,
   currentByeGameRef,
 ) => {
-  // const orderedIdentifiers = Object.keys(analysisObj.scoreObj).sort((a, b) => analysisObj.scoreObj[a] - analysisObj.scoreObj[b]);
   const orderedIdentifiers: string[] = randomizeOrSortPlayers(targetRound, analysisObj);
 
   //THIS IS AN ARRAY OF IDENTIFIERS, SORTED FROM LOWEST SCORE TO HIGHEST (OR RANDOMIZED IF IN FIRST ROUND), FOR PLAYERS THAT HAVE NOT HAD BYE

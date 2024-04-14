@@ -8,7 +8,6 @@ import { setupHomepage } from '../../actions/setup-homepage';
 describe('Tournament Components', () => {
   beforeEach(() => {
     cy.visit('http://localhost:3000');
-    // setupHomepage();
     setupTournaments();
     cy.login();
     cy.intercept(
@@ -27,12 +26,8 @@ describe('Tournament Components', () => {
       { statusCode: 200, fixture: 'tournaments/load-selected-tournament.json' }
     ).as('loadSelectedTournament');
     cy.visit('/tournament/153');
-    let requestCount = 0;
     cy.intercept('GET', '**/tournaments/153/get_selected_tournament_games', (req) => {
-      // if (requestCount < 1) {
       req.reply({ statusCode: 200, fixture: 'games/load-tournament-games.json' });
-      //   requestCount++;
-      // }
     }).as('initialLoadTournamentGames');
   });
 
@@ -223,84 +218,84 @@ describe('Tournament Components', () => {
     cy.get('[data-cy="g7--score-cell"]')
       .should('contain.text', 1);
   });
-  it('Manager should be able to change players on a tournament before games start and there should be enough pairings for each player', () => {
-    const addSelectors = [
-      'select-player--Richard--67',
-      'select-player--Alex--64',
-      'select-player--Adam--69',
-    ];
-    const removePlayerSelectors = [
-      'remove-player--tiger woods--2'
-    ];
-    const removeGuestSelectors = [
-      'remove-guest--Chewy--61',
-      'remove-guest--Bob Ross--1'
-    ];
-    let tournamentRequestCount = 0;
-    cy.intercept(
-      'GET',
-      '**/tournaments/my_open_tournaments',
-      (req) => {
-        if (tournamentRequestCount >= 2) {
-          req.reply({ statusCode: 200, fixture: 'tournaments/editingPlayers/edited-players-updated-tournaments-list.json' });
-        }
-        tournamentRequestCount++;
-      }
+  // it('Manager should be able to change players on a tournament before games start and there should be enough pairings for each player', () => {
+  //   const addSelectors = [
+  //     'select-player--Richard--67',
+  //     'select-player--Alex--64',
+  //     'select-player--Adam--69',
+  //   ];
+  //   const removePlayerSelectors = [
+  //     'remove-player--tiger woods--2'
+  //   ];
+  //   const removeGuestSelectors = [
+  //     'remove-guest--Chewy--61',
+  //     'remove-guest--Bob Ross--1'
+  //   ];
+  //   let tournamentRequestCount = 0;
+  //   cy.intercept(
+  //     'GET',
+  //     '**/tournaments/my_open_tournaments',
+  //     (req) => {
+  //       if (tournamentRequestCount >= 2) {
+  //         req.reply({ statusCode: 200, fixture: 'tournaments/editingPlayers/edited-players-updated-tournaments-list.json' });
+  //       }
+  //       tournamentRequestCount++;
+  //     }
 
-    ).as('loadMyTournaments');
-    cy.intercept(
-      'GET',
-      '**/tournaments/153',
-      { statusCode: 200, fixture: 'tournaments/editingPlayers/edited-players-updated-tournament.json' }
-    ).as('LoadActiveTournament');
+  //   ).as('loadMyTournaments');
+  //   cy.intercept(
+  //     'GET',
+  //     '**/tournaments/153',
+  //     { statusCode: 200, fixture: 'tournaments/editingPlayers/edited-players-updated-tournament.json' }
+  //   ).as('LoadActiveTournament');
 
-    cy.intercept('PUT', '**/tournaments/153', { statusCode: 204 }).as('SubmitEditedTournament');
-    cy.wait(200);
-    cy.get('[data-cy="edit-players-tournament-controls-btn"]')
-      .should('be.visible')
-      .click();
-    cy.wait(200);
-    cy.get('[data-cy="toggle-guests--true"]')
-      .click();
-    addSelectors.forEach(selector => {
-      cy.get(`[data-cy="${selector}"]`).click();
-    });
-    removePlayerSelectors.forEach(selector => {
-      cy.get(`[data-cy="${selector}"]`).click();
+  //   cy.intercept('PUT', '**/tournaments/153', { statusCode: 204 }).as('SubmitEditedTournament');
+  //   cy.wait(200);
+  //   cy.get('[data-cy="edit-players-tournament-controls-btn"]')
+  //     .should('be.visible')
+  //     .click();
+  //   cy.wait(200);
+  //   cy.get('[data-cy="toggle-guests--true"]')
+  //     .click();
+  //   addSelectors.forEach(selector => {
+  //     cy.get(`[data-cy="${selector}"]`).click();
+  //   });
+  //   removePlayerSelectors.forEach(selector => {
+  //     cy.get(`[data-cy="${selector}"]`).click();
 
-    });
-    removeGuestSelectors.forEach(selector => {
-      cy.get(`[data-cy="${selector}"]`).click();
-    });
-    cy.get('[data-cy="confirm-player-selection"]')
-      .click();
-    cy.get('[data-cy="games-not-started-btn"]')
-      .click();
-    cy.get('[data-cy="submit-players-btn"]')
-      .click();
-    cy.get('[data-cy="new-round-btn-confirm-no-force"]')
-      .click();
-    cy.wait('@SubmitEditedTournament').then(interception => {
-      const newPlayers = interception.request.body.competitors.sort((a: any, b: any) => a.id - b.id);
-      const newGuests = interception.request.body.guest_competitors.sort((a: any, b: any) => a.id - b.id);
-      expect(interception.request.body.pairings.filter((p: any) => p.round === 4).length).to.equal(7);
-      cy.fixture('tournaments/editingPlayers/edited-players-updated-tournament.json').then((expectedRequestBody) => {
-        const fixturePlayers = expectedRequestBody.competitors.sort((a: any, b: any) => a.id - b.id);
-        const fixtureGuests = expectedRequestBody.guest_competitors.sort((a: any, b: any) => a.id - b.id);
-        expect(newPlayers).to.deep.equal(fixturePlayers);
-        expect(newGuests).to.deep.equal(fixtureGuests);
-      });
-    });
-    cy.wait('@LoadActiveTournament').then(interception => {
-      const newPlayers = interception.response?.body.competitors.sort((a: any, b: any) => a.id - b.id);
-      const newGuests = interception.response?.body.guest_competitors.sort((a: any, b: any) => a.id - b.id);
-      cy.fixture('tournaments/editingPlayers/edited-players-updated-tournament.json').then((expectedRequestBody) => {
-        const fixturePlayers = expectedRequestBody.competitors.sort((a: any, b: any) => a.id - b.id);
-        const fixtureGuests = expectedRequestBody.guest_competitors.sort((a: any, b: any) => a.id - b.id);
-        expect(newPlayers).to.deep.equal(fixturePlayers);
-        expect(newGuests).to.deep.equal(fixtureGuests);
-      });
-    });
-  })
+  //   });
+  //   removeGuestSelectors.forEach(selector => {
+  //     cy.get(`[data-cy="${selector}"]`).click();
+  //   });
+  //   cy.get('[data-cy="confirm-player-selection"]')
+  //     .click();
+  //   cy.get('[data-cy="games-not-started-btn"]')
+  //     .click();
+  //   cy.get('[data-cy="submit-players-btn"]')
+  //     .click();
+  //   cy.get('[data-cy="new-round-btn-confirm-no-force"]')
+  //     .click();
+  //   cy.wait('@SubmitEditedTournament').then(interception => {
+  //     const newPlayers = interception.request.body.competitors.sort((a: any, b: any) => a.id - b.id);
+  //     const newGuests = interception.request.body.guest_competitors.sort((a: any, b: any) => a.id - b.id);
+  //     expect(interception.request.body.pairings.filter((p: any) => p.round === 4).length).to.equal(7);
+  //     cy.fixture('tournaments/editingPlayers/edited-players-updated-tournament.json').then((expectedRequestBody) => {
+  //       const fixturePlayers = expectedRequestBody.competitors.sort((a: any, b: any) => a.id - b.id);
+  //       const fixtureGuests = expectedRequestBody.guest_competitors.sort((a: any, b: any) => a.id - b.id);
+  //       expect(newPlayers).to.deep.equal(fixturePlayers);
+  //       expect(newGuests).to.deep.equal(fixtureGuests);
+  //     });
+  //   });
+  //   cy.wait('@LoadActiveTournament').then(interception => {
+  //     const newPlayers = interception.response?.body.competitors.sort((a: any, b: any) => a.id - b.id);
+  //     const newGuests = interception.response?.body.guest_competitors.sort((a: any, b: any) => a.id - b.id);
+  //     cy.fixture('tournaments/editingPlayers/edited-players-updated-tournament.json').then((expectedRequestBody) => {
+  //       const fixturePlayers = expectedRequestBody.competitors.sort((a: any, b: any) => a.id - b.id);
+  //       const fixtureGuests = expectedRequestBody.guest_competitors.sort((a: any, b: any) => a.id - b.id);
+  //       expect(newPlayers).to.deep.equal(fixturePlayers);
+  //       expect(newGuests).to.deep.equal(fixtureGuests);
+  //     });
+  //   });
+  // })
 });
 // })

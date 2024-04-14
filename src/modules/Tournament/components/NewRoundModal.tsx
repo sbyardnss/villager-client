@@ -48,6 +48,7 @@ export const NewRoundModal: React.FC<NewRoundProps> = ({
         Start round
       </button>
       <button
+        data-cy="new-round-btn-add-force"
         className="large-control-button"
         onClick={() => modalModeSetter('force-match')}>
         Start round with a forced match

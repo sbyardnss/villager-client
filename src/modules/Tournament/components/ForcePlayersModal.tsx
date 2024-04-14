@@ -120,27 +120,11 @@ export const ForcePlayersModal: React.FC<ForcePlayersModalProps> = ({
       <div className="d-flex j-between w-100 m-t-half">
         <h2 className="setCustomFont">Select Players</h2>
         <button
+          data-cy="force-modal-create-round-btn"
           className="progressionControlBtn buttonStyleReject"
           onClick={() => {
             if (selectedPlayersForForce && selectedPlayersForForce[0] && selectedPlayersForForce[1] && selectedPlayersForForce.length === 2) {
               if (window.confirm(`create round with forced pairing: ${selectedPlayersForForce[0].full_name} vs ${selectedPlayersForForce[1].full_name}?`)) {
-                
-                // const tournamentCopy = { ...tournamentObj };
-                // const newPairings = handleCreatePairings(operation, setOperation, tournamentObj, analysis, currentRound, undefined, undefined, false, undefined, [...selectedPlayersForForce], undefined);
-                // tournamentCopy.pairings = tournamentCopy.pairings.concat(newPairings);
-                // tournamentCopy.rounds++
-                // console.log('tournament', tournamentCopy)
-                // //TODO: CREATE HANDLER FOR THIS TO BE PLACED IN ACTIVE TOURNAMENT
-                // // if (byeGameCurrent.player_w.id) {
-                // //   sendNewGame(byeGameCurrent)
-                // // }
-                // // updateTournament(tournamentCopy)
-                // //   .then(() => {
-                // //     // tournamentResetter();
-                // //     activeTournamentResetter();
-                // //     tournamentGamesResetter();
-                // //   });
-                // handleUpdateTournament(operation, setOperation, tournamentObj, selectedPlayersForForce, setSelectedPlayersForForce, activePlayers, analysis, currentRound, byeGameCurrent, activeTournamentResetter, tournamentGamesResetter, roundGameIdentifiers, gamesStarted, gamesFromThisRound, [...selectedPlayersForForce], newAnalysis);
                 callHandleUpdateTournament();
 
                 modalModeSetter('none');

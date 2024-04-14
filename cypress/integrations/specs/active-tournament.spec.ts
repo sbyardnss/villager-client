@@ -278,6 +278,8 @@ describe('Tournament Components', () => {
       .click();
     cy.get('[data-cy="submit-players-btn"]')
       .click();
+    cy.get('[data-cy="new-round-btn-confirm-no-force"]')
+      .click();
     cy.wait('@SubmitEditedTournament').then(interception => {
       const newPlayers = interception.request.body.competitors.sort((a: any, b: any) => a.id - b.id);
       const newGuests = interception.request.body.guest_competitors.sort((a: any, b: any) => a.id - b.id);

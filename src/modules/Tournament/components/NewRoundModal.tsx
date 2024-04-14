@@ -30,6 +30,7 @@ export const NewRoundModal: React.FC<NewRoundProps> = ({
         </button>
       </div>
       <button
+        data-cy="new-round-btn-confirm-no-force"
         className="large-control-button"
         onClick={() => {
           if (operation === 'editing-players') {

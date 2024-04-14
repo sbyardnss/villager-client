@@ -58,19 +58,14 @@ export const handleUpdateTournament: HandleUpdateTournamentFunction = (
     const pastPairings = tournamentCopy.pairings.filter(p => p.round < currentRound);
     tournamentCopy.pairings = pastPairings.concat(newPairings);
   }
-  // const allRemainingPlayers = tournamentCopy.competitors.concat(tournamentCopy.guest_competitors)
-  // const remainingPlayersMatchups = tournamentCopy.pairings.filter(i => i.round === currentRound).map(p => {
-  //   const playerW = findByIdentifier(p.player1, allRemainingPlayers)
-  //   const playerB = findByIdentifier(p.player2, allRemainingPlayers)
-  //   return { round: p.round, match: p.match, player1: playerW?.full_name, player2: playerB?.full_name}
-  // })
-  console.log('tournamentCopy', tournamentCopy)
+  // console.log('tournamentCopy', tournamentCopy)
 
-  // updateTournament(tournamentCopy)
-  //   .then(() => {
-  //     activeTournamentResetter();
-  //     tournamentGamesResetter();
-  //   });
+  updateTournament(tournamentCopy)
+    .then(() => {
+      activeTournamentResetter();
+      tournamentGamesResetter();
+    });
   // modalModeSetter('none');
+  setOperation('normal-play');
   setSelectedPlayersForForce([]);
 }

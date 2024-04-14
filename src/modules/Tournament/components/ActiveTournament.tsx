@@ -348,24 +348,16 @@ export const ActiveTournament: React.FC<ActiveTournamentProps> = ({
           tournamentObj={selectedTournament} />
         : modalMode === 'edit-players' ?
           <EditPlayersModal
-            // operation={currentOperation}
             setOperation={setCurrentOperation}
             tournamentObj={selectedTournament}
             modalModeSetter={setModalMode}
-            // activeTournamentResetter={resetActiveTournament}
             byeGame={byeGameRef}
             rounds={currentRound}
-            // analysis={tournamentAnalysisObj}
             tourneyGames={tournamentGames}
             tournamentClub={selectedClub}
-            // resetTournaments={resetTourneys}
-            // selectedPlayersForForce={selectedPlayersForForce}
-            // setSelectedPlayersForForce={setSelectedPlayersForForce} 
             setPastPairings={setPastPairings}
             currentPairings={currentPairings}
             setCurrentPairings={setCurrentPairings}
-            setGamesFromThisRound={setGamesFromThisRound}
-            setRoundGameIdentifiers={setRoundGameIdentifiers}
             setNewAnalysis={setEditedTournamentAnalysis}
             editedTournament={editedTournament}
             updateEditedTournament={updateEditedTournament}
@@ -420,23 +412,15 @@ export const ActiveTournament: React.FC<ActiveTournamentProps> = ({
           }}>Results</button>
       </div>
       <TournamentControls
-        operation={currentOperation}
         setOperation={setCurrentOperation}
-        tournamentResetter={resetTourneys}
         tournamentGamesResetter={resetTournamentGames}
-        activeTournamentResetter={resetActiveTournament} //TODO: where is this being used
         modalMode={modalMode}
         modalModeSetter={setModalMode}
-        scoringMode={scoreMode}
         scoringModeSetter={setScoreMode}
         tournamentObj={selectedTournament}
         currentMatchups={currentRoundMatchups}
         gameForApi={gameForApi}
-        byeGameCurrent={byeGameRef.current}
         userIsCreator={tournamentCreatorBool}
-        activePlayers={activeTournamentPlayers}
-        currentRound={currentRound}
-        analysis={tournamentAnalysisObj}
         roundComplete={roundOver} />
       {currentRound ?
         <div className="setColor setTournamentFontSize">

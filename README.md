@@ -16,13 +16,13 @@ Villager Chess is an application for chess clubs to coordinate meetups, play cor
 
 
 ### Running the docker environment
-* Clone this repo's dockerized branch:
+* Clone client:
 ```sh
-git clone -b dockerize https://github.com/sbyardnss/villager-client.git
+git clone https://github.com/sbyardnss/villager-client.git
 ```
-* Clone the backend repo's dockerized branch:
+* Clone backend:
 ```sh
-git clone -b dockerize https://github.com/sbyardnss/villager-server.git
+git clone https://github.com/sbyardnss/villager-server.git
 ```
 * Open docker desktop
 > If you don't have docker desktop, you can find it here:

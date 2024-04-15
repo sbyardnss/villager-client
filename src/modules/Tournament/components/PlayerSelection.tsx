@@ -108,7 +108,7 @@ export const PlayerSelection: React.FC<PlayerSelectionProps> = ({
                       setSearch("");
                     }}>
                     {/* TODO: REMOVE FINDIDENTIFIER HERE */}
-                    {p.full_name} {findIdentifier(p)}
+                    {p.full_name}
                   </li>
                 )
               })
@@ -129,7 +129,7 @@ export const PlayerSelection: React.FC<PlayerSelectionProps> = ({
                       tournamentCopy.competitors.splice(index, 1)
                       updateTournamentObj(tournamentCopy)
                     }}>
-                    {competitor?.full_name}  {findIdentifier(competitor)}
+                    {competitor?.full_name}
                   </li>
                 )
               })
@@ -145,7 +145,7 @@ export const PlayerSelection: React.FC<PlayerSelectionProps> = ({
                       tournamentCopy.guest_competitors.splice(index, 1)
                       updateTournamentObj(tournamentCopy)
                     }}>
-                    {competitor?.full_name}  {findIdentifier(competitor)}
+                    {competitor?.full_name}
                   </li>
                 )
               })

@@ -35,7 +35,7 @@ export const MatchupItem: React.FC<MatchupItemProps> = ({
         onClick={() => {
           setSelectedOutcome([matchup.round, matchup.match, whitePlayer]);
           handleUpdate(whitePlayer, blackPlayer, whitePlayer);
-        }}>{whitePlayer.full_name} {findIdentifier(whitePlayer)}
+        }}>{whitePlayer.full_name}
       </div>
       <div
         data-cy={`draw-scoring-selector--match-${matchup.match}--round-${matchup.round}`}
@@ -53,7 +53,7 @@ export const MatchupItem: React.FC<MatchupItemProps> = ({
         onClick={() => {
           setSelectedOutcome([matchup.round, matchup.match, blackPlayer]);
           handleUpdate(whitePlayer, blackPlayer, blackPlayer);
-        }}>{blackPlayer.full_name} {findIdentifier(blackPlayer)}
+        }}>{blackPlayer.full_name}
       </div>
       <button
         data-cy={`submit-score-btn--match-${matchup.match}--round-${matchup.round}`}

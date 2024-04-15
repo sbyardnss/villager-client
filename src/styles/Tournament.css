@@ -81,7 +81,7 @@
 
   /* finish tournament modal */
   #resultsModal {
-    display: none;
+    display: flex;
     border: 1px solid #f4d35e;
     border-radius: 8px;
     color: rgb(231, 231, 231);
@@ -98,6 +98,7 @@
     padding: .5em;
   }
 
+
   .resultsModalListItem {
     width: 6em;
     display: flex;
@@ -110,6 +111,20 @@
     justify-content: space-between;
   }
 
+  #fullResults {
+    font-size: smaller;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: .5em;
+  }
+
+  #tieBreakResults {
+    display: flex;
+    width: 100%;
+    margin-top: 1em;
+    justify-content: space-between;
+  }
 
   /* end Tournament modal */
   #endTournamentModal {
@@ -512,6 +527,17 @@
     width: 10em;
   }
 
+  .selectedWhitePiecesMatchup {
+    text-align: center;
+    background-color: rgb(115, 242, 176);
+    color: black;
+    font-weight: 500;
+    padding: .5em;
+    border-radius: 5px 0 5px 0;
+    border: 1px solid #694873;
+    width: 10em;
+  }
+
   .blackPiecesMatchup {
     background-color: rgb(40, 40, 40);
     color: whitesmoke;
@@ -519,6 +545,17 @@
     padding: .5em;
     border-radius: 5px 0 5px 0;
     text-align: center;
+    width: 10em;
+  }
+
+  .selectedBlackPiecesMatchup {
+    text-align: center;
+    background-color: rgb(103, 40, 117);
+    color: whitesmoke;
+    font-weight: 500;
+    padding: .5em;
+    border-radius: 5px 0 5px 0;
+    border: 1px solid #694873;
     width: 10em;
   }
 
@@ -531,6 +568,17 @@
     border: 1px solid rgb(40, 40, 40);
     width: 6em;
 
+  }
+
+  .selectedDrawMatchupButton {
+    text-align: center;
+    background-color: rgb(229, 96, 250);
+    color: whitesmoke;
+    font-weight: 500;
+    padding: .5em;
+    border-radius: 5px 0 5px 0;
+    border: 1px solid rgb(40, 40, 40);
+    width: 6em;
   }
 
   /* tournament table */

@@ -1,0 +1,23 @@
+{
+  "id": 1710,
+  "player_w": {
+    "id": 4,
+    "full_name": "josh whiteman"
+  },
+  "player_b": {
+    "id": 1,
+    "full_name": "stephen byard"
+  },
+  "date_time": "2024-04-04T21:32:26.709926Z",
+  "tournament": 153,
+  "tournament_round": 2,
+  "time_setting": 1,
+  "winner": {
+    "id": 4,
+    "full_name": "josh whiteman"
+  },
+  "pgn": null,
+  "bye": false,
+  "accepted": true,
+  "win_style": "checkmate"
+}

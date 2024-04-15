@@ -59,7 +59,7 @@
   }
 
   .buttonStyleReject {
-    background-color: #934a67;
+    background-color: rgb(146, 73, 102);
     color: rgb(231, 231, 231);
     height: 2em;
     border: none;
@@ -69,7 +69,7 @@
   }
 
   .buttonStyleReject:hover {
-    background-color: #cf4d81;
+    background-color: hsl(336, 58%, 56%);
     color: rgb(231, 231, 231);
     transition: .2s cubic-bezier(0.215, 0.61, 0.355, 1);
   }
@@ -90,6 +90,7 @@
     transition: .2s cubic-bezier(0.215, 0.61, 0.355, 1);
   }
 }
+
 /* mobile styling */
 @media screen and (min-width: 320px) and (max-width: 640px) {
   body {
@@ -180,4 +181,61 @@
     color: rgb(231, 231, 231);
     transition: .2s cubic-bezier(0.215, 0.61, 0.355, 1);
   }
+}
+
+/* width */
+.w-100 {
+  width: 100%;
+}
+
+/* new with refactor */
+.m-1 {
+  margin: 1em;
+}
+
+.m-t-1 {
+  margin-top: 1em;
+}
+
+.m-t-half {
+  margin-top: .5em;
+}
+
+
+/* flex */
+.d-flex {
+  display: flex;
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+}
+
+/* justify-content */
+.j-even {
+  justify-content: space-evenly;
+}
+
+.j-between {
+  justify-content: space-between;
+}
+
+
+/* align items */
+.a-center {
+  align-items: center;
+}
+
+/* text */
+.text-align-c {
+  text-align: center;
+}
+
+.text-hl-pink {
+  color: #cf4d81
+}
+
+.text-hl-blue {
+  color: #4a9392
 }

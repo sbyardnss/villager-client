@@ -1,0 +1,88 @@
+import type { PlayerRelated } from "./Player"
+import { playerRelatedDefaults } from "./Player"
+import type { Guest } from "./Guest"
+//TODO: ADJUST SO THAT WE CAN USE ONE INTERFACE FOR BOTH
+export interface Game {
+  id: number,
+  player_w?: PlayerRelated | Guest,
+  player_b?: PlayerRelated | Guest,
+  date_time: string,
+  tournament?: number,
+  tournament_round: number,
+  time_setting?: number,
+  winner?: PlayerRelated | Guest | null,
+  pgn?: string,
+  bye: boolean,
+  accepted: boolean,
+  win_style: string,
+}
+
+export interface OutgoingGame {
+  player_w: Guest | PlayerRelated,
+  player_w_model_type: string,
+  player_b: Guest | PlayerRelated | null,
+  player_b_model_type: string | null,
+  tournament: number,
+  time_setting: number,
+  win_style: string,
+  accepted: true,
+  tournament_round: number,
+  winner?: Guest | PlayerRelated | null,
+  winner_model_type?: string | null,
+  bye: boolean,
+  id?: number | undefined,
+}
+
+export interface DigitalGame {
+  player_w: PlayerRelated | null,
+  player_w_model_type: 'player',
+  player_b: PlayerRelated | null,
+  player_b_model_type: 'player',
+  tournament: number | null,
+  date_time: string,
+  time_setting: number | null,
+  win_style: 'checkmate' | 'draw' | '',
+  accepted: boolean,
+  tournament_round: number | null,
+  winner?: PlayerRelated | null,
+  winner_model_type?: 'player' | null,
+  bye: boolean,
+  id?: number | undefined,
+  // computer_opponent?: boolean,
+  pgn?: string | null,
+}
+
+export const digitalGameDefaults: DigitalGame = {
+  id: undefined,
+  player_w: { ...playerRelatedDefaults },
+  player_w_model_type: 'player',
+  player_b: { ...playerRelatedDefaults },
+  player_b_model_type: 'player',
+  tournament: null,
+  time_setting: null,
+  win_style: '',
+  accepted: true,
+  tournament_round: null,
+  winner: null,
+  winner_model_type: null,
+  bye: false,
+  // computer_opponent: true,
+  pgn: null,
+  date_time: "",
+}
+
+export const gameForApiDefaults: OutgoingGame = {
+  id: undefined,
+  player_w: { ...playerRelatedDefaults } as PlayerRelated | Guest,
+  player_w_model_type: "",
+  player_b: { ...playerRelatedDefaults } as PlayerRelated | Guest,
+  player_b_model_type: "",
+  tournament: 0,
+  time_setting: 0,
+  win_style: "",
+  accepted: true,
+  tournament_round: 0,
+  winner: null,
+  winner_model_type: "",
+  bye: false
+}

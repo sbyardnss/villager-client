@@ -297,7 +297,6 @@ export const HomePage = () => {
           <article key="activeGames" id="activeGamesArticle">
             <section id="myActiveGames">
               <h2 id="activeGamesHeader" className="setCustomFont">My Games</h2>
-              {/* <button id="homepagePlayButton">play</button> */}
               <div id="myUnfinishedGamesScrollWindow">
                 <div id="activeGamesUl">
                   {!usersActiveGames.length ? <h3 className="setCustomFont" id="noGamesMsg">you have no active games</h3> : ""}
@@ -432,7 +431,6 @@ export const HomePage = () => {
               }
             </section>
             <h2 className="setCustomFont">Open Challenges</h2>
-            {/* {openChallengesOrMsg()} */}
             {!challenges.length ? <div id="noChallengesMsg">There are currently no open challenges</div> : ""}
             <section id="challengesList">
               {
@@ -443,7 +441,6 @@ export const HomePage = () => {
                     return (
                       <div key={c.id} className="challengeListItem">
                         <div>
-                          {/* <div>Challenger:</div> */}
                           <div className="challengerInfo">
                             <div>
                               Play as <span id={c.player_w ? "blackChallengeSpan" : "whiteChallengeSpan"}>{c.player_w ? "black" : "white"}</span> vs <span id={c.player_w ? "whiteChallengeSpan" : "blackChallengeSpan"}>{challengingPlayer?.full_name}</span>
@@ -472,7 +469,6 @@ export const HomePage = () => {
           </div>
           <div id="puzzlesArticle">
             <div id="puzzleParamaters">
-              {/* <label id="puzzleLabel" htmlFor="puzzleRatingSelect">select puzzle rating</label> */}
               <div id="puzzleSelectAndSubmit">
                 <select id="puzzleSelect" onChange={(e) => setSelectedRange(e.target.value)}>
                   <option value={800}>select puzzle rating</option>

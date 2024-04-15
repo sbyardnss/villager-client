@@ -3,7 +3,7 @@ import "../../styles/HomePage.css"
 import { useState, useEffect, KeyboardEvent } from "react"
 import { Chessboard } from "react-chessboard"
 // import Chess from "chess.js"
-import { getMyClubsCommunityPosts, getOpenChallenges, acceptChallenge, deleteChallengeGame, deleteCommunityPost, getAllCommunityPosts, getTournament, sendNewGame, submitNewPostToAPI } from "../../ServerManager"
+import { getMyClubsCommunityPosts, getOpenChallenges, acceptChallenge, deleteChallengeGame, deleteCommunityPost, getAllCommunityPosts, getTournament, sendNewGame, submitNewPostToAPI, getActiveUserPlayerObject } from "../../ServerManager"
 // import { PlayContext } from "../../Play/PlayProvider"
 import { useNavigate } from "react-router-dom"
 import trophyIcon from "../../images/small_trophy_with_background.png";
@@ -70,6 +70,16 @@ export const HomePage = () => {
 
   //POTENTIALLY TEMPORARY END
 
+  useEffect(
+    () => {
+      if (localVillagerUser) {
+        getActiveUserPlayerObject()
+          .then(data => {
+            setActiveUserPlayerObject(data)
+          });
+      }
+    }, [localVillagerUser]
+  )
   useEffect(
     () => {
       const myCreatedChallenges: ChallengeCreated[] = [];

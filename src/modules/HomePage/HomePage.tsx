@@ -447,7 +447,7 @@ export const HomePage = () => {
                                 c.player_w ? copy.player_w = (c.player_w as PlayerRelated).id : copy.player_b = (c.player_b as PlayerRelated).id
                                 copy.accepted = true
                                 acceptChallenge(copy)
-                                  .then(() => resetUserGames())
+                                  .then(() => resetChallenges());
                               }}>accept</button>
                           </div>
                         </div>

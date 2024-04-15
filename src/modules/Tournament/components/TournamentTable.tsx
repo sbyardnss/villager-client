@@ -3,7 +3,7 @@ import type { Guest } from "../../../Types/Guest";
 import type { PlayerRelated } from "../../../Types/Player";
 import { ScoreCardType, type tournamentAnalysisOutput } from "../actions/matchup-game-analysis"
 import { Tournament } from "../../../Types/Tournament";
-import { findByIdentifier } from "../../../Old_unused/Tournament/actions/find-by-identifier";
+import { findByIdentifier } from "../actions/find-by-identifier";
 import { OutgoingGame } from "../../../Types/Game";
 import { useEffect, useState } from "react";
 
@@ -89,38 +89,40 @@ export const TournamentTable: React.FC<TournamentTableProps> = ({
           {
             sortedScoreIdentifiers.map((identifier: number | string) => {
               const player = findByIdentifier(identifier, allClubMates);
-              return (
-                <tr key={identifier} id={identifier + "--tourneyRow"} className="tablePlayerRow">
-                  <td key={player.full_name + '--row'} className="tablePlayerCell sticky-col first-col">{player.full_name}</td>
-                  {
-                    scoreCardForDisplay[identifier].map((score, index) => {
-                      if (score !== 'none') {
-                        return (
-                          <td key={identifier + '--' + index + '--' + player.full_name} className="scoreCell">{score}</td>
-                        )
-                      }
-                      else if (score === 'none' && byePlayerIdentifier === identifier && index + 1 === round) {
-                        return (
-                          <td key={identifier + '--' + index + '--' + player.full_name} className="scoreCell">bye</td>
-                        )
-                      }
-                      else {
-                        return (
-                          <td key={identifier + '--' + index + '--' + player.full_name} className="scoreCell">0</td>
-                        )
-                      }
-                    })
-                  }
-                  {round < 6 ? <td className="scoreCell"></td> : ""}
-                  <td
-                    data-cy={`${identifier}--score-cell`}
-                    key={identifier + "-- score" + player.full_name}
-                    id={identifier + "-- score"}
-                    className="totalScoreCell">
-                    {analysis.scoreObj[identifier]}
-                  </td>
-                </tr>
-              )
+              if (player) {
+                return (
+                  <tr key={identifier} id={identifier + "--tourneyRow"} className="tablePlayerRow">
+                    <td key={player.full_name + '--row'} className="tablePlayerCell sticky-col first-col">{player.full_name}</td>
+                    {
+                      scoreCardForDisplay[identifier].map((score, index) => {
+                        if (score !== 'none') {
+                          return (
+                            <td key={identifier + '--' + index + '--' + player.full_name} className="scoreCell">{score}</td>
+                          )
+                        }
+                        else if (score === 'none' && byePlayerIdentifier === identifier && index + 1 === round) {
+                          return (
+                            <td key={identifier + '--' + index + '--' + player.full_name} className="scoreCell">bye</td>
+                          )
+                        }
+                        else {
+                          return (
+                            <td key={identifier + '--' + index + '--' + player.full_name} className="scoreCell">0</td>
+                          )
+                        }
+                      })
+                    }
+                    {round < 6 ? <td className="scoreCell"></td> : ""}
+                    <td
+                      data-cy={`${identifier}--score-cell`}
+                      key={identifier + "-- score" + player.full_name}
+                      id={identifier + "-- score"}
+                      className="totalScoreCell">
+                      {analysis.scoreObj[identifier]}
+                    </td>
+                  </tr>
+                )
+              }
             })
           }
         </tbody>

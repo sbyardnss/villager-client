@@ -50,7 +50,7 @@ export const playerArgCreator: PlayerArgCreatorFunction = (
   if (isActive) {
     //DO WE NEED THIS TO ADD CURRENT BY INFO? MAYBE WHEN EDITING PLAYERS?
     if (currentByeGameRef?.player_w?.id) {
-      console.log('within bye ref conditional')
+      // console.log('within bye ref conditional')
       playerArg = {
         id: identifier,
         score: analysisObj.scoreObj[identifier] || 0,

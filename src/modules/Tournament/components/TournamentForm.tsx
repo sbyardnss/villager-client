@@ -148,7 +148,7 @@ export const TournamentForm: React.FC<TournamentFormProps> = ({
                           // console.log(firstRoundPairings)
                           copy.pairings = firstRoundPairings;
                           copy.club = selectedClub.id;
-                          console.log(copy)
+                          // console.log(copy)
                           sendNewTournament(copy)
                             .then(() => {
                               resetTourneys();

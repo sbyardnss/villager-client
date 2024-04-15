@@ -44,9 +44,9 @@ export const ForcePlayersModal: React.FC<ForcePlayersModalProps> = ({
   useEffect(
     () => {
       const selectedIdentifiers: (string | number)[] = [...selectedPlayersForForce].map(p => findIdentifier(p));
-      console.log('selectedIdentifiers', selectedIdentifiers)
-      console.log('activePlayers', activePlayers)
-      console.log('analysis', analysis)
+      // console.log('selectedIdentifiers', selectedIdentifiers)
+      // console.log('activePlayers', activePlayers)
+      // console.log('analysis', analysis)
 
       const availablePlayers: (PlayerRelated | Guest)[] = [];
       activePlayers.forEach(p => {

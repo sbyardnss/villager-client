@@ -5,7 +5,7 @@ import { setupTournaments } from '../../actions/setup-tournaments';
 import { setupHomepage } from '../../actions/setup-homepage';
 // Cypress._.times(10, () => {
 
-describe('Tournament Components', () => {
+describe('Tournament Main component', () => {
   beforeEach(() => {
     cy.visit('http://localhost:3000');
     setupHomepage();

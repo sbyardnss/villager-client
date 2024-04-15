@@ -27,7 +27,12 @@ type PlayerArgCreatorFunction = (
   activeTourneyPlayers: (PlayerRelated | Guest)[],
   currentByeGameRef?: any,//TODO - ANY
 ) => PlayerArg | undefined;
-export const playerArgCreator: PlayerArgCreatorFunction = (identifier, analysisObj, activeTourneyPlayers, currentByeGameRef?) => {
+export const playerArgCreator: PlayerArgCreatorFunction = (
+  identifier,
+  analysisObj,
+  activeTourneyPlayers,
+  currentByeGameRef?
+) => {
   let isActive = true
   let playerArg: PlayerArg = { ...playerArgDefaults };
   //check if player is active and get identifier
@@ -45,6 +50,7 @@ export const playerArgCreator: PlayerArgCreatorFunction = (identifier, analysisO
   if (isActive) {
     //DO WE NEED THIS TO ADD CURRENT BY INFO? MAYBE WHEN EDITING PLAYERS?
     if (currentByeGameRef?.player_w?.id) {
+      console.log('within bye ref conditional')
       playerArg = {
         id: identifier,
         score: analysisObj.scoreObj[identifier] || 0,

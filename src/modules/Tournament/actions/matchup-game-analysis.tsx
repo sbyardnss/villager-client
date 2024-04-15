@@ -95,7 +95,13 @@ export const tournamentAnalysis: TournamentAnalysisFunction = (
   byeGame,
   tournamentPlayers,
 ) => {
-  const playerOppObjForOutput: PlayerOppRefObjType = {};
+  // const playerOppObjForOutput: PlayerOppRefObjType = {};
+  const playerOppObjForOutput: PlayerOppRefObjType = tournamentPlayers
+    ? tournamentPlayers.reduce((playerOppObj: PlayerOppRefObjType, competitor) => {
+      const identifier = findIdentifier(competitor);
+      return { ...playerOppObj, [identifier]: [] };
+    }, {})
+    : {};
   const scoreCardForOutput: ScoreCardType = tournamentPlayers
     ? tournamentPlayers.reduce((scoreCard: ScoreCardType, competitor) => {
       const identifier = findIdentifier(competitor);

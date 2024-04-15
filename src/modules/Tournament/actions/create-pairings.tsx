@@ -47,7 +47,7 @@ export const createPairings: CreatePairingsFunction = (
         identifier,
         analysisObj,
         tournamentPlayers,
-        currentByeGameRef
+        currentByeGameRef//TODO BYEGAME REF ARG
       );
       if (playerArgObj) playerArgs.push(playerArgObj);
     }

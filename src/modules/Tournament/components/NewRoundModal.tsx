@@ -1,72 +1,58 @@
-import { OutgoingGame } from "../../../Types/Game";
-import { Guest } from "../../../Types/Guest"
-import { PlayerRelated } from "../../../Types/Player"
-import { Tournament } from "../../../Types/Tournament";
-import { createPairings } from "../actions/create-pairings";
-import { sendNewGame, updateTournament } from "../../../ServerManager";
-import { tournamentAnalysisOutput } from "../actions/matchup-game-analysis";
-
 //TODO: CSS-ISSUE --throughout this component
 interface NewRoundProps {
-  tournamentObj: Tournament;
-  activePlayers: (PlayerRelated | Guest)[];
+  operation: 'editing-players' | 'new-round-normal' | 'normal-play';
+  setOperation: React.Dispatch<React.SetStateAction<'editing-players' | 'new-round-normal' | 'normal-play'>>;
   modalModeSetter: React.Dispatch<React.SetStateAction<'none' | 'results' | 'edit-players' | 'end-tournament' | 'new-round' | 'force-match'>>;
-  currentRound: number;
-  byeGameCurrent: OutgoingGame;
-  activeTournamentResetter: () => void;
-  tournamentGamesResetter: () => void;
-  analysis: tournamentAnalysisOutput;
+  callHandleUpdateTournament: () => void;
 }
 
 export const NewRoundModal: React.FC<NewRoundProps> = ({
-  tournamentObj,
-  activePlayers,
+  operation,
+  setOperation,
   modalModeSetter,
-  currentRound,
-  byeGameCurrent,
-  activeTournamentResetter,
-  tournamentGamesResetter,
-  analysis,
+  callHandleUpdateTournament,
 }) => {
   return <>
-      <div className="tournament-modal-fixed column a-center" style={{ top: '30%' }}>
-        <div className="d-flex j-between w-100">
-          <h2 className="setCustomFont">Create New Round</h2>
-          <button
-            className="progressionControlBtn buttonStyleReject"
-            onClick={() => {
-              modalModeSetter('none');
-            }}>
-            cancel
-          </button>
-        </div>
+    <div className="tournament-modal-fixed column a-center">
+      <div className="d-flex j-between w-100">
+        <h2 className="setCustomFont">Need a forced match?</h2>
         <button
-          className="large-control-button"
+          className="progressionControlBtn buttonStyleReject"
           onClick={() => {
-            if (window.confirm("create round?")) {
-              const tournamentCopy = { ...tournamentObj }
-              const newPairings = createPairings('new', activePlayers, currentRound, analysis, byeGameCurrent)
-              tournamentCopy.pairings = tournamentCopy.pairings.concat(newPairings)
-              tournamentCopy.rounds++
-              if (byeGameCurrent.player_w.id) {
-                sendNewGame(byeGameCurrent)
-              }
-              updateTournament(tournamentCopy)
-                .then(() => {
-                  // tournamentResetter();
-                  activeTournamentResetter();
-                  tournamentGamesResetter();
-                });
+            if (operation === 'editing-players') {
+              modalModeSetter('edit-players');
+            } else {
+              setOperation('normal-play');
               modalModeSetter('none');
             }
           }}>
-          Start round
-        </button>
-        <button
-          className="large-control-button"
-          onClick={() => modalModeSetter('force-match')}>
-          Start round with a forced match
+          cancel
         </button>
       </div>
+      <button
+        data-cy="new-round-btn-confirm-no-force"
+        className="large-control-button"
+        onClick={() => {
+          if (operation === 'editing-players') {
+            if (window.confirm("Confirm games have not started")) {
+              callHandleUpdateTournament();
+              modalModeSetter('none');
+            }
+          } else if (operation === 'new-round-normal') {
+            if (window.confirm("Create Round?")) {
+              callHandleUpdateTournament();
+              modalModeSetter('none');
+            }
+          }
+        }}>
+        Start round
+      </button>
+      <button
+        data-cy="new-round-btn-add-force"
+        className="large-control-button"
+        onClick={() => modalModeSetter('force-match')}>
+        Start round with a forced match
+      </button>
+    </div>
   </>
 }

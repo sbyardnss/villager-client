@@ -1,54 +1,30 @@
-// import { SetStateAction, useState } from "react";
-import { updateTournament, sendNewGame, reopenTournament } from "../../../ServerManager";
-import { createPairings } from "../actions/create-pairings";
-import { findIdentifier } from "../actions/find-identifier";
-import { tournamentAnalysisOutput } from "../actions/matchup-game-analysis";
+import { sendNewGame, reopenTournament } from "../../../ServerManager";
 import { checkIfUserIsAppCreator } from "../actions/check-if-creator";
-import type { PlayerRelated } from "../../../Types/Player";
-import type { Guest } from "../../../Types/Guest";
 import type { Tournament } from "../../../Types/Tournament";
 import type { Match } from "tournament-pairings/dist/Match";
-import type { Game, OutgoingGame } from "../../../Types/Game";
+import type { Game } from "../../../Types/Game";
 
 interface TournamentControlsProps {
-  // updater: React.Dispatch<React.SetStateAction<Tournament>>;
-  tournamentResetter: () => void;
+  setOperation: React.Dispatch<React.SetStateAction<'editing-players' | 'new-round-normal' | 'normal-play'>>;
   tournamentGamesResetter: () => void;
-  activeTournamentResetter: () => void;
   modalMode: 'none' | 'results' | 'edit-players' | 'end-tournament' | 'new-round' | 'force-match';
   modalModeSetter: React.Dispatch<React.SetStateAction<'none' | 'results' | 'edit-players' | 'end-tournament' | 'new-round' | 'force-match'>>;
-  scoringMode: 'scoring' | 'editing' | 'table';
   scoringModeSetter: React.Dispatch<React.SetStateAction<'scoring' | 'editing' | 'table'>>;
   tournamentObj: Tournament;
   currentMatchups: Match[];
-  //TODO: FIX PLAYERRELATEDISSUE
   gameForApi: Game | any;
-  //TODO: FIX PLAYERRELATEDISSUE
-  byeGameCurrent: OutgoingGame;
   userIsCreator: boolean;
-  activePlayers: (PlayerRelated | Guest)[];
-  currentRound: number;
-  analysis: tournamentAnalysisOutput;
   roundComplete: boolean;
 }
 export const TournamentControls: React.FC<TournamentControlsProps> = ({
-  // updater,
-  tournamentResetter,
+  setOperation,
   tournamentGamesResetter,
-  activeTournamentResetter,
-  modalMode,
   modalModeSetter,
-  scoringMode,
   scoringModeSetter,
   tournamentObj,
   currentMatchups,
-  //TODO: FIX PLAYERRELATED ISSUE
   gameForApi,
-  byeGameCurrent,
   userIsCreator,
-  activePlayers,
-  currentRound,
-  analysis,
   roundComplete,
 }) => {
   const newRoundButtonDigitalTournament = () => {
@@ -89,29 +65,13 @@ export const TournamentControls: React.FC<TournamentControlsProps> = ({
     }
 
   }
-  // if (!tournamentObj.complete && (userIsCreator || checkIfUserIsAppCreator())) {
   return (
     <div id="tournamentProgressionControls">
       {!tournamentObj.complete && (userIsCreator || checkIfUserIsAppCreator()) ?
         <button
           className="progressionControlBtn controlBtnApprove"
           onClick={() => {
-            // if (window.confirm("create round?")) {
-            //   const tournamentCopy = { ...tournamentObj }
-            //   const newPairings = createPairings('new', activePlayers, currentRound, analysis, byeGame.current)
-            //   tournamentCopy.pairings = tournamentCopy.pairings.concat(newPairings)
-            //   tournamentCopy.rounds++
-            //   if (byeGame.player_w.id) {
-            //     sendNewGame(byeGame)
-            //   }
-            //   updateTournament(tournamentCopy)
-            //     .then(() => {
-            //       // tournamentResetter();
-            //       activeTournamentResetter();
-            //       tournamentGamesResetter();
-            //     });
-            //   modalModeSetter('none');
-            // }
+            setOperation('new-round-normal');
             modalModeSetter('new-round');
           }}>
           New Round
@@ -149,6 +109,7 @@ export const TournamentControls: React.FC<TournamentControlsProps> = ({
               modalModeSetter('none');
             }
             else {
+              setOperation('editing-players');
               modalModeSetter('edit-players');
             }
           }}>edit players</button>
@@ -172,8 +133,4 @@ export const TournamentControls: React.FC<TournamentControlsProps> = ({
         : ""}
     </div>
   )
-  // } else {
-  //   return (
-  //   )
-  // }
 }

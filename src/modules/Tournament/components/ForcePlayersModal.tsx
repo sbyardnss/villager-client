@@ -5,24 +5,38 @@ import { findIdentifier } from "../actions/find-identifier";
 import { handleCreatePairings } from "../actions/handle-create-pairings";
 import { Tournament } from "../../../Types/Tournament";
 import { tournamentAnalysisOutput } from "../actions/matchup-game-analysis";
+import { handleUpdateTournament } from "../actions/handle-update-tournament";
+import { OutgoingGame } from "../../../Types/Game";
 
 interface ForcePlayersModalProps {
-  tournamentObj: Tournament;
+  // operation: 'editing-players' | 'new-round-normal' | 'normal-play';
+  // setOperation: React.Dispatch<React.SetStateAction<'editing-players' | 'new-round-normal' | 'normal-play'>>;
+  // tournamentObj: Tournament;
   modalModeSetter: React.Dispatch<React.SetStateAction<'none' | 'results' | 'edit-players' | 'end-tournament' | 'new-round' | 'force-match'>>;
   selectedPlayersForForce: (PlayerRelated | Guest)[];
   setSelectedPlayersForForce: React.Dispatch<React.SetStateAction<(PlayerRelated | Guest)[]>>;
   activePlayers: (PlayerRelated | Guest)[];
   analysis: tournamentAnalysisOutput;
-  currentRound: number
+  // currentRound: number,
+  // byeGameCurrent: OutgoingGame;
+  // activeTournamentResetter: () => void;
+  // tournamentGamesResetter: () => void;
+  callHandleUpdateTournament: () => void;
 }
 export const ForcePlayersModal: React.FC<ForcePlayersModalProps> = ({
-  tournamentObj,
+  // operation,
+  // setOperation,
+  // tournamentObj,
   modalModeSetter,
   selectedPlayersForForce,
   setSelectedPlayersForForce,
   activePlayers,
   analysis,
-  currentRound,
+  // currentRound,
+  // byeGameCurrent,
+  // activeTournamentResetter,
+  // tournamentGamesResetter,
+  callHandleUpdateTournament,
 }) => {
   const [displayedPlayers, setDisplayedPlayers] = useState<(PlayerRelated | Guest)[]>([]);
 
@@ -30,6 +44,10 @@ export const ForcePlayersModal: React.FC<ForcePlayersModalProps> = ({
   useEffect(
     () => {
       const selectedIdentifiers: (string | number)[] = [...selectedPlayersForForce].map(p => findIdentifier(p));
+      console.log('selectedIdentifiers', selectedIdentifiers)
+      console.log('activePlayers', activePlayers)
+      console.log('analysis', analysis)
+
       const availablePlayers: (PlayerRelated | Guest)[] = [];
       activePlayers.forEach(p => {
         const pIdentifier = findIdentifier(p);
@@ -50,7 +68,7 @@ export const ForcePlayersModal: React.FC<ForcePlayersModalProps> = ({
             modalModeSetter('new-round');
             setSelectedPlayersForForce([]);
           }}>
-          cancel
+          back
         </button>
       </div>
       <div className="d-flex j-between setColor">
@@ -102,25 +120,13 @@ export const ForcePlayersModal: React.FC<ForcePlayersModalProps> = ({
       <div className="d-flex j-between w-100 m-t-half">
         <h2 className="setCustomFont">Select Players</h2>
         <button
+          data-cy="force-modal-create-round-btn"
           className="progressionControlBtn buttonStyleReject"
           onClick={() => {
             if (selectedPlayersForForce && selectedPlayersForForce[0] && selectedPlayersForForce[1] && selectedPlayersForForce.length === 2) {
               if (window.confirm(`create round with forced pairing: ${selectedPlayersForForce[0].full_name} vs ${selectedPlayersForForce[1].full_name}?`)) {
-                const tournamentCopy = { ...tournamentObj };
-                const newPairings = handleCreatePairings('forcing-matchup-new', tournamentObj, analysis, currentRound, undefined, undefined, false, undefined, [...selectedPlayersForForce] as (PlayerRelated | Guest)[]/* TODO: address typing*/, undefined);
-                tournamentCopy.pairings = tournamentCopy.pairings.concat(newPairings);
-                tournamentCopy.rounds++
-                console.log('tournament', tournamentCopy)
-                //TODO: CREATE HANDLER FOR THIS TO BE PLACED IN ACTIVE TOURNAMENT
-                // if (byeGameCurrent.player_w.id) {
-                //   sendNewGame(byeGameCurrent)
-                // }
-                // updateTournament(tournamentCopy)
-                //   .then(() => {
-                //     // tournamentResetter();
-                //     activeTournamentResetter();
-                //     tournamentGamesResetter();
-                //   });
+                callHandleUpdateTournament();
+
                 modalModeSetter('none');
                 setSelectedPlayersForForce([]);
               }

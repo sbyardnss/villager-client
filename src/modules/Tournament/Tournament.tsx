@@ -11,7 +11,7 @@ import type { Tournament, NewTournament } from "../../Types/Tournament";
 import { selectedTournamentDefaults, newTournamentDefaults } from "../../Types/Tournament";
 import { useParams } from "react-router";
 
-export const TournamentController = () => {
+export const TournamentMain = () => {
   const { tournamentId } = useParams();
   const { myChessClubs, clubMatesAndGuests } = useAppContext();
   const [myOpenTournaments, setMyOpenTournaments] = useState<Tournament[]>([]);

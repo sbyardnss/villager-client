@@ -3,7 +3,7 @@ import { Play } from "./modules/Play/components/Play";
 import { ChessClubs } from "./modules/ChessClubs/ChessClubs"
 import { AppProvider } from "./modules/App/AppProvider";
 import { HomePage } from "./modules/HomePage/HomePage";
-import { TournamentController } from "./modules/Tournament/Tournament"
+import { TournamentMain } from "./modules/Tournament/Tournament"
 import { PlayController } from "./modules/Play/PlayController"
 export const ApplicationViews = () => {
   return (
@@ -27,7 +27,7 @@ export const ApplicationViews = () => {
         </Route>
         <Route path="clubs" element={<ChessClubs />} />
         <Route path="tournament/:tournamentId?" element={
-          <TournamentController />
+          <TournamentMain />
         } />
       </Routes>
     </AppProvider>

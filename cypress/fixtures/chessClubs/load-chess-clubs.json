@@ -1,0 +1,130 @@
+[
+  {
+    "id": 1,
+    "name": "Villager Chess Club",
+    "manager": {
+      "id": 1,
+      "full_name": "stephen byard"
+    },
+    "date": "2023-07-15",
+    "address": " 1719 21st Ave S",
+    "city": "Nashville",
+    "state": "TN",
+    "zipcode": 37212,
+    "details": "Wednesdays from 7 til whenever. Weekly tournament. All guests welcome!",
+    "members": [
+      {
+        "id": 1,
+        "full_name": "stephen byard"
+      },
+      {
+        "id": 2,
+        "full_name": "tiger woods"
+      },
+      {
+        "id": 3,
+        "full_name": "josh ryner"
+      },
+      {
+        "id": 4,
+        "full_name": "josh whiteman"
+      },
+      {
+        "id": 5,
+        "full_name": "jim jimothy"
+      },
+      {
+        "id": 6,
+        "full_name": "bill johnson"
+      }
+    ],
+    "guest_members": [
+      {
+        "id": 1,
+        "full_name": "Bob Ross",
+        "guest_id": "g1"
+      },
+      {
+        "id": 5,
+        "full_name": "phil",
+        "guest_id": "g5"
+      },
+      {
+        "id": 7,
+        "full_name": "mark",
+        "guest_id": "g7"
+      },
+      {
+        "id": 8,
+        "full_name": "john johnson",
+        "guest_id": "g8"
+      },
+      {
+        "id": 59,
+        "full_name": "Barbie",
+        "guest_id": "g59"
+      },
+      {
+        "id": 60,
+        "full_name": "Ken",
+        "guest_id": "g60"
+      },
+      {
+        "id": 61,
+        "full_name": "Chewy",
+        "guest_id": "g61"
+      },
+      {
+        "id": 62,
+        "full_name": "Leia",
+        "guest_id": "g62"
+      },
+      {
+        "id": 63,
+        "full_name": "Han",
+        "guest_id": "g63"
+      },
+      {
+        "id": 64,
+        "full_name": "Alex",
+        "guest_id": "g64"
+      },
+      {
+        "id": 65,
+        "full_name": "Billy",
+        "guest_id": "g65"
+      },
+      {
+        "id": 66,
+        "full_name": "Jeremy",
+        "guest_id": "g66"
+      },
+      {
+        "id": 67,
+        "full_name": "Richard",
+        "guest_id": "g67"
+      },
+      {
+        "id": 68,
+        "full_name": "Allison",
+        "guest_id": "g68"
+      },
+      {
+        "id": 69,
+        "full_name": "Adam",
+        "guest_id": "g69"
+      },
+      {
+        "id": 70,
+        "full_name": "Jack",
+        "guest_id": "g70"
+      },
+      {
+        "id": 71,
+        "full_name": "Jimbob",
+        "guest_id": "g71"
+      }
+    ],
+    "has_password": true
+  }
+]

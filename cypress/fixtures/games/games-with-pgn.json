@@ -1,0 +1,38 @@
+[
+  {
+    "id": 2,
+    "target_player_w_id": 1,
+    "target_player_w_ct": 11,
+    "target_player_b_id": 2,
+    "target_player_b_ct": 11,
+    "date_time": "2023-06-01T21:19:25.057Z",
+    "tournament": 1,
+    "tournament_round": 1,
+    "time_setting": 1,
+    "pgn": "1. d4 a5 2. Bf4 Nf6 3. e3 e6 4. Nc3 a4 5. Nb5 Ba3 6. Nxc7+ Ke7 7. Nxa8 Ng4 8. Qxg4 g6 9. bxa3 b6 10. Bb5 h6 11. Bg5+ Ke8 12. Bxd8 Ba6 13. Bxb6 f6 14. Bxa6 Rh7 15. Qxg6+ Ke7 16. Qxh7+ Ke8 17. Bc5 f5 18. Qe7#",
+    "target_winner_id": 1,
+    "target_winner_ct": 11,
+    "win_style": "checkmate",
+    "accepted": true,
+    "bye": false,
+    "computer_opponent": false
+  },
+  {
+    "id": 3,
+    "target_player_w_id": 1,
+    "target_player_w_ct": 15,
+    "target_player_b_id": null,
+    "target_player_b_ct": null,
+    "date_time": "2023-06-01T21:19:25.057Z",
+    "tournament": 1,
+    "tournament_round": 1,
+    "time_setting": 1,
+    "pgn": "",
+    "target_winner_id": 1,
+    "target_winner_ct": 15,
+    "win_style": "checkmate",
+    "accepted": true,
+    "bye": true,
+    "computer_opponent": false
+  }
+]

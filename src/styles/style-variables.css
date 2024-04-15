@@ -1,0 +1,10 @@
+:root {
+  --light-font-hue: 0;
+  --dark-hue: 0;
+  --reject-hue: 336;
+
+  --light-font-color: hsl(var(--light-font-hue), 0%, 91%);
+  --dark-background-1: hsl(var(--dark-hue), 0%, 13%);
+  --color-reject: hsl(var(--reject-hue), 33%, 43%);
+  --color-reject-hover: hsl(var(--reject-hue), 58%, 56%);
+}

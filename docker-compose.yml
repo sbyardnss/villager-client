@@ -1,0 +1,19 @@
+version: '3.7'
+services:
+  nginx:
+    restart: always
+    image: 'nginx:latest'
+    build:
+      context: .
+      dockerfile: nginx/Dockerfile.dev
+      args:
+        REACT_APP_API: http://localhost:8000
+        REACT_APP_CONTAINER: docker
+    ports:
+      - '3050:3050'
+    networks:
+      - villager_network
+
+networks:
+  villager_network:
+    external: true

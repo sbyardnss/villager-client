@@ -436,7 +436,7 @@ export const HomePage = () => {
                           {/* <div>Challenger:</div> */}
                           <div className="challengerInfo">
                             <div>
-                              Play as <span id={c.player_w ? "blackChallengeSpan" : "whiteChallengeSpan"}>{c.player_w ? "black" : "white"}</span> vs <span id={c.player_w ? "whiteChallengeSpan" : "blackChallengeSpan"}>{challengingPlayer.full_name}</span>
+                              Play as <span id={c.player_w ? "blackChallengeSpan" : "whiteChallengeSpan"}>{c.player_w ? "black" : "white"}</span> vs <span id={c.player_w ? "whiteChallengeSpan" : "blackChallengeSpan"}>{challengingPlayer?.full_name}</span>
                             </div>
                             <button className="challengeBtn buttonStyleAmbiguous"
                               onClick={() => {

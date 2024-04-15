@@ -26,7 +26,6 @@ import { NewRoundModal } from "./NewRoundModal";
 import { ForcePlayersModal } from "./ForcePlayersModal";
 import { handleUpdateTournament } from "../actions/handle-update-tournament";
 import { findIdentifier } from "../actions/find-identifier";
-
 interface ActiveTournamentProps {
   selectedTournament: Tournament;
   selectTournament: React.Dispatch<React.SetStateAction<Tournament>>;
@@ -81,20 +80,21 @@ export const ActiveTournament: React.FC<ActiveTournamentProps> = ({
   const [gamesFromThisRound, setGamesFromThisRound] = useState<Game[]>([]);
   const [roundGameIdentifiers, setRoundGameIdentifiers] = useState<(string | number)[][]>([]);
   const [editedTournamentAnalysis, setEditedTournamentAnalysis] = useState<tournamentAnalysisOutput>({ ...tournamentAnalysisDefaults });
-  const [editedTournament, updateEditedTournament] = useState<Tournament>({
-    id: 0,
-    title: "",
-    creator: { ...playerRelatedDefaults },
-    date: "",
-    club: 0,
-    rounds: 0,
-    in_person: false,
-    complete: false,
-    time_setting: 0,
-    competitors: [],
-    guest_competitors: [],
-    pairings: [],
-  })
+  // const [editedTournament, updateEditedTournament] = useState<Tournament>({
+  //   id: 0,
+  //   title: "",
+  //   creator: { ...playerRelatedDefaults },
+  //   date: "",
+  //   club: 0,
+  //   rounds: 0,
+  //   in_person: false,
+  //   complete: false,
+  //   time_setting: 0,
+  //   competitors: [],
+  //   guest_competitors: [],
+  //   pairings: [],
+  // })
+  const [editedTournament, updateEditedTournament] = useState<Tournament>({...selectedTournamentDefaults});
   //END ONLY FOR EDITED PLAYER PAIRING CREATION
 
 
@@ -243,6 +243,23 @@ export const ActiveTournament: React.FC<ActiveTournamentProps> = ({
       setGamesFromThisRound(completedCurrentRoundGames);
     }, [tournamentGames, currentRound]
   )
+
+  useEffect(
+    () => {
+        updateEditedTournament({ ...selectedTournament });
+        let currentRoundPairings: Match[] = [];
+        let previousPairings: Match[] = [];
+        selectedTournament.pairings.forEach(pairing => {
+          if (pairing.round === currentRound) {
+            currentRoundPairings.push(pairing);
+          } else {
+            previousPairings.push(pairing);
+          }
+        });
+        setCurrentPairings(currentRoundPairings);
+        setPastPairings(previousPairings)
+    }, [selectedTournament, currentRound]
+  );
 
   const resetTournamentGames = () => {
     getTournamentGames(selectedTournament.id)
@@ -393,7 +410,7 @@ export const ActiveTournament: React.FC<ActiveTournamentProps> = ({
           className="progressionControlBtn buttonStyleReject"
           onClick={() => {
             setModalMode('none');
-            selectTournament(selectedTournamentDefaults);
+            selectTournament({...selectedTournamentDefaults});
             selectClub(chessClubDefaults);
             setTournamentAnalysisObj({ ...tournamentAnalysisDefaults }); //TODO do we actually need this? the component should be reinitialized with the default value
             resetTourneys();

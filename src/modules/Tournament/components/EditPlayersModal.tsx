@@ -34,15 +34,15 @@ interface EditPlayersModalProps {
 
 export const EditPlayersModal: React.FC<EditPlayersModalProps> = ({
   setOperation,
-  tournamentObj,
+  // tournamentObj,
   modalModeSetter,
   byeGame,
   rounds,
   tourneyGames,
   tournamentClub,
-  setPastPairings,
+  // setPastPairings,
   currentPairings,
-  setCurrentPairings,
+  // setCurrentPairings,
   setNewAnalysis,
   editedTournament,
   updateEditedTournament,
@@ -53,26 +53,26 @@ export const EditPlayersModal: React.FC<EditPlayersModalProps> = ({
   const [playersSelected, setPlayersSelected] = useState(false);
   const [clubPlayers, setClubPlayers] = useState<PlayerRelated[]>([]);
   const [clubGuests, setClubGuests] = useState<Guest[]>([]);
+  // useEffect(
+  //   () => {
+  //     updateEditedTournament({ ...tournamentObj });
+  //     let currentRoundPairings: Match[] = [];
+  //     let previousPairings: Match[] = [];
+  //     tournamentObj.pairings.forEach(pairing => {
+  //       if (pairing.round === rounds) {
+  //         currentRoundPairings.push(pairing);
+  //       } else {
+  //         previousPairings.push(pairing);
+  //       }
+  //     });
+  //     setCurrentPairings(currentRoundPairings);
+  //     setPastPairings(previousPairings)
+  //   }, [tournamentObj, rounds]
+  // )
   useEffect(
     () => {
-      updateEditedTournament({ ...tournamentObj });
-      let currentRoundPairings: Match[] = [];
-      let previousPairings: Match[] = [];
-      tournamentObj.pairings.forEach(pairing => {
-        if (pairing.round === rounds) {
-          currentRoundPairings.push(pairing);
-        } else {
-          previousPairings.push(pairing);
-        }
-      });
-      setCurrentPairings(currentRoundPairings);
-      setPastPairings(previousPairings)
-    }, [tournamentObj, rounds]
-  )
-  useEffect(
-    () => {
-      setClubPlayers(tournamentClub.members);
-      setClubGuests(tournamentClub.guest_members);
+      setClubPlayers([...tournamentClub.members]);
+      setClubGuests([...tournamentClub.guest_members]);
     }, [tournamentClub]
   )
   useEffect(

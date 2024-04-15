@@ -51,20 +51,20 @@ export const handleUpdateTournament: HandleUpdateTournamentFunction = (
   if (operation === 'new-round-normal') {
     tournamentCopy.pairings = tournamentCopy.pairings.concat(newPairings);
     tournamentCopy.rounds++;
-    if (byeGame.player_w.id) {
-      sendNewGame(byeGame)
-    }
+    // if (byeGame.player_w.id) {
+    //   sendNewGame(byeGame)
+    // }
   } else if (operation === 'editing-players') {
     const pastPairings = tournamentCopy.pairings.filter(p => p.round < currentRound);
     tournamentCopy.pairings = pastPairings.concat(newPairings);
   }
-  // console.log('tournamentCopy', tournamentCopy)
+  console.log('tournamentCopy', tournamentCopy)
 
-  updateTournament(tournamentCopy)
-    .then(() => {
-      activeTournamentResetter();
-      tournamentGamesResetter();
-    });
+  // updateTournament(tournamentCopy)
+  //   .then(() => {
+  //     activeTournamentResetter();
+  //     tournamentGamesResetter();
+  //   });
   // modalModeSetter('none');
   setOperation('normal-play');
   setSelectedPlayersForForce([]);

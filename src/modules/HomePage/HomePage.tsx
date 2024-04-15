@@ -1,27 +1,22 @@
 import "../../styles/HomePage.css"
-// import { React, useContext, useState, useEffect, useRef, KeyboardEvent, ChangeEventHandler } from "react"
 import { useState, useEffect, KeyboardEvent } from "react"
 import { Chessboard } from "react-chessboard"
-// import Chess from "chess.js"
 import { getMyClubsCommunityPosts, getOpenChallenges, acceptChallenge, deleteChallengeGame, deleteCommunityPost, getAllCommunityPosts, getTournament, sendNewGame, submitNewPostToAPI, getActiveUserPlayerObject } from "../../ServerManager"
-// import { PlayContext } from "../../Play/PlayProvider"
 import { useNavigate } from "react-router-dom"
 import trophyIcon from "../../images/small_trophy_with_background.png";
 import { useAppContext } from "../App/AppProvider";
 import type { CommunityPost } from "../../Types/CommunityPost";
-import type { DigitalGame, Game, OutgoingGame } from "../../Types/Game";
+import type { DigitalGame } from "../../Types/Game";
 import type { ChessClub } from "../../Types/ChessClub";
 import { chessClubDefaults } from "../../Types/ChessClub"
 import type { PlayerRelated } from "../../Types/Player";
 import { playerRelatedDefaults } from "../../Types/Player";
 import type { Tournament } from "../../Types/Tournament";
-import type { ChallengeCreated, ChallengeEditing, ChallengeNew } from "../../Types/Challenge";
+import type { ChallengeCreated, ChallengeEditing } from "../../Types/Challenge";
 import type { Puzzle } from "../../Types/Puzzle";
 import { usePlayContext } from "../Play/PlayController";
-// import { showAlertModal } from "../../shared/AlertModal/alert-modal";
 import { findByIdentifier } from "../Tournament/actions/find-by-identifier";
 
-//TODO: MY CHALLENGES NOT SHOWING
 export const HomePage = () => {
   const { localVillagerUser, myChessClubs, clubMatesAndGuests } = useAppContext();
   const [communityPosts, setCommunityPosts] = useState([]);
@@ -209,6 +204,7 @@ export const HomePage = () => {
         })
     }
   }
+
 
   return <>
     <main id="homepageContainer">
@@ -420,7 +416,7 @@ export const HomePage = () => {
                           <button className="challengeBtn buttonStyleReject"
                             onClick={() => {
                               deleteChallengeGame(c.id)
-                                .then(() => resetUserGames());
+                                .then(() => resetChallenges());
                             }}>abort</button>
                         </div>
                       </div>

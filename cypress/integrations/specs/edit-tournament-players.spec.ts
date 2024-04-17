@@ -225,7 +225,6 @@ describe('Editing players on tournament functionality', () => {
     cy.intercept('PUT', '**/tournaments/153', { statusCode: 204 }).as('SubmitEditedTournament');
     cy.wait(200);
     cy.wait('@SubmitEditedTournament').then(async (interception: any) => {
-      console.log('interception.request.data', interception.request.body)
       const currentRound = interception.request.body.rounds;
       const allCompetitors = interception.request.body.competitors.concat(interception.request.body.guest_competitors);
       const allPairings = interception.request.body.pairings;
@@ -309,6 +308,42 @@ describe('Editing players on tournament functionality', () => {
       const currentRound = interception.request.body.rounds;
       const allCompetitors = interception.request.body.competitors.concat(interception.request.body.guest_competitors);
       await validateRoundPairings(allCompetitors, requestPairings, currentRound, ['g5']);
+    });
+  });
+  it('Manager should be able to create a new set of pairings, removing a player that has already played their match in the round and one that has not, with games already started, and 2 unmatched players. Bye player should now have a match and new pairings should provide all players with match.', () => {
+    cy.intercept('GET', '**/tournaments/153/get_selected_tournament_games', (req) => {
+      req.reply({ statusCode: 200, fixture: 'games/getResponsesAfterSubmittedGames/load-tournament-games-white-win.json' });
+    }).as('initialLoadTournamentGames');
+
+    cy.intercept('PUT', '**/tournaments/153', { statusCode: 204 }).as('SubmitEditedTournament');
+    cy.wait(200);
+
+    cy.get('[data-cy="edit-players-tournament-controls-btn"]')
+      .should('be.visible')
+      .click();
+    cy.wait(200);
+    cy.get('[data-cy="remove-guest--phil--5"]')
+      .click();
+    cy.get('[data-cy="remove-guest--Bob Ross--1"]')
+      .click();
+    cy.get('[data-cy="confirm-player-selection"]')
+      .click();
+    cy.get('[data-cy="games-already-started-btn"]')
+      .should('be.visible')
+      .click();
+    cy.get('[data-cy="submit-players-btn"]')
+      .click();
+    cy.wait(200);
+    cy.wait('@SubmitEditedTournament').then(async (interception) => {
+      const requestPairings = interception.request.body.pairings;
+      const currentRound = interception.request.body.rounds;
+      const allCompetitors = interception.request.body.competitors.concat(interception.request.body.guest_competitors);
+      await validateRoundPairings(allCompetitors, requestPairings, currentRound, ['g5']);
+
+
+      //TODO: ADD FURTHER VALIDATION TO THIS TEST. THIS ADDED BIT IS GOOD FOR TIME BEING
+      const pairingForFormerlyByePlayer = requestPairings.find((pairing: Match) => pairing.player1 === 'g8' || pairing.player2 === 'g8');
+      expect(pairingForFormerlyByePlayer).to.exist;
     });
   });
 });

@@ -47,24 +47,26 @@ export const handleUpdateTournament: HandleUpdateTournamentFunction = (
   const tournamentCopy = { ...tournamentObj };
 
   const newPairings = handleCreatePairings(operation, setOperation, tournamentCopy, analysis, currentRound, byeGame, gamesFromThisRound, currentPairings, roundGameIdentifiers, gamesStarted, selectedPlayersForForce, newAnalysis);
-  
-  if (operation === 'new-round-normal') {
-    tournamentCopy.pairings = tournamentCopy.pairings.concat(newPairings);
-    tournamentCopy.rounds++;
-    if (byeGame.player_w.id) {
-      sendNewGame(byeGame)
+  if (newPairings) {
+    if (operation === 'new-round-normal') {
+      tournamentCopy.pairings = tournamentCopy.pairings.concat(newPairings);
+      tournamentCopy.rounds++;
+      if (byeGame.player_w.id) {
+        sendNewGame(byeGame)
+      }
+    } else if (operation === 'editing-players') {
+      const pastPairings = tournamentCopy.pairings.filter(p => p.round < currentRound);
+      tournamentCopy.pairings = pastPairings.concat(newPairings);
     }
-  } else if (operation === 'editing-players') {
-    const pastPairings = tournamentCopy.pairings.filter(p => p.round < currentRound);
-    tournamentCopy.pairings = pastPairings.concat(newPairings);
+    // console.log('tournamentCopy', tournamentCopy.pairings)
+    updateTournament(tournamentCopy)
+      .then(() => {
+        activeTournamentResetter();
+        tournamentGamesResetter();
+      });
+  } else {
+    window.alert('Something went wrong. Try again')
   }
-  // console.log('tournamentCopy', tournamentCopy)
-
-  updateTournament(tournamentCopy)
-    .then(() => {
-      activeTournamentResetter();
-      tournamentGamesResetter();
-    });
   // modalModeSetter('none');
   setOperation('normal-play');
   setSelectedPlayersForForce([]);

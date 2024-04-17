@@ -29,7 +29,7 @@ interface EditPlayersModalProps {
   gamesStarted: boolean;
   setGamesStarted: React.Dispatch<React.SetStateAction<boolean>>;
   callHandleUpdateTournament: () => void;
-
+  editingStateResetter: () => void;
 }
 
 export const EditPlayersModal: React.FC<EditPlayersModalProps> = ({
@@ -49,6 +49,7 @@ export const EditPlayersModal: React.FC<EditPlayersModalProps> = ({
   gamesStarted,
   setGamesStarted,
   callHandleUpdateTournament,
+  editingStateResetter,
 }) => {
   const [playersSelected, setPlayersSelected] = useState(false);
   const [clubPlayers, setClubPlayers] = useState<PlayerRelated[]>([]);
@@ -100,6 +101,7 @@ export const EditPlayersModal: React.FC<EditPlayersModalProps> = ({
           <button className="buttonStyleReject" onClick={() => {
             setOperation('normal-play');
             modalModeSetter('none');
+            editingStateResetter();
           }}>cancel</button>
         </div>
         {!playersSelected ?

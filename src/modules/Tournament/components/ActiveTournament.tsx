@@ -322,12 +322,53 @@ export const ActiveTournament: React.FC<ActiveTournamentProps> = ({
     resetGameForApi();
   }
 
+  const resetEditingTournamentStates = () => {
+    setGamesStarted(true);
+    // const resetTourney = {
+    //   ...selectedTournament,
+    //   competitors: [...selectedTournament.competitors],
+    //   guest_competitors: [...selectedTournament.guest_competitors]
+    // }
+    // updateEditedTournament(resetTourney);
+  };
   const callHandleUpdateTournament = () => {
     if (currentOperation === 'editing-players') {
-      handleUpdateTournament(currentOperation, setCurrentOperation, editedTournament, [...selectedPlayersForForce], setSelectedPlayersForForce, tournamentAnalysisObj, currentRound, byeGameRef.current, resetActiveTournament, resetTournamentGames, gamesFromThisRound, roundGameIdentifiers, gamesStarted, editedTournamentAnalysis, currentPairings);
+      handleUpdateTournament(
+        currentOperation,
+        setCurrentOperation,
+        editedTournament,
+        [...selectedPlayersForForce],
+        setSelectedPlayersForForce,
+        tournamentAnalysisObj,
+        currentRound,
+        byeGameRef.current,
+        resetActiveTournament,
+        resetTournamentGames,
+        gamesFromThisRound,
+        roundGameIdentifiers,
+        gamesStarted,
+        editedTournamentAnalysis,
+        currentPairings);
     } else if (currentOperation === 'new-round-normal') {
-      handleUpdateTournament(currentOperation, setCurrentOperation, selectedTournament, [...selectedPlayersForForce], setSelectedPlayersForForce, tournamentAnalysisObj, currentRound, byeGameRef.current, resetActiveTournament, resetTournamentGames, gamesFromThisRound, undefined, undefined, undefined, currentPairings);
+      handleUpdateTournament(
+        currentOperation,
+        setCurrentOperation,
+        selectedTournament,
+        [...selectedPlayersForForce],
+        setSelectedPlayersForForce,
+        tournamentAnalysisObj,
+        currentRound,
+        byeGameRef.current,
+        resetActiveTournament,
+        resetTournamentGames,
+        gamesFromThisRound,
+        undefined,
+        undefined,
+        undefined,
+        currentPairings
+      );
     }
+    resetEditingTournamentStates();
   }
 
   return <>
@@ -356,7 +397,8 @@ export const ActiveTournament: React.FC<ActiveTournamentProps> = ({
             updateEditedTournament={updateEditedTournament}
             gamesStarted={gamesStarted}
             setGamesStarted={setGamesStarted}
-            callHandleUpdateTournament={callHandleUpdateTournament} />
+            callHandleUpdateTournament={callHandleUpdateTournament} 
+            editingStateResetter={resetEditingTournamentStates} />
           : modalMode === 'end-tournament' ?
             <EndTournamentModal
               resetTourneys={resetTourneys}

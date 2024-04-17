@@ -66,8 +66,8 @@ export function registerCommands() {
   })
 }
 
-export async function validateRoundPairings(tournamentPlayers: (PlayerRelated | Guest)[], pairings: Match[], currentRound: number) {
-  const confirmedPairings = [];
+export async function validateRoundPairings(tournamentPlayers: (PlayerRelated | Guest)[], pairings: Match[], currentRound: number, removedPlayersAlreadyPlayed: (string | number)[] | undefined) {
+  let confirmedPairings = [];
   const accountedForPlayers = [];
   const roundPairings = pairings.filter(p => p.round === currentRound);
 
@@ -84,13 +84,22 @@ export async function validateRoundPairings(tournamentPlayers: (PlayerRelated | 
       if (pairing.player1 === findIdentifier(playerW) && pairing.player2 === findIdentifier(playerB)) {
         confirmedPairings.push(pairing);
       }
-    } else if(playerW && playerB === null) {
+    } else if (playerW && playerB === null) {
       if (pairing.player1 === findIdentifier(playerW) && pairing.player2 === null) {
         confirmedPairings.push(pairing);
       }
     }
   }
+  if (removedPlayersAlreadyPlayed && removedPlayersAlreadyPlayed.length) {
+    removedPlayersAlreadyPlayed.forEach((identifier: string | number) => {
+      const removedPlayerPairing = roundPairings.find(pairing => pairing.player1 === identifier || pairing.player2 === identifier);
+      if (removedPlayerPairing) {
+        confirmedPairings.push(removedPlayerPairing);
+      };
+    });
 
+  }
+  confirmedPairings = confirmedPairings.sort((a, b) => a.match - b.match);
   expect(confirmedPairings).to.deep.equal(roundPairings);
   const sortedAccountedPlayers = accountedForPlayers.sort((a, b) => {
     if (a.full_name < b.full_name) {
@@ -109,7 +118,7 @@ export async function validateRoundPairings(tournamentPlayers: (PlayerRelated | 
       return +1;
     }
     return 0;
-  })
+  });
 
   expect(sortedAccountedPlayers).to.deep.equal(sortedTournamentPlayers);
 }

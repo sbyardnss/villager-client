@@ -163,11 +163,11 @@ describe('Editing players on tournament functionality', () => {
       .click();
     cy.intercept('PUT', '**/tournaments/153', { statusCode: 204 }).as('SubmitEditedTournament');
     cy.wait(200);
-    cy.wait('@SubmitEditedTournament').then(async (interception) => {
+    cy.wait('@SubmitEditedTournament').then(async (interception: any) => {
       const currentRound = interception.request.body.rounds;
       const allCompetitors = interception.request.body.competitors.concat(interception.request.body.guest_competitors);
       const allPairings = interception.request.body.pairings;
-      await validateRoundPairings(allCompetitors, allPairings, currentRound);
+      await validateRoundPairings(allCompetitors, allPairings, currentRound, undefined);
       const forcedPairingFromRequest = interception.request.body.pairings.find((p: Match) => (p.player1 === 'g59' && p.player2 === 'g64') || (p.player1 === 'g64' && p.player2 === 'g59'));
 
       expect(forcedPairingFromRequest).to.have.property('round', 4);
@@ -224,16 +224,16 @@ describe('Editing players on tournament functionality', () => {
 
     cy.intercept('PUT', '**/tournaments/153', { statusCode: 204 }).as('SubmitEditedTournament');
     cy.wait(200);
-    cy.wait('@SubmitEditedTournament').then(async (interception) => {
+    cy.wait('@SubmitEditedTournament').then(async (interception: any) => {
       console.log('interception.request.data', interception.request.body)
       const currentRound = interception.request.body.rounds;
       const allCompetitors = interception.request.body.competitors.concat(interception.request.body.guest_competitors);
       const allPairings = interception.request.body.pairings;
-      await validateRoundPairings(allCompetitors, allPairings, currentRound);
+      await validateRoundPairings(allCompetitors, allPairings, currentRound, undefined);
     });
     cy.wait('@LoadActiveTournament');
   });
-  it('Manager should be able to create a new set of pairings, adding a forced match, with same players. New pairings should provid all players with match.', () => {
+  it('Manager should be able to create a new set of pairings, adding a forced match, with same players. New pairings should provide all players with match.', () => {
     cy.intercept('GET', '**/tournaments/153/get_selected_tournament_games', (req) => {
       req.reply({ statusCode: 200, fixture: 'games/load-tournament-games.json' });
     }).as('initialLoadTournamentGames');
@@ -261,16 +261,55 @@ describe('Editing players on tournament functionality', () => {
       .click();
     cy.intercept('PUT', '**/tournaments/153', { statusCode: 204 }).as('SubmitEditedTournament');
     cy.wait(200);
-    cy.wait('@SubmitEditedTournament').then(async (interception) => {
+    cy.wait('@SubmitEditedTournament').then(async (interception: any) => {
       const currentRound = interception.request.body.rounds;
       const allCompetitors = interception.request.body.competitors.concat(interception.request.body.guest_competitors);
       const allPairings = interception.request.body.pairings;
-      await validateRoundPairings(allCompetitors, allPairings, currentRound);
+      await validateRoundPairings(allCompetitors, allPairings, currentRound, undefined);
       const forcedPairingFromRequest = interception.request.body.pairings.find((p: Match) => (p.player1 === 3 && p.player2 === 'g61') || (p.player1 === 'g61' && p.player2 === 3));
 
       expect(forcedPairingFromRequest).to.have.property('round', 4);
       expect(forcedPairingFromRequest).to.have.property('match', 1);
     });
   })
+  it('Manager should be able to create a new set of pairings, removing a player that has already played their match in the round, with games already started, and only 1 unmatched player. New pairings should provide all players with match.', () => {
+    cy.intercept('GET', '**/tournaments/153/get_selected_tournament_games', (req) => {
+      req.reply({ statusCode: 200, fixture: 'games/getResponsesAfterSubmittedGames/load-tournament-games-white-win.json' });
+    }).as('initialLoadTournamentGames');
+
+    cy.intercept('PUT', '**/tournaments/153', { statusCode: 204 }).as('SubmitEditedTournament');
+    cy.wait(200);
+    
+    cy.get('[data-cy="edit-players-tournament-controls-btn"]')
+      .should('be.visible')
+      .click();
+    cy.wait(200);
+    cy.get('[data-cy="remove-guest--phil--5"]')
+      .click();
+    cy.get('[data-cy="confirm-player-selection"]')
+      .click();
+    cy.get('[data-cy="games-already-started-btn"]')
+      .should('be.visible')
+      .click();
+    cy.get('[data-cy="submit-players-btn"]')
+      .click();
+    cy.wait(200);
+    cy.wait('@SubmitEditedTournament').then(async (interception) => {
+      const requestTournament = interception.request.body;
+      const requestGuests = interception.request.body.guest_competitors;
+      const requestPairings = interception.request.body.pairings;
+      cy.fixture('tournaments/editingPlayers/single-unmatched-competitor.json').then((fixtureData) => {
+        const expectedGuests = fixtureData.guest_competitors;
+        const expectedPairings = fixtureData.pairings;
+
+        expect(requestGuests).to.deep.equal(expectedGuests);
+        expect(requestPairings).to.deep.equal(expectedPairings);
+        expect(requestTournament).to.deep.equal(fixtureData);
+      });
+      const currentRound = interception.request.body.rounds;
+      const allCompetitors = interception.request.body.competitors.concat(interception.request.body.guest_competitors);
+      await validateRoundPairings(allCompetitors, requestPairings, currentRound, ['g5']);
+    });
+  });
 });
 // })

@@ -53,7 +53,7 @@ export const playerArgCreator: PlayerArgCreatorFunction = (
       // console.log('within bye ref conditional')
       playerArg = {
         id: identifier,
-        score: analysisObj.scoreObj[identifier] || 0,
+        score: Math.round(analysisObj.scoreObj[identifier]) || 0,
         colors: analysisObj.blackWhiteTally[identifier] || [],
         avoid: analysisObj.playerOppRefObj[identifier] ? analysisObj.playerOppRefObj[identifier].filter(ref => ref !== 'bye') : [],
         // receivedBye: false,
@@ -62,7 +62,7 @@ export const playerArgCreator: PlayerArgCreatorFunction = (
     } else {
       playerArg = {
         id: identifier,
-        score: analysisObj.scoreObj[identifier] || 0,
+        score: Math.round(analysisObj.scoreObj[identifier]) || 0,
         colors: analysisObj.blackWhiteTally[identifier] || [],
         avoid: analysisObj.playerOppRefObj[identifier] ? analysisObj.playerOppRefObj[identifier].filter(ref => ref !== 'bye') : [],
         receivedBye: false,
